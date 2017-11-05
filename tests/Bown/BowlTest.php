@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Recipe.
  *
@@ -22,17 +20,37 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Recipe\Ingredient;
+namespace Teknoo\Tests\Recipe\Bowl;
 
-use Teknoo\Immutable\ImmutableInterface;
+use Teknoo\Recipe\Bowl\Bowl;
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
 
-interface IngredientInterface extends ImmutableInterface
+/**
+ * @covers \Teknoo\Recipe\Bowl\Bowl
+ */
+class BowlTest extends AbstractBowlTest
 {
+    protected function getCallable()
+    {
+        return function (ChefInterface $chef, $foo) {
+            $chef->continue([$foo => 'foo']);
+        };
+    }
+
+    protected function getMapping()
+    {
+        return ['bar' => 'bar2'];
+    }
+
     /**
-     * @param array $workPlan
-     * @param ChefInterface $chef
-     * @return IngredientInterface
+     * @inheritDoc
      */
-    public function prepare(array $workPlan, ChefInterface $chef): IngredientInterface;
+    public function buildBowl(): BowlInterface
+    {
+        return new Bowl(
+            $this->getCallable(),
+            $this->getMapping()
+        );
+    }
 }

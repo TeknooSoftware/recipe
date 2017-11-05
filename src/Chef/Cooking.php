@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
@@ -49,17 +50,20 @@ class Cooking implements StateInterface
         };
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function updateMyWorkPlan() {
-        return function (array $with): ChefInterface {
+    private function getNextStep()
+    {
+        return function () {
             /**
              * @var Chef $this
              */
-            $this->workPlan = \array_merge($this->workPlan , $with);
+            if (count($this->steps) > $this->position) {
+                $position = $this->position;
+                $this->position++;
 
-            return $this;
+                return $this->steps[$position];
+            }
+
+            return null;
         };
     }
 
@@ -68,7 +72,18 @@ class Cooking implements StateInterface
      */
     public function continueRecipe() {
         return function (array $with = []): ChefInterface {
-            // TODO: Implement continue() method.
+            /**
+             * @var Chef $this
+             */
+            $this->updateMyWorkPlan($with);
+
+            $callable = $this->getNextStep();
+
+            if ($callable instanceof BowlInterface) {
+                $callable->execute($this, $this->workPlan);
+            }
+
+            return $this;
         };
     }
 

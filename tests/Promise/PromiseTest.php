@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Recipe.
  *
@@ -22,17 +20,18 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Recipe\Ingredient;
+namespace Teknoo\Tests\Recipe\Promise;
 
-use Teknoo\Immutable\ImmutableInterface;
-use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Promise\Promise;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
-interface IngredientInterface extends ImmutableInterface
+/**
+ * @covers \Teknoo\Recipe\Promise\Promise
+ */
+class PromiseTest extends AbstractPromiseTest
 {
-    /**
-     * @param array $workPlan
-     * @param ChefInterface $chef
-     * @return IngredientInterface
-     */
-    public function prepare(array $workPlan, ChefInterface $chef): IngredientInterface;
+    public function buildPromise($onSuccess , $onFail): PromiseInterface
+    {
+        return new Promise($onSuccess, $onFail);
+    }
 }

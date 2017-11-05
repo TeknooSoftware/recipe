@@ -25,6 +25,8 @@ declare(strict_types=1);
 namespace Teknoo\Recipe\Recipe;
 
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Dish\DishInterface;
+use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
@@ -33,56 +35,15 @@ class Written implements StateInterface
 {
     use StateTrait;
 
-    private function browseSteps()
-    {
-        return function () {
-            $steps = $this->steps;
-            ksort($steps);
-
-            foreach ($this->steps as &$stepsSublist) {
-                foreach ($stepsSublist as &$step) {
-                    yield $step;
-                }
-            }
-        };
-    }
-
-    private function compileStep()
-    {
-        return function () {
-            if (empty($this->compiled)) {
-                $this->compiled = [];
-                foreach ($this->browseSteps() as $step) {
-                    $this->compiled[] = $step;
-                }
-
-                $this->updateStates();
-            }
-
-            return $this->compiled;
-        };
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function trainChef()
-    {
-        return function (ChefInterface $chef): RecipeInterface {
-            $that = $this->cloneMe();
-
-            $chef->followSteps($this->compileStep());
-
-            return $that;
-        };
-    }
-
     /**
      * {@inheritdoc}
      */
     public function prepareCooking()
     {
         return function (array &$workPlan, ChefInterface $chef): RecipeInterface {
+            /**
+             * @var Recipe $this
+             */
             foreach ($this->requiredIngredients as $ingredient) {
                 $ingredient->prepare($workPlan , $chef);
             }
@@ -97,6 +58,9 @@ class Written implements StateInterface
     public function validateDish()
     {
         return function ($value): RecipeInterface {
+            /**
+             * @var Recipe $this
+             */
             if ($this->exceptedDish instanceof DishInterface) {
                 $this->exceptedDish->isExcepted($value);
             }

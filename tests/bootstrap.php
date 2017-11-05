@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Recipe.
  *
@@ -22,17 +20,12 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Recipe\Ingredient;
+namespace Teknoo\Tests;
 
-use Teknoo\Immutable\ImmutableInterface;
-use Teknoo\Recipe\ChefInterface;
+ini_set('memory_limit', '16M');
 
-interface IngredientInterface extends ImmutableInterface
-{
-    /**
-     * @param array $workPlan
-     * @param ChefInterface $chef
-     * @return IngredientInterface
-     */
-    public function prepare(array $workPlan, ChefInterface $chef): IngredientInterface;
-}
+require_once __DIR__.'/../vendor/autoload.php';
+
+date_default_timezone_set('UTC');
+
+error_reporting(E_ALL | E_STRICT);

@@ -37,6 +37,20 @@ class Trained implements StateInterface
     /**
      * @inheritDoc
      */
+    public function updateMyWorkPlan() {
+        return function (array $with): ChefInterface {
+            /**
+             * @var Chef $this
+             */
+            $this->workPlan = \array_merge($this->workPlan , $with);
+
+            return $this;
+        };
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function runRecipe() {
         return function (array $workPlan): ChefInterface {
             /**
@@ -46,11 +60,20 @@ class Trained implements StateInterface
                 throw new \RuntimeException('Error, this chef is not trained for a recipe');
             }
 
-            $this->updateWorkPlan($workPlan);
-
+            $this->workPlan = $workPlan;
             $this->recipe->prepare($this->workPlan , $this);
 
+            $this->updateStates();
+
             $this->checkMissingIngredients();
+
+            $this->position = 0;
+
+            $this->continue();
+
+            $this->workPlan = [];
+
+            $this->updateStates();
 
             return $this;
         };

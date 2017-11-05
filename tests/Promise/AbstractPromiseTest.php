@@ -75,10 +75,9 @@ abstract class AbstractPromiseTest extends TestCase
     {
         $called = false;
         $promiseWithSuccessCallback = $this->buildPromise(
-            function ($result, $next) use (&$called) {
+            function ($result) use (&$called) {
                 $called = true;
                 self::assertEquals('foo', $result);
-                self::assertNull($next);
             },
             function () {
                 self::fail('Error, fail callback must not be called');
@@ -112,10 +111,9 @@ abstract class AbstractPromiseTest extends TestCase
             function () {
                 self::fail('Error, success callback must not be called');
             },
-            function ($result, $next) use (&$called) {
+            function ($result) use (&$called) {
                 $called = true;
                 self::assertEquals(new \Exception('fooBar'), $result);
-                self::assertNull($next);
             }
         );
 

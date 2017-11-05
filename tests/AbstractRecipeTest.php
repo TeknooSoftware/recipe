@@ -158,6 +158,8 @@ abstract class AbstractRecipeTest extends TestCase
             RecipeInterface::class,
             $this->buildRecipe()
                 ->given($dish)
+                ->do(function(){})
+                ->train($this->createMock(ChefInterface::class))
                 ->validate('fooBar')
         );
     }

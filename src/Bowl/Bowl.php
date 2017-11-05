@@ -123,6 +123,10 @@ class Bowl implements BowlInterface
                 continue;
             }
 
+            if (!empty(($this->mapping[$name]))) {
+                $name = $this->mapping[$name];
+            }
+
             if (isset($workPlan[$name])) {
                 $values[] = $workPlan[$name];
                 continue;

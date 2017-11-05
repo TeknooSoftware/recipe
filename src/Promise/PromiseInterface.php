@@ -24,7 +24,9 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Promise;
 
-interface PromiseInterface
+use Teknoo\Immutable\ImmutableInterface;
+
+interface PromiseInterface extends ImmutableInterface
 {
      /**
      * To call the callback defined when the actor has successfully it's operation.

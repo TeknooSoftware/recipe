@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Recipe.
  *
@@ -22,17 +20,20 @@ declare(strict_types=1);
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Recipe\Ingredient;
+namespace Teknoo\Tests;
 
-use Teknoo\Immutable\ImmutableInterface;
-use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Recipe;
+use Teknoo\Recipe\RecipeInterface;
 
-interface IngredientInterface extends ImmutableInterface
+/**
+ * @covers \Teknoo\Recipe\Recipe
+ * @covers \Teknoo\Recipe\Recipe\Draft
+ * @covers \Teknoo\Recipe\Recipe\Written
+ */
+class RecipeTest extends AbstractRecipeTest
 {
-    /**
-     * @param array $workPlan
-     * @param ChefInterface $chef
-     * @return IngredientInterface
-     */
-    public function prepare(array $workPlan, ChefInterface $chef): IngredientInterface;
+    public function buildRecipe(): RecipeInterface
+    {
+        return new Recipe();
+    }
 }

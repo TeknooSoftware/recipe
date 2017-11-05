@@ -65,6 +65,11 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     private $missingIngredients = [];
 
     /**
+     * @var int
+     */
+    private $position = 0;
+
+    /**
      * @inheritDoc
      */
     protected static function statesListDeclaration(): array
@@ -82,9 +87,10 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     protected function listAssertions(): array
     {
         return [
-            (new Property(Free::class))->with('recipe', new IsNull())
-                ->with('steps', new IsEqual([])),
-            (new Property(Trained::class))->with('recipe', new IsInstanceOf(RecipeInterface::class))
+            (new Property(Free::class))->with('recipe', new IsNull()),
+            (new Property(Free::class))->with('steps', new IsEqual([])),
+            (new Property(Trained::class))
+                ->with('recipe', new IsInstanceOf(RecipeInterface::class))
                 ->with('steps', new IsNotEqual([])),
             (new Property(Cooking::class))->with('workPlan', new IsNotEqual([])),
         ];
@@ -94,7 +100,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
      * Chef constructor.
      * @param RecipeInterface|null $recipe
      */
-    public function __construct(?RecipeInterface $recipe)
+    public function __construct(RecipeInterface $recipe=null)
     {
         $this->initializeProxy();
 

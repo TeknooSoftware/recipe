@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests;
 
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
@@ -70,13 +71,34 @@ abstract class AbstractChefTest extends TestCase
 
     public function testMissing()
     {
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+
+        $called = false;
+        $bowl = $this->createMock(BowlInterface::class);
+        $bowl->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function () use ($chef, &$called, $bowl) {
+                $called = true;
+                self::assertInstanceOf(
+                    ChefInterface::class,
+                    $chef->missing(
+                        $this->createMock(IngredientInterface::class),
+                        'fooBar'
+                    )
+                );
+
+                return $bowl;
+            });
+
+        $chef->followSteps([$bowl]);
+
         self::assertInstanceOf(
             ChefInterface::class,
-            $this->buildChef()->missing(
-                $this->createMock(IngredientInterface::class),
-                'fooBar'
-            )
+            $chef->process(['foo'=>'bar'])
         );
+
+        self::assertTrue($called);
     }
 
     /**
@@ -89,9 +111,13 @@ abstract class AbstractChefTest extends TestCase
 
     public function testUpdateWorkPlan()
     {
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->followSteps([$this->createMock(BowlInterface::class)]);
+
         self::assertInstanceOf(
             ChefInterface::class,
-            $this->buildChef()->updateWorkPlan(
+            $chef->updateWorkPlan(
                 ['foo'=>'bar']
             )
         );
@@ -125,22 +151,74 @@ abstract class AbstractChefTest extends TestCase
 
     public function testContinue()
     {
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+
+        $called = false;
+        $bowl = $this->createMock(BowlInterface::class);
+        $bowl->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl) {
+                $called = true;
+                self::assertEquals(['foo'=>'bar'], $workPlan);
+                self::assertInstanceOf(
+                    ChefInterface::class,
+                    $chef->continue(
+                        ['foo'=>'bar2']
+                    )
+                );
+
+                return $bowl;
+            });
+
+        $bowl2 = $this->createMock(BowlInterface::class);
+        $bowl2->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl2) {
+                self::assertEquals(['foo'=>'bar2'], $workPlan);
+
+                return $bowl2;
+            });
+
+        $chef->followSteps([$bowl, $bowl2]);
+
         self::assertInstanceOf(
             ChefInterface::class,
-            $this->buildChef()->continue(
-                ['foo'=>'bar']
-            )
+            $chef->process(['foo'=>'bar'])
         );
+
+        self::assertTrue($called);
     }
 
     public function testFinish()
     {
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+
+        $called = false;
+        $bowl = $this->createMock(BowlInterface::class);
+        $bowl->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function () use ($chef, &$called, $bowl) {
+                $called = true;
+                self::assertInstanceOf(
+                    ChefInterface::class,
+                    $chef->finish(
+                        ['foo'=>'bar']
+                    )
+                );
+
+                return $bowl;
+            });
+
+        $chef->followSteps([$bowl]);
+
         self::assertInstanceOf(
             ChefInterface::class,
-            $this->buildChef()->finish(
-                ['foo'=>'bar']
-            )
+            $chef->process(['foo'=>'bar'])
         );
+
+        self::assertTrue($called);
     }
 
     /**
@@ -153,9 +231,13 @@ abstract class AbstractChefTest extends TestCase
 
     public function testProcess()
     {
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->followSteps([$this->createMock(BowlInterface::class)]);
+
         self::assertInstanceOf(
             ChefInterface::class,
-            $this->buildChef()->process(
+            $chef->process(
                 ['foo'=>'bar']
             )
         );

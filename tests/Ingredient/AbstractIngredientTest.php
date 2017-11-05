@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\Recipe\Ingredient;
 
+use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\RecipeInterface;
@@ -66,13 +67,13 @@ abstract class AbstractIngredientTest extends TestCase
 
     public function testPrepareWithValidPlan()
     {
-        $recipe = $this->createMock(RecipeInterface::class);
+        $chef = $this->createMock(ChefInterface::class);
 
-        $recipe->expects(self::never())
+        $chef->expects(self::never())
             ->method('missing');
 
-        $recipe->expects(self::once())
-            ->method('prepareWorkPlan')
+        $chef->expects(self::once())
+            ->method('updateWorkPlan')
             ->with($this->getWorkPlanInjected())
             ->willReturnSelf();
 
@@ -80,27 +81,27 @@ abstract class AbstractIngredientTest extends TestCase
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
                 $this->getWorkPlanValid(),
-                $recipe
+                $chef
             )
         );
     }
 
     public function testPrepareWithInvalidPlan()
     {
-        $recipe = $this->createMock(RecipeInterface::class);
+        $chef = $this->createMock(ChefInterface::class);
 
-        $recipe->expects(self::once())
-            ->method('missing')
+        $chef->expects(self::once())
+            ->method('missing');
+
+        $chef->expects(self::never())
+            ->method('updateWorkPlan')
             ->willReturnSelf();
-
-        $recipe->expects(self::never())
-            ->method('prepareWorkPlan');
 
         self::assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
                 $this->getWorkPlanInvalid(),
-                $recipe
+                $chef
             )
         );
     }

@@ -101,7 +101,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     {
         return [
             (new Property(Draft::class))->with('compiled', new IsNull()),
-            (new Property(Draft::class))->with('compiled', new IsNotNull()),
+            (new Property(Written::class))->with('compiled', new IsNotNull()),
         ];
     }
 
@@ -136,12 +136,45 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
         return $this->setExceptedDish($dish);
     }
 
+    private function browseSteps()
+    {
+        $steps = $this->steps;
+        ksort($steps);
+
+        foreach ($this->steps as &$stepsSublist) {
+            foreach ($stepsSublist as &$step) {
+                yield $step;
+            }
+        }
+    }
+
+    private function compileStep()
+    {
+        /**
+         * @var Recipe $this
+         */
+        if (empty($this->compiled)) {
+            $this->compiled = [];
+            foreach ($this->browseSteps() as $step) {
+                $this->compiled[] = $step;
+            }
+
+            $this->updateStates();
+        }
+
+        return $this->compiled;
+    }
+
     /**
      * @inheritDoc
      */
     public function train(ChefInterface $chef): RecipeInterface
     {
-        return $this->trainChef($chef);
+        $that = $this->cloneMe();
+
+        $chef->followSteps($that->compileStep());
+
+        return $that;
     }
 
     /**
