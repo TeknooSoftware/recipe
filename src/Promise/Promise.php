@@ -1,0 +1,79 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Recipe.
+ *
+ * LICENSE
+ *
+ * This source file is subject to the MIT license and the version 3 of the GPL3
+ * license that are bundled with this package in the folder licences
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to richarddeloge@gmail.com so we can send you a copy immediately.
+ *
+ *
+ * @copyright   Copyright (c) 2009-2017 Richard Déloge (richarddeloge@gmail.com)
+ *
+ * @link        http://teknoo.software/recipe Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
+
+namespace Teknoo\Recipe\Promise;
+
+use Teknoo\Immutable\ImmutableTrait;
+
+class Promise implements PromiseInterface
+{
+    use ImmutableTrait;
+
+    /**
+     * @var callable|null
+     */
+    private $onSuccess;
+
+    /**
+     * @var callable|null
+     */
+    private $onFail;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(callable $onSuccess = null, callable $onFail = null)
+    {
+        $this->onSuccess = $onSuccess;
+        $this->onFail = $onFail;
+
+        $this->uniqueConstructorCheck();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function success($result = null): PromiseInterface
+    {
+        if (\is_callable($this->onSuccess)) {
+            $onSuccess = ($this->onSuccess);
+            $onSuccess($result);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fail(\Throwable $throwable): PromiseInterface
+    {
+        if (\is_callable($this->onFail)) {
+            $onFail = $this->onFail;
+            $onFail($throwable);
+        }
+
+        return $this;
+    }
+}
