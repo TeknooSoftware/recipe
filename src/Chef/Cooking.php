@@ -101,7 +101,7 @@ class Cooking implements StateInterface
 
             $this->recipe->validate($result);
 
-            $this->recipe = null;
+            $this->position = \count($this->steps) + 1;
 
             return $this;
         };
