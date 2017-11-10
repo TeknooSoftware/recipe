@@ -33,15 +33,16 @@ use Teknoo\Recipe\ChefInterface;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
- * 
+ *
  * @covers \Teknoo\Recipe\Bowl\Bowl
  */
 class BowlObjectTest extends AbstractBowlTest
 {
     protected function getCallable()
     {
-        $object = new class () {
-            public function methodToCall(ChefInterface $chef, $bar, $foo2, \DateTime $date) {
+        $object = new class() {
+            public function methodToCall(ChefInterface $chef, $bar, $foo2, \DateTime $date)
+            {
                 $chef->continue([
                     'bar' => $bar,
                     'foo2' => $foo2,

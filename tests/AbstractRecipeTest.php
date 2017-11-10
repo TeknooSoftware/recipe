@@ -79,7 +79,8 @@ abstract class AbstractRecipeTest extends TestCase
      */
     public function testExceptionOnDoWithBadParameterMapping()
     {
-        $this->buildRecipe()->do(function(){}, new \stdClass());
+        $this->buildRecipe()->do(function () {
+        }, new \stdClass());
     }
 
     /**
@@ -87,14 +88,16 @@ abstract class AbstractRecipeTest extends TestCase
      */
     public function testExceptionOnDoWithBadPosition()
     {
-        $this->buildRecipe()->do(function(){}, ['foo'=>'bar'], new \stdClass());
+        $this->buildRecipe()->do(function () {
+        }, ['foo'=>'bar'], new \stdClass());
     }
 
     public function testDoWithDefaultMapping()
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->do(
-            function () {}
+            function () {
+            }
         );
 
         self::assertInstanceOf(
@@ -112,7 +115,8 @@ abstract class AbstractRecipeTest extends TestCase
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->do(
-            function () {},
+            function () {
+            },
             ['foo' => 'bar'],
             123
         );
@@ -166,7 +170,8 @@ abstract class AbstractRecipeTest extends TestCase
             RecipeInterface::class,
             $this->buildRecipe()
                 ->given($dish)
-                ->do(function(){})
+                ->do(function () {
+                })
                 ->train($this->createMock(ChefInterface::class))
                 ->validate('fooBar')
         );
@@ -233,7 +238,8 @@ abstract class AbstractRecipeTest extends TestCase
 
         self::assertInstanceOf(
             RecipeInterface::class,
-            $recipe = $recipe->do(function () {})
+            $recipe = $recipe->do(function () {
+            })
         );
 
         self::assertInstanceOf(

@@ -45,7 +45,8 @@ class Free implements StateInterface
     /**
      * @inheritDoc
      */
-    public function readRecipe() {
+    public function readRecipe()
+    {
         return function (RecipeInterface $recipe): ChefInterface {
             /**
              * @var Chef $this
@@ -61,7 +62,8 @@ class Free implements StateInterface
     /**
      * @inheritDoc
      */
-    public function followStepsRecipe() {
+    public function followStepsRecipe()
+    {
         return function (array $steps): ChefInterface {
             /**
              * @var Chef $this

@@ -59,7 +59,7 @@ class Draft implements StateInterface
 
     public function addStep()
     {
-        return function (callable $action , array $with = [] , int $position = null): RecipeInterface {
+        return function (callable $action, array $with = [], int $position = null): RecipeInterface {
             /**
              * @var Recipe $this
              */
@@ -77,7 +77,8 @@ class Draft implements StateInterface
         };
     }
 
-    public function setExceptedDish() {
+    public function setExceptedDish()
+    {
         return function (DishInterface $dish): RecipeInterface {
             /**
              * @var Recipe $this

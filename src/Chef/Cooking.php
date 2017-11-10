@@ -46,8 +46,9 @@ class Cooking implements StateInterface
     /**
      * @inheritDoc
      */
-    public function missingIngredient() {
-        return function(IngredientInterface $ingredient , string $message): ChefInterface {
+    public function missingIngredient()
+    {
+        return function (IngredientInterface $ingredient, string $message): ChefInterface {
             /**
              * @var Chef $this
              */
@@ -77,7 +78,8 @@ class Cooking implements StateInterface
     /**
      * @inheritDoc
      */
-    public function continueRecipe() {
+    public function continueRecipe()
+    {
         return function (array $with = []): ChefInterface {
             /**
              * @var Chef $this
@@ -85,7 +87,7 @@ class Cooking implements StateInterface
             $this->updateMyWorkPlan($with);
 
             while (($callable = $this->getNextStep()) instanceof BowlInterface) {
-                $callable->execute($this , $this->workPlan);
+                $callable->execute($this, $this->workPlan);
             }
 
             return $this;
@@ -95,7 +97,8 @@ class Cooking implements StateInterface
     /**
      * @inheritDoc
      */
-    public function finishRecipe() {
+    public function finishRecipe()
+    {
         return function ($result): ChefInterface {
             //This method is called only if $this->recipe is a valid RecipeInterface instance
             $this->recipe->validate($result);
@@ -109,7 +112,7 @@ class Cooking implements StateInterface
     private function prepare()
     {
         return function () {
-            $this->recipe->prepare($this->workPlan , $this);
+            $this->recipe->prepare($this->workPlan, $this);
 
             $this->checkMissingIngredients();
 
@@ -131,7 +134,8 @@ class Cooking implements StateInterface
         };
     }
 
-    private function checkMissingIngredients() {
+    private function checkMissingIngredients()
+    {
         return function (): void {
             /**
              * @var Chef $this
@@ -142,7 +146,7 @@ class Cooking implements StateInterface
 
             throw new \RuntimeException(
                 'Error, missing some ingredients : '
-                . implode(', ' , \array_keys($this->missingIngredients))
+                . implode(', ', \array_keys($this->missingIngredients))
             );
         };
     }

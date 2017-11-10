@@ -51,14 +51,17 @@ abstract class AbstractPromiseTest extends TestCase
      */
     public function testConstructorBadFailCallable()
     {
-        $this->buildPromise(function () {}, 'fooBar');
+        $this->buildPromise(function () {
+        }, 'fooBar');
     }
 
     public function testConstructor()
     {
         self::assertInstanceOf(
             PromiseInterface::class,
-            $this->buildPromise(function () {}, function () {})
+            $this->buildPromise(function () {
+            }, function () {
+            })
         );
     }
 
@@ -75,8 +78,12 @@ abstract class AbstractPromiseTest extends TestCase
      */
     public function testConstructorImmutable()
     {
-        $this->buildPromise(function () {}, function () {})
-            ->__construct(function () {}, function () {});
+        $this->buildPromise(function () {
+        }, function () {
+        })
+            ->__construct(function () {
+            }, function () {
+            });
     }
 
     public function testSuccess()

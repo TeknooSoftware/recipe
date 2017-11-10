@@ -44,12 +44,13 @@ class Trained implements StateInterface
     /**
      * @inheritDoc
      */
-    public function updateMyWorkPlan() {
+    public function updateMyWorkPlan()
+    {
         return function (array $with): ChefInterface {
             /**
              * @var Chef $this
              */
-            $this->workPlan = \array_merge($this->workPlan , $with);
+            $this->workPlan = \array_merge($this->workPlan, $with);
 
             return $this;
         };
@@ -58,7 +59,8 @@ class Trained implements StateInterface
     /**
      * @inheritDoc
      */
-    public function runRecipe() {
+    public function runRecipe()
+    {
         return function (array $workPlan): ChefInterface {
             //If this method is called, $this->recipe is a valid RecipeInterface instance
             $this->workPlan = $workPlan;

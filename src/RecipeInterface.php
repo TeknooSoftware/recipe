@@ -76,5 +76,4 @@ interface RecipeInterface extends ImmutableInterface
      * @return RecipeInterface
      */
     public function validate($value): RecipeInterface;
-
 }

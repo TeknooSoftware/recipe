@@ -36,13 +36,13 @@ use Teknoo\Immutable\ImmutableInterface;
  */
 interface PromiseInterface extends ImmutableInterface
 {
-     /**
-     * To call the callback defined when the actor has successfully it's operation.
-     *
-     * @param mixed|null $result
-     *
-     * @return PromiseInterface
-     */
+    /**
+    * To call the callback defined when the actor has successfully it's operation.
+    *
+    * @param mixed|null $result
+    *
+    * @return PromiseInterface
+    */
     public function success($result = null): PromiseInterface;
 
     /**

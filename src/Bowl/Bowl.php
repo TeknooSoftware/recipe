@@ -59,7 +59,7 @@ class Bowl implements BowlInterface
      * @param callable $callable
      * @param array $mapping
      */
-    public function __construct(callable $callable , array $mapping)
+    public function __construct(callable $callable, array $mapping)
     {
         $this->uniqueConstructorCheck();
 

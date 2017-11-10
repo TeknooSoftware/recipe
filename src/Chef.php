@@ -138,7 +138,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     /**
      * @inheritDoc
      */
-    public function missing(IngredientInterface $ingredient , string $message): ChefInterface
+    public function missing(IngredientInterface $ingredient, string $message): ChefInterface
     {
         return $this->missingIngredient($ingredient, $message);
     }
@@ -182,5 +182,4 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     {
         return $this->runRecipe($workPlan);
     }
-
 }

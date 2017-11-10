@@ -54,7 +54,7 @@ class Ingredient implements IngredientInterface
      * @param string $requiredType
      * @param string $name
      */
-    public function __construct(string $requiredType , string $name)
+    public function __construct(string $requiredType, string $name)
     {
         $this->uniqueConstructorCheck();
 

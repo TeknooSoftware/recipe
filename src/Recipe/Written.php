@@ -53,7 +53,7 @@ class Written implements StateInterface
              * @var Recipe $this
              */
             foreach ($this->requiredIngredients as $ingredient) {
-                $ingredient->prepare($workPlan , $chef);
+                $ingredient->prepare($workPlan, $chef);
             }
 
             return $this;
