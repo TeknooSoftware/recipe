@@ -40,7 +40,7 @@ class Written implements StateInterface
      */
     public function prepareCooking()
     {
-        return function (array &$workPlan, ChefInterface $chef): RecipeInterface {
+        return function (array $workPlan, ChefInterface $chef): RecipeInterface {
             /**
              * @var Recipe $this
              */

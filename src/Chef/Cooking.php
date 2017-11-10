@@ -28,7 +28,6 @@ use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
-use Teknoo\Recipe\RecipeInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
@@ -52,7 +51,7 @@ class Cooking implements StateInterface
 
     private function getNextStep()
     {
-        return function () {
+        return function (): ?BowlInterface {
             /**
              * @var Chef $this
              */
@@ -77,10 +76,8 @@ class Cooking implements StateInterface
              */
             $this->updateMyWorkPlan($with);
 
-            $callable = $this->getNextStep();
-
-            if ($callable instanceof BowlInterface) {
-                $callable->execute($this, $this->workPlan);
+            while (($callable = $this->getNextStep()) instanceof BowlInterface) {
+                $callable->execute($this , $this->workPlan);
             }
 
             return $this;
@@ -92,13 +89,7 @@ class Cooking implements StateInterface
      */
     public function finishRecipe() {
         return function ($result): ChefInterface {
-            /**
-             * @var Chef $this
-             */
-            if (!$this->recipe instanceof RecipeInterface) {
-                throw new \RuntimeException('Error, this chef is not executing a recipe');
-            }
-
+            //This method is called only if $this->recipe is a valid RecipeInterface instance
             $this->recipe->validate($result);
 
             $this->position = \count($this->steps) + 1;

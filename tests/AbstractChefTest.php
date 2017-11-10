@@ -42,11 +42,14 @@ abstract class AbstractChefTest extends TestCase
 
     public function testRead()
     {
+        $recipe = $this->createMock(RecipeInterface::class);
+        $recipe->expects(self::once())
+            ->method('train')
+            ->willReturnSelf();
+
         self::assertInstanceOf(
             ChefInterface::class,
-            $this->buildChef()->read(
-                $this->createMock(RecipeInterface::class)
-            )
+            $this->buildChef()->read($recipe)
         );
     }
 
@@ -241,5 +244,35 @@ abstract class AbstractChefTest extends TestCase
                 ['foo'=>'bar']
             )
         );
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testExceptionProcessWithMissingIngredient()
+    {
+        $chef = $this->buildChef();
+        $ingredient = $this->createMock(IngredientInterface::class);
+
+        $recipe = $this->createMock(RecipeInterface::class);
+        $recipe->expects(self::once())
+            ->method('train')
+            ->willReturnSelf();
+
+        $recipe->expects(self::once())
+            ->method('prepare')
+            ->willReturnCallback(function ($workPlan, ChefInterface $chef) use ($recipe, $ingredient) {
+                self::assertInstanceOf(
+                    ChefInterface::class,
+                    $chef->missing($ingredient, 'Error')
+                );
+
+                return $recipe;
+            });
+
+        $chef->read($recipe);
+        $chef->followSteps([$this->createMock(BowlInterface::class)]);
+
+        $chef->process(['foo'=>'bar']);
     }
 }

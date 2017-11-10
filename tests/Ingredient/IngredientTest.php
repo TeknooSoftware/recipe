@@ -51,10 +51,21 @@ class IngredientTest extends AbstractIngredientTest
     /**
      * @inheritDoc
      */
-    public function getWorkPlanInvalid(): array
+    public function getWorkPlanInvalidMissing(): array
     {
         return [
             'foo' => 'bar'
+        ];
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getWorkPlanInvalidNotInstanceOf(): array
+    {
+        return [
+            'IngName' => new \DateTime()
         ];
     }
 

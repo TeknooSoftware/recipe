@@ -70,6 +70,11 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     private $position = 0;
 
     /**
+     * @var bool
+     */
+    private $cooking = false;
+
+    /**
      * @inheritDoc
      */
     protected static function statesListDeclaration(): array
@@ -92,7 +97,10 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
             (new Property(Trained::class))
                 ->with('recipe', new IsInstanceOf(RecipeInterface::class))
                 ->with('steps', new IsNotEqual([])),
-            (new Property(Cooking::class))->with('workPlan', new IsNotEqual([])),
+            (new Property(Cooking::class))
+                ->with('recipe', new IsInstanceOf(RecipeInterface::class))
+                ->with('steps', new IsNotEqual([]))
+                ->with('cooking', new IsEqual(true)),
         ];
     }
 

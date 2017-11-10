@@ -29,18 +29,26 @@ use Teknoo\Recipe\ChefInterface;
 /**
  * @covers \Teknoo\Recipe\Bowl\Bowl
  */
-class BowlTest extends AbstractBowlTest
+class BowlObjectTest extends AbstractBowlTest
 {
     protected function getCallable()
     {
-        return function (ChefInterface $chef, $foo) {
-            $chef->continue([$foo => 'foo']);
+        $object = new class () {
+            public function methodToCall(ChefInterface $chef, $bar, $foo2, \DateTime $date) {
+                $chef->continue([
+                    'bar' => $bar,
+                    'foo2' => $foo2,
+                    'date' => $date->getTimestamp()
+                ]);
+            }
         };
+
+        return [$object, 'methodToCall'];
     }
 
     protected function getMapping()
     {
-        return ['bar' => 'bar2'];
+        return ['bar' => 'foo'];
     }
 
     /**

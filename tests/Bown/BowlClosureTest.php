@@ -20,35 +20,41 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests;
+namespace Teknoo\Tests\Recipe\Bowl;
 
-use Teknoo\Recipe\Chef;
+use Teknoo\Recipe\Bowl\Bowl;
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\RecipeInterface;
 
 /**
- * @covers \Teknoo\Recipe\Chef
- * @covers \Teknoo\Recipe\Chef\Cooking
- * @covers \Teknoo\Recipe\Chef\Free
- * @covers \Teknoo\Recipe\Chef\Trained
+ * @covers \Teknoo\Recipe\Bowl\Bowl
  */
-class ChefTest extends AbstractChefTest
+class BowlClosureTest extends AbstractBowlTest
 {
-    public function buildChef(): ChefInterface
+    protected function getCallable()
     {
-        return new Chef();
+        return function (ChefInterface $chef, $bar, $foo2, \DateTime $date) {
+            $chef->continue([
+                'bar' => $bar,
+                'foo2' => $foo2,
+                'date' => $date->getTimestamp()
+            ]);
+        };
     }
 
-    public function testReadInConstructor()
+    protected function getMapping()
     {
-        $recipe = $this->createMock(RecipeInterface::class);
-        $recipe->expects(self::once())
-            ->method('train')
-            ->willReturnSelf();
+        return ['bar' => 'foo'];
+    }
 
-        self::assertInstanceOf(
-            ChefInterface::class,
-            new Chef($recipe)
+    /**
+     * @inheritDoc
+     */
+    public function buildBowl(): BowlInterface
+    {
+        return new Bowl(
+            $this->getCallable(),
+            $this->getMapping()
         );
     }
 }

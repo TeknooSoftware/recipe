@@ -124,7 +124,6 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
      */
     public function do(callable $action , array $with = [] , int $position = null): RecipeInterface
     {
-
         return $this->addStep($action, $with, $position);
     }
 

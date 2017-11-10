@@ -42,7 +42,12 @@ abstract class AbstractIngredientTest extends TestCase
     /**
      * @return array
      */
-    abstract public function getWorkPlanInvalid(): array;
+    abstract public function getWorkPlanInvalidMissing(): array;
+
+    /**
+     * @return array
+     */
+    abstract public function getWorkPlanInvalidNotInstanceOf(): array;
 
     /**
      * @return array
@@ -86,7 +91,7 @@ abstract class AbstractIngredientTest extends TestCase
         );
     }
 
-    public function testPrepareWithInvalidPlan()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresent()
     {
         $chef = $this->createMock(ChefInterface::class);
 
@@ -100,7 +105,27 @@ abstract class AbstractIngredientTest extends TestCase
         self::assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
-                $this->getWorkPlanInvalid(),
+                $this->getWorkPlanInvalidMissing(),
+                $chef
+            )
+        );
+    }
+
+    public function testPrepareWithInvalidPlanTheIngredientIsNotOfTheRequiredClass()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+
+        $chef->expects(self::once())
+            ->method('missing');
+
+        $chef->expects(self::never())
+            ->method('updateWorkPlan')
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            IngredientInterface::class,
+            $this->buildIngredient()->prepare(
+                $this->getWorkPlanInvalidNotInstanceOf(),
                 $chef
             )
         );

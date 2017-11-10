@@ -54,7 +54,11 @@ abstract class AbstractBowlTest extends TestCase
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects(self::once())
             ->method('continue')
-            ->with(['bar' => 'foo'])
+            ->with([
+                'bar' => 'foo',
+                'foo2' => 'bar2',
+                'date' => (new \DateTime('2018-01-01'))->getTimestamp()
+            ])
             ->willReturnSelf();
 
         $chef->expects(self::never())
@@ -64,7 +68,34 @@ abstract class AbstractBowlTest extends TestCase
             BowlInterface::class,
             $this->buildBowl()->execute(
                 $chef,
-                ['foo' => 'bar']
+                [
+                    'foo' => 'foo',
+                    'foo2' => 'bar2',
+                    'now' => (new \DateTime('2018-01-01'))
+                ]
+            )
+        );
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testExceptionWhenExecuteAndMissingAndIngredientInWorkPlan()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+        $chef->expects(self::never())
+            ->method('continue');
+
+        $chef->expects(self::never())
+            ->method('updateWorkPlan');
+
+        self::assertInstanceOf(
+            BowlInterface::class,
+            $this->buildBowl()->execute(
+                $chef,
+                [
+                    'foo' => 'foo'
+                ]
             )
         );
     }

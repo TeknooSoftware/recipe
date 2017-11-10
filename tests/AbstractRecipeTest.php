@@ -186,4 +186,56 @@ abstract class AbstractRecipeTest extends TestCase
             )
         );
     }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnPrepareWithABadWorkPlan()
+    {
+        $workPlan = new \stdClass();
+        $this->buildRecipe()->prepare($workPlan, $this->createMock(ChefInterface::class));
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnPrepareWithABadChef()
+    {
+        $array = ['foo'=>'bar'];
+        $this->buildRecipe()->prepare($array, new \stdClass());
+    }
+
+    public function testPrepare()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+        $ingredient = $this->createMock(IngredientInterface::class);
+        $workPlan = ['foo' => 'bar'];
+
+        $ingredient->expects(self::once())
+            ->method('prepare')
+            ->with($workPlan, $chef)
+            ->willReturnSelf();
+
+        $recipe = $this->buildRecipe();
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $recipe = $recipe->require($ingredient)
+        );
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $recipe = $recipe->do(function () {})
+        );
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $recipe = $recipe->train($chef)
+        );
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $recipe = $recipe->prepare($workPlan, $chef)
+        );
+    }
 }

@@ -53,17 +53,13 @@ class Trained implements StateInterface
      */
     public function runRecipe() {
         return function (array $workPlan): ChefInterface {
-            /**
-             * @var Chef $this
-             */
-            if (!$this->recipe instanceof RecipeInterface) {
-                throw new \RuntimeException('Error, this chef is not trained for a recipe');
-            }
-
+            //If this method is called, $this->recipe is a valid RecipeInterface instance
             $this->workPlan = $workPlan;
-            $this->recipe->prepare($this->workPlan , $this);
+            $this->cooking = true;
 
             $this->updateStates();
+
+            $this->recipe->prepare($this->workPlan , $this);
 
             $this->checkMissingIngredients();
 
@@ -72,6 +68,7 @@ class Trained implements StateInterface
             $this->continue();
 
             $this->workPlan = [];
+            $this->cooking = false;
 
             $this->updateStates();
 

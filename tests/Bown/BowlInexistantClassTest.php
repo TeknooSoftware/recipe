@@ -20,35 +20,36 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests;
+namespace Teknoo\Tests\Recipe\Bowl;
 
-use Teknoo\Recipe\Chef;
+use PHPUnit\Framework\TestCase;
+use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\RecipeInterface;
 
 /**
- * @covers \Teknoo\Recipe\Chef
- * @covers \Teknoo\Recipe\Chef\Cooking
- * @covers \Teknoo\Recipe\Chef\Free
- * @covers \Teknoo\Recipe\Chef\Trained
+ * @covers \Teknoo\Recipe\Bowl\Bowl
  */
-class ChefTest extends AbstractChefTest
+class BowlInexistantClassTest extends TestCase
 {
-    public function buildChef(): ChefInterface
+    protected function getCallableClassNotAvailable()
     {
-        return new Chef();
+        return ['NoExistantClass', 'methodToCall'];
     }
 
-    public function testReadInConstructor()
-    {
-        $recipe = $this->createMock(RecipeInterface::class);
-        $recipe->expects(self::once())
-            ->method('train')
-            ->willReturnSelf();
 
-        self::assertInstanceOf(
-            ChefInterface::class,
-            new Chef($recipe)
+    protected function getMapping()
+    {
+        return [];
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionWhenClassOfCallableIsNotAvailable()
+    {
+        $bowl = new Bowl(
+            $this->getCallableClassNotAvailable(),
+            $this->getMapping()
         );
     }
 }

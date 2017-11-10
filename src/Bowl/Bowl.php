@@ -65,15 +65,8 @@ class Bowl implements BowlInterface
     private function getReflection(): \ReflectionFunctionAbstract
     {
         if (\is_array($this->callable)) {
-            if (!\is_object($this->callable[0]) && !\class_exists($this->callable[0])) {
-                throw new \RuntimeException("Error, the class {$this->callable[0]} does not exist");
-            }
-
+            //The callable is checked by PHP in the constructor by the type hiting
             $reflectionClass = new \ReflectionClass($this->callable[0]);
-
-            if (!$reflectionClass->hasMethod($this->callable[1])) {
-                throw new \RuntimeException("Error, the method {$this->callable[1]} is not available");
-            }
 
             return $reflectionClass->getMethod($this->callable[1]);
         }
@@ -132,18 +125,24 @@ class Bowl implements BowlInterface
                 continue;
             }
 
-            if (!$class instanceof \ReflectionClass) {
-                if (!$parameter->isOptional()) {
-                    throw new \Exception("Missing the parameter {$parameter->getName()} in the WorkPlan");
+            if ($class instanceof \ReflectionClass) {
+                $automaticValueFound = false;
+
+                foreach ($workPlan as &$variable) {
+                    if (\is_object($variable) && $class->isInstance($variable)) {
+                        $values[] = $variable;
+                        $automaticValueFound = true;
+                        break;
+                    }
                 }
 
-                continue;
+                if (true === $automaticValueFound) {
+                    continue;
+                }
             }
 
-            foreach ($workPlan as $variable) {
-                if ($class->isInstance($variable)) {
-                    $values[] = $variable;
-                }
+            if (!$parameter->isOptional()) {
+                throw new \RuntimeException("Missing the parameter {$parameter->getName()} in the WorkPlan");
             }
         }
 

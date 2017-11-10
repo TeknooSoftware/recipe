@@ -32,9 +32,14 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  */
 class DishTest extends AbstractDishTest
 {
+    /**
+     * @var PromiseInterface
+     */
+    private $promise;
+
     protected function getExceptedValue()
     {
-        return 'fooBar';
+        return new \DateTime('2018-01-01');
     }
 
     /**
@@ -42,7 +47,11 @@ class DishTest extends AbstractDishTest
      */
     protected function getPromise()
     {
-        return $this->createMock(PromiseInterface::class);
+        if (!$this->promise instanceof PromiseInterface) {
+            $this->promise = $this->createMock(PromiseInterface::class);
+        }
+
+        return $this->promise;
     }
 
     /**
@@ -51,7 +60,7 @@ class DishTest extends AbstractDishTest
     public function buildDish(): DishInterface
     {
         return new DishClass(
-            $this->getExceptedValue(),
+            \DateTime::class,
             $this->getPromise()
         );
     }
