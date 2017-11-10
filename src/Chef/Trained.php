@@ -26,10 +26,17 @@ namespace Teknoo\Recipe\Chef;
 
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\RecipeInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
+/**
+ * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
+ *
+ * @link        http://teknoo.software/recipe Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class Trained implements StateInterface
 {
     use StateTrait;
@@ -59,18 +66,11 @@ class Trained implements StateInterface
 
             $this->updateStates();
 
-            $this->recipe->prepare($this->workPlan , $this);
-
-            $this->checkMissingIngredients();
-
-            $this->position = 0;
+            $this->prepare();
 
             $this->continue();
 
-            $this->workPlan = [];
-            $this->cooking = false;
-
-            $this->updateStates();
+            $this->clean();
 
             return $this;
         };

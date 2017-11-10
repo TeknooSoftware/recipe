@@ -30,6 +30,14 @@ use Teknoo\Recipe\RecipeInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
+/**
+ * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
+ *
+ * @link        http://teknoo.software/recipe Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class Free implements StateInterface
 {
     use StateTrait;

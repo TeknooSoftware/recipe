@@ -25,6 +25,14 @@ namespace Teknoo\Tests\Recipe\Promise;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
+ *
+ * @link        http://teknoo.software/recipe Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 abstract class AbstractPromiseTest extends TestCase
 {
     abstract public function buildPromise($onSuccess, $onFail): PromiseInterface;

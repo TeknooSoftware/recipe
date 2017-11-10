@@ -26,6 +26,13 @@ use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 
 /**
+ * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
+ *
+ * @link        http://teknoo.software/recipe Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
  * @covers \Teknoo\Recipe\Ingredient\Ingredient
  */
 class IngredientTest extends AbstractIngredientTest

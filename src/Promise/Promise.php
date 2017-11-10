@@ -26,6 +26,14 @@ namespace Teknoo\Recipe\Promise;
 
 use Teknoo\Immutable\ImmutableTrait;
 
+/**
+ * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
+ *
+ * @link        http://teknoo.software/recipe Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class Promise implements PromiseInterface
 {
     use ImmutableTrait;

@@ -26,6 +26,13 @@ use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface;
 
 /**
+ * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
+ *
+ * @link        http://teknoo.software/recipe Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
  * @covers \Teknoo\Recipe\Recipe
  * @covers \Teknoo\Recipe\Recipe\Draft
  * @covers \Teknoo\Recipe\Recipe\Written

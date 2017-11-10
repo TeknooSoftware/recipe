@@ -27,6 +27,13 @@ use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
+ * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
+ *
+ * @link        http://teknoo.software/recipe Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
  * @covers \Teknoo\Recipe\Dish\AbstractDishClass
  * @covers \Teknoo\Recipe\Dish\DishClass
  */

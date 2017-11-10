@@ -31,6 +31,14 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
+/**
+ * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
+ *
+ * @link        http://teknoo.software/recipe Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 class Cooking implements StateInterface
 {
     use StateTrait;
@@ -93,6 +101,31 @@ class Cooking implements StateInterface
             $this->recipe->validate($result);
 
             $this->position = \count($this->steps) + 1;
+
+            return $this;
+        };
+    }
+
+    private function prepare()
+    {
+        return function () {
+            $this->recipe->prepare($this->workPlan , $this);
+
+            $this->checkMissingIngredients();
+
+            $this->position = 0;
+
+            return $this;
+        };
+    }
+
+    private function clean()
+    {
+        return function () {
+            $this->workPlan = [];
+            $this->cooking = false;
+
+            $this->updateStates();
 
             return $this;
         };

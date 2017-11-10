@@ -27,6 +27,14 @@ namespace Teknoo\Recipe\Dish;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
+/**
+ * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
+ *
+ * @link        http://teknoo.software/recipe Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
 abstract class AbstractDishClass implements DishInterface
 {
     use ImmutableTrait;
