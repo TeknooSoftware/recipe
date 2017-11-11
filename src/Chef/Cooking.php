@@ -72,7 +72,7 @@ class Cooking implements StateInterface
              * @var Chef $this
              */
 
-            if (!empty ($nextStep) && isset($this->stepsNames[$nextStep])) {
+            if (!empty($nextStep) && isset($this->stepsNames[$nextStep])) {
                 $this->position = $this->stepsNames[$nextStep];
             }
 

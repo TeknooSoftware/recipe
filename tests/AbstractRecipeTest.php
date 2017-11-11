@@ -79,7 +79,8 @@ abstract class AbstractRecipeTest extends TestCase
      */
     public function testExceptionOnCookWithBadName()
     {
-        $this->buildRecipe()->cook(function () {}, new \stdClass());
+        $this->buildRecipe()->cook(function () {
+        }, new \stdClass());
     }
 
     /**
@@ -87,7 +88,8 @@ abstract class AbstractRecipeTest extends TestCase
      */
     public function testExceptionOnCookWithBadParameterMapping()
     {
-        $this->buildRecipe()->cook(function () {}, 'foo', new \stdClass());
+        $this->buildRecipe()->cook(function () {
+        }, 'foo', new \stdClass());
     }
 
     /**
@@ -95,7 +97,8 @@ abstract class AbstractRecipeTest extends TestCase
      */
     public function testExceptionOnCookWithBadPosition()
     {
-        $this->buildRecipe()->cook(function () {}, 'foo', ['foo'=>'bar'], new \stdClass());
+        $this->buildRecipe()->cook(function () {
+        }, 'foo', ['foo'=>'bar'], new \stdClass());
     }
 
     public function testCookWithDefaultMapping()
@@ -178,7 +181,8 @@ abstract class AbstractRecipeTest extends TestCase
             RecipeInterface::class,
             $this->buildRecipe()
                 ->given($dish)
-                ->cook(function () {}, 'foo')
+                ->cook(function () {
+                }, 'foo')
                 ->train($this->createMock(ChefInterface::class))
                 ->validate('fooBar')
         );
@@ -246,7 +250,8 @@ abstract class AbstractRecipeTest extends TestCase
 
         self::assertInstanceOf(
             RecipeInterface::class,
-            $recipe = $recipe->cook(function () {}, 'foo')
+            $recipe = $recipe->cook(function () {
+            }, 'foo')
         );
 
         self::assertInstanceOf(
