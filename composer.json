@@ -18,7 +18,7 @@
     },
     "require":{
         "php": "~7.1",
-        "teknoo/states": "~3.2.0-beta1",
+        "teknoo/states": "~3.2.0-beta3",
         "teknoo/immutable": "^0.0.3"
     },
     "require-dev": {
