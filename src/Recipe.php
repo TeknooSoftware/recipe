@@ -162,7 +162,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
         $steps = $this->steps;
         ksort($steps);
 
-        foreach ($this->steps as &$stepsSublist) {
+        foreach ($steps as &$stepsSublist) {
             foreach ($stepsSublist as &$step) {
                 yield $step;
             }
