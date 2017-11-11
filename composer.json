@@ -1,8 +1,8 @@
 {
     "name": "teknoo/recipe",
     "type": "library",
-    "description": "",
-    "keywords": [""],
+    "description": "Inspired by cooking, allows the creation of recipe to implement an algorithm via middlewares following the #east programming, if a set of conditions (ingredients) are available",
+    "keywords": ["east", "middleware"],
     "homepage": "http://teknoo.software/recipe",
     "license": ["MIT"],
     "authors": [
@@ -33,11 +33,6 @@
         "psr-4": {
             "Teknoo\\Recipe\\": ["src/"],
             "Teknoo\\Tests\\Recipe\\": ["tests/"]
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "demo\\": ["demo/"]
         }
     },
     "minimum-stability": "stable",
