@@ -69,33 +69,33 @@ abstract class AbstractRecipeTest extends TestCase
     /**
      * @expectedException \TypeError
      */
-    public function testExceptionOnDoWithNotCallable()
+    public function testExceptionOnCookWithNotCallable()
     {
-        $this->buildRecipe()->do(new \stdClass());
+        $this->buildRecipe()->cook(new \stdClass());
     }
 
     /**
      * @expectedException \TypeError
      */
-    public function testExceptionOnDoWithBadParameterMapping()
+    public function testExceptionOnCookWithBadParameterMapping()
     {
-        $this->buildRecipe()->do(function () {
+        $this->buildRecipe()->cook(function () {
         }, new \stdClass());
     }
 
     /**
      * @expectedException \TypeError
      */
-    public function testExceptionOnDoWithBadPosition()
+    public function testExceptionOnCookWithBadPosition()
     {
-        $this->buildRecipe()->do(function () {
+        $this->buildRecipe()->cook(function () {
         }, ['foo'=>'bar'], new \stdClass());
     }
 
-    public function testDoWithDefaultMapping()
+    public function testCookWithDefaultMapping()
     {
         $recipe = $this->buildRecipe();
-        $recipeWithStep = $recipe->do(
+        $recipeWithStep = $recipe->cook(
             function () {
             }
         );
@@ -111,10 +111,10 @@ abstract class AbstractRecipeTest extends TestCase
         );
     }
 
-    public function testDo()
+    public function testCook()
     {
         $recipe = $this->buildRecipe();
-        $recipeWithStep = $recipe->do(
+        $recipeWithStep = $recipe->cook(
             function () {
             },
             ['foo' => 'bar'],
@@ -170,7 +170,7 @@ abstract class AbstractRecipeTest extends TestCase
             RecipeInterface::class,
             $this->buildRecipe()
                 ->given($dish)
-                ->do(function () {
+                ->cook(function () {
                 })
                 ->train($this->createMock(ChefInterface::class))
                 ->validate('fooBar')
@@ -238,7 +238,7 @@ abstract class AbstractRecipeTest extends TestCase
 
         self::assertInstanceOf(
             RecipeInterface::class,
-            $recipe = $recipe->do(function () {
+            $recipe = $recipe->cook(function () {
             })
         );
 

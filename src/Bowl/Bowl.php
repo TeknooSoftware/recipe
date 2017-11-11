@@ -189,7 +189,8 @@ class Bowl implements BowlInterface
     {
         $values = $this->extractParameters($chef, $workPlan);
 
-        ($this->callable)(...$values);
+        $callable = $this->callable;
+        $callable(...$values);
 
         return $this;
     }

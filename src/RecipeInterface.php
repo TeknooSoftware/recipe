@@ -61,7 +61,7 @@ interface RecipeInterface extends ImmutableInterface
      * @param int|null $position
      * @return RecipeInterface
      */
-    public function do(callable $action, array $with=[], int $position=null): RecipeInterface;
+    public function cook(callable $action, array $with=[], int $position=null): RecipeInterface;
 
     /**
      * To define the excepted dish attempted at the end.

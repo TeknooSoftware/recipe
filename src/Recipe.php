@@ -139,7 +139,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     /**
      * @inheritDoc
      */
-    public function do(callable $action, array $with = [], int $position = null): RecipeInterface
+    public function cook(callable $action, array $with = [], int $position = null): RecipeInterface
     {
         return $this->addStep($action, $with, $position);
     }
