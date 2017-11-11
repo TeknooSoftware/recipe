@@ -38,6 +38,15 @@ use Teknoo\States\Proxy\ProxyInterface;
 use Teknoo\States\Proxy\ProxyTrait;
 
 /**
+ * Default implementation to define a recipe. A recipe has several ordered steps (as callable).
+ * It can have several required ingredients needed to start the cooking and the excepted dish attempted.
+ *
+ * A recipe instance must be immutable. Each call to this method must be performed on a clone and not update the state
+ * of the recipe.
+ * When a chef learn, the recipe returned must be frozen and not accept any new step or ingredient.
+ *
+ * @see RecipeInterface
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
@@ -143,6 +152,11 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
         return $this->setExceptedDish($dish);
     }
 
+    /**
+     * To browse steps, stored into an ordered matrix as a single array
+     *
+     * @return \Generator
+     */
     private function browseSteps()
     {
         $steps = $this->steps;
@@ -155,6 +169,11 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
         }
     }
 
+    /**
+     * To compile all steps into a single array to allow chefs to follow them easier
+     *
+     * @return array|callable[]
+     */
     private function compileStep()
     {
         /**

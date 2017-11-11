@@ -28,6 +28,9 @@ use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Recipe\ChefInterface;
 
 /**
+ * Interface to define required ingredient needed to start cooking a recipe, initialize or clean them if it's necessary.
+ * Ingredient must be immutable.
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
@@ -38,6 +41,9 @@ use Teknoo\Recipe\ChefInterface;
 interface IngredientInterface extends ImmutableInterface
 {
     /**
+     * To check if an ingredient is available on the workplan and inject the cleaned ingredient into the workplan.
+     * If the ingredient is not available, the instance must call the method missing of the chef.
+     *
      * @param array $workPlan
      * @param ChefInterface $chef
      * @return IngredientInterface

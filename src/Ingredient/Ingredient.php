@@ -28,6 +28,11 @@ use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
 
 /**
+ * Base class to define required ingredient needed to start cooking a recipe,
+ * initialize or clean them if it's necessary. This class check only the class of each ingredient.
+ *
+ * @see IngredientInterface
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website

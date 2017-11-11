@@ -27,6 +27,9 @@ namespace Teknoo\Recipe\Dish;
 use Teknoo\Immutable\ImmutableInterface;
 
 /**
+ * To define Dish, instance able to check and validate the result of cooked recipe.
+ * Dish must be immutable.
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
@@ -37,7 +40,9 @@ use Teknoo\Immutable\ImmutableInterface;
 interface DishInterface extends ImmutableInterface
 {
     /**
-     * @param $result
+     * To check if the result if the excepted dish attempted for the recipe.
+     *
+     * @param mixed $result
      * @return DishInterface
      */
     public function isExcepted($result): DishInterface;

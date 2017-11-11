@@ -28,6 +28,14 @@ use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
 
 /**
+ * Default implementation of BowlInterface. A container with a callable to perform a step in a recipe.
+ * The callable must be valid. It will not be check in the execute() method, so it's check automatically by the PHP
+ * engine thanks to the type hitting in the constructor.
+ *
+ * With this Bowl, you can map an argument name to another name.
+ *
+ * @see BowlInterface
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
@@ -40,22 +48,29 @@ class Bowl implements BowlInterface
     use ImmutableTrait;
 
     /**
+     * Valid callable contained in thos bawl.
+     *
      * @var callable
      */
     private $callable;
 
     /**
+     * To map some argument's name to another ingredient name on the workplan.
+     *
      * @var array
      */
     private $mapping;
 
     /**
+     * To cache the reflections about parameters of the callable
+     *
      * @var string[]
      */
     private $parametersCache = null;
 
     /**
-     * Bowl constructor.
+     * To initialize the bowl, the type hitting will check the callable.
+     *
      * @param callable $callable
      * @param array $mapping
      */
@@ -68,6 +83,9 @@ class Bowl implements BowlInterface
     }
 
     /**
+     * To return the Reflection instance about this callable, supports functions, closures, objects methods or class
+     * methods.
+     *
      * @return \ReflectionFunctionAbstract
      */
     private function getReflection(): \ReflectionFunctionAbstract
@@ -83,6 +101,8 @@ class Bowl implements BowlInterface
     }
 
     /**
+     * To extract the list of ReflectionParameter instances about the current callable
+     *
      * @return \ReflectionParameter[]
      */
     private function listParameters(): array
@@ -96,6 +116,9 @@ class Bowl implements BowlInterface
     }
 
     /**
+     * To extract the list of ReflectionParameter instances about the current callable
+     * and cache them for next call.
+     *
      * @return \ReflectionParameter[]
      */
     private function getParametersInOrder(): array
@@ -108,6 +131,8 @@ class Bowl implements BowlInterface
     }
 
     /**
+     * To map each callable's arguments to ingredients available into the workplan.
+     *
      * @param ChefInterface $chef
      * @param array $workPlan
      * @return array

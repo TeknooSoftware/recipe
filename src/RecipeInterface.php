@@ -29,6 +29,13 @@ use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 
 /**
+ * Interface to define a recipe. A recipe has several ordered steps (as callable). It can have several required
+ * ingredients needed to start the cooking and the excepted dish attempted.
+ *
+ * A recipe instance must be immutable. Each call to this method must be performed on a clone and not update the state
+ * of the recipe.
+ * When a chef learn, the recipe returned must be frozen and not accept any new step or ingredient.
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
@@ -39,12 +46,16 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
 interface RecipeInterface extends ImmutableInterface
 {
     /**
+     * To define required ingredients to start the cooking of the recipe.
+     *
      * @param IngredientInterface $ingredient
      * @return RecipeInterface
      */
     public function require(IngredientInterface $ingredient): RecipeInterface;
 
     /**
+     * To define actions to realize the recipe.
+     *
      * @param callable $action
      * @param array $with
      * @param int|null $position
@@ -53,18 +64,24 @@ interface RecipeInterface extends ImmutableInterface
     public function do(callable $action, array $with=[], int $position=null): RecipeInterface;
 
     /**
+     * To define the excepted dish attempted at the end.
+     *
      * @param DishInterface $dish
      * @return RecipeInterface
      */
     public function given(DishInterface $dish): RecipeInterface;
 
     /**
+     * To train a chef about this recipe.
+     *
      * @param ChefInterface $chef
      * @return RecipeInterface
      */
     public function train(ChefInterface $chef): RecipeInterface;
 
     /**
+     * To prepare the work plan of the chef before start the cooking.
+     *
      * @param array $workPlan
      * @param ChefInterface $chef
      * @return RecipeInterface
@@ -72,6 +89,8 @@ interface RecipeInterface extends ImmutableInterface
     public function prepare(array &$workPlan, ChefInterface $chef): RecipeInterface;
 
     /**
+     * To validate the result of the cooking via the dish defined via the method "given".
+     *
      * @param $value
      * @return RecipeInterface
      */

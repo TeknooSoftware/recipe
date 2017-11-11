@@ -40,6 +40,10 @@ use Teknoo\States\Proxy\ProxyInterface;
 use Teknoo\States\Proxy\ProxyTrait;
 
 /**
+ * Default implementation of chefs able to learn a recipe and execute. It will follow the recipe, like all algorithms.
+ *
+ * @see ChefInterface
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website

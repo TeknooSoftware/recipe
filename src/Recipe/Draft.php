@@ -33,6 +33,10 @@ use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
 /**
+ * @see Recipe
+ *
+ * Default state of a recipe, able to complete them with required ingredients and steps of the recipe.
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website

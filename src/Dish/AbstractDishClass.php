@@ -28,6 +28,10 @@ use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
+ * Base class dish
+ *
+ * @see DishInterface
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
@@ -45,7 +49,7 @@ abstract class AbstractDishClass implements DishInterface
     private $promise;
 
     /**
-     * AbstractDishClass constructor.
+     * AbstractDishClass constructor. To inject the promise to follow the result.
      * @param PromiseInterface $promise
      */
     public function __construct(PromiseInterface $promise)
@@ -56,7 +60,10 @@ abstract class AbstractDishClass implements DishInterface
     }
 
     /**
+     * To define in final class to check the result of the cooked recipe.
+     *
      * @param mixed &$result
+     *
      * @return bool
      */
     abstract protected function check(&$result): bool;

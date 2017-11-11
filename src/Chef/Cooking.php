@@ -32,6 +32,10 @@ use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
 /**
+ * @see Chef
+ *
+ * State representing a chef instance cooking a recipe. It is enable only if a chef is trained and flaggad as cooking.
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
@@ -44,7 +48,7 @@ class Cooking implements StateInterface
     use StateTrait;
 
     /**
-     * @inheritDoc
+     * To memorize a missing ingredients to stop the cooking of the recipe.
      */
     public function missingIngredient()
     {
@@ -58,6 +62,9 @@ class Cooking implements StateInterface
         };
     }
 
+    /**
+     * To get the next step in the cooking to execute
+     */
     private function getNextStep()
     {
         return function (): ?BowlInterface {
@@ -76,7 +83,7 @@ class Cooking implements StateInterface
     }
 
     /**
-     * @inheritDoc
+     * Called by a step to continue the execution of the recipe but before, update ingredients available on the workplan
      */
     public function continueRecipe()
     {
@@ -95,11 +102,14 @@ class Cooking implements StateInterface
     }
 
     /**
-     * @inheritDoc
+     * Called by a step to stop the execution of the recipe and check if the dish is the result excepted.
      */
     public function finishRecipe()
     {
         return function ($result): ChefInterface {
+            /**
+             * @var Chef $this
+             */
             //This method is called only if $this->recipe is a valid RecipeInterface instance
             $this->recipe->validate($result);
 
@@ -109,9 +119,16 @@ class Cooking implements StateInterface
         };
     }
 
+    /**
+     * Internal method to prepare a cooking, check is all ingredients are available.
+     * @internal
+     */
     private function prepare()
     {
-        return function () {
+        return function (): void {
+            /**
+             * @var Chef $this
+             */
             $this->recipe->prepare($this->workPlan, $this);
 
             $this->checkMissingIngredients();
@@ -122,9 +139,16 @@ class Cooking implements StateInterface
         };
     }
 
+    /**
+     * Internal method to clean the workplan after cooking.
+     * @internal
+     */
     private function clean()
     {
-        return function () {
+        return function (): void {
+            /**
+             * @var Chef $this
+             */
             $this->workPlan = [];
             $this->cooking = false;
 
@@ -134,6 +158,9 @@ class Cooking implements StateInterface
         };
     }
 
+    /**
+     * To check if the chef has memorized some missing ingredients
+     */
     private function checkMissingIngredients()
     {
         return function (): void {

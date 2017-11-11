@@ -31,6 +31,10 @@ use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
 /**
+ * @see Chef
+ *
+ * State representing an untrained chef
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
@@ -43,7 +47,7 @@ class Free implements StateInterface
     use StateTrait;
 
     /**
-     * @inheritDoc
+     * To read and lean a recipe.
      */
     public function readRecipe()
     {
@@ -60,7 +64,7 @@ class Free implements StateInterface
     }
 
     /**
-     * @inheritDoc
+     * To learn steps in the recipe, in the good order
      */
     public function followStepsRecipe()
     {

@@ -32,6 +32,9 @@ use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
 /**
+ * State representing a finished recipe, able to train chef and validate theirs cooking.
+ * @see Recipe
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
@@ -44,7 +47,7 @@ class Written implements StateInterface
     use StateTrait;
 
     /**
-     * {@inheritdoc}
+     * To check if all ingredients are available and valid on the workplan
      */
     public function prepareCooking()
     {
@@ -61,7 +64,7 @@ class Written implements StateInterface
     }
 
     /**
-     * @inheritDoc
+     * To validate the result of the cooking.
      */
     public function validateDish()
     {

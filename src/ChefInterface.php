@@ -28,6 +28,8 @@ use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 
 /**
+ * Interface to define a chef able to learn a recipe and execute. It will follow the recipe, like all algorithms.
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
@@ -38,12 +40,16 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
 interface ChefInterface
 {
     /**
+     * To read and learn a recipe.
+     *
      * @param RecipeInterface $recipe
      * @return ChefInterface
      */
     public function read(RecipeInterface $recipe): ChefInterface;
 
     /**
+     * To known when an ingredient missing in the work plan to start the cooking
+     *
      * @param IngredientInterface $ingredient
      * @param string $message
      * @return ChefInterface
@@ -51,30 +57,41 @@ interface ChefInterface
     public function missing(IngredientInterface $ingredient, string $message): ChefInterface;
 
     /**
+     * To update the work plan from ingredient.
+     *
      * @param array $with
      * @return ChefInterface
      */
     public function updateWorkPlan(array $with): ChefInterface;
 
     /**
+     * To learn steps to able to cook the recipe.
+     *
      * @param Bowl[] $steps
      * @return ChefInterface
      */
     public function followSteps(array $steps): ChefInterface;
 
     /**
+     * To continue to cook the recipe and execute the next step, but before complete the workp lan
+     * with this new ingredient.
+     *
      * @param array $with
      * @return ChefInterface
      */
     public function continue(array $with=[]): ChefInterface;
 
     /**
+     * To stop / finish cooking the recipe and check the result.
+     *
      * @param mixed $result
      * @return ChefInterface
      */
     public function finish($result): ChefInterface;
 
     /**
+     * To start cooking a recipe with an initial work plan.
+     *
      * @param array $workPlan
      * @return ChefInterface
      */

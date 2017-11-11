@@ -30,6 +30,10 @@ use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
 /**
+ * @see Chef
+ *
+ * State representing a trained chef with a recipe, able to execute it
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
@@ -42,7 +46,7 @@ class Trained implements StateInterface
     use StateTrait;
 
     /**
-     * @inheritDoc
+     * To update/prepare ingredients available on the workplan for the cooking
      */
     public function updateMyWorkPlan()
     {
@@ -57,7 +61,7 @@ class Trained implements StateInterface
     }
 
     /**
-     * @inheritDoc
+     * To execute a cooking and switch to cookine state.
      */
     public function runRecipe()
     {

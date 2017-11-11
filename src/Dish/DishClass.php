@@ -27,6 +27,11 @@ namespace Teknoo\Recipe\Dish;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
+ * To define Dish, instance able to check and validate the result of cooked recipe. The validation is performed on the
+ * instance of the result
+ *
+ * @see DishInterface
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website

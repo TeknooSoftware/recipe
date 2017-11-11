@@ -27,6 +27,10 @@ namespace Teknoo\Recipe\Promise;
 use Teknoo\Immutable\ImmutableInterface;
 
 /**
+ * PromiseInterface is a contract to create to allow an actor, following east,
+ * to call the actor without perform a return or an assignment and without know the interface / class of the next
+ * objects. Promise must be immutable
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
