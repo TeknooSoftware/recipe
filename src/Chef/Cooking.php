@@ -134,8 +134,6 @@ class Cooking implements StateInterface
             $this->checkMissingIngredients();
 
             $this->position = 0;
-
-            return $this;
         };
     }
 
@@ -153,8 +151,6 @@ class Cooking implements StateInterface
             $this->cooking = false;
 
             $this->updateStates();
-
-            return $this;
         };
     }
 
