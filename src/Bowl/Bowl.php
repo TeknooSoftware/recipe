@@ -97,6 +97,13 @@ class Bowl implements BowlInterface
             return $reflectionClass->getMethod($this->callable[1]);
         }
 
+        if (\is_object($this->callable) && !$this->callable instanceof \Closure) {
+            //It's not a closure, so it's mandatory a invokable object (because the callable is valid)
+            $reflectionClass = new \ReflectionClass($this->callable);
+
+            return $reflectionClass->getMethod('__invoke');
+        }
+
         return new \ReflectionFunction($this->callable);
     }
 
