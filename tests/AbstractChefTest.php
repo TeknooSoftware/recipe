@@ -160,6 +160,14 @@ abstract class AbstractChefTest extends TestCase
         $this->buildChef()->missing(new \stdClass());
     }
 
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnContinueWithBadNextStep()
+    {
+        $this->buildChef()->missing([], new \stdClass());
+    }
+
     public function testContinue()
     {
         $chef = $this->buildChef();
@@ -192,6 +200,52 @@ abstract class AbstractChefTest extends TestCase
             });
 
         $chef->followSteps([$bowl, $bowl2]);
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->process(['foo'=>'bar'])
+        );
+
+        self::assertTrue($called);
+    }
+
+    public function testContinueNextStep()
+    {
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+
+        $called = false;
+        $bowl = $this->createMock(BowlInterface::class);
+        $bowl->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl) {
+                $called = true;
+                self::assertEquals(['foo'=>'bar'], $workPlan);
+                self::assertInstanceOf(
+                    ChefInterface::class,
+                    $chef->continue(
+                        ['foo'=>'bar2'],
+                        'bowl3'
+                    )
+                );
+
+                return $bowl;
+            });
+
+        $bowl2 = $this->createMock(BowlInterface::class);
+        $bowl2->expects(self::never())
+            ->method('execute');
+
+        $bowl3 = $this->createMock(BowlInterface::class);
+        $bowl3->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl3) {
+                self::assertEquals(['foo'=>'bar2'], $workPlan);
+
+                return $bowl3;
+            });
+
+        $chef->followSteps(['bowl' => $bowl, 'bowl2' => $bowl2, 'bowl3' => $bowl3]);
 
         self::assertInstanceOf(
             ChefInterface::class,

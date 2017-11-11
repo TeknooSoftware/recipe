@@ -67,15 +67,22 @@ class Cooking implements StateInterface
      */
     private function getNextStep()
     {
-        return function (): ?BowlInterface {
+        return function (string $nextStep=null): ?BowlInterface {
             /**
              * @var Chef $this
              */
+
+            if (!empty ($nextStep) && isset($this->stepsNames[$nextStep])) {
+                $this->position = $this->stepsNames[$nextStep];
+            }
+
             if (count($this->steps) > $this->position) {
                 $position = $this->position;
+
+                $step = $this->steps[$position];
                 $this->position++;
 
-                return $this->steps[$position];
+                return $step;
             }
 
             return null;
@@ -87,14 +94,15 @@ class Cooking implements StateInterface
      */
     public function continueRecipe()
     {
-        return function (array $with = []): ChefInterface {
+        return function (array $with = [], string $nextStep=null): ChefInterface {
             /**
              * @var Chef $this
              */
             $this->updateMyWorkPlan($with);
 
-            while (($callable = $this->getNextStep()) instanceof BowlInterface) {
+            while (($callable = $this->getNextStep($nextStep)) instanceof BowlInterface) {
                 $callable->execute($this, $this->workPlan);
+                $nextStep = null;
             }
 
             return $this;

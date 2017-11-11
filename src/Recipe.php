@@ -139,9 +139,9 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     /**
      * @inheritDoc
      */
-    public function cook(callable $action, array $with = [], int $position = null): RecipeInterface
+    public function cook(callable $action, string $name, array $with = [], int $position = null): RecipeInterface
     {
-        return $this->addStep($action, $with, $position);
+        return $this->addStep($action, $name, $with, $position);
     }
 
     /**
@@ -164,7 +164,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
 
         foreach ($steps as &$stepsSublist) {
             foreach ($stepsSublist as &$step) {
-                yield $step;
+                yield \key($step) => \current($step);
             }
         }
     }
@@ -181,8 +181,8 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
          */
         if (empty($this->compiled)) {
             $this->compiled = [];
-            foreach ($this->browseSteps() as $step) {
-                $this->compiled[] = $step;
+            foreach ($this->browseSteps() as $name => $step) {
+                $this->compiled[$name] = $step;
             }
 
             $this->updateStates();

@@ -66,6 +66,12 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
      */
     private $steps = [];
 
+
+    /**
+     * @var Bowl[]
+     */
+    private $stepsNames = [];
+
     /**
      * @var RecipeInterface;
      */
@@ -166,9 +172,9 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     /**
      * @inheritDoc
      */
-    public function continue(array $with = []): ChefInterface
+    public function continue(array $with = [], string $nextStep=null): ChefInterface
     {
-        return $this->continueRecipe($with);
+        return $this->continueRecipe($with, $nextStep);
     }
 
     /**

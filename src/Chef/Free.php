@@ -72,7 +72,8 @@ class Free implements StateInterface
             /**
              * @var Chef $this
              */
-            $this->steps = $steps;
+            $this->steps = \array_values($steps);
+            $this->stepsNames = \array_flip(\array_keys($steps));
 
             $this->updateStates();
 

@@ -77,9 +77,10 @@ interface ChefInterface
      * with this new ingredient.
      *
      * @param array $with
+     * @param string|null $nextStep
      * @return ChefInterface
      */
-    public function continue(array $with=[]): ChefInterface;
+    public function continue(array $with=[], string $nextStep=null): ChefInterface;
 
     /**
      * To stop / finish cooking the recipe and check the result.

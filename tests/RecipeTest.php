@@ -22,6 +22,8 @@
 
 namespace Teknoo\Tests\Recipe;
 
+use Teknoo\Recipe\Bowl\Bowl;
+use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface;
 
@@ -42,5 +44,30 @@ class RecipeTest extends AbstractRecipeTest
     public function buildRecipe(): RecipeInterface
     {
         return new Recipe();
+    }
+
+    public function testTrainNotEmpty()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+        $chef->expects(self::once())
+            ->method('followSteps')
+            ->with([
+                'stepB' => new Bowl('microtime', []),
+                'stepA' => new Bowl('microtime', []),
+                'stepC' => new Bowl('microtime', [])
+            ])
+            ->willReturnSelf();
+
+        $recipe = $this->buildRecipe();
+        $recipe = $recipe->cook('microtime', 'stepA', [], 2);
+        $recipe = $recipe->cook('microtime', 'stepB', [], 1);
+        $recipe = $recipe->cook('microtime', 'stepC', [], 2);
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $recipe->train(
+                $chef
+            )
+        );
     }
 }

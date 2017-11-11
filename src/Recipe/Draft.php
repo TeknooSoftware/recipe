@@ -63,7 +63,7 @@ class Draft implements StateInterface
 
     public function addStep()
     {
-        return function (callable $action, array $with = [], int $position = null): RecipeInterface {
+        return function (callable $action, string $name, array $with = [], int $position = null): RecipeInterface {
             /**
              * @var Recipe $this
              */
@@ -72,9 +72,9 @@ class Draft implements StateInterface
             $callable = new Bowl($action, $with);
 
             if (empty($position)) {
-                $that->steps[] = [$callable];
+                $that->steps[] = [[$name => $callable]];
             } else {
-                $that->steps[$position][] = $callable;
+                $that->steps[$position][] = [$name => $callable];
             }
 
             return $that;
