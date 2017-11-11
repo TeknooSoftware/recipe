@@ -20,7 +20,7 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-namespace Teknoo\Tests;
+namespace Teknoo\Tests\Recipe;
 
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
