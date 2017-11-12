@@ -46,7 +46,8 @@ abstract class AbstractBowlTest extends TestCase
      */
     public function testExceptionOnExecuteWithBadChef()
     {
-        $this->buildBowl()->execute(new \stdClass(), ['foo'=>'bar']);
+        $values = ['foo'=>'bar'];
+        $this->buildBowl()->execute(new \stdClass(), $values);
     }
 
     /**
@@ -54,7 +55,8 @@ abstract class AbstractBowlTest extends TestCase
      */
     public function testExceptionOnExecuteWithBadWorkPlan()
     {
-        $this->buildBowl()->execute($this->createMock(ChefInterface::class), new \stdClass());
+        $values = new \stdClass();
+        $this->buildBowl()->execute($this->createMock(ChefInterface::class), $values);
     }
 
     public function testExecute()
@@ -72,15 +74,17 @@ abstract class AbstractBowlTest extends TestCase
         $chef->expects(self::never())
             ->method('updateWorkPlan');
 
+        $values = [
+            'foo' => 'foo',
+            'foo2' => 'bar2',
+            'now' => (new \DateTime('2018-01-01'))
+        ];
+
         self::assertInstanceOf(
             BowlInterface::class,
             $this->buildBowl()->execute(
                 $chef,
-                [
-                    'foo' => 'foo',
-                    'foo2' => 'bar2',
-                    'now' => (new \DateTime('2018-01-01'))
-                ]
+                $values
             )
         );
     }
@@ -97,13 +101,14 @@ abstract class AbstractBowlTest extends TestCase
         $chef->expects(self::never())
             ->method('updateWorkPlan');
 
+        $values = [
+            'foo' => 'foo'
+        ];
         self::assertInstanceOf(
             BowlInterface::class,
             $this->buildBowl()->execute(
                 $chef,
-                [
-                    'foo' => 'foo'
-                ]
+                $values
             )
         );
     }

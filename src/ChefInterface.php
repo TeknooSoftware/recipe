@@ -80,7 +80,7 @@ interface ChefInterface
      * @param string|null $nextStep
      * @return ChefInterface
      */
-    public function continue(array $with=[], string $nextStep=null): ChefInterface;
+    public function continue(array $with = [], string $nextStep = null): ChefInterface;
 
     /**
      * To stop / finish cooking the recipe and check the result.

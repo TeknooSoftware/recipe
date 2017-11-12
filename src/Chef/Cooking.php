@@ -67,7 +67,7 @@ class Cooking implements StateInterface
      */
     private function getNextStep()
     {
-        return function (string $nextStep=null): ?BowlInterface {
+        return function (string $nextStep = null): ?BowlInterface {
             /**
              * @var Chef $this
              */
@@ -94,7 +94,7 @@ class Cooking implements StateInterface
      */
     public function continueRecipe()
     {
-        return function (array $with = [], string $nextStep=null): ChefInterface {
+        return function (array $with = [], string $nextStep = null): ChefInterface {
             /**
              * @var Chef $this
              */

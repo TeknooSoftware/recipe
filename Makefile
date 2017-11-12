@@ -24,7 +24,7 @@ phploc:
 	vendor/bin/phploc src
 
 phpmd:
-	vendor/bin/phpmd --suffixes php src/ text codesize,design,naming,unusedcode,controversial
+	vendor/bin/phpmd --suffixes php src/ text codesize,design,naming,controversial
 
 phpcs:
 	vendor/bin/phpcs --standard=PSR2 --extensions=php src/

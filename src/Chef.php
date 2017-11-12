@@ -126,7 +126,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
      * Chef constructor.
      * @param RecipeInterface|null $recipe
      */
-    public function __construct(RecipeInterface $recipe=null)
+    public function __construct(RecipeInterface $recipe = null)
     {
         $this->initializeProxy();
 
@@ -172,7 +172,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     /**
      * @inheritDoc
      */
-    public function continue(array $with = [], string $nextStep=null): ChefInterface
+    public function continue(array $with = [], string $nextStep = null): ChefInterface
     {
         return $this->continueRecipe($with, $nextStep);
     }

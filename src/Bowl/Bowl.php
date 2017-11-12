@@ -138,6 +138,27 @@ class Bowl implements BowlInterface
     }
 
     /**
+     * @param \ReflectionClass $class
+     * @param array $workPlan
+     * @param array $values
+     * @return bool
+     */
+    private function findInstanceForParameter(\ReflectionClass $class, array &$workPlan, array &$values)
+    {
+        $automaticValueFound = false;
+
+        foreach ($workPlan as &$variable) {
+            if (\is_object($variable) && $class->isInstance($variable)) {
+                $values[] = $variable;
+                $automaticValueFound = true;
+                break;
+            }
+        }
+
+        return $automaticValueFound;
+    }
+
+    /**
      * To map each callable's arguments to ingredients available into the workplan.
      *
      * @param ChefInterface $chef
@@ -145,10 +166,10 @@ class Bowl implements BowlInterface
      * @return array
      * @throws \Exception
      */
-    private function extractParameters(ChefInterface $chef, array $workPlan): array
+    private function extractParameters(ChefInterface $chef, array &$workPlan): array
     {
         $values = [];
-        foreach ($this->getParametersInOrder() as $name=>$parameter) {
+        foreach ($this->getParametersInOrder() as $name => $parameter) {
             $class = $parameter->getClass();
 
             if ($class instanceof \ReflectionClass && $class->isInstance($chef)) {
@@ -166,15 +187,7 @@ class Bowl implements BowlInterface
             }
 
             if ($class instanceof \ReflectionClass) {
-                $automaticValueFound = false;
-
-                foreach ($workPlan as &$variable) {
-                    if (\is_object($variable) && $class->isInstance($variable)) {
-                        $values[] = $variable;
-                        $automaticValueFound = true;
-                        break;
-                    }
-                }
+                $automaticValueFound = $this->findInstanceForParameter($class, $workPlan, $values);
 
                 if (true === $automaticValueFound) {
                     continue;
@@ -192,7 +205,7 @@ class Bowl implements BowlInterface
     /**
      * @inheritDoc
      */
-    public function execute(ChefInterface $chef, array $workPlan): BowlInterface
+    public function execute(ChefInterface $chef, array &$workPlan): BowlInterface
     {
         $values = $this->extractParameters($chef, $workPlan);
 
