@@ -1,7 +1,7 @@
 {
     "name": "teknoo/recipe",
     "type": "library",
-    "description": "Inspired by cooking, allows the creation of recipe to implement an algorithm via middlewares following the #east programming, if a set of conditions (ingredients) are available",
+    "description": "Inspired by cooking, allows the creation of dynamic algorithm, called here recipe, following the #east programming and using middleware, configurable via DI or any configuration, if a set of conditions (ingredients) are available.",
     "keywords": ["east", "middleware"],
     "homepage": "http://teknoo.software/recipe",
     "license": ["MIT"],
@@ -19,7 +19,7 @@
     "require":{
         "php": "~7.1",
         "teknoo/states": "~3.2.0-beta3",
-        "teknoo/immutable": "^0.0.3"
+        "teknoo/immutable": "^1.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~6.2",
