@@ -27,7 +27,8 @@
         "pdepend/pdepend": "~2.5",
         "phpmd/phpmd": "~2.6",
         "sebastian/phpcpd": "~3.0",
-        "phploc/phploc": "~4.0"
+        "phploc/phploc": "~4.0",
+        "behat/behat": "~3.4"
     },
     "autoload": {
         "psr-4": {
