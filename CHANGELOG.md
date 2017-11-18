@@ -1,5 +1,11 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.0.0-beta2] - 2017-11-12
+###Second beta release
+
+###Added
+- Behat tests
+
 ##[1.0.0-beta1] - 2017-11-12
 ###First beta release
 
