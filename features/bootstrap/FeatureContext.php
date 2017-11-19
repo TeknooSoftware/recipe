@@ -98,9 +98,9 @@ class FeatureContext implements Context
         Assert::assertNotEmpty($this->recipes);
         $lastRecipe = null;
         foreach ($this->recipes as $recipe) {
-            Assert::assertInstanceOf(RecipeInterface::class , $recipe);
+            Assert::assertInstanceOf(RecipeInterface::class, $recipe);
             if ($lastRecipe instanceof RecipeInterface) {
-                Assert::assertNotSame($lastRecipe , $recipe);
+                Assert::assertNotSame($lastRecipe, $recipe);
             }
             $lastRecipe = $recipe;
         }
