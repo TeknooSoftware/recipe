@@ -11,7 +11,7 @@ Installation & Requirements
 ---------------------------
 To install this library with composer, run this command :
 
-    composer require teknoo/states
+    composer require teknoo/recipe
 
 This library requires :
 
