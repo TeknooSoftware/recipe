@@ -7,6 +7,65 @@ Inspired by cooking, allows the creation of dynamic algorithm, called here recip
 following the #east programming and using middleware, configurable via DI or any configuration,
 if a set of conditions (ingredients) are available.
 
+Example
+-------
+
+    <?php
+
+    use Teknoo\Recipe\Dish\DishClass;
+    use Teknoo\Recipe\Ingredient\Ingredient;
+    use Teknoo\Recipe\Recipe;
+    use Teknoo\Recipe\Chef;
+    use Teknoo\Recipe\ChefInterface;
+    use Teknoo\Recipe\Promise\Promise;
+
+    require 'vendor/autoload.php';
+
+    $recipe = new Recipe();
+
+    $recipe = $recipe->require(
+        new Ingredient(\DateTime::class, 'date')
+    );
+
+    $recipe = $recipe->cook(
+        function (\DateTime $date, ChefInterface $chef) {
+            $date = $date->setTimezone(new \DateTimeZone('UTC'));
+
+            $chef->continue(['date' => $date]);
+        },
+        'convertToUTC'
+    );
+
+    $recipe = $recipe->cook(
+        function (\DateTime $date, ChefInterface $chef) {
+            $immutable = \DateTimeImmutable::createFromMutable($date);
+
+            $chef->finish($immutable);
+        },
+        'immutableDate'
+    );
+
+    $output = '';
+    $recipe = $recipe->given(
+        new DishClass(
+            \DateTimeImmutable::class,
+            new Promise(
+                function (\DateTimeImmutable $immutable) use (&$output) {
+                    $output = $immutable->format('Y-m-d H:i:s T');
+                },
+                function (\Throwable $error) use (&$output) {
+                    $output = $error->getMessage();
+                }
+            )
+        )
+    );
+
+    $chef = new Chef;
+    $chef->read($recipe);
+    $chef->process(['date' => new \DateTime('2017-12-25 00:00:00', new \DateTimeZone('Europe/Paris'))]);
+    echo $output.PHP_EOL;
+    //Output : 2017-12-24 23:00:00 UTC
+
 Installation & Requirements
 ---------------------------
 To install this library with composer, run this command :
