@@ -1,8 +1,8 @@
 {
     "name": "teknoo/recipe",
     "type": "library",
-    "description": "Inspired by cooking, allows the creation of dynamic algorithm, called here recipe, following the #east programming and using middleware, configurable via DI or any configuration, if a set of conditions (ingredients) are available.",
-    "keywords": ["east", "middleware"],
+    "description": "Inspired by cooking, allows the creation of dynamic workflow, called here recipe, following the #east programming and using middleware, configurable via DI or any configuration, if a set of conditions (ingredients) are available.",
+    "keywords": ["east", "middleware", "workflow", "recipe", "dynamic"],
     "homepage": "http://teknoo.software/recipe",
     "license": ["MIT"],
     "authors": [
