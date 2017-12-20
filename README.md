@@ -79,10 +79,6 @@ This library requires :
     * Teknoo/Immutable.
     * Teknoo/States.
 
-API Documentation
------------------
-The API documentation is available at : [API](docs/howto/api/index.index).
-
 Credits
 -------
 Richard Déloge - <richarddeloge@gmail.com> - Lead developer.
