@@ -40,9 +40,9 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTest
     /**
      * @inheritDoc
      */
-    public function buildIngredient($requiredType = 'string', $name='ing_name', $normalize='IngName'): IngredientInterface
+    public function buildIngredient($requiredType = 'numeric', $name='ing_name', $normalize='IngName', $callback = 'intval'): IngredientInterface
     {
-        return new Ingredient($requiredType, $name, $normalize);
+        return new Ingredient($requiredType, $name, $normalize, $callback);
     }
 
     /**
@@ -51,7 +51,7 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTest
     public function getWorkPlanValid(): array
     {
         return [
-            'ing_name' => 'fooBar'
+            'ing_name' => '123'
         ];
     }
 
@@ -72,7 +72,7 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTest
     public function getWorkPlanInvalidNotInstanceOf(): array
     {
         return [
-            'ing_name' => 123
+            'ing_name' => 'fooBar'
         ];
     }
 
@@ -82,7 +82,7 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTest
     public function getWorkPlanInjected(): array
     {
         return [
-            'IngName' => 'fooBar'
+            'IngName' => 123
         ];
     }
 }

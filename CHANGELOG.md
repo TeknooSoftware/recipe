@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.0.2] - 2018-05-08
+###Add
+- Update Ingredient to support callback feature to normalize a value.
+
 ##[1.0.1] - 2018-05-08
 ###Add
 - Update Ingredient to support also scalar type and can normalize ingredient.

@@ -60,18 +60,29 @@ class Ingredient implements IngredientInterface
     private $normalizedName;
 
     /**
+     * @var callable|null
+     */
+    private $normalizeCallback;
+
+    /**
      * Ingredient constructor.
      * @param string $requiredType
      * @param string $name
      * @param string|null $normalizedName
+     * @param callable|null $normalizeCallback
      */
-    public function __construct(string $requiredType, string $name, string $normalizedName = null)
-    {
+    public function __construct(
+        string $requiredType,
+        string $name,
+        string $normalizedName = null,
+        callable $normalizeCallback = null
+    ) {
         $this->uniqueConstructorCheck();
 
         $this->requiredType = $requiredType;
         $this->name = $name;
         $this->normalizedName = $normalizedName;
+        $this->normalizeCallback = $normalizeCallback;
     }
 
     /**
@@ -123,6 +134,19 @@ class Ingredient implements IngredientInterface
     }
 
     /**
+     * @param mixed $value
+     * @return mixed
+     */
+    private function normalize(&$value)
+    {
+        if (\is_callable($this->normalizeCallback)) {
+            return ($this->normalizeCallback)($value);
+        }
+
+        return $value;
+    }
+
+    /**
      * @inheritDoc
      */
     public function prepare(array $workPlan, ChefInterface $chef): IngredientInterface
@@ -143,7 +167,7 @@ class Ingredient implements IngredientInterface
             return $this;
         }
 
-        $chef->updateWorkPlan([$this->getNormalizedName() => $value]);
+        $chef->updateWorkPlan([$this->getNormalizedName() => $this->normalize($value)]);
 
         return $this;
     }
