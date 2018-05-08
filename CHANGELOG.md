@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.0.1] - 2018-05-08
+###Add
+- Update Ingredient to support also scalar type and can normalize ingredient.
+
 ##[1.0.0] - 2018-01-01
 ###Stable release
 

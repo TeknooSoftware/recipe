@@ -55,16 +55,71 @@ class Ingredient implements IngredientInterface
     private $name;
 
     /**
+     * @var string
+     */
+    private $normalizedName;
+
+    /**
      * Ingredient constructor.
      * @param string $requiredType
      * @param string $name
+     * @param string|null $normalizedName
      */
-    public function __construct(string $requiredType, string $name)
+    public function __construct(string $requiredType, string $name, string $normalizedName = null)
     {
         $this->uniqueConstructorCheck();
 
         $this->requiredType = $requiredType;
         $this->name = $name;
+        $this->normalizedName = $normalizedName;
+    }
+
+    /**
+     * @return string
+     */
+    private function getNormalizedName(): string
+    {
+        if (empty($this->normalizedName)) {
+            return $this->name;
+        }
+
+        return $this->normalizedName;
+    }
+
+    /**
+     * @param $value
+     * @param ChefInterface $chef
+     * @return bool
+     */
+    private function testScalarValue(&$value, ChefInterface $chef): bool
+    {
+        $isMethod = 'is_'.$this->requiredType;
+
+        if (\function_exists($isMethod) && !$isMethod($value)) {
+            $chef->missing($this, "The ingredient {$this->name} must be a {$this->requiredType}");
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $value
+     * @param ChefInterface $chef
+     * @return bool
+     */
+    private function testObjectValue(&$value, ChefInterface $chef): bool
+    {
+        if (\class_exists($this->requiredType)
+            && !\is_a($value, $this->requiredType, true)
+            && !\is_subclass_of($value, $this->requiredType)) {
+            $chef->missing($this, "The ingredient {$this->name} must implement {$this->requiredType}");
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -80,13 +135,15 @@ class Ingredient implements IngredientInterface
 
         $value = $workPlan[$this->name];
 
-        if (!\is_a($value, $this->requiredType, true) && !\is_subclass_of($value, $this->requiredType)) {
-            $chef->missing($this, "The ingredient {$this->name} must implement {$this->requiredType}");
-
+        if (!$this->testScalarValue($value, $chef)) {
             return $this;
         }
 
-        $chef->updateWorkPlan([$this->name => $value]);
+        if (!$this->testObjectValue($value, $chef)) {
+            return $this;
+        }
+
+        $chef->updateWorkPlan([$this->getNormalizedName() => $value]);
 
         return $this;
     }

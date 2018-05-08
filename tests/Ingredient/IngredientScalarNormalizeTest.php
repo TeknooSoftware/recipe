@@ -35,14 +35,14 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  *
  * @covers \Teknoo\Recipe\Ingredient\Ingredient
  */
-class IngredientTest extends AbstractIngredientTest
+class IngredientScalarNormalizeTest extends AbstractIngredientTest
 {
     /**
      * @inheritDoc
      */
-    public function buildIngredient($requiredType = '\stdClass', $name='IngName'): IngredientInterface
+    public function buildIngredient($requiredType = 'string', $name='ing_name', $normalize='IngName'): IngredientInterface
     {
-        return new Ingredient($requiredType, $name);
+        return new Ingredient($requiredType, $name, $normalize);
     }
 
     /**
@@ -51,7 +51,7 @@ class IngredientTest extends AbstractIngredientTest
     public function getWorkPlanValid(): array
     {
         return [
-            'IngName' => new \stdClass()
+            'ing_name' => 'fooBar'
         ];
     }
 
@@ -61,7 +61,7 @@ class IngredientTest extends AbstractIngredientTest
     public function getWorkPlanInvalidMissing(): array
     {
         return [
-            'foo' => 'bar'
+            'foo' => 'fooBar'
         ];
     }
 
@@ -72,7 +72,7 @@ class IngredientTest extends AbstractIngredientTest
     public function getWorkPlanInvalidNotInstanceOf(): array
     {
         return [
-            'IngName' => new \DateTime()
+            'ing_name' => 123
         ];
     }
 
@@ -82,7 +82,7 @@ class IngredientTest extends AbstractIngredientTest
     public function getWorkPlanInjected(): array
     {
         return [
-            'IngName' => new \stdClass()
+            'IngName' => 'fooBar'
         ];
     }
 }
