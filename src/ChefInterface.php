@@ -48,6 +48,14 @@ interface ChefInterface
     public function read(RecipeInterface $recipe): ChefInterface;
 
     /**
+     * To begin a sub recipe with the actual workplan.
+     *
+     * @param RecipeInterface $recipe
+     * @return ChefInterface
+     */
+    public function setAsideAndBegin(RecipeInterface $recipe): ChefInterface;
+
+    /**
      * To known when an ingredient missing in the work plan to start the cooking
      *
      * @param IngredientInterface $ingredient

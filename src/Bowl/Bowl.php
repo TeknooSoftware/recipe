@@ -87,6 +87,7 @@ class Bowl implements BowlInterface
      * methods.
      *
      * @return \ReflectionFunctionAbstract
+     * @throws \ReflectionException
      */
     private function getReflection(): \ReflectionFunctionAbstract
     {
@@ -111,6 +112,7 @@ class Bowl implements BowlInterface
      * To extract the list of ReflectionParameter instances about the current callable
      *
      * @return \ReflectionParameter[]
+     * @throws \ReflectionException
      */
     private function listParameters(): array
     {
@@ -127,6 +129,7 @@ class Bowl implements BowlInterface
      * and cache them for next call.
      *
      * @return \ReflectionParameter[]
+     * @throws \ReflectionException
      */
     private function getParametersInOrder(): array
     {

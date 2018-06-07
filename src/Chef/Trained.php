@@ -67,7 +67,7 @@ class Trained implements StateInterface
     {
         return function (array $workPlan): ChefInterface {
             //If this method is called, $this->recipe is a valid RecipeInterface instance
-            $this->workPlan = $workPlan;
+            $this->workPlan = \array_merge($this->workPlan, $workPlan);
             $this->cooking = true;
 
             $this->updateStates();

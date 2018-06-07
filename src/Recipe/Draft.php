@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\Recipe\Recipe;
 
 use Teknoo\Recipe\Bowl\Bowl;
+use Teknoo\Recipe\Bowl\RecipeBowl;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Recipe;
@@ -70,6 +71,30 @@ class Draft implements StateInterface
             $that = $this->cloneMe();
 
             $callable = new Bowl($action, $with);
+
+            if (empty($position)) {
+                $that->steps[] = [[$name => $callable]];
+            } else {
+                $that->steps[$position][] = [$name => $callable];
+            }
+
+            return $that;
+        };
+    }
+
+    public function addSubRecipe()
+    {
+        return function (RecipeInterface $recipe, string $name, $repeat = 1, int $position = null): RecipeInterface {
+            /**
+             * @var Recipe $this
+             */
+            $that = $this->cloneMe();
+
+            if (\is_callable($repeat)) {
+                $repeat = new Bowl($recipe, []);
+            }
+
+            $callable = new RecipeBowl($recipe, $repeat);
 
             if (empty($position)) {
                 $that->steps[] = [[$name => $callable]];

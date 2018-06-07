@@ -71,7 +71,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     private $exceptedDish;
 
     /**
-     * @var callable[]
+     * @var callable[]|RecipeInterface[]
      */
     private $steps = [];
 
@@ -142,6 +142,14 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     public function cook(callable $action, string $name, array $with = [], int $position = null): RecipeInterface
     {
         return $this->addStep($action, $name, $with, $position);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function do(RecipeInterface $recipe, string $name, $repeat = 1, int $position = null): RecipeInterface
+    {
+        return $this->addSubRecipe($recipe, $name, $repeat, $position);
     }
 
     /**

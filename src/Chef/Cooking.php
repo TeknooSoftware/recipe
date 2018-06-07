@@ -28,6 +28,7 @@ use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
+use Teknoo\Recipe\RecipeInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
@@ -46,6 +47,16 @@ use Teknoo\States\State\StateTrait;
 class Cooking implements StateInterface
 {
     use StateTrait;
+
+    public function begin()
+    {
+        return function (RecipeInterface $recipe): ChefInterface {
+            $chef = new self($recipe);
+            $chef->updateMyWorkPlan($this->workPlan);
+
+            return $chef;
+        };
+    }
 
     /**
      * To memorize a missing ingredients to stop the cooking of the recipe.
