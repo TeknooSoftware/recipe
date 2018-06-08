@@ -28,6 +28,16 @@ class FeatureContext implements Context
     private $recipes = [];
 
     /**
+     * @var RecipeInterface[]
+     */
+    private $subRecipes = [];
+
+    /**
+     * @var string
+     */
+    private $lastSubRecipeName;
+
+    /**
      * @var callable
      */
     private $callbackPromiseSuccess;
@@ -36,6 +46,12 @@ class FeatureContext implements Context
     {
         $this->recipes[] = $recipe;
         $this->lastRecipe = $recipe;
+    }
+
+    private function setSubRecipe(string $name, RecipeInterface $recipe)
+    {
+        $this->subRecipes[$name] = $recipe;
+        $this->lastSubRecipeName = $name;
     }
 
     private function parseMethod($method): callable
@@ -127,7 +143,7 @@ class FeatureContext implements Context
      */
     public function itStartsCookingWithAs($arg1, $arg2)
     {
-        $this->chef->process([$arg2 => new \DateTime($arg1)]);
+        $this->chef->process([$arg2 => new $arg2($arg1)]);
     }
 
     /**
@@ -138,6 +154,62 @@ class FeatureContext implements Context
         $this->callbackPromiseSuccess = function ($value) use ($arg1) {
             Assert::assertInstanceOf(\DateTimeImmutable::class, $value);
             Assert::assertEquals(new \DateTimeImmutable($arg1), $value);
+        };
+    }
+
+    /**
+     * @Given I create a subrecipe :arg1
+     */
+    public function iCreateASubrecipe($arg1)
+    {
+        $this->setSubRecipe($arg1, new \Teknoo\Recipe\Recipe());
+    }
+
+    /**
+     * @Given With the step :arg1 to do :arg2
+     */
+    public function withTheStepToDo($arg1, $arg2)
+    {
+        $this->setSubRecipe(
+            $this->lastSubRecipeName,
+            $this->subRecipes[$this->lastSubRecipeName]->cook(
+                $this->parseMethod($arg2),
+                $arg1
+            )
+        );
+    }
+
+    /**
+     * @When I include the recipe :arg1 to :arg2 in my recipe to call :arg3 times
+     */
+    public function iIncludeTheRecipeToInMyRecipeToCallTimes($arg1, $arg2, $arg3)
+    {
+        $this->pushRecipe(
+            $this->lastRecipe->do($this->subRecipes[$arg1], $arg2, (int) $arg3)
+        );
+    }
+
+    /**
+     * @When I define the excepted dish :arg1 with value :arg2 to my recipe
+     */
+    public function iDefineTheExceptedDishWithValueToMyRecipe($arg1, $arg2)
+    {
+        $promise = new Promise(function ($value) use ($arg2) {
+            ($this->callbackPromiseSuccess)($value);
+        }, function () {
+            Assert::fail('The dish is not valid');
+        });
+        $this->pushRecipe($this->lastRecipe->given(new DishClass($arg1, $promise)));
+    }
+
+    /**
+     * @Then I must obtain an IntBag at :arg1
+     */
+    public function iMustObtainAnIntbagAt($arg1)
+    {
+        $this->callbackPromiseSuccess = function ($value) use ($arg1) {
+            Assert::assertInstanceOf(IntBag::class, $value);
+            Assert::assertEquals(new IntBag($arg1), $value);
         };
     }
 }

@@ -51,11 +51,7 @@ class Cooking implements StateInterface
     public function begin()
     {
         return function (RecipeInterface $recipe): ChefInterface {
-            $chef = clone $this;
-            $chef->steps = [];
-            $chef->stepsNames = [];
-            $chef->clean();
-            $chef->read($recipe);
+            $chef = new self($recipe);
 
             return $chef;
         };
