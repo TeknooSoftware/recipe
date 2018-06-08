@@ -1,5 +1,15 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.1.0-beta1] - 2018-06-08
+###Add
+- Feature "execute" on RecipeInterface and Recipe to embed recipes in another recipe. A subrecipe can be
+called severa time, in a loop, defined in parameter
+- Feature "setAsideAndBegin" on ChefInterface and Chef to support embedded recipe.
+- Add RecipeBowl to store in the execution plan a recipe as a bowl to be executed by the chef.
+
+###Update
+- Update behat tests to support last adds.
+
 ##[1.0.2] - 2018-05-08
 ###Add
 - Update Ingredient to support callback feature to normalize a value.
