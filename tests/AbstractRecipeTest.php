@@ -146,6 +146,91 @@ abstract class AbstractRecipeTest extends TestCase
     /**
      * @expectedException \TypeError
      */
+    public function testExceptionOnDoWithNotRecipe()
+    {
+        $this->buildRecipe()->do(new \stdClass(), 'foo');
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnDoWithBadName()
+    {
+        $this->buildRecipe()->do($this->createMock(RecipeInterface::class), new \stdClass());
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnDoWithBadPosition()
+    {
+        $this->buildRecipe()->do($this->createMock(RecipeInterface::class), 'foo', 123, new \stdClass());
+    }
+
+    public function testDoW()
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithStep = $recipe->do(
+            $this->createMock(RecipeInterface::class),
+            'foo'
+        );
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithStep
+        );
+
+        self::assertNotSame(
+            $recipe,
+            $recipeWithStep
+        );
+    }
+
+    public function testDoWithRepeatAsNumber()
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithStep = $recipe->do(
+            $this->createMock(RecipeInterface::class),
+            'foo',
+            123,
+            123
+        );
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithStep
+        );
+
+        self::assertNotSame(
+            $recipe,
+            $recipeWithStep
+        );
+    }
+
+    public function testDoWithRepeatAsCallable()
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithStep = $recipe->do(
+            $this->createMock(RecipeInterface::class),
+            'foo',
+            function() {},
+            123
+        );
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithStep
+        );
+
+        self::assertNotSame(
+            $recipe,
+            $recipeWithStep
+        );
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
     public function testExceptionOnGivenWithBadDish()
     {
         $this->buildRecipe()->given(new \stdClass());

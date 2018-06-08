@@ -64,6 +64,74 @@ abstract class AbstractChefTest extends TestCase
     /**
      * @expectedException \TypeError
      */
+    public function testExceptionOnSetAsideAndBeginWithBadRecipe()
+    {
+        $this->buildChef()->setAsideAndBegin(new \stdClass());
+    }
+
+    public function testSetAsideAndBeginAvailableOnCooking()
+    {
+        $mainRecipe = $this->createMock(RecipeInterface::class);
+        $mainRecipe->expects(self::once())
+            ->method('train')
+            ->willReturnSelf();
+
+        $subRecipe = $this->createMock(RecipeInterface::class);
+        $subRecipe->expects(self::once())
+            ->method('train')
+            ->willReturnCallback(function (ChefInterface $chef) use ($subRecipe) {
+                $chef->followSteps(['substep' => $this->createMock(BowlInterface::class)]);
+
+                return $subRecipe;
+            });
+
+        $chef = $this->buildChef();
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->read($mainRecipe)
+        );
+
+        $step = $this->createMock(BowlInterface::class);
+        $step->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function (ChefInterface $chef) use ($step, $subRecipe) {
+
+                self::assertInstanceOf(
+                    ChefInterface::class,
+                    $subchef = $chef->setAsideAndBegin($subRecipe)
+                );
+
+                self::assertNotSame(
+                    $chef,
+                    $subchef
+                );
+
+                return $step;
+            });
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->followSteps(['step' => $step])
+        );
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->process(['foo'=>'bar'])
+        );
+    }
+
+    /**
+     * @expectedException \Throwable
+     */
+    public function testSetAsideAndBeginOnNonTrainedChef()
+    {
+        $recipe = $this->createMock(RecipeInterface::class);
+        $this->buildChef()->setAsideAndBegin($recipe);
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
     public function testExceptionOnMissingWithBadIngredient()
     {
         $this->buildChef()->missing(new \stdClass(), 'fooBar');

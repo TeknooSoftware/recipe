@@ -61,7 +61,7 @@ class RecipeBowl implements BowlInterface
     /**
      * @var bool
      */
-    private $allowToLoop;
+    private $allowToLoop = true;
 
     /**
      * RecipeBowl constructor.
@@ -94,7 +94,7 @@ class RecipeBowl implements BowlInterface
     private function checkLooping(ChefInterface $chef, int $counter): bool
     {
         if (\is_numeric($this->repeat)) {
-            return $counter < $this->repeat;
+            return $counter <= $this->repeat;
         }
 
         $workPlan = ['counter' => $counter, 'bowl' => $this];
@@ -111,8 +111,10 @@ class RecipeBowl implements BowlInterface
         $counter = 0;
         do {
             $subchef = $chef->setAsideAndBegin($this->recipe);
-            $subchef->process([]);
+            $subchef->process($workPlan);
 
         } while ($this->checkLooping($subchef, ++$counter));
+
+        return $this;
     }
 }

@@ -91,7 +91,7 @@ class Draft implements StateInterface
             $that = $this->cloneMe();
 
             if (\is_callable($repeat)) {
-                $repeat = new Bowl($recipe, []);
+                $repeat = new Bowl($repeat, []);
             }
 
             $callable = new RecipeBowl($recipe, $repeat);
