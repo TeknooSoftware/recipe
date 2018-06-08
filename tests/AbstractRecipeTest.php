@@ -146,31 +146,31 @@ abstract class AbstractRecipeTest extends TestCase
     /**
      * @expectedException \TypeError
      */
-    public function testExceptionOnDoWithNotRecipe()
+    public function testExceptionOnExecuteWithNotRecipe()
     {
-        $this->buildRecipe()->do(new \stdClass(), 'foo');
+        $this->buildRecipe()->execute(new \stdClass(), 'foo');
     }
 
     /**
      * @expectedException \TypeError
      */
-    public function testExceptionOnDoWithBadName()
+    public function testExceptionOnExecuteWithBadName()
     {
-        $this->buildRecipe()->do($this->createMock(RecipeInterface::class), new \stdClass());
+        $this->buildRecipe()->execute($this->createMock(RecipeInterface::class), new \stdClass());
     }
 
     /**
      * @expectedException \TypeError
      */
-    public function testExceptionOnDoWithBadPosition()
+    public function testExceptionOnExecuteWithBadPosition()
     {
-        $this->buildRecipe()->do($this->createMock(RecipeInterface::class), 'foo', 123, new \stdClass());
+        $this->buildRecipe()->execute($this->createMock(RecipeInterface::class), 'foo', 123, new \stdClass());
     }
 
-    public function testDoW()
+    public function testExecuteW()
     {
         $recipe = $this->buildRecipe();
-        $recipeWithStep = $recipe->do(
+        $recipeWithStep = $recipe->execute(
             $this->createMock(RecipeInterface::class),
             'foo'
         );
@@ -186,10 +186,10 @@ abstract class AbstractRecipeTest extends TestCase
         );
     }
 
-    public function testDoWithRepeatAsNumber()
+    public function testExecuteWithRepeatAsNumber()
     {
         $recipe = $this->buildRecipe();
-        $recipeWithStep = $recipe->do(
+        $recipeWithStep = $recipe->execute(
             $this->createMock(RecipeInterface::class),
             'foo',
             123,
@@ -207,10 +207,10 @@ abstract class AbstractRecipeTest extends TestCase
         );
     }
 
-    public function testDoWithRepeatAsCallable()
+    public function testExecuteWithRepeatAsCallable()
     {
         $recipe = $this->buildRecipe();
-        $recipeWithStep = $recipe->do(
+        $recipeWithStep = $recipe->execute(
             $this->createMock(RecipeInterface::class),
             'foo',
             function() {},

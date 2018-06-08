@@ -185,7 +185,7 @@ class FeatureContext implements Context
     public function iIncludeTheRecipeToInMyRecipeToCallTimes($arg1, $arg2, $arg3)
     {
         $this->pushRecipe(
-            $this->lastRecipe->do($this->subRecipes[$arg1], $arg2, (int) $arg3)
+            $this->lastRecipe->execute($this->subRecipes[$arg1], $arg2, (int) $arg3)
         );
     }
 

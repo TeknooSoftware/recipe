@@ -73,7 +73,7 @@ interface RecipeInterface extends ImmutableInterface
      * @param int|null $position
      * @return RecipeInterface
      */
-    public function do(RecipeInterface $recipe, string $name, $repeat = 1, int $position = null): RecipeInterface;
+    public function execute(RecipeInterface $recipe, string $name, $repeat = 1, int $position = null): RecipeInterface;
 
     /**
      * To define the excepted dish attempted at the end.

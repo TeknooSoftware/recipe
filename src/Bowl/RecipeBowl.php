@@ -112,7 +112,6 @@ class RecipeBowl implements BowlInterface
         do {
             $subchef = $chef->setAsideAndBegin($this->recipe);
             $subchef->process($workPlan);
-
         } while ($this->checkLooping($subchef, ++$counter));
 
         return $this;
