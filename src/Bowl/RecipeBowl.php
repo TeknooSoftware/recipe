@@ -86,16 +86,17 @@ class RecipeBowl implements BowlInterface
     /**
      * @param ChefInterface $chef
      * @param int $counter
+     * @param array $workPlan
      * @return bool
      */
-    private function checkLooping(ChefInterface $chef, int $counter): bool
+    private function checkLooping(ChefInterface $chef, int $counter, array &$workPlan): bool
     {
         if (\is_numeric($this->repeat)) {
             return $counter <= $this->repeat;
         }
 
-        $workPlan = ['counter' => $counter, 'bowl' => $this];
-        $this->repeat->execute($chef, $workPlan);
+        $loopWorkPlan = \array_merge($workPlan, ['counter' => $counter, 'bowl' => $this]);
+        $this->repeat->execute($chef, $loopWorkPlan);
 
         return (true === $this->allowToLoop);
     }
@@ -109,7 +110,7 @@ class RecipeBowl implements BowlInterface
         do {
             $subchef = $chef->setAsideAndBegin($this->recipe);
             $subchef->process($workPlan);
-        } while ($this->checkLooping($subchef, ++$counter));
+        } while ($this->checkLooping($subchef, ++$counter, $workPlan));
 
         return $this;
     }

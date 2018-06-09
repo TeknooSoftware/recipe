@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.1.0-beta3] - 2018-06-10
+###Update
+- The work plan injected into the RecipeBowl inherits of the original workplan
+
 ##[1.1.0-beta2] - 2018-06-09
 ###Add
 - DynamicBowl class to allow dynamic step in recipe, with the callable is stored into a variable in the work plan

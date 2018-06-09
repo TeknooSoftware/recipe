@@ -116,6 +116,8 @@ class RecipeBowlTest extends TestCase
                 if ($workplan['counter'] >= 3) {
                     $workplan['bowl']->stopLooping();
                 }
+
+                self::assertEquals('bar', $workplan['foo']);
                 return $counter;
             });
 
@@ -139,6 +141,11 @@ class RecipeBowlTest extends TestCase
         self::assertInstanceOf(
             RecipeBowl::class,
             $bowl->execute($chef, $workplan)
+        );
+
+        self::assertEquals(
+            ['foo' => 'bar'],
+            $workplan
         );
     }
 }
