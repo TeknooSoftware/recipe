@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\Recipe;
 
 use Teknoo\Immutable\ImmutableInterface;
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 
@@ -56,13 +57,13 @@ interface RecipeInterface extends ImmutableInterface
     /**
      * To define actions to realize the recipe.
      *
-     * @param callable $action
+     * @param callable|BowlInterface $action
      * @param string $name
      * @param array $with
      * @param int|null $position
      * @return RecipeInterface
      */
-    public function cook(callable $action, string $name, array $with = [], int $position = null): RecipeInterface;
+    public function cook($action, string $name, array $with = [], int $position = null): RecipeInterface;
 
     /**
      * To define actions to realize the recipe.

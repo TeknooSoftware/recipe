@@ -46,6 +46,7 @@ use Teknoo\Recipe\ChefInterface;
 class Bowl implements BowlInterface
 {
     use ImmutableTrait;
+    use BowlTrait;
 
     /**
      * Valid callable contained in thos bawl.
@@ -53,20 +54,6 @@ class Bowl implements BowlInterface
      * @var callable
      */
     private $callable;
-
-    /**
-     * To map some argument's name to another ingredient name on the workplan.
-     *
-     * @var array
-     */
-    private $mapping;
-
-    /**
-     * To cache the reflections about parameters of the callable
-     *
-     * @var string[]
-     */
-    private $parametersCache = null;
 
     /**
      * To initialize the bowl, the type hitting will check the callable.
@@ -83,134 +70,12 @@ class Bowl implements BowlInterface
     }
 
     /**
-     * To return the Reflection instance about this callable, supports functions, closures, objects methods or class
-     * methods.
-     *
-     * @return \ReflectionFunctionAbstract
-     * @throws \ReflectionException
-     */
-    private function getReflection(): \ReflectionFunctionAbstract
-    {
-        if (\is_array($this->callable)) {
-            //The callable is checked by PHP in the constructor by the type hiting
-            $reflectionClass = new \ReflectionClass($this->callable[0]);
-
-            return $reflectionClass->getMethod($this->callable[1]);
-        }
-
-        if (\is_object($this->callable) && !$this->callable instanceof \Closure) {
-            //It's not a closure, so it's mandatory a invokable object (because the callable is valid)
-            $reflectionClass = new \ReflectionClass($this->callable);
-
-            return $reflectionClass->getMethod('__invoke');
-        }
-
-        return new \ReflectionFunction($this->callable);
-    }
-
-    /**
-     * To extract the list of ReflectionParameter instances about the current callable
-     *
-     * @return \ReflectionParameter[]
-     * @throws \ReflectionException
-     */
-    private function listParameters(): array
-    {
-        $parameters = [];
-        foreach ($this->getReflection()->getParameters() as $parameter) {
-            $parameters[$parameter->getName()] = $parameter;
-        }
-
-        return $parameters;
-    }
-
-    /**
-     * To extract the list of ReflectionParameter instances about the current callable
-     * and cache them for next call.
-     *
-     * @return \ReflectionParameter[]
-     * @throws \ReflectionException
-     */
-    private function getParametersInOrder(): array
-    {
-        if (null === $this->parametersCache) {
-            $this->parametersCache = $this->listParameters();
-        }
-
-        return $this->parametersCache;
-    }
-
-    /**
-     * @param \ReflectionClass $class
-     * @param array $workPlan
-     * @param array $values
-     * @return bool
-     */
-    private function findInstanceForParameter(\ReflectionClass $class, array &$workPlan, array &$values)
-    {
-        $automaticValueFound = false;
-
-        foreach ($workPlan as &$variable) {
-            if (\is_object($variable) && $class->isInstance($variable)) {
-                $values[] = $variable;
-                $automaticValueFound = true;
-                break;
-            }
-        }
-
-        return $automaticValueFound;
-    }
-
-    /**
-     * To map each callable's arguments to ingredients available into the workplan.
-     *
-     * @param ChefInterface $chef
-     * @param array $workPlan
-     * @return array
-     * @throws \Exception
-     */
-    private function extractParameters(ChefInterface $chef, array &$workPlan): array
-    {
-        $values = [];
-        foreach ($this->getParametersInOrder() as $name => $parameter) {
-            $class = $parameter->getClass();
-
-            if ($class instanceof \ReflectionClass && $class->isInstance($chef)) {
-                $values[] = $chef;
-                continue;
-            }
-
-            if (!empty(($this->mapping[$name]))) {
-                $name = $this->mapping[$name];
-            }
-
-            if (isset($workPlan[$name])) {
-                $values[] = $workPlan[$name];
-                continue;
-            }
-
-            if ($class instanceof \ReflectionClass) {
-                $automaticValueFound = $this->findInstanceForParameter($class, $workPlan, $values);
-
-                if (true === $automaticValueFound) {
-                    continue;
-                }
-            }
-
-            if (!$parameter->isOptional()) {
-                throw new \RuntimeException("Missing the parameter {$parameter->getName()} in the WorkPlan");
-            }
-        }
-
-        return $values;
-    }
-
-    /**
      * @inheritDoc
+     * @throws \Exception
      */
     public function execute(ChefInterface $chef, array &$workPlan): BowlInterface
     {
-        $values = $this->extractParameters($chef, $workPlan);
+        $values = $this->extractParameters($this->callable, $chef, $workPlan);
 
         $callable = $this->callable;
         $callable(...$values);

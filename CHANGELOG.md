@@ -1,5 +1,15 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.1.0-beta2] - 2018-06-09
+###Add
+- DynamicBowl class to allow dynamic step in recipe, with the callable is stored into a variable in the work plan
+and not directly defined in the recipe. Only the name of the callable as ingredient into the work plan is mandatory.
+This bowl can throw an exception if no callable has found in the workplan, but it can fail silently. 
+
+###Update
+- Method "cook" of Recipe can accept now BowlInstance as $action value, in addition to callable value
+- Update behat tests to support last adds.
+
 ##[1.1.0-beta1] - 2018-06-08
 ###Add
 - Feature "execute" on RecipeInterface and Recipe to embed recipes in another recipe. A subrecipe can be

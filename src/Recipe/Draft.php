@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\Recipe\Recipe;
 
 use Teknoo\Recipe\Bowl\Bowl;
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Bowl\RecipeBowl;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
@@ -64,13 +65,20 @@ class Draft implements StateInterface
 
     public function addStep()
     {
-        return function (callable $action, string $name, array $with = [], int $position = null): RecipeInterface {
+        return function ($action, string $name, array $with = [], int $position = null): RecipeInterface {
+            if (!$action instanceof BowlInterface && !\is_callable($action)) {
+                throw new \TypeError('$action accepts only callable value or a BowlInterface instance');
+            }
+
             /**
              * @var Recipe $this
              */
             $that = $this->cloneMe();
 
-            $callable = new Bowl($action, $with);
+            $callable = $action;
+            if (!$action instanceof BowlInterface) {
+                $callable = new Bowl($action, $with);
+            }
 
             if (empty($position)) {
                 $that->steps[] = [[$name => $callable]];

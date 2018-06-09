@@ -59,6 +59,18 @@ abstract class AbstractBowlTest extends TestCase
         $this->buildBowl()->execute($this->createMock(ChefInterface::class), $values);
     }
 
+    /**
+     * @return array
+     */
+    protected function getValidWorkPlan(): array
+    {
+        return [
+            'foo' => 'foo',
+            'foo2' => 'bar2',
+            'now' => (new \DateTime('2018-01-01'))
+        ];
+    }
+
     public function testExecute()
     {
         $chef = $this->createMock(ChefInterface::class);
@@ -74,12 +86,7 @@ abstract class AbstractBowlTest extends TestCase
         $chef->expects(self::never())
             ->method('updateWorkPlan');
 
-        $values = [
-            'foo' => 'foo',
-            'foo2' => 'bar2',
-            'now' => (new \DateTime('2018-01-01'))
-        ];
-
+        $values = $this->getValidWorkPlan();
         self::assertInstanceOf(
             BowlInterface::class,
             $this->buildBowl()->execute(
@@ -87,6 +94,16 @@ abstract class AbstractBowlTest extends TestCase
                 $values
             )
         );
+    }
+
+    /**
+     * @return array
+     */
+    protected function getNotValidWorkPlan(): array
+    {
+        return [
+            'foo' => 'foo'
+        ];
     }
 
     /**
@@ -101,9 +118,7 @@ abstract class AbstractBowlTest extends TestCase
         $chef->expects(self::never())
             ->method('updateWorkPlan');
 
-        $values = [
-            'foo' => 'foo'
-        ];
+        $values = $this->getNotValidWorkPlan();
         self::assertInstanceOf(
             BowlInterface::class,
             $this->buildBowl()->execute(

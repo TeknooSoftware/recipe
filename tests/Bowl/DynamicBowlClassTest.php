@@ -22,7 +22,7 @@
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
-use Teknoo\Recipe\Bowl\Bowl;
+use Teknoo\Recipe\Bowl\DynamicBowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
 
@@ -34,24 +34,23 @@ use Teknoo\Recipe\ChefInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *
- * @covers \Teknoo\Recipe\Bowl\Bowl
+ * @covers \Teknoo\Recipe\Bowl\DynamicBowl
+ * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
-class BowlObjectTest extends AbstractBowlTest
+class DynamicBowlClassTest extends AbstractBowlTest
 {
+    public static function methodToCall(ChefInterface $chef, $bar, $foo2, \DateTime $date)
+    {
+        $chef->continue([
+            'bar' => $bar,
+            'foo2' => $foo2,
+            'date' => $date->getTimestamp()
+        ]);
+    }
+
     protected function getCallable()
     {
-        $object = new class() {
-            public function methodToCall(ChefInterface $chef, $bar, $foo2, \DateTime $date)
-            {
-                $chef->continue([
-                    'bar' => $bar,
-                    'foo2' => $foo2,
-                    'date' => $date->getTimestamp()
-                ]);
-            }
-        };
-
-        return [$object, 'methodToCall'];
+        return [static::class, 'methodToCall'];
     }
 
     protected function getMapping()
@@ -62,10 +61,27 @@ class BowlObjectTest extends AbstractBowlTest
     /**
      * @inheritDoc
      */
+    protected function getValidWorkPlan(): array
+    {
+        return \array_merge(parent::getValidWorkPlan(), ['callableToExec' => $this->getCallable()]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getNotValidWorkPlan(): array
+    {
+        return \array_merge(parent::getNotValidWorkPlan(), ['callableToExec' => $this->getCallable()]);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildBowl(): BowlInterface
     {
-        return new Bowl(
-            $this->getCallable(),
+        return new DynamicBowl(
+            'callableToExec',
+            false,
             $this->getMapping()
         );
     }

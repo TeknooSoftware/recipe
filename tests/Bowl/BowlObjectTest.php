@@ -22,8 +22,9 @@
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
-use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Bowl\Bowl;
+use Teknoo\Recipe\Bowl\BowlInterface;
+use Teknoo\Recipe\ChefInterface;
 
 /**
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
@@ -34,27 +35,38 @@ use Teknoo\Recipe\Bowl\Bowl;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *
  * @covers \Teknoo\Recipe\Bowl\Bowl
+ * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
-class BowlInexistantClassTest extends TestCase
+class BowlObjectTest extends AbstractBowlTest
 {
-    protected function getCallableClassNotAvailable()
+    protected function getCallable()
     {
-        return ['NoExistantClass', 'methodToCall'];
-    }
+        $object = new class() {
+            public function methodToCall(ChefInterface $chef, $bar, $foo2, \DateTime $date)
+            {
+                $chef->continue([
+                    'bar' => $bar,
+                    'foo2' => $foo2,
+                    'date' => $date->getTimestamp()
+                ]);
+            }
+        };
 
+        return [$object, 'methodToCall'];
+    }
 
     protected function getMapping()
     {
-        return [];
+        return ['bar' => 'foo'];
     }
 
     /**
-     * @expectedException \TypeError
+     * @inheritDoc
      */
-    public function testExceptionWhenClassOfCallableIsNotAvailable()
+    public function buildBowl(): BowlInterface
     {
-        $bowl = new Bowl(
-            $this->getCallableClassNotAvailable(),
+        return new Bowl(
+            $this->getCallable(),
             $this->getMapping()
         );
     }

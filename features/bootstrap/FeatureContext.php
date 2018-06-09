@@ -42,6 +42,11 @@ class FeatureContext implements Context
      */
     private $callbackPromiseSuccess;
 
+    /**
+     * @var array
+     */
+    private $workPlan = [];
+
     private function pushRecipe(RecipeInterface $recipe)
     {
         $this->recipes[] = $recipe;
@@ -143,7 +148,21 @@ class FeatureContext implements Context
      */
     public function itStartsCookingWithAs($arg1, $arg2)
     {
-        $this->chef->process([$arg2 => new $arg2($arg1)]);
+        $this->chef->process(\array_merge($this->workPlan, [$arg2 => new $arg2($arg1)]));
+    }
+
+    /**
+     * @Then It starts cooking with :arg1 as :arg2 and get an error
+     */
+    public function itStartsCookingWithAsAndGetAnError($arg1, $arg2)
+    {
+        try {
+            $this->chef->process(\array_merge($this->workPlan , [$arg2 => new $arg2($arg1)]));
+        } catch (\Throwable $e) {
+            return;
+        }
+
+        Assert::fail('An error must be thrown');
     }
 
     /**
@@ -154,6 +173,17 @@ class FeatureContext implements Context
         $this->callbackPromiseSuccess = function ($value) use ($arg1) {
             Assert::assertInstanceOf(\DateTimeImmutable::class, $value);
             Assert::assertEquals(new \DateTimeImmutable($arg1), $value);
+        };
+    }
+
+    /**
+     * @Then I must obtain an Mutable DateTime at :arg1
+     */
+    public function iMustObtainAnMutableDatetimeAt($arg1)
+    {
+        $this->callbackPromiseSuccess = function ($value) use ($arg1) {
+            Assert::assertInstanceOf(\DateTime::class, $value);
+            Assert::assertEquals(new \DateTime($arg1), $value);
         };
     }
 
@@ -211,5 +241,33 @@ class FeatureContext implements Context
             Assert::assertInstanceOf(IntBag::class, $value);
             Assert::assertEquals(new IntBag($arg1), $value);
         };
+    }
+
+    /**
+     * @When I define the dynamic step :arg1 my recipe
+     */
+    public function iDefineTheDynamicStepMyRecipe($arg1)
+    {
+        $this->pushRecipe($this->lastRecipe->cook(
+            new \Teknoo\Recipe\Bowl\DynamicBowl($arg1, false), $arg1)
+        );
+    }
+
+    /**
+     * @When I define the mandatory dynamic step :arg1 my recipe
+     */
+    public function iDefineTheMandatoryDynamicStepMyRecipe($arg1)
+    {
+        $this->pushRecipe($this->lastRecipe->cook(
+            new \Teknoo\Recipe\Bowl\DynamicBowl($arg1, true), $arg1)
+        );
+    }
+
+    /**
+     * @When I set the dynamic callable :arg1 to :arg2 my recipe
+     */
+    public function iSetTheDynamicCallableToMyRecipe($arg1, $arg2)
+    {
+        $this->workPlan[$arg1] = $this->parseMethod($arg2);
     }
 }

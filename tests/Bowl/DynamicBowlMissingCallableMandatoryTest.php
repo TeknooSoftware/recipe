@@ -22,8 +22,8 @@
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
-use Teknoo\Recipe\Bowl\Bowl;
-use Teknoo\Recipe\Bowl\BowlInterface;
+use PHPUnit\Framework\TestCase;
+use Teknoo\Recipe\Bowl\DynamicBowl;
 use Teknoo\Recipe\ChefInterface;
 
 /**
@@ -34,37 +34,30 @@ use Teknoo\Recipe\ChefInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *
- * @covers \Teknoo\Recipe\Bowl\Bowl
+ * @covers \Teknoo\Recipe\Bowl\DynamicBowl
+ * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
-class BowlClassTest extends AbstractBowlTest
+class DynamicBowlMissingCallableMandatoryTest extends TestCase
 {
-    public static function methodToCall(ChefInterface $chef, $bar, $foo2, \DateTime $date)
-    {
-        $chef->continue([
-            'bar' => $bar,
-            'foo2' => $foo2,
-            'date' => $date->getTimestamp()
-        ]);
-    }
-
-    protected function getCallable()
-    {
-        return [static::class, 'methodToCall'];
-    }
-
-    protected function getMapping()
-    {
-        return ['bar' => 'foo'];
-    }
-
     /**
-     * @inheritDoc
+     * @expectedException \RuntimeException
+     * @throws \Exception
      */
-    public function buildBowl(): BowlInterface
+    public function testFailSilentlyIfNoCallbackAvailableInWorkPlan()
     {
-        return new Bowl(
-            $this->getCallable(),
-            $this->getMapping()
+        $bowl = new DynamicBowl(
+            'callableToExec',
+            true,
+            []
+        );
+
+        $values = [];
+        self::assertInstanceOf(
+            DynamicBowl::class,
+            $bowl->execute(
+                $this->createMock(ChefInterface::class),
+                $values
+            )
         );
     }
 }

@@ -29,11 +29,8 @@ use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\RecipeInterface;
 
 /**
- * Default implementation of BowlInterface. A container with a callable to perform a step in a recipe.
- * The callable must be valid. It will not be check in the execute() method, so it's check automatically by the PHP
- * engine thanks to the type hitting in the constructor.
- *
- * With this Bowl, you can map an argument name to another name.
+ * Bowl to execute a new recipe, with a new trained chef provided by the current chef, but sharing the a clone of the
+ * original workplan.
  *
  * @see BowlInterface
  *

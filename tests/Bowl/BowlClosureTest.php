@@ -35,6 +35,7 @@ use Teknoo\Recipe\ChefInterface;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *
  * @covers \Teknoo\Recipe\Bowl\Bowl
+ * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
 class BowlClosureTest extends AbstractBowlTest
 {
