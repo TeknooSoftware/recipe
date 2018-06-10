@@ -51,7 +51,7 @@ class Cooking implements StateInterface
     public function begin()
     {
         return function (RecipeInterface $recipe): ChefInterface {
-            $chef = new self($recipe);
+            $chef = new static($recipe);
 
             return $chef;
         };

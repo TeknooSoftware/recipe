@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.1.0-beta4] - 2018-06-10
+###Fix
+- Method Chef::begin() use new static() instead of new self().
+
 ##[1.1.0-beta3] - 2018-06-10
 ###Update
 - The work plan injected into the RecipeBowl inherits of the original workplan
