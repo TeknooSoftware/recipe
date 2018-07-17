@@ -95,7 +95,7 @@ class RecipeBowlTest extends TestCase
 
         $subchef->expects(self::exactly(3))
             ->method('process')
-            ->with($workplan)
+            ->with([])
             ->willReturnSelf();
 
         $bowl = $this->buildBowl($recipe, $counter);
@@ -133,7 +133,7 @@ class RecipeBowlTest extends TestCase
 
         $subchef->expects(self::exactly(3))
             ->method('process')
-            ->with($workplan)
+            ->with([])
             ->willReturnSelf();
 
         $bowl = $this->buildBowl($recipe, $counter);

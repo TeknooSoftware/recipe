@@ -52,6 +52,7 @@ class Cooking implements StateInterface
     {
         return function (RecipeInterface $recipe): ChefInterface {
             $chef = new static($recipe);
+            $chef->workPlan = $this->workPlan;
 
             return $chef;
         };
