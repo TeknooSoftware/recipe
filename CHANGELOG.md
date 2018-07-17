@@ -22,7 +22,7 @@ This bowl can throw an exception if no callable has found in the workplan, but i
 ###Add
 - Feature "execute" on RecipeInterface and Recipe to embed recipes in another recipe. A subrecipe can be
 called severa time, in a loop, defined in parameter
-- Feature "setAsideAndBegin" on ChefInterface and Chef to support embedded recipe.
+- Feature "reserveAndBegin" on ChefInterface and Chef to support embedded recipe.
 - Add RecipeBowl to store in the execution plan a recipe as a bowl to be executed by the chef.
 
 ###Update

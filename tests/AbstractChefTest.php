@@ -64,12 +64,12 @@ abstract class AbstractChefTest extends TestCase
     /**
      * @expectedException \TypeError
      */
-    public function testExceptionOnSetAsideAndBeginWithBadRecipe()
+    public function testExceptionOnReserveAndBeginWithBadRecipe()
     {
-        $this->buildChef()->setAsideAndBegin(new \stdClass());
+        $this->buildChef()->reserveAndBegin(new \stdClass());
     }
 
-    public function testSetAsideAndBeginAvailableOnCooking()
+    public function testReserveAndBeginAvailableOnCooking()
     {
         $mainRecipe = $this->createMock(RecipeInterface::class);
         $mainRecipe->expects(self::once())
@@ -98,7 +98,7 @@ abstract class AbstractChefTest extends TestCase
 
                 self::assertInstanceOf(
                     ChefInterface::class,
-                    $subchef = $chef->setAsideAndBegin($subRecipe)
+                    $subchef = $chef->reserveAndBegin($subRecipe)
                 );
 
                 self::assertNotSame(
@@ -123,10 +123,10 @@ abstract class AbstractChefTest extends TestCase
     /**
      * @expectedException \Throwable
      */
-    public function testSetAsideAndBeginOnNonTrainedChef()
+    public function testReserveAndBeginOnNonTrainedChef()
     {
         $recipe = $this->createMock(RecipeInterface::class);
-        $this->buildChef()->setAsideAndBegin($recipe);
+        $this->buildChef()->reserveAndBegin($recipe);
     }
 
     /**

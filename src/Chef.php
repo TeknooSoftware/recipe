@@ -148,7 +148,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     /**
      * @inheritDoc
      */
-    public function setAsideAndBegin(RecipeInterface $recipe): ChefInterface
+    public function reserveAndBegin(RecipeInterface $recipe): ChefInterface
     {
         return $this->begin($recipe);
     }
