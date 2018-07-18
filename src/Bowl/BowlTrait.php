@@ -27,6 +27,8 @@ namespace Teknoo\Recipe\Bowl;
 use Teknoo\Recipe\ChefInterface;
 
 /**
+ * Default base implementation for Bowl to manage parameter mapping with the workplan's ingredients.
+ *
  * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
