@@ -1,5 +1,13 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.1.0] - 2018-07-18
+Stable release
+###Fix
+- Method ChefInterface::setAsideAndBegin() to reserveAndBegin() to follow the culinary vocabulary.
+
+###Change
+- Subchef are initialized with workplan of the master
+
 ##[1.1.0-beta4] - 2018-06-10
 ###Fix
 - Method Chef::begin() use new static() instead of new self().
