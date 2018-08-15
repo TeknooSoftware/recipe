@@ -26,6 +26,7 @@ Feature: Recipe with dynamic bowl
     When I define the dynamic step "createImmutable" my recipe
     When I set the dynamic callable "createImmutable" to "DateTimeImmutable::createFromMutable" my recipe
     When I define the excepted dish "DateTimeImmutable" to my recipe
+    And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
     Then I should have a new recipe.
 
   Scenario: Train a chef to cook a dynamic dish
@@ -35,18 +36,18 @@ Feature: Recipe with dynamic bowl
     When I define the dynamic step "createImmutable" my recipe
     When I set the dynamic callable "createImmutable" to "DateTimeImmutable::createFromMutable" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
-    Then I train the chef with the recipe
     And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
+    Then I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
 
-  Scenario: Train a chef to cook a dynamic dish without callable
+  Scenario: Train a chef to cook a dynamic dish without non mandatory callable
     Given I have an empty recipe
     And I have an untrained chef
     When I define a "\DateTime" to start my recipe
     When I define the dynamic step "createImmutable" my recipe
-    And I define the excepted dish "DateTimeImmutable" to my recipe
+    And I define the excepted dish "DateTime" to my recipe
+    And I must obtain an DateTime at "2017-07-01 10:00:00"
     Then I train the chef with the recipe
-    And I must obtain an Mutable DateTime at "2017-07-01 10:00:00"
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
 
   Scenario: Train a chef to cook a dynamic dish with a mandatory step
@@ -56,8 +57,8 @@ Feature: Recipe with dynamic bowl
     When I define the mandatory dynamic step "createImmutable" my recipe
     When I set the dynamic callable "createImmutable" to "DateTimeImmutable::createFromMutable" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
-    Then I train the chef with the recipe
     And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
+    Then I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
 
   Scenario: Train a chef to cook a dynamic dish without callable with a mandatory step
@@ -66,5 +67,6 @@ Feature: Recipe with dynamic bowl
     When I define a "\DateTime" to start my recipe
     When I define the mandatory dynamic step "createImmutable" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
+    And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
     Then I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime" and get an error

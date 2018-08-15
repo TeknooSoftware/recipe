@@ -47,6 +47,20 @@ class FeatureContext implements Context
      */
     private $workPlan = [];
 
+    private $definedClosure = [];
+
+    /**
+     * FeatureContext constructor.
+     */
+    public function __construct()
+    {
+        $createFromMutable = function (ChefInterface $chef, \DateTime $datetime) {
+            $immutable = \DateTimeImmutable::createFromMutable($datetime);
+            $chef->updateWorkPlan([\DateTimeImmutable::class => $immutable]);
+        };
+        $this->definedClosure['DateTimeImmutable::createFromMutable'] = $createFromMutable;
+    }
+
     private function pushRecipe(RecipeInterface $recipe)
     {
         $this->recipes[] = $recipe;
@@ -61,6 +75,10 @@ class FeatureContext implements Context
 
     private function parseMethod($method): callable
     {
+        if (isset($this->definedClosure[$method])) {
+            return $this->definedClosure[$method];
+        }
+
         if (false !== \strpos($method, '::')) {
             return \explode('::', $method);
         }
@@ -108,6 +126,11 @@ class FeatureContext implements Context
         }, function () {
             Assert::fail('The dish is not valid');
         });
+
+        $this->pushRecipe($this->lastRecipe->cook(function (ChefInterface $chef, $result) {
+            $chef->finish($result);
+        }, 'finish', ['result' => \trim($arg1, '\\')]));
+
         $this->pushRecipe($this->lastRecipe->given(new DishClass($arg1, $promise)));
     }
 
@@ -148,7 +171,7 @@ class FeatureContext implements Context
      */
     public function itStartsCookingWithAs($arg1, $arg2)
     {
-        $this->chef->process(\array_merge($this->workPlan, [$arg2 => new $arg2($arg1)]));
+        $this->chef->process(\array_merge($this->workPlan, [\trim($arg2, '\\') => new $arg2($arg1)]));
     }
 
     /**
@@ -163,6 +186,17 @@ class FeatureContext implements Context
         }
 
         Assert::fail('An error must be thrown');
+    }
+
+    /**
+     * @When I must obtain an DateTime at :arg1
+     */
+    public function iMustObtainAnDatetimeAt($arg1)
+    {
+        $this->callbackPromiseSuccess = function ($value) use ($arg1) {
+            Assert::assertInstanceOf(\DateTime::class, $value);
+            Assert::assertEquals(new \DateTime($arg1), $value);
+        };
     }
 
     /**
@@ -186,6 +220,18 @@ class FeatureContext implements Context
             Assert::assertEquals(new \DateTime($arg1), $value);
         };
     }
+
+    /**
+     * @Then I must obtain an String with at :arg1
+     */
+    public function iMustObtainAnStringWithAt($arg1)
+    {
+        $this->callbackPromiseSuccess = function ($value) use ($arg1) {
+            Assert::assertInstanceOf(\StringObject::class, $value);
+            Assert::assertEquals($arg1, (string) $value);
+        };
+    }
+
 
     /**
      * @Given I create a subrecipe :arg1
@@ -220,22 +266,9 @@ class FeatureContext implements Context
     }
 
     /**
-     * @When I define the excepted dish :arg1 with value :arg2 to my recipe
+     * @When I must obtain an IntBag with value :arg1
      */
-    public function iDefineTheExceptedDishWithValueToMyRecipe($arg1, $arg2)
-    {
-        $promise = new Promise(function ($value) use ($arg2) {
-            ($this->callbackPromiseSuccess)($value);
-        }, function () {
-            Assert::fail('The dish is not valid');
-        });
-        $this->pushRecipe($this->lastRecipe->given(new DishClass($arg1, $promise)));
-    }
-
-    /**
-     * @Then I must obtain an IntBag at :arg1
-     */
-    public function iMustObtainAnIntbagAt($arg1)
+    public function iMustObtainAnIntbagWithValue($arg1)
     {
         $this->callbackPromiseSuccess = function ($value) use ($arg1) {
             Assert::assertInstanceOf(IntBag::class, $value);

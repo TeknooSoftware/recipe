@@ -25,6 +25,7 @@ Feature: Recipe
     And I define a "\Closure" to start my recipe
     When I define the step "createImmutable" to do "DateTimeImmutable::createFromMutable" my recipe
     When I define the excepted dish "DateTimeImmutable" to my recipe
+    And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
     Then I should have a new recipe.
 
   Scenario: Train a chef to cook a dish
@@ -33,6 +34,6 @@ Feature: Recipe
     When I define a "\DateTime" to start my recipe
     And I define the step "createImmutable" to do "DateTimeImmutable::createFromMutable" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
-    Then I train the chef with the recipe
     And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
+    Then I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
