@@ -39,6 +39,13 @@ use Teknoo\Recipe\ChefInterface;
 trait BowlTrait
 {
     /**
+     * Name of the action
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
      * To map some argument's name to another ingredient name on the workplan.
      *
      * @var array
@@ -147,6 +154,7 @@ trait BowlTrait
      * @return array
      *
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function extractParameters(callable $callable, ChefInterface $chef, array &$workPlan): array
     {
@@ -174,6 +182,11 @@ trait BowlTrait
                 if (true === $automaticValueFound) {
                     continue;
                 }
+            }
+
+            if (BowlInterface::METHOD_NAME === $name) {
+                $values[] = $this->name;
+                continue;
             }
 
             if (!$parameter->isOptional()) {

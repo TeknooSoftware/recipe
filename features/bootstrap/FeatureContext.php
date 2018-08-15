@@ -54,9 +54,10 @@ class FeatureContext implements Context
      */
     public function __construct()
     {
-        $createFromMutable = function (ChefInterface $chef, \DateTime $datetime) {
+        $createFromMutable = function (ChefInterface $chef, \DateTime $datetime, $_methodName) {
             $immutable = \DateTimeImmutable::createFromMutable($datetime);
             $chef->updateWorkPlan([\DateTimeImmutable::class => $immutable]);
+            Assert::assertEquals('createImmutable', $_methodName);
         };
         $this->definedClosure['DateTimeImmutable::createFromMutable'] = $createFromMutable;
     }
@@ -282,7 +283,7 @@ class FeatureContext implements Context
     public function iDefineTheDynamicStepMyRecipe($arg1)
     {
         $this->pushRecipe($this->lastRecipe->cook(
-            new \Teknoo\Recipe\Bowl\DynamicBowl($arg1, false), $arg1)
+            new \Teknoo\Recipe\Bowl\DynamicBowl($arg1, false, [], $arg1), $arg1)
         );
     }
 
@@ -292,7 +293,7 @@ class FeatureContext implements Context
     public function iDefineTheMandatoryDynamicStepMyRecipe($arg1)
     {
         $this->pushRecipe($this->lastRecipe->cook(
-            new \Teknoo\Recipe\Bowl\DynamicBowl($arg1, true), $arg1)
+            new \Teknoo\Recipe\Bowl\DynamicBowl($arg1, true, [], $arg1), $arg1)
         );
     }
 

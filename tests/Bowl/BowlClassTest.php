@@ -39,12 +39,13 @@ use Teknoo\Recipe\ChefInterface;
  */
 class BowlClassTest extends AbstractBowlTest
 {
-    public static function methodToCall(ChefInterface $chef, $bar, $foo2, \DateTime $date)
+    public static function methodToCall(ChefInterface $chef, $bar, $foo2, \DateTime $date, $_methodName)
     {
         $chef->continue([
             'bar' => $bar,
             'foo2' => $foo2,
-            'date' => $date->getTimestamp()
+            'date' => $date->getTimestamp(),
+            '_methodName' => $_methodName,
         ]);
     }
 
@@ -65,7 +66,8 @@ class BowlClassTest extends AbstractBowlTest
     {
         return new Bowl(
             $this->getCallable(),
-            $this->getMapping()
+            $this->getMapping(),
+            'bowlClass'
         );
     }
 }

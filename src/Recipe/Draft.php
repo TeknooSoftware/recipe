@@ -77,7 +77,7 @@ class Draft implements StateInterface
 
             $callable = $action;
             if (!$action instanceof BowlInterface) {
-                $callable = new Bowl($action, $with);
+                $callable = new Bowl($action, $with, $name);
             }
 
             if (empty($position)) {

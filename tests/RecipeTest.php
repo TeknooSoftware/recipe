@@ -52,9 +52,9 @@ class RecipeTest extends AbstractRecipeTest
         $chef->expects(self::once())
             ->method('followSteps')
             ->with([
-                new Bowl('microtime', []),
-                new Bowl('microtime', []),
-                new Bowl('microtime', [])
+                new Bowl('microtime', [], 'stepB'),
+                new Bowl('microtime', [], 'stepA'),
+                new Bowl('microtime', [], 'stepC')
             ])
             ->willReturnSelf();
 

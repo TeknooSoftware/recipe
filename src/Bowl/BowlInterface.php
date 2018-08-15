@@ -42,6 +42,8 @@ use Teknoo\Recipe\ChefInterface;
  */
 interface BowlInterface extends ImmutableInterface
 {
+    const METHOD_NAME = '_methodName';
+
     /**
      * To execute the callable contained into the bowl. The bowl instance must automatically map ingredients contained
      * on the Work plan to the callable's arguments :

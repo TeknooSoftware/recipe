@@ -64,14 +64,20 @@ class DynamicBowl implements BowlInterface
      * @param string $callableKeyName
      * @param bool $throwIfNotExisting
      * @param array $mapping
+     * @param string $name
      */
-    public function __construct(string $callableKeyName, bool $throwIfNotExisting, array $mapping = [])
-    {
+    public function __construct(
+        string $callableKeyName,
+        bool $throwIfNotExisting,
+        $mapping = [],
+        string $name = ''
+    ) {
         $this->uniqueConstructorCheck();
 
         $this->callableKeyName = $callableKeyName;
         $this->throwIfNotExisting = $throwIfNotExisting;
         $this->mapping = $mapping;
+        $this->name = $name;
     }
 
     /**

@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.1.2] - 2018-08-16
+Stable release
+###Add
+- Bowl and DynamicBowl can pass to the special parameter "_methodName", the name of the current step.
+
 ##[1.1.1] - 2018-08-15
 Stable release
 ###Fix

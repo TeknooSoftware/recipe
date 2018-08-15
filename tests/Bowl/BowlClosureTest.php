@@ -41,11 +41,12 @@ class BowlClosureTest extends AbstractBowlTest
 {
     protected function getCallable()
     {
-        return function (ChefInterface $chef, $bar, $foo2, \DateTime $date) {
+        return function (ChefInterface $chef, $bar, $foo2, \DateTime $date, $_methodName) {
             $chef->continue([
                 'bar' => $bar,
                 'foo2' => $foo2,
-                'date' => $date->getTimestamp()
+                'date' => $date->getTimestamp(),
+                '_methodName' => $_methodName,
             ]);
         };
     }
@@ -62,7 +63,8 @@ class BowlClosureTest extends AbstractBowlTest
     {
         return new Bowl(
             $this->getCallable(),
-            $this->getMapping()
+            $this->getMapping(),
+            'bowlClass'
         );
     }
 }

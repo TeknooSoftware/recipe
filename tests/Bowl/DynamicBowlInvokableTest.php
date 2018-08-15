@@ -42,12 +42,13 @@ class DynamicBowlInvokableTest extends AbstractBowlTest
     protected function getCallable(): callable
     {
         $object = new class() {
-            public function __invoke(ChefInterface $chef, $bar, $foo2, \DateTime $date)
+            public function __invoke(ChefInterface $chef, $bar, $foo2, \DateTime $date, $_methodName)
             {
                 $chef->continue([
                     'bar' => $bar,
                     'foo2' => $foo2,
-                    'date' => $date->getTimestamp()
+                    'date' => $date->getTimestamp(),
+                    '_methodName' => $_methodName,
                 ]);
             }
         };
@@ -84,7 +85,8 @@ class DynamicBowlInvokableTest extends AbstractBowlTest
         return new DynamicBowl(
             'callableToExec',
             false,
-            $this->getMapping()
+            $this->getMapping(),
+            'bowlClass'
         );
     }
 }
