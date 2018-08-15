@@ -92,7 +92,8 @@ class RecipeBowl implements BowlInterface
     private function checkLooping(ChefInterface $chef, int $counter, array &$workPlan): bool
     {
         if (\is_numeric($this->repeat)) {
-            return $counter <= $this->repeat;
+            //Strictly less because the step has been executed at least one time.
+            return $counter < $this->repeat;
         }
 
         $loopWorkPlan = \array_merge($workPlan, ['counter' => $counter, 'bowl' => $this]);

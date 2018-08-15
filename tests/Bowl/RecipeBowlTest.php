@@ -88,12 +88,12 @@ class RecipeBowlTest extends TestCase
 
         $workplan = ['foo' => 'bar'];
 
-        $chef->expects(self::exactly(3))
+        $chef->expects(self::exactly(2))
             ->method('reserveAndBegin')
             ->with($recipe)
             ->willReturn($subchef);
 
-        $subchef->expects(self::exactly(3))
+        $subchef->expects(self::exactly(2))
             ->method('process')
             ->with([])
             ->willReturnSelf();
