@@ -1,5 +1,12 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.1.1] - 2018-08-15
+Stable release
+###Fix
+- Clean and fix behavior tests, Recipe's dish was not correctly tested.
+- Fix Recipe bowl, they have an extra looping because the loop counter had a bug.
+- Fix recipe compiling when several steps share the same name, firsts was lost.
+
 ##[1.1.0] - 2018-07-18
 Stable release
 ###Fix
