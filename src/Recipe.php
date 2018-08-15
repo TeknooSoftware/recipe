@@ -190,7 +190,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
         if (empty($this->compiled)) {
             $this->compiled = [];
             foreach ($this->browseSteps() as $name => $step) {
-                $this->compiled[$name] = $step;
+                $this->compiled[] = $step;
             }
 
             $this->updateStates();
