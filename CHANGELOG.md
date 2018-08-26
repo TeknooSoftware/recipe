@@ -1,5 +1,11 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.2.0] - 2018-08-26
+Stable release
+###Add
+- Recipe method "onError" to define a callable or a BowlInterface instance to execute when an exception
+is occurred during a recipe's cooking. The exception still be rethrown by the chef after.
+
 ##[1.1.2] - 2018-08-16
 Stable release
 ###Add

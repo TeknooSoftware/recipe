@@ -112,7 +112,17 @@ class Cooking implements StateInterface
             $this->updateMyWorkPlan($with);
 
             while (($callable = $this->getNextStep($nextStep)) instanceof BowlInterface) {
-                $callable->execute($this, $this->workPlan);
+                try {
+                    $callable->execute($this, $this->workPlan);
+                } catch (\Throwable $error) {
+                    if ($this->onError instanceof BowlInterface) {
+                        $this->workPlan['exception'] = $error;
+                        $this->onError->execute($this, $this->workPlan);
+                    }
+
+                    throw $error;
+                }
+
                 $nextStep = null;
             }
 

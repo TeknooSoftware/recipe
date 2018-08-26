@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe;
 
-use Teknoo\Recipe\Bowl\Bowl;
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef\Cooking;
 use Teknoo\Recipe\Chef\Free;
 use Teknoo\Recipe\Chef\Trained;
@@ -62,13 +62,17 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     private $workPlan = [];
 
     /**
-     * @var Bowl[]
+     * @var BowlInterface[]
      */
     private $steps = [];
 
+    /**
+     * @var BowlInterface|null
+     */
+    private $onError;
 
     /**
-     * @var Bowl[]
+     * @var BowlInterface[]
      */
     private $stepsNames = [];
 
@@ -125,6 +129,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     /**
      * Chef constructor.
      * @param RecipeInterface|null $recipe
+     * @throws \Teknoo\States\Proxy\Exception\StateNotFound
      */
     public function __construct(RecipeInterface $recipe = null)
     {
@@ -172,9 +177,9 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     /**
      * @inheritDoc
      */
-    public function followSteps(array $steps): ChefInterface
+    public function followSteps(array $steps, BowlInterface $onError = null): ChefInterface
     {
-        return $this->followStepsRecipe($steps);
+        return $this->followStepsRecipe($steps, $onError);
     }
 
     /**

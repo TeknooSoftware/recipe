@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe;
 
-use Teknoo\Recipe\Bowl\Bowl;
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 
 /**
@@ -75,10 +75,11 @@ interface ChefInterface
     /**
      * To learn steps to able to cook the recipe.
      *
-     * @param Bowl[] $steps
+     * @param BowlInterface[] $steps
+     * @param BowlInterface|null $onError
      * @return ChefInterface
      */
-    public function followSteps(array $steps): ChefInterface;
+    public function followSteps(array $steps, BowlInterface $onError = null): ChefInterface;
 
     /**
      * To continue to cook the recipe and execute the next step, but before complete the workp lan

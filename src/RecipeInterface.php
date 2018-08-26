@@ -66,6 +66,14 @@ interface RecipeInterface extends ImmutableInterface
     public function cook($action, string $name, array $with = [], int $position = null): RecipeInterface;
 
     /**
+     * To define action when an error is occurred
+     *
+     * @param callable|BowlInterface $action
+     * @return RecipeInterface
+     */
+    public function onError($action): RecipeInterface;
+
+    /**
      * To define actions to realize the recipe.
      *
      * @param RecipeInterface $recipe

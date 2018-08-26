@@ -143,6 +143,34 @@ abstract class AbstractRecipeTest extends TestCase
         );
     }
 
+    public function testOnError()
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithError = $recipe->onError(
+            function () {
+            }
+        );
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithError
+        );
+
+        self::assertNotSame(
+            $recipe,
+            $recipeWithError
+        );
+    }
+
+    /**
+     * @expectedException \TypeError
+     */
+    public function testExceptionOnErrorWithNotCallable()
+    {
+        $this->buildRecipe()->onError(new \stdClass());
+    }
+
+
     /**
      * @expectedException \TypeError
      */
@@ -213,7 +241,8 @@ abstract class AbstractRecipeTest extends TestCase
         $recipeWithStep = $recipe->execute(
             $this->createMock(RecipeInterface::class),
             'foo',
-            function() {},
+            function () {
+            },
             123
         );
 

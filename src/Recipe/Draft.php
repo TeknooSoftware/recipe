@@ -90,6 +90,25 @@ class Draft implements StateInterface
         };
     }
 
+    public function setOnError()
+    {
+        return function ($action): RecipeInterface {
+            /**
+             * @var Recipe $this
+             */
+            $that = $this->cloneMe();
+
+            $callable = $action;
+            if (!$action instanceof BowlInterface) {
+                $callable = new Bowl($action, []);
+            }
+
+            $that->onError = $callable;
+
+            return $that;
+        };
+    }
+
     public function addSubRecipe()
     {
         return function (RecipeInterface $recipe, string $name, $repeat = 1, int $position = null): RecipeInterface {

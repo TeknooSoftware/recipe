@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Teknoo\Recipe;
 
 use Teknoo\Immutable\ImmutableTrait;
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Recipe\Draft;
@@ -74,6 +75,11 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
      * @var callable[]|RecipeInterface[]
      */
     private $steps = [];
+
+    /**
+     * @var callable|null
+     */
+    private $onError;
 
     /**
      * @var callable[]
@@ -147,6 +153,14 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     /**
      * @inheritDoc
      */
+    public function onError($action): RecipeInterface
+    {
+        return $this->setOnError($action);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function execute(RecipeInterface $recipe, string $name, $repeat = 1, int $position = null): RecipeInterface
     {
         return $this->addSubRecipe($recipe, $name, $repeat, $position);
@@ -206,7 +220,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     {
         $that = $this->cloneMe();
 
-        $chef->followSteps($that->compileStep());
+        $chef->followSteps($that->compileStep(), $this->onError);
 
         return $that;
     }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\RecipeInterface;
@@ -68,12 +69,13 @@ class Free implements StateInterface
      */
     public function followStepsRecipe()
     {
-        return function (array $steps): ChefInterface {
+        return function (array $steps, ?BowlInterface $onError): ChefInterface {
             /**
              * @var Chef $this
              */
             $this->steps = \array_values($steps);
             $this->stepsNames = \array_flip(\array_keys($steps));
+            $this->onError = $onError;
 
             $this->updateStates();
 

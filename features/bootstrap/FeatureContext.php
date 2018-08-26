@@ -47,7 +47,15 @@ class FeatureContext implements Context
      */
     private $workPlan = [];
 
+    /**
+     * @var array|callable[]
+     */
     private $definedClosure = [];
+
+    /**
+     * @var string
+     */
+    private static $message;
 
     /**
      * FeatureContext constructor.
@@ -190,6 +198,21 @@ class FeatureContext implements Context
     }
 
     /**
+     * @Then It starts cooking and obtain an error
+     */
+    public function itStartsCookingAndObtainAnError()
+    {
+        try {
+            $this->chef->process($this->workPlan);
+        } catch (\Throwable $e) {
+            ($this->callbackPromiseSuccess)();
+            return;
+        }
+
+        Assert::fail('An error must be thrown');
+    }
+
+    /**
      * @When I must obtain an DateTime at :arg1
      */
     public function iMustObtainAnDatetimeAt($arg1)
@@ -257,6 +280,16 @@ class FeatureContext implements Context
     }
 
     /**
+     * @When I define the behavior on error to do :arg1 my recipe
+     */
+    public function iDefineTheBehaviorOnErrorToDoMyRecipe($arg1)
+    {
+        $this->pushRecipe(
+            $this->lastRecipe->onError($this->parseMethod($arg1))
+        );
+    }
+
+    /**
      * @When I include the recipe :arg1 to :arg2 in my recipe to call :arg3 times
      */
     public function iIncludeTheRecipeToInMyRecipeToCallTimes($arg1, $arg2, $arg3)
@@ -274,6 +307,16 @@ class FeatureContext implements Context
         $this->callbackPromiseSuccess = function ($value) use ($arg1) {
             Assert::assertInstanceOf(IntBag::class, $value);
             Assert::assertEquals(new IntBag($arg1), $value);
+        };
+    }
+
+    /**
+     * @When I must obtain an error message :arg1
+     */
+    public function iMustObtainAnErrorMessage($arg1)
+    {
+        $this->callbackPromiseSuccess = function () use ($arg1) {
+            Assert::assertEquals($arg1, static::$message);
         };
     }
 
@@ -303,5 +346,15 @@ class FeatureContext implements Context
     public function iSetTheDynamicCallableToMyRecipe($arg1, $arg2)
     {
         $this->workPlan[$arg1] = $this->parseMethod($arg2);
+    }
+
+    public static function createException()
+    {
+        throw new \RuntimeException('There had an error');
+    }
+
+    public static function onError(\Throwable $exception)
+    {
+        self::$message = $exception->getMessage();
     }
 }
