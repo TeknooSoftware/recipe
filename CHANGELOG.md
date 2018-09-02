@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.2.1] - 2018-08-26
+Stable release
+###Fix
+- Fix composer requirement about teknoo/states.
+
 ##[1.2.0] - 2018-08-26
 Stable release
 ###Add
