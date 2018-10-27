@@ -67,4 +67,49 @@ class BowlClosureTest extends AbstractBowlTest
             'bowlClass'
         );
     }
+
+    public function testExecuteWithOptional()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+        $chef->expects(self::once())
+            ->method('continue')
+            ->with([
+                'date' => (new \DateTime('2018-01-01'))->getTimestamp(),
+                'opt1' => 123,
+                'opt2' => null,
+                'opt3' => 'foo',
+            ])
+            ->willReturnSelf();
+
+        $chef->expects(self::never())
+            ->method('updateWorkPlan');
+
+        $closure = function (ChefInterface $chef, \DateTime $date, $opt1 = 123, $opt2 = null, $opt3 = null) {
+            $chef->continue([
+                'date' => $date->getTimestamp(),
+                'opt1' => $opt1,
+                'opt2' => $opt2,
+                'opt3' => $opt3,
+            ]);
+        };
+
+        $bowl = new Bowl(
+            $closure,
+            $this->getMapping(),
+            'bowlClass'
+        );;
+
+        $values = [
+            'now' => (new \DateTime('2018-01-01')),
+            'opt3' => 'foo',
+        ];
+
+        self::assertInstanceOf(
+            BowlInterface::class,
+            $bowl->execute(
+                $chef,
+                $values
+            )
+        );
+    }
 }

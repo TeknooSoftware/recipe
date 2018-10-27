@@ -191,6 +191,8 @@ trait BowlTrait
 
             if (!$parameter->isOptional()) {
                 throw new \RuntimeException("Missing the parameter {$parameter->getName()} in the WorkPlan");
+            } else {
+                $values[] = $parameter->getDefaultValue();
             }
         }
 

@@ -1,5 +1,11 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.2.2] - 2018-10-27
+Stable release
+###Fix
+- Fix issue with bowl and optionals arguments not correctly setted when a previous optional argument
+(following the order of the declaration) was not set. 
+
 ##[1.2.1] - 2018-08-26
 Stable release
 ###Fix
