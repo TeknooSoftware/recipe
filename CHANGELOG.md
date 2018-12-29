@@ -1,5 +1,12 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.3.0] - 2018-10-27
+Stable release
+###Update
+- Recipe method "onError" can now be called several times to add multiple error handler
+- Chef can now manage multiple error handler. Interface has been updated to avoid bc break and allow single onError
+  and an array of Bowl.
+
 ##[1.2.2] - 2018-10-27
 Stable release
 ###Fix

@@ -101,6 +101,20 @@ class Cooking implements StateInterface
     }
 
     /**
+     * @return \Closure
+     */
+    private function callErrors()
+    {
+        return function (\Throwable $error) {
+            $this->workPlan['exception'] = $error;
+
+            foreach ($this->onError as $onError) {
+                $onError->execute($this, $this->workPlan);
+            }
+        };
+    }
+
+    /**
      * Called by a step to continue the execution of the recipe but before, update ingredients available on the workplan
      */
     public function continueRecipe()
@@ -115,10 +129,7 @@ class Cooking implements StateInterface
                 try {
                     $callable->execute($this, $this->workPlan);
                 } catch (\Throwable $error) {
-                    if ($this->onError instanceof BowlInterface) {
-                        $this->workPlan['exception'] = $error;
-                        $this->onError->execute($this, $this->workPlan);
-                    }
+                    $this->callErrors($error);
 
                     throw $error;
                 }

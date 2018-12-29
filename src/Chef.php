@@ -67,9 +67,9 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     private $steps = [];
 
     /**
-     * @var BowlInterface|null
+     * @var BowlInterface[]
      */
-    private $onError;
+    private $onError = [];
 
     /**
      * @var BowlInterface[]
@@ -177,8 +177,13 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     /**
      * @inheritDoc
      */
-    public function followSteps(array $steps, BowlInterface $onError = null): ChefInterface
+    public function followSteps(array $steps, $onError = []): ChefInterface
     {
+        if ($onError instanceof BowlInterface) {
+            //Avoid BC Break
+            $onError = [$onError];
+        }
+
         return $this->followStepsRecipe($steps, $onError);
     }
 

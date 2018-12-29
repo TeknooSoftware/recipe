@@ -77,9 +77,9 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     private $steps = [];
 
     /**
-     * @var callable|null
+     * @var callable[]
      */
-    private $onError;
+    private $onError = [];
 
     /**
      * @var callable[]

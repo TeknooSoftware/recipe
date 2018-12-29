@@ -76,10 +76,10 @@ interface ChefInterface
      * To learn steps to able to cook the recipe.
      *
      * @param BowlInterface[] $steps
-     * @param BowlInterface|null $onError
+     * @param BowlInterface[] $onError
      * @return ChefInterface
      */
-    public function followSteps(array $steps, BowlInterface $onError = null): ChefInterface;
+    public function followSteps(array $steps, /* BowlInterface */ $onError = []): ChefInterface;
 
     /**
      * To continue to cook the recipe and execute the next step, but before complete the workp lan

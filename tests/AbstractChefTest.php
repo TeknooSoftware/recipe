@@ -342,6 +342,55 @@ abstract class AbstractChefTest extends TestCase
 
         self::assertTrue($called);
     }
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testExceptionWithSeveralExceptionBowlDefined()
+    {
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+
+        $called = false;
+        $bowl1 = $this->createMock(BowlInterface::class);
+        $bowl1->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function () use (&$called) {
+                throw new \RuntimeException('fooBar');
+            });
+
+        $errorBowl1 = $this->createMock(BowlInterface::class);
+        $errorBowl1->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function ($chef, &$workPlan) use (&$called, $errorBowl1) {
+                self::assertInstanceOf(\RuntimeException::class, $workPlan['exception']);
+                $called = true;
+
+                return $errorBowl1;
+            });
+
+        $errorBowl2 = $this->createMock(BowlInterface::class);
+        $errorBowl2->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function ($chef, &$workPlan) use (&$called, $errorBowl2) {
+                self::assertInstanceOf(\RuntimeException::class, $workPlan['exception']);
+                $called = true;
+
+                return $errorBowl2;
+            });
+
+        $bowl2 = $this->createMock(BowlInterface::class);
+        $bowl2->expects(self::never())
+            ->method('execute');
+
+        $chef->followSteps([$bowl1, $bowl2], [$errorBowl1, $errorBowl2]);
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->process(['foo'=>'bar'])
+        );
+
+        self::assertTrue($called);
+    }
 
     public function testContinueNextStep()
     {

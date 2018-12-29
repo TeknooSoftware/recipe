@@ -69,7 +69,7 @@ class Free implements StateInterface
      */
     public function followStepsRecipe()
     {
-        return function (array $steps, ?BowlInterface $onError): ChefInterface {
+        return function (array $steps, array $onError): ChefInterface {
             /**
              * @var Chef $this
              */

@@ -103,7 +103,7 @@ class Draft implements StateInterface
                 $callable = new Bowl($action, []);
             }
 
-            $that->onError = $callable;
+            $that->onError[] = $callable;
 
             return $that;
         };
