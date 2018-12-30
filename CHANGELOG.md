@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.3.1] - 2018-10-27
+Stable release
+###Fix
+- When an error handler is defined, exception is not rethrowed automatically, but the recipe remains interrupted.
+
 ##[1.3.0] - 2018-10-27
 Stable release
 ###Update

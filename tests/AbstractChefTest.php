@@ -303,9 +303,6 @@ abstract class AbstractChefTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testExceptionWithExceptionBowlDefined()
     {
         $chef = $this->buildChef();
@@ -342,9 +339,7 @@ abstract class AbstractChefTest extends TestCase
 
         self::assertTrue($called);
     }
-    /**
-     * @expectedException \RuntimeException
-     */
+
     public function testExceptionWithSeveralExceptionBowlDefined()
     {
         $chef = $this->buildChef();

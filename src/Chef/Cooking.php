@@ -108,6 +108,10 @@ class Cooking implements StateInterface
         return function (\Throwable $error) {
             $this->workPlan['exception'] = $error;
 
+            if (empty($this->onError)) {
+                throw $error;
+            }
+
             foreach ($this->onError as $onError) {
                 $onError->execute($this, $this->workPlan);
             }
@@ -129,9 +133,9 @@ class Cooking implements StateInterface
                 try {
                     $callable->execute($this, $this->workPlan);
                 } catch (\Throwable $error) {
-                    $this->callErrors($error);
+                    $this->position = \count($this->steps) + 1;
 
-                    throw $error;
+                    $this->callErrors($error);
                 }
 
                 $nextStep = null;
