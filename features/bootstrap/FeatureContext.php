@@ -205,11 +205,21 @@ class FeatureContext implements Context
         try {
             $this->chef->process($this->workPlan);
         } catch (\Throwable $e) {
+            static::$message = $e->getMessage();
             ($this->callbackPromiseSuccess)();
             return;
         }
 
         Assert::fail('An error must be thrown');
+    }
+
+    /**
+     * @Then It starts cooking and obtain an catched error with message :arg1
+     */
+    public function itStartsCookingAndObtainAnCatchedErrorWithMessage($arg1)
+    {
+        $this->chef->process($this->workPlan);
+        Assert::assertEquals($arg1, static::$message);
     }
 
     /**
