@@ -1,11 +1,17 @@
 #Teknoo Software - Recipe - Change Log
 
-##[1.3.1] - 2018-10-27
+##[1.3.2] - 2019-01-04
+Stable release
+###Update
+- QA - Check technical debt
+- Add support to PHP 7.3
+
+##[1.3.1] - 2018-12-18
 Stable release
 ###Fix
 - When an error handler is defined, exception is not rethrowed automatically, but the recipe remains interrupted.
 
-##[1.3.0] - 2018-10-27
+##[1.3.0] - 2018-12-18
 Stable release
 ###Update
 - Recipe method "onError" can now be called several times to add multiple error handler
