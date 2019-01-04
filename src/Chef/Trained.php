@@ -40,6 +40,8 @@ use Teknoo\States\State\StateTrait;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @mixin Chef
  */
 class Trained implements StateInterface
 {
@@ -48,7 +50,7 @@ class Trained implements StateInterface
     /**
      * To update/prepare ingredients available on the workplan for the cooking
      */
-    public function updateMyWorkPlan()
+    public function updateMyWorkPlan(): callable
     {
         return function (array $with): ChefInterface {
             /**
@@ -63,7 +65,7 @@ class Trained implements StateInterface
     /**
      * To execute a cooking and switch to cookine state.
      */
-    public function runRecipe()
+    public function runRecipe(): callable
     {
         return function (array $workPlan): ChefInterface {
             //If this method is called, $this->recipe is a valid RecipeInterface instance

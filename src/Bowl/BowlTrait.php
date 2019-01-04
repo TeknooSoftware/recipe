@@ -57,7 +57,7 @@ trait BowlTrait
      *
      * @var string[]
      */
-    private $parametersCache = null;
+    private $parametersCache;
 
     /**
      * To return the Reflection instance about this callable, supports functions, closures, objects methods or class
@@ -129,7 +129,7 @@ trait BowlTrait
      * @param array $values
      * @return bool
      */
-    private function findInstanceForParameter(\ReflectionClass $class, array &$workPlan, array &$values)
+    private function findInstanceForParameter(\ReflectionClass $class, array &$workPlan, array &$values): bool
     {
         $automaticValueFound = false;
 
@@ -167,7 +167,7 @@ trait BowlTrait
                 continue;
             }
 
-            if (!empty(($this->mapping[$name]))) {
+            if (!empty($this->mapping[$name])) {
                 $name = $this->mapping[$name];
             }
 
@@ -191,9 +191,9 @@ trait BowlTrait
 
             if (!$parameter->isOptional()) {
                 throw new \RuntimeException("Missing the parameter {$parameter->getName()} in the WorkPlan");
-            } else {
-                $values[] = $parameter->getDefaultValue();
             }
+
+            $values[] = $parameter->getDefaultValue();
         }
 
         return $values;

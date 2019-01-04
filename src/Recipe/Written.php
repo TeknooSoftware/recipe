@@ -41,6 +41,8 @@ use Teknoo\States\State\StateTrait;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @mixin Recipe
  */
 class Written implements StateInterface
 {
@@ -49,7 +51,7 @@ class Written implements StateInterface
     /**
      * To check if all ingredients are available and valid on the workplan
      */
-    public function prepareCooking()
+    public function prepareCooking(): callable
     {
         return function (array $workPlan, ChefInterface $chef): RecipeInterface {
             /**
@@ -66,7 +68,7 @@ class Written implements StateInterface
     /**
      * To validate the result of the cooking.
      */
-    public function validateDish()
+    public function validateDish(): callable
     {
         return function ($value): RecipeInterface {
             /**

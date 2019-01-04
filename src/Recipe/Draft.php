@@ -45,12 +45,14 @@ use Teknoo\States\State\StateTrait;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @mixin Recipe
  */
 class Draft implements StateInterface
 {
     use StateTrait;
 
-    public function addIngredient()
+    public function addIngredient(): callable
     {
         return function (IngredientInterface $ingredient): RecipeInterface {
             /**
@@ -63,7 +65,7 @@ class Draft implements StateInterface
         };
     }
 
-    public function addStep()
+    public function addStep(): callable
     {
         return function ($action, string $name, array $with = [], int $position = null): RecipeInterface {
             if (!$action instanceof BowlInterface && !\is_callable($action)) {
@@ -90,7 +92,7 @@ class Draft implements StateInterface
         };
     }
 
-    public function setOnError()
+    public function setOnError(): callable
     {
         return function ($action): RecipeInterface {
             /**
@@ -109,7 +111,7 @@ class Draft implements StateInterface
         };
     }
 
-    public function addSubRecipe()
+    public function addSubRecipe(): callable
     {
         return function (RecipeInterface $recipe, string $name, $repeat = 1, int $position = null): RecipeInterface {
             /**
@@ -133,7 +135,7 @@ class Draft implements StateInterface
         };
     }
 
-    public function setExceptedDish()
+    public function setExceptedDish(): callable
     {
         return function (DishInterface $dish): RecipeInterface {
             /**

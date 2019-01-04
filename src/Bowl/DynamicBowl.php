@@ -57,7 +57,7 @@ class DynamicBowl implements BowlInterface
     /**
      * @var null|callable
      */
-    private $previousCallable = null;
+    private $previousCallable;
 
     /**
      * DynamicBowl constructor.
@@ -110,7 +110,7 @@ class DynamicBowl implements BowlInterface
     /**
      * @param callable $callable
      */
-    private function checkToClearsParametersCache(callable $callable)
+    private function checkToClearsParametersCache(callable $callable): void
     {
         if ($this->previousCallable !== $callable) {
             $this->parametersCache = null;

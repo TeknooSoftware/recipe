@@ -43,12 +43,14 @@ use Teknoo\States\State\StateTrait;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @mixin Chef
  */
 class Cooking implements StateInterface
 {
     use StateTrait;
 
-    public function begin()
+    public function begin(): callable
     {
         return function (RecipeInterface $recipe): ChefInterface {
             $chef = new static($recipe);
@@ -61,7 +63,7 @@ class Cooking implements StateInterface
     /**
      * To memorize a missing ingredients to stop the cooking of the recipe.
      */
-    public function missingIngredient()
+    public function missingIngredient(): callable
     {
         return function (IngredientInterface $ingredient, string $message): ChefInterface {
             /**
@@ -76,7 +78,7 @@ class Cooking implements StateInterface
     /**
      * To get the next step in the cooking to execute
      */
-    private function getNextStep()
+    private function getNextStep(): callable
     {
         return function (string $nextStep = null): ?BowlInterface {
             /**
@@ -103,7 +105,7 @@ class Cooking implements StateInterface
     /**
      * @return \Closure
      */
-    private function callErrors()
+    private function callErrors(): callable
     {
         return function (\Throwable $error) {
             $this->workPlan['exception'] = $error;
@@ -121,7 +123,7 @@ class Cooking implements StateInterface
     /**
      * Called by a step to continue the execution of the recipe but before, update ingredients available on the workplan
      */
-    public function continueRecipe()
+    public function continueRecipe(): callable
     {
         return function (array $with = [], string $nextStep = null): ChefInterface {
             /**
@@ -148,7 +150,7 @@ class Cooking implements StateInterface
     /**
      * Called by a step to stop the execution of the recipe and check if the dish is the result excepted.
      */
-    public function finishRecipe()
+    public function finishRecipe(): callable
     {
         return function ($result): ChefInterface {
             /**
@@ -167,7 +169,7 @@ class Cooking implements StateInterface
      * Internal method to prepare a cooking, check is all ingredients are available.
      * @internal
      */
-    private function prepare()
+    private function prepare(): callable
     {
         return function (): void {
             /**
@@ -185,7 +187,7 @@ class Cooking implements StateInterface
      * Internal method to clean the workplan after cooking.
      * @internal
      */
-    private function clean()
+    private function clean(): callable
     {
         return function (): void {
             /**
@@ -201,7 +203,7 @@ class Cooking implements StateInterface
     /**
      * To check if the chef has memorized some missing ingredients
      */
-    private function checkMissingIngredients()
+    private function checkMissingIngredients(): callable
     {
         return function (): void {
             /**

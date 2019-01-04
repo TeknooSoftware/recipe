@@ -42,6 +42,8 @@ use Teknoo\States\State\StateTrait;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @mixin Chef
  */
 class Free implements StateInterface
 {
@@ -50,7 +52,7 @@ class Free implements StateInterface
     /**
      * To read and lean a recipe.
      */
-    public function readRecipe()
+    public function readRecipe(): callable
     {
         return function (RecipeInterface $recipe): ChefInterface {
             /**
@@ -67,7 +69,7 @@ class Free implements StateInterface
     /**
      * To learn steps in the recipe, in the good order
      */
-    public function followStepsRecipe()
+    public function followStepsRecipe(): callable
     {
         return function (array $steps, array $onError): ChefInterface {
             /**

@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Teknoo\Recipe;
 
 use Teknoo\Immutable\ImmutableTrait;
-use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Recipe\Draft;
@@ -88,6 +87,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
 
     /**
      * Recipe constructor.
+     * @throws \Teknoo\States\Proxy\Exception\StateNotFound
      */
     public function __construct()
     {
@@ -100,6 +100,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
 
     /**
      * @inheritDoc
+     * @throws \Teknoo\States\Proxy\Exception\StateNotFound
      */
     public function __clone()
     {
@@ -179,7 +180,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
      *
      * @return \Generator
      */
-    private function browseSteps()
+    private function browseSteps(): \Generator
     {
         $steps = $this->steps;
         ksort($steps);
@@ -196,7 +197,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
      *
      * @return array|callable[]
      */
-    private function compileStep()
+    private function compileStep(): array
     {
         /**
          * @var Recipe $this

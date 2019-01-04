@@ -69,8 +69,7 @@ class Promise implements PromiseInterface
     public function success($result = null): PromiseInterface
     {
         if (\is_callable($this->onSuccess)) {
-            $onSuccess = ($this->onSuccess);
-            $onSuccess(...\func_get_args());
+            ($this->onSuccess)(...\func_get_args());
         }
 
         return $this;
@@ -82,8 +81,7 @@ class Promise implements PromiseInterface
     public function fail(\Throwable $throwable): PromiseInterface
     {
         if (\is_callable($this->onFail)) {
-            $onFail = $this->onFail;
-            $onFail(...\func_get_args());
+            ($this->onFail)(...\func_get_args());
         }
 
         return $this;
