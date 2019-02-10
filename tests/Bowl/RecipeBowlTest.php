@@ -50,29 +50,23 @@ class RecipeBowlTest extends TestCase
         return new RecipeBowl($recipe, $repeat);
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnBadRecipe()
     {
+        $this->expectException(\TypeError::class);
         $this->buildBowl(new \stdClass());
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnExecuteWithBadChef()
     {
+        $this->expectException(\TypeError::class);
         $values = ['foo'=>'bar'];
         $this->buildBowl($this->createMock(RecipeInterface::class), 1)
             ->execute(new \stdClass(), $values);
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnExecuteWithBadWorkPlan()
     {
+        $this->expectException(\TypeError::class);
         $values = new \stdClass();
         $this->buildBowl($this->createMock(RecipeInterface::class), 1)
             ->execute($this->createMock(ChefInterface::class), $values);

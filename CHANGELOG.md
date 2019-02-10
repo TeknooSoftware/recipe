@@ -1,5 +1,11 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.3.3] - 2019-02-10
+Stable release
+###Update
+- Remove support of PHP 7.2
+- Swtich to PHPUnit 8.0
+
 ##[1.3.2] - 2019-01-04
 Stable release
 ###Update

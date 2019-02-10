@@ -40,11 +40,9 @@ abstract class AbstractRecipeTest extends TestCase
 {
     abstract public function buildRecipe(): RecipeInterface;
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnRequireWithBadIngredient()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRecipe()->require(new \stdClass());
     }
 
@@ -66,37 +64,29 @@ abstract class AbstractRecipeTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnCookWithNotCallable()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRecipe()->cook(new \stdClass(), 'foo');
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnCookWithBadName()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRecipe()->cook(function () {
         }, new \stdClass());
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnCookWithBadParameterMapping()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRecipe()->cook(function () {
         }, 'foo', new \stdClass());
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnCookWithBadPosition()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRecipe()->cook(function () {
         }, 'foo', ['foo'=>'bar'], new \stdClass());
     }
@@ -162,36 +152,28 @@ abstract class AbstractRecipeTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnErrorWithNotCallable()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRecipe()->onError(new \stdClass());
     }
 
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnExecuteWithNotRecipe()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRecipe()->execute(new \stdClass(), 'foo');
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnExecuteWithBadName()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRecipe()->execute($this->createMock(RecipeInterface::class), new \stdClass());
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnExecuteWithBadPosition()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRecipe()->execute($this->createMock(RecipeInterface::class), 'foo', 123, new \stdClass());
     }
 
@@ -257,11 +239,9 @@ abstract class AbstractRecipeTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnGivenWithBadDish()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRecipe()->given(new \stdClass());
     }
 
@@ -302,11 +282,9 @@ abstract class AbstractRecipeTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnTrainWithBadIngredient()
     {
+        $this->expectException(\TypeError::class);
         $this->buildRecipe()->train(new \stdClass());
     }
 
@@ -326,20 +304,16 @@ abstract class AbstractRecipeTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnPrepareWithABadWorkPlan()
     {
+        $this->expectException(\TypeError::class);
         $workPlan = new \stdClass();
         $this->buildRecipe()->prepare($workPlan, $this->createMock(ChefInterface::class));
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnPrepareWithABadChef()
     {
+        $this->expectException(\TypeError::class);
         $array = ['foo'=>'bar'];
         $this->buildRecipe()->prepare($array, new \stdClass());
     }

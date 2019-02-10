@@ -62,19 +62,15 @@ abstract class AbstractIngredientTest extends TestCase
      */
     abstract public function getWorkPlanInjected(): array;
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnPrepareWhenWorkPlanIsNotAnArray()
     {
+        $this->expectException(\TypeError::class);
         $this->buildIngredient()->prepare(new \stdClass(), $this->createMock(RecipeInterface::class));
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnPrepareWhenWorkPlanIsNotPromise()
     {
+        $this->expectException(\TypeError::class);
         $this->buildIngredient()->prepare([], new \stdClass());
     }
 

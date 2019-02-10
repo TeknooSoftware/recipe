@@ -40,11 +40,9 @@ abstract class AbstractChefTest extends TestCase
 {
     abstract public function buildChef(): ChefInterface;
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnReadWithBadRecipe()
     {
+        $this->expectException(\TypeError::class);
         $this->buildChef()->read(new \stdClass());
     }
 
@@ -61,11 +59,9 @@ abstract class AbstractChefTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnReserveAndBeginWithBadRecipe()
     {
+        $this->expectException(\TypeError::class);
         $this->buildChef()->reserveAndBegin(new \stdClass());
     }
 
@@ -119,28 +115,22 @@ abstract class AbstractChefTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testReserveAndBeginOnNonTrainedChef()
     {
+        $this->expectException(\Throwable::class);
         $recipe = $this->createMock(RecipeInterface::class);
         $this->buildChef()->reserveAndBegin($recipe);
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnMissingWithBadIngredient()
     {
+        $this->expectException(\TypeError::class);
         $this->buildChef()->missing(new \stdClass(), 'fooBar');
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnMissingWithBadMessage()
     {
+        $this->expectException(\TypeError::class);
         $this->buildChef()->missing(
             $this->createMock(IngredientInterface::class),
             new \stdClass()
@@ -179,11 +169,9 @@ abstract class AbstractChefTest extends TestCase
         self::assertTrue($called);
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnUpdateWorkPlanWithBadArray()
     {
+        $this->expectException(\TypeError::class);
         $this->buildChef()->missing(new \stdClass());
     }
 
@@ -201,11 +189,9 @@ abstract class AbstractChefTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnFollowStepsWithBadArray()
     {
+        $this->expectException(\TypeError::class);
         $this->buildChef()->missing(new \stdClass());
     }
 
@@ -219,19 +205,15 @@ abstract class AbstractChefTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnContinueWithBadArray()
     {
+        $this->expectException(\TypeError::class);
         $this->buildChef()->missing(new \stdClass());
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnContinueWithBadNextStep()
     {
+        $this->expectException(\TypeError::class);
         $this->buildChef()->missing([], new \stdClass());
     }
 
@@ -276,11 +258,9 @@ abstract class AbstractChefTest extends TestCase
         self::assertTrue($called);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testExceptionWithoutExceptionBowlDefined()
     {
+        $this->expectException(\RuntimeException::class);
         $chef = $this->buildChef();
         $chef->read($this->createMock(RecipeInterface::class));
 
@@ -464,11 +444,9 @@ abstract class AbstractChefTest extends TestCase
         self::assertTrue($called);
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionOnProcessWithBadArray()
     {
+        $this->expectException(\TypeError::class);
         $this->buildChef()->missing(new \stdClass());
     }
 
@@ -486,11 +464,9 @@ abstract class AbstractChefTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testExceptionProcessWithMissingIngredient()
     {
+        $this->expectException(\RuntimeException::class);
         $chef = $this->buildChef();
         $ingredient = $this->createMock(IngredientInterface::class);
 

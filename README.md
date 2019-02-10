@@ -74,7 +74,7 @@ To install this library with composer, run this command :
 
 This library requires :
 
-    * PHP 7.1+
+    * PHP 7.2+
     * A PHP autoloader (Composer is recommended)
     * Teknoo/Immutable.
     * Teknoo/States.

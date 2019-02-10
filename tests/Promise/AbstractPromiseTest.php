@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\Recipe\Promise;
 
+use Teknoo\Immutable\Exception\ImmutableException;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -37,20 +38,16 @@ abstract class AbstractPromiseTest extends TestCase
 {
     abstract public function buildPromise($onSuccess, $onFail): PromiseInterface;
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testConstructorBadSuccessCallable()
     {
+        $this->expectException(\Throwable::class);
         $this->buildPromise('fooBar', function () {
         });
     }
 
-    /**
-     * @expectedException \Throwable
-     */
     public function testConstructorBadFailCallable()
     {
+        $this->expectException(\Throwable::class);
         $this->buildPromise(function () {
         }, 'fooBar');
     }
@@ -73,11 +70,9 @@ abstract class AbstractPromiseTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Teknoo\Immutable\Exception\ImmutableException
-     */
     public function testConstructorImmutable()
     {
+        $this->expectException(ImmutableException::class);
         $this->buildPromise(function () {
         }, function () {
         })

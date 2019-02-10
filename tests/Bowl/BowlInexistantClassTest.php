@@ -49,11 +49,9 @@ class BowlInexistantClassTest extends TestCase
         return [];
     }
 
-    /**
-     * @expectedException \TypeError
-     */
     public function testExceptionWhenClassOfCallableIsNotAvailable()
     {
+        $this->expectException(\TypeError::class);
         $bowl = new Bowl(
             $this->getCallableClassNotAvailable(),
             $this->getMapping()

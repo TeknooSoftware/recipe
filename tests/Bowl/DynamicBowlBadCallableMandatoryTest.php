@@ -40,11 +40,11 @@ use Teknoo\Recipe\ChefInterface;
 class DynamicBowlBadCallableMandatoryTest extends TestCase
 {
     /**
-     * @expectedException \RuntimeException
      * @throws \Exception
      */
     public function testFailSilentlyIfWrongCallbackAvailableInWorkPlan()
     {
+        $this->expectException(\RuntimeException::class);
         $bowl = new DynamicBowl(
             'callableToExec',
             false,
