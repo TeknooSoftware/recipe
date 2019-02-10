@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\Recipe\Dish;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Teknoo\Recipe\Dish\DishClass;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
@@ -50,7 +51,7 @@ class DishTest extends AbstractDishTest
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|PromiseInterface
+     * @return MockObject|PromiseInterface
      */
     protected function getPromise()
     {

@@ -22,6 +22,7 @@
 
 namespace Teknoo\Tests\Recipe\Dish;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Teknoo\Recipe\Dish\DishInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Promise\PromiseInterface;
@@ -42,7 +43,7 @@ abstract class AbstractDishTest extends TestCase
     abstract public function buildDish(): DishInterface;
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|PromiseInterface
+     * @return MockObject|PromiseInterface
      */
     abstract protected function getPromise();
 
