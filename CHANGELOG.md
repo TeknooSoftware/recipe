@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[1.3.4] - 2019-06-09
+###Release
+- Maintenance release, upgrade composer dev requirement and libs
+
 ##[1.3.3] - 2019-02-10
 Stable release
 ###Update
