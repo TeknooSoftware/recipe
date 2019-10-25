@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -102,9 +102,6 @@ class Cooking implements StateInterface
         };
     }
 
-    /**
-     * @return \Closure
-     */
     private function callErrors(): callable
     {
         return function (\Throwable $error) {

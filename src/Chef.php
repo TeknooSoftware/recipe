@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -56,45 +56,30 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     use ProxyTrait,
         AutomatedTrait;
 
-    /**
-     * @var array
-     */
-    private $workPlan = [];
+    private array $workPlan = [];
 
     /**
      * @var BowlInterface[]
      */
-    private $steps = [];
+    private array $steps = [];
 
     /**
      * @var BowlInterface[]
      */
-    private $onError = [];
+    private array $onError = [];
 
     /**
      * @var BowlInterface[]
      */
-    private $stepsNames = [];
+    private array $stepsNames = [];
 
-    /**
-     * @var RecipeInterface;
-     */
-    private $recipe;
+    private RecipeInterface $recipe;
 
-    /**
-     * @var array
-     */
-    private $missingIngredients = [];
+    private array $missingIngredients = [];
 
-    /**
-     * @var int
-     */
-    private $position = 0;
+    private int $position = 0;
 
-    /**
-     * @var bool
-     */
-    private $cooking = false;
+    private bool $cooking = false;
 
     /**
      * @inheritDoc
@@ -126,11 +111,6 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
         ];
     }
 
-    /**
-     * Chef constructor.
-     * @param RecipeInterface|null $recipe
-     * @throws \Teknoo\States\Proxy\Exception\StateNotFound
-     */
     public function __construct(RecipeInterface $recipe = null)
     {
         $this->initializeProxy();

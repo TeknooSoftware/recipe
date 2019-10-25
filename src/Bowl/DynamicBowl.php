@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -44,28 +44,15 @@ class DynamicBowl implements BowlInterface
     use ImmutableTrait;
     use BowlTrait;
 
-    /**
-     * @var string
-     */
-    private $callableKeyName;
+    private string $callableKeyName;
 
-    /**
-     * @var bool
-     */
-    private $throwIfNotExisting;
+    private bool $throwIfNotExisting;
 
     /**
      * @var null|callable
      */
     private $previousCallable;
 
-    /**
-     * DynamicBowl constructor.
-     * @param string $callableKeyName
-     * @param bool $throwIfNotExisting
-     * @param array $mapping
-     * @param string $name
-     */
     public function __construct(
         string $callableKeyName,
         bool $throwIfNotExisting,
@@ -107,9 +94,6 @@ class DynamicBowl implements BowlInterface
         return $callable;
     }
 
-    /**
-     * @param callable $callable
-     */
     private function checkToClearsParametersCache(callable $callable): void
     {
         if ($this->previousCallable !== $callable) {

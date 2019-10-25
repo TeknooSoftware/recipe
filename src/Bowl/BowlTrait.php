@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -40,24 +40,18 @@ trait BowlTrait
 {
     /**
      * Name of the action
-     *
-     * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * To map some argument's name to another ingredient name on the workplan.
-     *
-     * @var array
      */
-    private $mapping = [];
+    private array $mapping = [];
 
     /**
      * To cache the reflections about parameters of the callable
-     *
-     * @var string[]
      */
-    private $parametersCache;
+    private array $parametersCache;
 
     /**
      * To return the Reflection instance about this callable, supports functions, closures, objects methods or class

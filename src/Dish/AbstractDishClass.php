@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -43,15 +43,8 @@ abstract class AbstractDishClass implements DishInterface
 {
     use ImmutableTrait;
 
-    /**
-     * @var PromiseInterface
-     */
-    private $promise;
+    private PromiseInterface $promise;
 
-    /**
-     * AbstractDishClass constructor. To inject the promise to follow the result.
-     * @param PromiseInterface $promise
-     */
     public function __construct(PromiseInterface $promise)
     {
         $this->uniqueConstructorCheck();

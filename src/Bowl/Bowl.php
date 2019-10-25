@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -55,13 +55,6 @@ class Bowl implements BowlInterface
      */
     private $callable;
 
-    /**
-     * To initialize the bowl, the type hitting will check the callable.
-     *
-     * @param callable $callable
-     * @param array $mapping
-     * @param string $name
-     */
     public function __construct(callable $callable, array $mapping, string $name = '')
     {
         $this->uniqueConstructorCheck();

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -63,30 +63,26 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     /**
      * @var IngredientInterface[]
      */
-    private $requiredIngredients=[];
+    private array $requiredIngredients=[];
 
-    /**
-     * @var DishInterface
-     */
-    private $exceptedDish;
+    private DishInterface $exceptedDish;
 
     /**
      * @var callable[]|RecipeInterface[]
      */
-    private $steps = [];
+    private array $steps = [];
 
     /**
      * @var callable[]
      */
-    private $onError = [];
+    private array $onError = [];
 
     /**
      * @var callable[]
      */
-    private $compiled;
+    private array $compiled;
 
     /**
-     * Recipe constructor.
      * @throws \Teknoo\States\Proxy\Exception\StateNotFound
      */
     public function __construct()

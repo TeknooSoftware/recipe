@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -41,16 +41,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  */
 class DishClass extends AbstractDishClass
 {
-    /**
-     * @var string
-     */
-    private $class;
+    private string $class;
 
-    /**
-     * DishClass constructor.
-     * @param string $class
-     * @param PromiseInterface $promise
-     */
     public function __construct(string $class, PromiseInterface $promise)
     {
         parent::__construct($promise);

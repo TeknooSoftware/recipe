@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -44,38 +44,22 @@ class Ingredient implements IngredientInterface
 {
     use ImmutableTrait;
 
-    /**
-     * @var string
-     */
-    private $requiredType;
+    private string $requiredType;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $normalizedName;
+    private string $normalizedName;
 
     /**
      * @var callable|null
      */
     private $normalizeCallback;
 
-    /**
-     * Ingredient constructor.
-     * @param string $requiredType
-     * @param string $name
-     * @param string|null $normalizedName
-     * @param callable|null $normalizeCallback
-     */
     public function __construct(
         string $requiredType,
         string $name,
         string $normalizedName = null,
-        callable $normalizeCallback = null
+        ?callable $normalizeCallback = null
     ) {
         $this->uniqueConstructorCheck();
 
@@ -85,9 +69,6 @@ class Ingredient implements IngredientInterface
         $this->normalizeCallback = $normalizeCallback;
     }
 
-    /**
-     * @return string
-     */
     private function getNormalizedName(): string
     {
         if (empty($this->normalizedName)) {
@@ -97,11 +78,6 @@ class Ingredient implements IngredientInterface
         return $this->normalizedName;
     }
 
-    /**
-     * @param $value
-     * @param ChefInterface $chef
-     * @return bool
-     */
     private function testScalarValue(&$value, ChefInterface $chef): bool
     {
         $isMethod = 'is_'.$this->requiredType;
