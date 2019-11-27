@@ -48,7 +48,7 @@ class Ingredient implements IngredientInterface
 
     private string $name;
 
-    private string $normalizedName;
+    private ?string $normalizedName;
 
     /**
      * @var callable|null

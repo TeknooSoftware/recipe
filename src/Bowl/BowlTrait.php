@@ -51,7 +51,7 @@ trait BowlTrait
     /**
      * To cache the reflections about parameters of the callable
      */
-    private array $parametersCache;
+    private ?array $parametersCache = null;
 
     /**
      * To return the Reflection instance about this callable, supports functions, closures, objects methods or class

@@ -1,5 +1,12 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.0.0-beta1] - 2019-11-27
+###Change
+- PHP 7.4 is the minimum required
+- Switch to typed properties
+- Remove some PHP useless DockBlocks
+- Replace array_merge by "..." operators for integer indexed arrays
+
 ##[1.3.5] - 2019-10-24
 ###Release
 - Maintenance release, QA and update dev vendors requirements
