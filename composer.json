@@ -26,6 +26,7 @@
         "squizlabs/php_codesniffer": "~3.5",
         "pdepend/pdepend": "~2.5",
         "phpmd/phpmd": "~2.7",
+        "phpstan/phpstan": "~0.11",
         "sebastian/phpcpd": "~4.1",
         "phploc/phploc": "~5.0",
         "behat/behat": "~3.5"

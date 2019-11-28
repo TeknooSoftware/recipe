@@ -112,7 +112,7 @@ interface RecipeInterface extends ImmutableInterface
     /**
      * To validate the result of the cooking via the dish defined via the method "given".
      *
-     * @param $value
+     * @param mixed $value
      * @return RecipeInterface
      */
     public function validate($value): RecipeInterface;

@@ -155,6 +155,8 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     }
 
     /**
+     * @array $steps
+     * @param BowlInterface|array $onError
      * @inheritDoc
      */
     public function followSteps(array $steps, $onError = []): ChefInterface

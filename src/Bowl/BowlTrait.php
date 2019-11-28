@@ -77,7 +77,7 @@ trait BowlTrait
 
             return $reflectionClass->getMethod('__invoke');
         }
-
+        
         return new \ReflectionFunction($callable);
     }
 
