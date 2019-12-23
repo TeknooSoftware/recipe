@@ -66,9 +66,6 @@ class Cooking implements StateInterface
     public function missingIngredient(): callable
     {
         return function (IngredientInterface $ingredient, string $message): ChefInterface {
-            /**
-             * @var Chef $this
-             */
             $this->missingIngredients[$message] = $ingredient;
 
             return $this;
@@ -81,10 +78,6 @@ class Cooking implements StateInterface
     private function getNextStep(): callable
     {
         return function (string $nextStep = null): ?BowlInterface {
-            /**
-             * @var Chef $this
-             */
-
             if (!empty($nextStep) && isset($this->stepsNames[$nextStep])) {
                 $this->position = $this->stepsNames[$nextStep];
             }

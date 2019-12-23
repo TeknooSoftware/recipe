@@ -53,6 +53,10 @@ class DynamicBowl implements BowlInterface
      */
     private $previousCallable;
 
+    /**
+     * DynamicBowl constructor.
+     * @param array<string, string> $mapping
+     */
     public function __construct(
         string $callableKeyName,
         bool $throwIfNotExisting,
@@ -71,8 +75,7 @@ class DynamicBowl implements BowlInterface
      * Extract the callable from the workplan, null if it has not been found. If the element in the workPlan is not
      * a callable (but exist), this method throw an exception.
      *
-     * @param array $workPlan
-     * @return callable|null
+     * @param array<string, mixed> $workPlan
      */
     private function getCallable(array &$workPlan): ?callable
     {

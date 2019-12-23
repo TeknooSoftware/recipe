@@ -56,6 +56,6 @@ class DishClass extends AbstractDishClass
     protected function check(&$result): bool
     {
         return \is_object($result)
-            && (\is_a($result, $this->class, true) || \is_subclass_of($result, $this->class));
+            && (\is_a($result, $this->class, true));
     }
 }

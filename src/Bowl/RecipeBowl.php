@@ -76,6 +76,9 @@ class RecipeBowl implements BowlInterface
         return $this;
     }
 
+    /**
+     * @param array<string, mixed> $workPlan
+     */
     private function checkLooping(ChefInterface $chef, int $counter, array &$workPlan): bool
     {
         if (\is_numeric($this->repeat)) {

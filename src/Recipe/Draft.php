@@ -78,8 +78,8 @@ class Draft implements StateInterface
             $that = $this->cloneMe();
 
             $callable = $action;
-            if (!$action instanceof BowlInterface) {
-                $callable = new Bowl($action, $with, $name);
+            if (!$callable instanceof BowlInterface) {
+                $callable = new Bowl($callable, $with, $name);
             }
 
             if (empty($position)) {

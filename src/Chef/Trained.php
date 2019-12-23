@@ -53,9 +53,6 @@ class Trained implements StateInterface
     public function updateMyWorkPlan(): callable
     {
         return function (array $with): ChefInterface {
-            /**
-             * @var Chef $this
-             */
             $this->workPlan = \array_merge($this->workPlan, $with);
 
             return $this;

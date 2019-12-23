@@ -25,15 +25,18 @@ declare(strict_types=1);
 namespace Teknoo\Recipe;
 
 use Teknoo\Immutable\ImmutableTrait;
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Recipe\Draft;
 use Teknoo\Recipe\Recipe\Written;
+use Teknoo\States\Automated\Assertion\AssertionInterface;
 use Teknoo\States\Automated\Assertion\Property;
 use Teknoo\States\Automated\Assertion\Property\IsNull;
 use Teknoo\States\Automated\Assertion\Property\IsNotNull;
 use Teknoo\States\Automated\AutomatedInterface;
 use Teknoo\States\Automated\AutomatedTrait;
+use Teknoo\States\Proxy\Exception\StateNotFound;
 use Teknoo\States\Proxy\ProxyInterface;
 use Teknoo\States\Proxy\ProxyTrait;
 
@@ -56,34 +59,34 @@ use Teknoo\States\Proxy\ProxyTrait;
  */
 class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
 {
-    use ImmutableTrait,
-        ProxyTrait,
-        AutomatedTrait;
+    use ImmutableTrait;
+    use ProxyTrait;
+    use AutomatedTrait;
 
     /**
      * @var IngredientInterface[]
      */
-    private array $requiredIngredients=[];
+    private array $requiredIngredients = [];
 
     private DishInterface $exceptedDish;
 
     /**
-     * @var callable[]|RecipeInterface[]
+     * @var array<int, array<array<string, BowlInterface>>>
      */
     private array $steps = [];
 
     /**
-     * @var callable[]
+     * @var array<BowlInterface>
      */
     private array $onError = [];
 
     /**
-     * @var callable[]
+     * @var array<BowlInterface>
      */
     private array $compiled;
 
     /**
-     * @throws \Teknoo\States\Proxy\Exception\StateNotFound
+     * @throws StateNotFound
      */
     public function __construct()
     {
@@ -96,7 +99,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
 
     /**
      * @inheritDoc
-     * @throws \Teknoo\States\Proxy\Exception\StateNotFound
+     * @throws StateNotFound
      */
     public function __clone()
     {
@@ -104,7 +107,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     }
 
     /**
-     * @inheritDoc
+     * @return array<string>
      */
     protected static function statesListDeclaration(): array
     {
@@ -115,7 +118,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     }
 
     /**
-     * @inheritDoc
+     * @return array<AssertionInterface>
      */
     protected function listAssertions(): array
     {
@@ -174,7 +177,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     /**
      * To browse steps, stored into an ordered matrix as a single array
      *
-     * @return \Generator
+     * @return \Generator<string, BowlInterface>
      */
     private function browseSteps(): \Generator
     {
@@ -183,7 +186,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
 
         foreach ($steps as &$stepsSublist) {
             foreach ($stepsSublist as &$step) {
-                yield \key($step) => \current($step);
+                yield (string) \key($step) => \current($step);
             }
         }
     }
@@ -191,13 +194,10 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     /**
      * To compile all steps into a single array to allow chefs to follow them easier
      *
-     * @return array|callable[]
+     * @return array<BowlInterface>
      */
     private function compileStep(): array
     {
-        /**
-         * @var Recipe $this
-         */
         if (empty($this->compiled)) {
             $this->compiled = [];
             foreach ($this->browseSteps() as $name => $step) {

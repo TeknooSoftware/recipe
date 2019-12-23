@@ -78,11 +78,14 @@ class Ingredient implements IngredientInterface
         return $this->normalizedName;
     }
 
+    /**
+     * @param mixed $value
+     */
     private function testScalarValue(&$value, ChefInterface $chef): bool
     {
-        $isMethod = 'is_'.$this->requiredType;
+        $isMethod = 'is_' . $this->requiredType;
 
-        if (\function_exists($isMethod) && !$isMethod($value)) {
+        if (\is_callable($isMethod) && !$isMethod($value)) {
             $chef->missing($this, "The ingredient {$this->name} must be a {$this->requiredType}");
 
             return false;
@@ -92,15 +95,17 @@ class Ingredient implements IngredientInterface
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @param ChefInterface $chef
      * @return bool
      */
     private function testObjectValue(&$value, ChefInterface $chef): bool
     {
-        if (\class_exists($this->requiredType)
+        if (
+            \class_exists($this->requiredType)
             && !\is_a($value, $this->requiredType, true)
-            && !\is_subclass_of($value, $this->requiredType)) {
+            && !\is_subclass_of($value, $this->requiredType)
+        ) {
             $chef->missing($this, "The ingredient {$this->name} must implement {$this->requiredType}");
 
             return false;
@@ -124,6 +129,7 @@ class Ingredient implements IngredientInterface
 
     /**
      * @inheritDoc
+     * @param array<string, mixed> $workPlan
      */
     public function prepare(array $workPlan, ChefInterface $chef): IngredientInterface
     {

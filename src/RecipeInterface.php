@@ -59,7 +59,7 @@ interface RecipeInterface extends ImmutableInterface
      *
      * @param callable|BowlInterface $action
      * @param string $name
-     * @param array $with
+     * @param array<string, string> $with
      * @param int|null $position
      * @return RecipeInterface
      */
@@ -103,7 +103,7 @@ interface RecipeInterface extends ImmutableInterface
     /**
      * To prepare the work plan of the chef before start the cooking.
      *
-     * @param array $workPlan
+     * @param array<string, mixed> $workPlan
      * @param ChefInterface $chef
      * @return RecipeInterface
      */

@@ -29,6 +29,7 @@ use Teknoo\Recipe\Chef\Cooking;
 use Teknoo\Recipe\Chef\Free;
 use Teknoo\Recipe\Chef\Trained;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
+use Teknoo\States\Automated\Assertion\AssertionInterface;
 use Teknoo\States\Automated\Assertion\Property;
 use Teknoo\States\Automated\Assertion\Property\IsNull;
 use Teknoo\States\Automated\Assertion\Property\IsInstanceOf;
@@ -50,31 +51,46 @@ use Teknoo\States\Proxy\ProxyTrait;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @method ChefInterface readRecipe(RecipeInterface $recipe)
+ * @method ChefInterface followStepsRecipe(array $steps, array $onError)
+ * @method ChefInterface updateMyWorkPlan(array $with)
+ * @method ChefInterface runRecipe(array $workPlan)
+ * @method ChefInterface begin(RecipeInterface $recipe)
+ * @method ChefInterface missingIngredient(IngredientInterface $ingredient, string $message)
+ * @method ChefInterface continueRecipe(array $with = [], string $nextStep = null)
+ * @method ChefInterface finishRecipe($result)
  */
 class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
 {
-    use ProxyTrait,
-        AutomatedTrait;
+    use ProxyTrait;
+    use AutomatedTrait;
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $workPlan = [];
 
     /**
-     * @var BowlInterface[]
+     * @var array<BowlInterface>
      */
     private array $steps = [];
 
     /**
-     * @var BowlInterface[]
+     * @var array<BowlInterface>
      */
     private array $onError = [];
 
     /**
-     * @var BowlInterface[]
+     * @var array<int, string>
      */
     private array $stepsNames = [];
 
     private RecipeInterface $recipe;
 
+    /**
+     * @var array<string, IngredientInterface>
+     */
     private array $missingIngredients = [];
 
     private int $position = 0;
@@ -83,6 +99,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
 
     /**
      * @inheritDoc
+     * @return array<string>
      */
     protected static function statesListDeclaration(): array
     {
@@ -95,6 +112,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
 
     /**
      * @inheritDoc
+     * @return array<AssertionInterface>
      */
     protected function listAssertions(): array
     {
@@ -111,7 +129,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
         ];
     }
 
-    public function __construct(RecipeInterface $recipe = null)
+    final public function __construct(RecipeInterface $recipe = null)
     {
         $this->initializeProxy();
 

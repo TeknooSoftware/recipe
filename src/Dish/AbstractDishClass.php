@@ -55,7 +55,7 @@ abstract class AbstractDishClass implements DishInterface
     /**
      * To define in final class to check the result of the cooked recipe.
      *
-     * @param mixed &$result
+     * @param mixed $result
      *
      * @return bool
      */

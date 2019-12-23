@@ -45,11 +45,13 @@ trait BowlTrait
 
     /**
      * To map some argument's name to another ingredient name on the workplan.
+     * @var array<string, string>
      */
     private array $mapping = [];
 
     /**
      * To cache the reflections about parameters of the callable
+     * @var array<string, \ReflectionParameter>
      */
     private ?array $parametersCache = null;
 
@@ -71,14 +73,14 @@ trait BowlTrait
             return $reflectionClass->getMethod($callable[1]);
         }
 
-        if (\is_object($callable) && !$callable instanceof \Closure) {
-            //It's not a closure, so it's mandatory a invokable object (because the callable is valid)
-            $reflectionClass = new \ReflectionClass($callable);
-
-            return $reflectionClass->getMethod('__invoke');
+        if (\is_string($callable) || $callable instanceof \Closure) {
+            return new \ReflectionFunction($callable);
         }
-        
-        return new \ReflectionFunction($callable);
+
+        //It's not a closure, so it's mandatory a invokable object (because the callable is valid)
+        $reflectionClass = new \ReflectionClass($callable);
+
+        return $reflectionClass->getMethod('__invoke');
     }
 
     /**
@@ -86,7 +88,7 @@ trait BowlTrait
      *
      * @param callable $callable
      *
-     * @return \ReflectionParameter[]
+     * @return array<string, \ReflectionParameter>
      * @throws \ReflectionException
      */
     private function listParameters(callable $callable): array
@@ -105,7 +107,7 @@ trait BowlTrait
      *
      * @param callable $callable
      *
-     * @return \ReflectionParameter[]
+     * @return array<string, \ReflectionParameter>
      * @throws \ReflectionException
      */
     private function getParametersInOrder(callable $callable): array
@@ -119,8 +121,8 @@ trait BowlTrait
 
     /**
      * @param \ReflectionClass $class
-     * @param array $workPlan
-     * @param array $values
+     * @param array<string, mixed> $workPlan
+     * @param array<mixed> $values
      * @return bool
      */
     private function findInstanceForParameter(\ReflectionClass $class, array &$workPlan, array &$values): bool
@@ -143,9 +145,9 @@ trait BowlTrait
      *
      * @param callable $callable
      * @param ChefInterface $chef
-     * @param array $workPlan
+     * @param array<string, mixed> $workPlan
      *
-     * @return array
+     * @return array<mixed>
      *
      * @throws \Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
