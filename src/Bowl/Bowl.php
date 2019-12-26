@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Recipe\Bowl;
 
@@ -56,10 +56,8 @@ class Bowl implements BowlInterface
     private $callable;
 
     /**
-     * To initialize the bowl, the type hitting will check the callable.
-     *
      * @param callable $callable
-     * @param array $mapping
+     * @param array<string, string> $mapping
      * @param string $name
      */
     public function __construct(callable $callable, array $mapping, string $name = '')

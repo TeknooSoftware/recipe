@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Recipe\Recipe;
 
@@ -78,8 +78,8 @@ class Draft implements StateInterface
             $that = $this->cloneMe();
 
             $callable = $action;
-            if (!$action instanceof BowlInterface) {
-                $callable = new Bowl($action, $with, $name);
+            if (!$callable instanceof BowlInterface) {
+                $callable = new Bowl($callable, $with, $name);
             }
 
             if (empty($position)) {

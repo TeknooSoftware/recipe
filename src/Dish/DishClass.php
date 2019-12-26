@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Recipe\Dish;
 
@@ -41,16 +41,8 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  */
 class DishClass extends AbstractDishClass
 {
-    /**
-     * @var string
-     */
-    private $class;
+    private string $class;
 
-    /**
-     * DishClass constructor.
-     * @param string $class
-     * @param PromiseInterface $promise
-     */
     public function __construct(string $class, PromiseInterface $promise)
     {
         parent::__construct($promise);
@@ -64,6 +56,6 @@ class DishClass extends AbstractDishClass
     protected function check(&$result): bool
     {
         return \is_object($result)
-            && (\is_a($result, $this->class, true) || \is_subclass_of($result, $this->class));
+            && (\is_a($result, $this->class, true));
     }
 }

@@ -1,5 +1,27 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.0.0-beta4] - 2019-12-23
+###Change
+- Fix Make definitions tools
+- Fix QA issues spotted by PHPStan
+- Enable PHPStan extension dedicated to support Stated classes
+
+##[2.0.0-beta3] - 2019-11-28
+###Change
+- Enable PHPStan in QA Tools
+
+##[2.0.0-beta2] - 2019-11-28
+###Change
+- Most methods have been updated to include type hints where applicable. Please check your extension points to make sure the function signatures are correct.
+_ All files use strict typing. Please make sure to not rely on type coercion.
+
+##[2.0.0-beta1] - 2019-11-27
+###Change
+- PHP 7.4 is the minimum required
+- Switch to typed properties
+- Remove some PHP useless DockBlocks
+- Replace array_merge by "..." operators for integer indexed arrays
+
 ##[1.3.5] - 2019-10-24
 ###Release
 - Maintenance release, QA and update dev vendors requirements

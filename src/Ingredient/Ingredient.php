@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Recipe\Ingredient;
 
@@ -44,38 +44,22 @@ class Ingredient implements IngredientInterface
 {
     use ImmutableTrait;
 
-    /**
-     * @var string
-     */
-    private $requiredType;
+    private string $requiredType;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $normalizedName;
+    private ?string $normalizedName;
 
     /**
      * @var callable|null
      */
     private $normalizeCallback;
 
-    /**
-     * Ingredient constructor.
-     * @param string $requiredType
-     * @param string $name
-     * @param string|null $normalizedName
-     * @param callable|null $normalizeCallback
-     */
     public function __construct(
         string $requiredType,
         string $name,
         string $normalizedName = null,
-        callable $normalizeCallback = null
+        ?callable $normalizeCallback = null
     ) {
         $this->uniqueConstructorCheck();
 
@@ -85,9 +69,6 @@ class Ingredient implements IngredientInterface
         $this->normalizeCallback = $normalizeCallback;
     }
 
-    /**
-     * @return string
-     */
     private function getNormalizedName(): string
     {
         if (empty($this->normalizedName)) {
@@ -98,15 +79,13 @@ class Ingredient implements IngredientInterface
     }
 
     /**
-     * @param $value
-     * @param ChefInterface $chef
-     * @return bool
+     * @param mixed $value
      */
     private function testScalarValue(&$value, ChefInterface $chef): bool
     {
-        $isMethod = 'is_'.$this->requiredType;
+        $isMethod = 'is_' . $this->requiredType;
 
-        if (\function_exists($isMethod) && !$isMethod($value)) {
+        if (\is_callable($isMethod) && !$isMethod($value)) {
             $chef->missing($this, "The ingredient {$this->name} must be a {$this->requiredType}");
 
             return false;
@@ -116,15 +95,17 @@ class Ingredient implements IngredientInterface
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @param ChefInterface $chef
      * @return bool
      */
     private function testObjectValue(&$value, ChefInterface $chef): bool
     {
-        if (\class_exists($this->requiredType)
+        if (
+            \class_exists($this->requiredType)
             && !\is_a($value, $this->requiredType, true)
-            && !\is_subclass_of($value, $this->requiredType)) {
+            && !\is_subclass_of($value, $this->requiredType)
+        ) {
             $chef->missing($this, "The ingredient {$this->name} must implement {$this->requiredType}");
 
             return false;
@@ -148,6 +129,7 @@ class Ingredient implements IngredientInterface
 
     /**
      * @inheritDoc
+     * @param array<string, mixed> $workPlan
      */
     public function prepare(array $workPlan, ChefInterface $chef): IngredientInterface
     {

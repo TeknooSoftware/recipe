@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
@@ -66,9 +66,6 @@ class Cooking implements StateInterface
     public function missingIngredient(): callable
     {
         return function (IngredientInterface $ingredient, string $message): ChefInterface {
-            /**
-             * @var Chef $this
-             */
             $this->missingIngredients[$message] = $ingredient;
 
             return $this;
@@ -81,10 +78,6 @@ class Cooking implements StateInterface
     private function getNextStep(): callable
     {
         return function (string $nextStep = null): ?BowlInterface {
-            /**
-             * @var Chef $this
-             */
-
             if (!empty($nextStep) && isset($this->stepsNames[$nextStep])) {
                 $this->position = $this->stepsNames[$nextStep];
             }
@@ -102,9 +95,6 @@ class Cooking implements StateInterface
         };
     }
 
-    /**
-     * @return \Closure
-     */
     private function callErrors(): callable
     {
         return function (\Throwable $error) {

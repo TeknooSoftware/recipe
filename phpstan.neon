@@ -1,0 +1,19 @@
+parameters:
+    scopeClass: Teknoo\States\PHPStan\Analyser\Scope
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    ignoreErrors:
+        -
+            message: '#Parameter \#1 \$argument of class ReflectionClass constructor expects class-string\<T of object\>\|T of object, callable given.#'
+            path: src/Bowl
+        -
+            message: '#Result of \&\& is always false.#'
+            path: src/Chef/Cooking.php
+        -
+            message: '#Property [a-zA-Z0-9\\_]+::\$workPlan \(array<string, mixed>\) does not accept array<int|string, mixed>.#'
+            path: src/Chef
+services:
+	-
+		class: Teknoo\States\PHPStan\MethodsClassExtension
+		tags:
+			- phpstan.broker.methodsClassReflectionExtension

@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Recipe;
 
@@ -67,7 +67,7 @@ interface ChefInterface
     /**
      * To update the work plan from ingredient.
      *
-     * @param array $with
+     * @param array<string, mixed> $with
      * @return ChefInterface
      */
     public function updateWorkPlan(array $with): ChefInterface;
@@ -75,8 +75,8 @@ interface ChefInterface
     /**
      * To learn steps to able to cook the recipe.
      *
-     * @param BowlInterface[] $steps
-     * @param BowlInterface[] $onError
+     * @param array<BowlInterface> $steps
+     * @param array<BowlInterface>|BowlInterface $onError
      * @return ChefInterface
      */
     public function followSteps(array $steps, /* BowlInterface */ $onError = []): ChefInterface;
@@ -85,7 +85,7 @@ interface ChefInterface
      * To continue to cook the recipe and execute the next step, but before complete the workp lan
      * with this new ingredient.
      *
-     * @param array $with
+     * @param array<string, mixed> $with
      * @param string|null $nextStep
      * @return ChefInterface
      */
@@ -102,7 +102,7 @@ interface ChefInterface
     /**
      * To start cooking a recipe with an initial work plan.
      *
-     * @param array $workPlan
+     * @param array<string, mixed> $workPlan
      * @return ChefInterface
      */
     public function process(array $workPlan): ChefInterface;

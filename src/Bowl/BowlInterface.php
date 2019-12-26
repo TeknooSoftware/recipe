@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Recipe\Bowl;
 
@@ -53,7 +53,7 @@ interface BowlInterface extends ImmutableInterface
      * - Throw a RuntTimeException if a mandatory argument can not be mapped
      *
      * @param ChefInterface $chef
-     * @param array $workPlan
+     * @param array<string, mixed> $workPlan
      * @return BowlInterface
      * @throws \RuntimeException if a required argument can not be mapped.
      */

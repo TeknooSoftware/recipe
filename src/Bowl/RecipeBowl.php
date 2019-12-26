@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Recipe\Bowl;
 
@@ -45,10 +45,7 @@ class RecipeBowl implements BowlInterface
 {
     use ImmutableTrait;
 
-    /**
-     * @var RecipeInterface
-     */
-    private $recipe;
+    private RecipeInterface $recipe;
 
     /**
      * @var int|BowlInterface
@@ -58,10 +55,9 @@ class RecipeBowl implements BowlInterface
     /**
      * @var bool
      */
-    private $allowToLoop = true;
+    private bool $allowToLoop = true;
 
     /**
-     * RecipeBowl constructor.
      * @param RecipeInterface $recipe
      * @param int|BowlInterface $repeat
      */
@@ -73,9 +69,6 @@ class RecipeBowl implements BowlInterface
         $this->repeat = $repeat;
     }
 
-    /**
-     * @return self
-     */
     public function stopLooping(): self
     {
         $this->allowToLoop = false;
@@ -84,10 +77,7 @@ class RecipeBowl implements BowlInterface
     }
 
     /**
-     * @param ChefInterface $chef
-     * @param int $counter
-     * @param array $workPlan
-     * @return bool
+     * @param array<string, mixed> $workPlan
      */
     private function checkLooping(ChefInterface $chef, int $counter, array &$workPlan): bool
     {
@@ -102,9 +92,6 @@ class RecipeBowl implements BowlInterface
         return (true === $this->allowToLoop);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function execute(ChefInterface $chef, array &$workPlan): BowlInterface
     {
         $counter = 0;

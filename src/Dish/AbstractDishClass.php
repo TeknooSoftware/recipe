@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Recipe\Dish;
 
@@ -43,15 +43,8 @@ abstract class AbstractDishClass implements DishInterface
 {
     use ImmutableTrait;
 
-    /**
-     * @var PromiseInterface
-     */
-    private $promise;
+    private PromiseInterface $promise;
 
-    /**
-     * AbstractDishClass constructor. To inject the promise to follow the result.
-     * @param PromiseInterface $promise
-     */
     public function __construct(PromiseInterface $promise)
     {
         $this->uniqueConstructorCheck();
@@ -62,7 +55,7 @@ abstract class AbstractDishClass implements DishInterface
     /**
      * To define in final class to check the result of the cooked recipe.
      *
-     * @param mixed &$result
+     * @param mixed $result
      *
      * @return bool
      */

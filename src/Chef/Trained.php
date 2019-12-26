@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
@@ -53,9 +53,6 @@ class Trained implements StateInterface
     public function updateMyWorkPlan(): callable
     {
         return function (array $with): ChefInterface {
-            /**
-             * @var Chef $this
-             */
             $this->workPlan = \array_merge($this->workPlan, $with);
 
             return $this;

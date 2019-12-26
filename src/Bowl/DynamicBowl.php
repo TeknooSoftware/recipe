@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Recipe\Bowl;
 
@@ -44,15 +44,9 @@ class DynamicBowl implements BowlInterface
     use ImmutableTrait;
     use BowlTrait;
 
-    /**
-     * @var string
-     */
-    private $callableKeyName;
+    private string $callableKeyName;
 
-    /**
-     * @var bool
-     */
-    private $throwIfNotExisting;
+    private bool $throwIfNotExisting;
 
     /**
      * @var null|callable
@@ -61,10 +55,7 @@ class DynamicBowl implements BowlInterface
 
     /**
      * DynamicBowl constructor.
-     * @param string $callableKeyName
-     * @param bool $throwIfNotExisting
-     * @param array $mapping
-     * @param string $name
+     * @param array<string, string> $mapping
      */
     public function __construct(
         string $callableKeyName,
@@ -84,8 +75,7 @@ class DynamicBowl implements BowlInterface
      * Extract the callable from the workplan, null if it has not been found. If the element in the workPlan is not
      * a callable (but exist), this method throw an exception.
      *
-     * @param array $workPlan
-     * @return callable|null
+     * @param array<string, mixed> $workPlan
      */
     private function getCallable(array &$workPlan): ?callable
     {
@@ -107,9 +97,6 @@ class DynamicBowl implements BowlInterface
         return $callable;
     }
 
-    /**
-     * @param callable $callable
-     */
     private function checkToClearsParametersCache(callable $callable): void
     {
         if ($this->previousCallable !== $callable) {

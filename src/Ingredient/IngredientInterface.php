@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
  * Recipe.
  *
  * LICENSE
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
+
+declare(strict_types=1);
 
 namespace Teknoo\Recipe\Ingredient;
 
@@ -44,7 +44,7 @@ interface IngredientInterface extends ImmutableInterface
      * To check if an ingredient is available on the workplan and inject the cleaned ingredient into the workplan.
      * If the ingredient is not available, the instance must call the method missing of the chef.
      *
-     * @param array $workPlan
+     * @param array<string, mixed> $workPlan
      * @param ChefInterface $chef
      * @return IngredientInterface
      */
