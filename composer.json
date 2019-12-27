@@ -38,6 +38,12 @@
     },
     "minimum-stability": "stable",
     "archive": {
-        "exclude": ["demo", "vendor", ".idea"]
+        "exclude": ["features", "vendor", ".idea"]
+    },
+    "extra": {
+        "thanks": {
+            "name": "teknoo/states",
+            "url": "https://github.com/TeknooSoftware/states"
+        }
     }
 }
