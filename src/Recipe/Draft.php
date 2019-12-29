@@ -12,7 +12,7 @@
  * to richarddeloge@gmail.com so we can send you a copy immediately.
  *
  *
- * @copyright   Copyright (c) 2009-2019 Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
  *
@@ -39,7 +39,7 @@ use Teknoo\States\State\StateTrait;
  *
  * Default state of a recipe, able to complete them with required ingredients and steps of the recipe.
  *
- * @copyright   Copyright (c) 2009-2016 Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
  *
  * @link        http://teknoo.software/recipe Project website
  *
