@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.0.0-beta7] - 2020-01-07
+###Change
+- Update to support last PHPStan 0.12.4
+
 ##[2.0.0-beta5] - 2019-12-30
 ###Change
 - Update copyright
