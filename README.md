@@ -1,7 +1,11 @@
 Teknoo Software - Recipe library
 ================================
 
-[![Build Status](https://travis-ci.org/TeknooSoftware/recipe.svg?branch=master)](https://travis-ci.org/TeknooSoftware/recipe) [![Build Status](https://travis-ci.org/TeknooSoftware/recipe.svg?branch=master)](https://travis-ci.org/TeknooSoftware/recipe)
+[![Build Status](https://travis-ci.com/TeknooSoftware/recipe.svg?branch=master)](https://travis-ci.com/TeknooSoftware/recipe)
+[![Latest Stable Version](https://poser.pugx.org/teknoo/recipe/v/stable)](https://packagist.org/packages/teknoo/recipe)
+[![Total Downloads](https://poser.pugx.org/teknoo/recipe/downloads)](https://packagist.org/packages/teknoo/recipe)
+[![License](https://poser.pugx.org/teknoo/recipe/license)](https://packagist.org/packages/teknoo/recipe)
+[![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 
 Inspired by cooking, allows the creation of dynamic algorithm, called here recipe,
 following the #east programming and using middleware, configurable via DI or any configuration,
