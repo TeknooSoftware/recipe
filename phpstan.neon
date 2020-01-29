@@ -10,7 +10,7 @@ parameters:
             message: '#Result of \&\& is always false.#'
             path: src/Chef/Cooking.php
         -
-            message: '#Property [a-zA-Z0-9\\_]+::\$workPlan \(array<string, mixed>\) does not accept array<int|string, mixed>.#'
+            message: '#Property [a-zA-Z0-9\\_]+::\$workPlan \(array<string, mixed>\) does not accept array<int\|string, mixed>.#'
             path: src/Chef
 services:
 	-
