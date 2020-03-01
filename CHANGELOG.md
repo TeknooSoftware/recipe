@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.0.2] - 2020-03-01
+###Stable Release
+###Changes
+- Migrate PHPStan extension from src folder to infrastructures folder (namespace stay unchanged)
+
 ##[2.0.1] - 2020-01-29
 ###Stable Release
 - Require Teknoo State 4.0.1+
