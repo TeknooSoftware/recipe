@@ -131,7 +131,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
 
     final public function __construct(RecipeInterface $recipe = null)
     {
-        $this->initializeProxy();
+        $this->initializeStateProxy();
 
         $this->updateStates();
 

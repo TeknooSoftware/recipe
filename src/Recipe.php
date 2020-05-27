@@ -92,7 +92,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     {
         $this->uniqueConstructorCheck();
 
-        $this->initializeProxy();
+        $this->initializeStateProxy();
 
         $this->updateStates();
     }

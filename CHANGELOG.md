@@ -1,5 +1,11 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.0.3] - 2020-05-28
+###Stable Release
+###Changes
+- Require State 4.0.7
+- Replace initializeProxy by initializeStateProxy to avoid collision with other libs
+
 ##[2.0.2] - 2020-03-01
 ###Stable Release
 ###Changes
