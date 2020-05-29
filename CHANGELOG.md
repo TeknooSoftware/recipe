@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.0.4] - 2020-05-29
+###Fix
+- Revert Method : Chef::begin() use new static() instead of new self().
+
 ##[2.0.3] - 2020-05-28
 ###Stable Release
 ###Changes
