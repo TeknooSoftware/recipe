@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.0.5] - 2020-06-08
+###Update
+- Require Teknoo States 4.0.9 to support PHPStan 0.12.26
+
 ##[2.0.4] - 2020-05-29
 ###Fix
 - Revert Method : Chef::begin() use new static() instead of new self().
