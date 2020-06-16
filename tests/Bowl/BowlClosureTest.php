@@ -97,7 +97,7 @@ class BowlClosureTest extends AbstractBowlTest
             $closure,
             $this->getMapping(),
             'bowlClass'
-        );;
+        );
 
         $values = [
             'now' => (new \DateTime('2018-01-01')),

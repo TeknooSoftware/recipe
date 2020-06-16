@@ -189,7 +189,7 @@ class FeatureContext implements Context
     public function itStartsCookingWithAsAndGetAnError($arg1, $arg2)
     {
         try {
-            $this->chef->process(\array_merge($this->workPlan , [$arg2 => new $arg2($arg1)]));
+            $this->chef->process(\array_merge($this->workPlan, [$arg2 => new $arg2($arg1)]));
         } catch (\Throwable $e) {
             return;
         }
@@ -335,8 +335,11 @@ class FeatureContext implements Context
      */
     public function iDefineTheDynamicStepMyRecipe($arg1)
     {
-        $this->pushRecipe($this->lastRecipe->cook(
-            new \Teknoo\Recipe\Bowl\DynamicBowl($arg1, false, [], $arg1), $arg1)
+        $this->pushRecipe(
+            $this->lastRecipe->cook(
+                new \Teknoo\Recipe\Bowl\DynamicBowl($arg1, false, [], $arg1),
+                $arg1
+            )
         );
     }
 
@@ -345,8 +348,11 @@ class FeatureContext implements Context
      */
     public function iDefineTheMandatoryDynamicStepMyRecipe($arg1)
     {
-        $this->pushRecipe($this->lastRecipe->cook(
-            new \Teknoo\Recipe\Bowl\DynamicBowl($arg1, true, [], $arg1), $arg1)
+        $this->pushRecipe(
+            $this->lastRecipe->cook(
+                new \Teknoo\Recipe\Bowl\DynamicBowl($arg1, true, [], $arg1),
+                $arg1
+            )
         );
     }
 
