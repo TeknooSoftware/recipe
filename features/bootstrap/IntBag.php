@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class IntBag
 {
     /**
@@ -7,13 +9,9 @@ class IntBag
      */
     private $value;
 
-    /**
-     * IntBag constructor.
-     * @param int $value
-     */
-    public function __construct(int $value)
+    public function __construct($value)
     {
-        $this->value = $value;
+        $this->value = (int) $value;
     }
 
     public static function initializeTo10(IntBag $bag)

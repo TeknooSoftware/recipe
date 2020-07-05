@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Behat\Behat\Context\Context;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\RecipeInterface;
@@ -312,7 +314,7 @@ class FeatureContext implements Context
     /**
      * @When I must obtain an IntBag with value :arg1
      */
-    public function iMustObtainAnIntbagWithValue($arg1)
+    public function iMustObtainAnIntbagWithValue(int $arg1)
     {
         $this->callbackPromiseSuccess = function ($value) use ($arg1) {
             Assert::assertInstanceOf(IntBag::class, $value);
