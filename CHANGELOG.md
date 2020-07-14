@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.0.6] - 2020-07-14
+###Fix
+- Fix error when a recipe is validate without dish.
+
 ##[2.0.5] - 2020-06-08
 ###Update
 - Require Teknoo States 4.0.9 to support PHPStan 0.12.26

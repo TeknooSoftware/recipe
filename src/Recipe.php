@@ -68,7 +68,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
      */
     private array $requiredIngredients = [];
 
-    private DishInterface $exceptedDish;
+    private ?DishInterface $exceptedDish = null;
 
     /**
      * @var array<int, array<array<string, BowlInterface>>>

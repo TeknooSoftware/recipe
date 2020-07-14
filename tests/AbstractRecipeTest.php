@@ -282,6 +282,18 @@ abstract class AbstractRecipeTest extends TestCase
         );
     }
 
+    public function testValidateDishWithoutDish()
+    {
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $this->buildRecipe()
+                ->cook(function () {
+                }, 'foo')
+                ->train($this->createMock(ChefInterface::class))
+                ->validate('fooBar')
+        );
+    }
+
     public function testExceptionOnTrainWithBadIngredient()
     {
         $this->expectException(\TypeError::class);
