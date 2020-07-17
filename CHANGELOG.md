@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.0.7] - 2020-07-17
+###Stable Release
+###Change
+- Add travis run also with lowest dependencies.
+
 ##[2.0.6] - 2020-07-14
 ###Fix
 - Fix error when a recipe is validate without dish.
