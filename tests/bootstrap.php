@@ -22,7 +22,7 @@
 
 namespace Teknoo\Tests;
 
-ini_set('memory_limit', '16M');
+ini_set('memory_limit', '32M');
 
 require_once __DIR__.'/../vendor/autoload.php';
 
