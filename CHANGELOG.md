@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.0.9] - 2020-09-18
+###Stable Release
+- Update QA and CI tools
+- Update description
+
 ##[2.0.8] - 2020-08-25
 ###Stable Release
 ###Update
