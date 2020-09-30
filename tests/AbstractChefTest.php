@@ -25,6 +25,7 @@ namespace Teknoo\Tests\Recipe;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
 use PHPUnit\Framework\TestCase;
+use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\RecipeInterface;
 
@@ -46,9 +47,22 @@ abstract class AbstractChefTest extends TestCase
         $this->buildChef()->read(new \stdClass());
     }
 
-    public function testRead()
+    public function testReadWithRecipe()
     {
         $recipe = $this->createMock(RecipeInterface::class);
+        $recipe->expects(self::once())
+            ->method('train')
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $this->buildChef()->read($recipe)
+        );
+    }
+
+    public function testReadWithCookbook()
+    {
+        $recipe = $this->createMock(CookbookInterface::class);
         $recipe->expects(self::once())
             ->method('train')
             ->willReturnSelf();
@@ -65,7 +79,7 @@ abstract class AbstractChefTest extends TestCase
         $this->buildChef()->reserveAndBegin(new \stdClass());
     }
 
-    public function testReserveAndBeginAvailableOnCooking()
+    public function testReserveAndBeginAvailableOnCookingWithRecipe()
     {
         $mainRecipe = $this->createMock(RecipeInterface::class);
         $mainRecipe->expects(self::once())
@@ -115,10 +129,67 @@ abstract class AbstractChefTest extends TestCase
         );
     }
 
-    public function testReserveAndBeginOnNonTrainedChef()
+    public function testReserveAndBeginAvailableOnCookingWithCookbook()
+    {
+        $mainRecipe = $this->createMock(RecipeInterface::class);
+        $mainRecipe->expects(self::once())
+            ->method('train')
+            ->willReturnSelf();
+
+        $subRecipe = $this->createMock(CookbookInterface::class);
+        $subRecipe->expects(self::once())
+            ->method('train')
+            ->willReturnCallback(function (ChefInterface $chef) use ($subRecipe) {
+                $chef->followSteps(['substep' => $this->createMock(BowlInterface::class)]);
+
+                return $subRecipe;
+            });
+
+        $chef = $this->buildChef();
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->read($mainRecipe)
+        );
+
+        $step = $this->createMock(BowlInterface::class);
+        $step->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function (ChefInterface $chef) use ($step, $subRecipe) {
+                self::assertInstanceOf(
+                    ChefInterface::class,
+                    $subchef = $chef->reserveAndBegin($subRecipe)
+                );
+
+                self::assertNotSame(
+                    $chef,
+                    $subchef
+                );
+
+                return $step;
+            });
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->followSteps(['step' => $step])
+        );
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->process(['foo'=>'bar'])
+        );
+    }
+
+    public function testReserveAndBeginOnNonTrainedChefWithRecipe()
     {
         $this->expectException(\Throwable::class);
         $recipe = $this->createMock(RecipeInterface::class);
+        $this->buildChef()->reserveAndBegin($recipe);
+    }
+
+    public function testReserveAndBeginOnNonTrainedChefWithCookbook()
+    {
+        $this->expectException(\Throwable::class);
+        $recipe = $this->createMock(CookbookInterface::class);
         $this->buildChef()->reserveAndBegin($recipe);
     }
 

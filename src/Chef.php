@@ -143,16 +143,30 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     /**
      * @inheritDoc
      */
-    public function read(RecipeInterface $recipe): ChefInterface
+    public function read($recipe): ChefInterface
     {
-        return $this->readRecipe($recipe);
+        if ($recipe instanceof RecipeInterface) {
+            return $this->readRecipe($recipe);
+        }
+
+        if ($recipe instanceof CookbookInterface) {
+            $recipe->train($this);
+
+            return $this;
+        }
+
+        throw new \TypeError('$recipe must be of type of RecipeInterface or CookbookInterface');
     }
 
     /**
      * @inheritDoc
      */
-    public function reserveAndBegin(RecipeInterface $recipe): ChefInterface
+    public function reserveAndBegin($recipe): ChefInterface
     {
+        if (!$recipe instanceof RecipeInterface && !$recipe instanceof CookbookInterface) {
+            throw new \TypeError('$recipe must be of type of RecipeInterface or CookbookInterface');
+        }
+
         return $this->begin($recipe);
     }
 
