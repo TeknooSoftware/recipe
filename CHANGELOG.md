@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.1.0-beta2] - 2020-10-02
+###Beta Release
+Change CookbookInterface to be compliant with RecipeInterface
+
 ##[2.1.0-beta1] - 2020-10-01
 ###Beta Release
 Add CookbookInterface behavior to provide to developer a new way to define recipe to inject into Chef

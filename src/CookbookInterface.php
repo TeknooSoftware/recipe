@@ -41,6 +41,7 @@ interface CookbookInterface
 
     /**
      * To train a free chef with the recipe filled by the method fill to execute it
+     * @return self
      */
-    public function train(ChefInterface $chef): CookbookInterface;
+    public function train(ChefInterface $chef);
 }
