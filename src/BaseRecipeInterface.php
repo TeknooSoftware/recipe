@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe;
 
-use Teknoo\Immutable\ImmutableInterface;
-
 /**
  * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
  *
@@ -38,9 +36,6 @@ interface BaseRecipeInterface
 {
     /**
      * To train a chef about this recipe.
-     *
-     * @param ChefInterface $chef
-     * @return RecipeInterface
      */
     public function train(ChefInterface $chef): BaseRecipeInterface;
 
@@ -48,8 +43,6 @@ interface BaseRecipeInterface
      * To prepare the work plan of the chef before start the cooking.
      *
      * @param array<string, mixed> $workPlan
-     * @param ChefInterface $chef
-     * @return RecipeInterface
      */
     public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface;
 
@@ -57,7 +50,6 @@ interface BaseRecipeInterface
      * To validate the result of the cooking via the dish defined via the method "given".
      *
      * @param mixed $value
-     * @return RecipeInterface
      */
     public function validate($value): BaseRecipeInterface;
 }

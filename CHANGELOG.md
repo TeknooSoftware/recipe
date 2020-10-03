@@ -1,8 +1,12 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.1.0-beta5] - 2020-10-03
+###Beta Release
+Fix BaseRecipeInterface doc
+
 ##[2.1.0-beta4] - 2020-10-03
 ###Beta Release
-Fix Chef constructorto use BaseRecipeInterface instead of RecipeInterface
+Fix Chef constructor to use BaseRecipeInterface instead of RecipeInterface
 
 ##[2.1.0-beta3] - 2020-10-03
 ###Beta Release
