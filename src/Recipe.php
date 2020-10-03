@@ -161,8 +161,12 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     /**
      * @inheritDoc
      */
-    public function execute(RecipeInterface $recipe, string $name, $repeat = 1, int $position = null): RecipeInterface
-    {
+    public function execute(
+        BaseRecipeInterface $recipe,
+        string $name,
+        $repeat = 1,
+        int $position = null
+    ): RecipeInterface {
         return $this->addSubRecipe($recipe, $name, $repeat, $position);
     }
 

@@ -74,6 +74,7 @@ abstract class AbstractBowlTest extends TestCase
             ->method('continue')
             ->with([
                 'bar' => 'foo',
+                'bar2' => 'foo',
                 'foo2' => 'bar2',
                 'date' => (new \DateTime('2018-01-01'))->getTimestamp(),
                 '_methodName' => 'bowlClass',

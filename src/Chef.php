@@ -86,7 +86,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
      */
     private array $stepsNames = [];
 
-    private RecipeInterface $recipe;
+    private BaseRecipeInterface $recipe;
 
     /**
      * @var array<string, IngredientInterface>
@@ -120,10 +120,10 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
             (new Property(Free::class))->with('recipe', new IsNull()),
             (new Property(Free::class))->with('steps', new IsEqual([])),
             (new Property(Trained::class))
-                ->with('recipe', new IsInstanceOf(RecipeInterface::class))
+                ->with('recipe', new IsInstanceOf(BaseRecipeInterface::class))
                 ->with('steps', new IsNotEqual([])),
             (new Property(Cooking::class))
-                ->with('recipe', new IsInstanceOf(RecipeInterface::class))
+                ->with('recipe', new IsInstanceOf(BaseRecipeInterface::class))
                 ->with('steps', new IsNotEqual([]))
                 ->with('cooking', new IsEqual(true)),
         ];
@@ -143,30 +143,22 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     /**
      * @inheritDoc
      */
-    public function read($recipe): ChefInterface
+    public function read(BaseRecipeInterface $recipe): ChefInterface
     {
         if ($recipe instanceof RecipeInterface) {
             return $this->readRecipe($recipe);
         }
 
-        if ($recipe instanceof CookbookInterface) {
-            $recipe->train($this);
+        $recipe->train($this);
 
-            return $this;
-        }
-
-        throw new \TypeError('$recipe must be of type of RecipeInterface or CookbookInterface');
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function reserveAndBegin($recipe): ChefInterface
+    public function reserveAndBegin(BaseRecipeInterface $recipe): ChefInterface
     {
-        if (!$recipe instanceof RecipeInterface && !$recipe instanceof CookbookInterface) {
-            throw new \TypeError('$recipe must be of type of RecipeInterface or CookbookInterface');
-        }
-
         return $this->begin($recipe);
     }
 

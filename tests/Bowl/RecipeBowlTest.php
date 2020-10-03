@@ -23,6 +23,7 @@
 namespace Teknoo\Tests\Recipe\Bowl;
 
 use PHPUnit\Framework\TestCase;
+use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Bowl\RecipeBowl;
 use Teknoo\Recipe\ChefInterface;
@@ -72,7 +73,7 @@ class RecipeBowlTest extends TestCase
             ->execute($this->createMock(ChefInterface::class), $values);
     }
 
-    public function testExecuteWithBasicCounter()
+    public function testExecuteWithBasicCounterWithRecipe()
     {
         $recipe = $this->createMock(RecipeInterface::class);
         $counter = 2;
@@ -100,9 +101,80 @@ class RecipeBowlTest extends TestCase
         );
     }
 
-    public function testExecuteWithBasicCallableCounter()
+    public function testExecuteWithBasicCallableCounterWithRecipe()
     {
         $recipe = $this->createMock(RecipeInterface::class);
+        $counter = $this->createMock(BowlInterface::class);
+        $counter->expects(self::exactly(3))
+            ->method('execute')
+            ->willReturnCallback(function (ChefInterface $chef, $workplan) use ($counter) {
+                if ($workplan['counter'] >= 3) {
+                    $workplan['bowl']->stopLooping();
+                }
+
+                self::assertEquals('bar', $workplan['foo']);
+                return $counter;
+            });
+
+        $chef = $this->createMock(ChefInterface::class);
+        $subchef = $this->createMock(ChefInterface::class);
+
+        $workplan = ['foo' => 'bar'];
+
+        $chef->expects(self::exactly(3))
+            ->method('reserveAndBegin')
+            ->with($recipe)
+            ->willReturn($subchef);
+
+        $subchef->expects(self::exactly(3))
+            ->method('process')
+            ->with([])
+            ->willReturnSelf();
+
+        $bowl = $this->buildBowl($recipe, $counter);
+
+        self::assertInstanceOf(
+            RecipeBowl::class,
+            $bowl->execute($chef, $workplan)
+        );
+
+        self::assertEquals(
+            ['foo' => 'bar'],
+            $workplan
+        );
+    }
+
+    public function testExecuteWithBasicCounterWithBaseRecipe()
+    {
+        $recipe = $this->createMock(BaseRecipeInterface::class);
+        $counter = 2;
+
+        $chef = $this->createMock(ChefInterface::class);
+        $subchef = $this->createMock(ChefInterface::class);
+
+        $workplan = ['foo' => 'bar'];
+
+        $chef->expects(self::exactly(2))
+            ->method('reserveAndBegin')
+            ->with($recipe)
+            ->willReturn($subchef);
+
+        $subchef->expects(self::exactly(2))
+            ->method('process')
+            ->with([])
+            ->willReturnSelf();
+
+        $bowl = $this->buildBowl($recipe, $counter);
+
+        self::assertInstanceOf(
+            RecipeBowl::class,
+            $bowl->execute($chef, $workplan)
+        );
+    }
+
+    public function testExecuteWithBasicCallableCounterWithBaseRecipe()
+    {
+        $recipe = $this->createMock(BaseRecipeInterface::class);
         $counter = $this->createMock(BowlInterface::class);
         $counter->expects(self::exactly(3))
             ->method('execute')

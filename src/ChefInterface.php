@@ -42,18 +42,18 @@ interface ChefInterface
     /**
      * To read and learn a recipe.
      *
-     * @param RecipeInterface|CookbookInterface $recipe
+     * @param BaseRecipeInterface $recipe
      * @return ChefInterface
      */
-    public function read($recipe): ChefInterface;
+    public function read(BaseRecipeInterface $recipe): ChefInterface;
 
     /**
      * To reserve the current recipe to begin a sub recipe with the actual workplan.
      *
-     * @param RecipeInterface|CookbookInterface $recipe
+     * @param BaseRecipeInterface $recipe
      * @return ChefInterface
      */
-    public function reserveAndBegin($recipe): ChefInterface;
+    public function reserveAndBegin(BaseRecipeInterface $recipe): ChefInterface;
 
     /**
      * To known when an ingredient missing in the work plan to start the cooking

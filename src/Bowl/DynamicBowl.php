@@ -55,7 +55,7 @@ class DynamicBowl implements BowlInterface
 
     /**
      * DynamicBowl constructor.
-     * @param array<string, string> $mapping
+     * @param array<string, string|string[]> $mapping
      */
     public function __construct(
         string $callableKeyName,

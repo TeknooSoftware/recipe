@@ -1,5 +1,13 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.1.0-beta3] - 2020-10-03
+###Beta Release
+Create a base interface BaseRecipeInterface for RecipeInterface and CookingBookInterface
+Migrate from RecipeInterface to BaseRecipeInterface provide all method needed in execution of recipe (train, prepare and validate)
+Migrate RecipeBowl to use BaseRecipeInterface instead of RecipeInterface
+Migrate Chef to use BaseRecipeInterface instead of RecipeInterface
+Mapping in Bowl can be map to an array of string, instead a string to map several possibilities in the workplan (stop on first found occurence)
+
 ##[2.1.0-beta2] - 2020-10-02
 ###Beta Release
 Change CookbookInterface to be compliant with RecipeInterface

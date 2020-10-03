@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace Teknoo\Recipe\Bowl;
 
 use Teknoo\Immutable\ImmutableTrait;
+use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\RecipeInterface;
 
 /**
  * Bowl to execute a new recipe, with a new trained chef provided by the current chef, but sharing the a clone of the
@@ -45,7 +45,7 @@ class RecipeBowl implements BowlInterface
 {
     use ImmutableTrait;
 
-    private RecipeInterface $recipe;
+    private BaseRecipeInterface $recipe;
 
     /**
      * @var int|BowlInterface
@@ -58,10 +58,9 @@ class RecipeBowl implements BowlInterface
     private bool $allowToLoop = true;
 
     /**
-     * @param RecipeInterface $recipe
      * @param int|BowlInterface $repeat
      */
-    public function __construct(RecipeInterface $recipe, $repeat)
+    public function __construct(BaseRecipeInterface $recipe, $repeat)
     {
         $this->uniqueConstructorCheck();
 

@@ -24,10 +24,9 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
-use Teknoo\Recipe\Bowl\BowlInterface;
+use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\RecipeInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
@@ -54,7 +53,7 @@ class Free implements StateInterface
      */
     public function readRecipe(): callable
     {
-        return function (RecipeInterface $recipe): ChefInterface {
+        return function (BaseRecipeInterface $recipe): ChefInterface {
             /**
              * @var Chef $this
              */

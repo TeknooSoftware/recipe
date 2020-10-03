@@ -44,7 +44,7 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-interface RecipeInterface extends ImmutableInterface
+interface RecipeInterface extends ImmutableInterface, BaseRecipeInterface
 {
     /**
      * To define required ingredients to start the cooking of the recipe.
@@ -76,13 +76,18 @@ interface RecipeInterface extends ImmutableInterface
     /**
      * To define actions to realize the recipe.
      *
-     * @param RecipeInterface $recipe
+     * @param BaseRecipeInterface $recipe
      * @param string $name
      * @param int|callable $repeat
      * @param int|null $position
      * @return RecipeInterface
      */
-    public function execute(RecipeInterface $recipe, string $name, $repeat = 1, int $position = null): RecipeInterface;
+    public function execute(
+        BaseRecipeInterface $recipe,
+        string $name,
+        $repeat = 1,
+        int $position = null
+    ): RecipeInterface;
 
     /**
      * To define the excepted dish attempted at the end.
@@ -91,29 +96,4 @@ interface RecipeInterface extends ImmutableInterface
      * @return RecipeInterface
      */
     public function given(DishInterface $dish): RecipeInterface;
-
-    /**
-     * To train a chef about this recipe.
-     *
-     * @param ChefInterface $chef
-     * @return RecipeInterface
-     */
-    public function train(ChefInterface $chef): RecipeInterface;
-
-    /**
-     * To prepare the work plan of the chef before start the cooking.
-     *
-     * @param array<string, mixed> $workPlan
-     * @param ChefInterface $chef
-     * @return RecipeInterface
-     */
-    public function prepare(array &$workPlan, ChefInterface $chef): RecipeInterface;
-
-    /**
-     * To validate the result of the cooking via the dish defined via the method "given".
-     *
-     * @param mixed $value
-     * @return RecipeInterface
-     */
-    public function validate($value): RecipeInterface;
 }

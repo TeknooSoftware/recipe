@@ -3,10 +3,14 @@
 declare(strict_types=1);
 
 use Behat\Behat\Context\Context;
-use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\RecipeInterface;
 use PHPUnit\Framework\Assert;
+use Teknoo\Recipe\BaseRecipeInterface;
+use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Dish\DishClass;
+use Teknoo\Recipe\Ingredient\Ingredient;
+use Teknoo\Recipe\Recipe;
+use Teknoo\Recipe\RecipeInterface;
+use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\Promise\Promise;
 
 /**
@@ -38,6 +42,11 @@ class FeatureContext implements Context
      * @var string
      */
     private $lastSubRecipeName;
+
+    /**
+     * @var CookbookInterface
+     */
+    private $cookbook;
 
     /**
      * @var callable
@@ -84,7 +93,7 @@ class FeatureContext implements Context
         $this->lastSubRecipeName = $name;
     }
 
-    private function parseMethod($method): callable
+    public function parseMethod($method): callable
     {
         if (isset($this->definedClosure[$method])) {
             return $this->definedClosure[$method];
@@ -102,35 +111,31 @@ class FeatureContext implements Context
      */
     public function iHaveAnEmptyRecipe()
     {
-        $this->pushRecipe(new Teknoo\Recipe\Recipe());
+        $this->pushRecipe(new Recipe());
     }
 
     /**
-     * @When I define a :arg1 to start my recipe
-     * @param string $arg1
+     * @When I define a :className to start my recipe
      */
-    public function iDefineAToStartMyRecipe(string $arg1)
+    public function iDefineAToStartMyRecipe(string $className)
     {
         $this->pushRecipe(
-            $this->lastRecipe->require(new \Teknoo\Recipe\Ingredient\Ingredient($arg1, \trim($arg1, '\\')))
+            $this->lastRecipe->require(new Ingredient($className, \trim($className, '\\')))
         );
     }
 
     /**
-     * @When I define the step :arg1 to do :arg2 my recipe
-     * @param string $arg1
-     * @param string $arg2
+     * @When I define the step :stepName to do :methodName my recipe
      */
-    public function iDefineTheStepToDoMyRecipe($arg1, $arg2)
+    public function iDefineTheStepToDoMyRecipe(string $stepName, string $methodName)
     {
-        $this->pushRecipe($this->lastRecipe->cook($this->parseMethod($arg2), $arg1));
+        $this->pushRecipe($this->lastRecipe->cook($this->parseMethod($methodName), $stepName));
     }
 
     /**
-     * @When I define the excepted dish :arg1 to my recipe
-     * @param string $arg1
+     * @When I define the excepted dish :className to my recipe
      */
-    public function iDefineTheExceptedDishToMyRecipe($arg1)
+    public function iDefineTheExceptedDishToMyRecipe(string $className)
     {
         $promise = new Promise(function ($value) {
             ($this->callbackPromiseSuccess)($value);
@@ -140,9 +145,9 @@ class FeatureContext implements Context
 
         $this->pushRecipe($this->lastRecipe->cook(function (ChefInterface $chef, $result) {
             $chef->finish($result);
-        }, 'finish', ['result' => \trim($arg1, '\\')]));
+        }, 'finish', ['result' => \trim($className, '\\')]));
 
-        $this->pushRecipe($this->lastRecipe->given(new DishClass($arg1, $promise)));
+        $this->pushRecipe($this->lastRecipe->given(new DishClass($className, $promise)));
     }
 
     /**
@@ -374,5 +379,116 @@ class FeatureContext implements Context
     public static function onError(\Throwable $exception)
     {
         self::$message = $exception->getMessage();
+    }
+
+    /**
+     * @Given I have a cookbook for date management
+     */
+    public function iHaveACookbookForDateManagement()
+    {
+        $this->cookbook = new class ($this) implements CookbookInterface
+        {
+            private FeatureContext $context;
+
+            private ?BaseRecipeInterface $recipe;
+
+            public string $expectedDate = '2017-07-01 10:00:00';
+
+            public function __construct(FeatureContext $context)
+            {
+                $this->context = $context;
+            }
+
+            public function train(ChefInterface $chef): BaseRecipeInterface
+            {
+                $chef->read($this->recipe);
+
+                return $this;
+            }
+
+            public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface
+            {
+                $this->recipe->prepare($workPlan, $chef);
+                return $this;
+            }
+
+            public function validate($value): BaseRecipeInterface
+            {
+                $this->recipe->validate($value);
+
+                return $this;
+            }
+
+            public function fill(RecipeInterface $recipe): CookbookInterface
+            {
+                $recipe = $recipe->require(new Ingredient(\DateTime::class, 'DateTime'));
+                $recipe = $recipe->cook(
+                    $this->context->parseMethod('DateTimeImmutable::createFromMutable'),
+                    'createImmutable',
+                    [],
+                    1
+                );
+
+                $promise = new Promise(function ($value) {
+                    Assert::assertInstanceOf(\DateTimeImmutable::class, $value);
+                    Assert::assertEquals(new \DateTimeImmutable($this->expectedDate), $value);
+                }, function () {
+                    Assert::fail('The dish is not valid');
+                });
+
+                $recipe = $recipe->cook(
+                    function (ChefInterface $chef, $result) {
+                        $chef->finish($result);
+                    },
+                    'finish',
+                    ['result' => ['DateTimeImmutable', 'DateTime']],
+                    10
+                );
+
+                $recipe = $recipe->given(new DishClass(\DateTimeImmutable::class, $promise));
+
+                $this->recipe = $recipe;
+
+                return $this;
+            }
+
+        };
+    }
+
+    /**
+     * @Then I train the chef with the cookbook
+     */
+    public function iTrainTheChefWithTheCookbook()
+    {
+        if (null === $this->lastRecipe) {
+            $this->pushRecipe(new Recipe());
+        }
+
+        $this->cookbook->fill($this->lastRecipe);
+        $this->chef->read($this->cookbook);
+    }
+
+    /**
+     * @Given I add a step to the recipe to increment the date
+     */
+    public function iAddAStepToTheRecipeToIncrementTheDate()
+    {
+        $this->pushRecipe(new Recipe());
+        $this->pushRecipe(
+            $this->lastRecipe->cook(
+                function (\DateTime $dateTime, ChefInterface $chef) {
+                    $dateTime = $dateTime->modify('+ 2 hours');
+
+                    $chef->updateWorkPlan([
+                        'DateTime' => $dateTime
+                    ]);
+                },
+                'IncrementStep',
+                [],
+                5
+            )
+        );
+
+        $this->cookbook->expectedDate = '2017-07-01 12:00:00';
     }
 }

@@ -46,6 +46,7 @@ class DynamicBowlInvokableTest extends AbstractBowlTest
             {
                 $chef->continue([
                     'bar' => $bar,
+                    'bar2' => $bar,
                     'foo2' => $foo2,
                     'date' => $date->getTimestamp(),
                     '_methodName' => $_methodName,
@@ -58,7 +59,7 @@ class DynamicBowlInvokableTest extends AbstractBowlTest
 
     protected function getMapping()
     {
-        return ['bar' => 'foo'];
+        return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
 
     /**

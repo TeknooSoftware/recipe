@@ -22,7 +22,9 @@
 
 namespace Teknoo\Tests\Recipe;
 
+use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\RecipeInterface;
@@ -177,11 +179,49 @@ abstract class AbstractRecipeTest extends TestCase
         $this->buildRecipe()->execute($this->createMock(RecipeInterface::class), 'foo', 123, new \stdClass());
     }
 
-    public function testExecuteW()
+    public function testExecuteWithRecipe()
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->execute(
             $this->createMock(RecipeInterface::class),
+            'foo'
+        );
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithStep
+        );
+
+        self::assertNotSame(
+            $recipe,
+            $recipeWithStep
+        );
+    }
+
+    public function testExecuteWithBaseRecipe()
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithStep = $recipe->execute(
+            $this->createMock(BaseRecipeInterface::class),
+            'foo'
+        );
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithStep
+        );
+
+        self::assertNotSame(
+            $recipe,
+            $recipeWithStep
+        );
+    }
+
+    public function testExecuteWithCookbook()
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithStep = $recipe->execute(
+            $this->createMock(CookbookInterface::class),
             'foo'
         );
 

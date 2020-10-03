@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
+use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\States\State\StateInterface;
@@ -53,10 +53,7 @@ class Cooking implements StateInterface
 
     public function begin(): callable
     {
-        /**
-         * @param RecipeInterface|CookbookInterface $recipe
-         */
-        return function ($recipe): ChefInterface {
+        return function (BaseRecipeInterface $recipe): ChefInterface {
             if ($recipe instanceof RecipeInterface) {
                 $chef = new static($recipe);
                 $chef->workPlan = $this->workPlan;

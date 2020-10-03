@@ -44,6 +44,7 @@ class DynamicBowlClosureTest extends AbstractBowlTest
         return function (ChefInterface $chef, $bar, $foo2, \DateTime $date, $_methodName) {
             $chef->continue([
                 'bar' => $bar,
+                'bar2' => $bar,
                 'foo2' => $foo2,
                 'date' => $date->getTimestamp(),
                 '_methodName' => $_methodName,
@@ -53,7 +54,7 @@ class DynamicBowlClosureTest extends AbstractBowlTest
 
     protected function getMapping()
     {
-        return ['bar' => 'foo'];
+        return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
 
     /**

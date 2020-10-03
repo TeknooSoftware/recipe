@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Recipe;
 
+use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Bowl\RecipeBowl;
@@ -113,7 +114,12 @@ class Draft implements StateInterface
 
     public function addSubRecipe(): callable
     {
-        return function (RecipeInterface $recipe, string $name, $repeat = 1, int $position = null): RecipeInterface {
+        return function (
+            BaseRecipeInterface $recipe,
+            string $name,
+            $repeat = 1,
+            int $position = null
+        ): RecipeInterface {
             /**
              * @var Recipe $this
              */

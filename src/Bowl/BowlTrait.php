@@ -45,7 +45,7 @@ trait BowlTrait
 
     /**
      * To map some argument's name to another ingredient name on the workplan.
-     * @var array<string, string>
+     * @var array<string, string|string[]>
      */
     private array $mapping = [];
 
@@ -164,7 +164,15 @@ trait BowlTrait
             }
 
             if (!empty($this->mapping[$name])) {
-                $name = $this->mapping[$name];
+                $mapping = $this->mapping[$name];
+                if (\is_string($mapping)) {
+                    $name = $mapping;
+                } elseif (\is_array($mapping)) {
+                    \reset($mapping);
+                    do {
+                        $name = \current($mapping);
+                    } while (!isset($workPlan[$name]) && \next($mapping));
+                }
             }
 
             if (isset($workPlan[$name])) {
