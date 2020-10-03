@@ -409,6 +409,7 @@ class FeatureContext implements Context
             public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface
             {
                 $this->recipe->prepare($workPlan, $chef);
+
                 return $this;
             }
 
