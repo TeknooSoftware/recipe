@@ -25,7 +25,10 @@ declare(strict_types=1);
 namespace Teknoo\Recipe;
 
 /**
- * Interface to define a Cookbook. A Cookbook is a factory to write recipe.
+ * Interface to define a Cookbook : a factory to write recipe.
+ * To be execute by a Chef, a cookbook needs a recipe, who can me prepopulated.
+ *
+ * A Cookbook can be muttable
  *
  * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
  *

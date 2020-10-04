@@ -1,5 +1,15 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.1.0] - 2020-10-04
+###Stable Release
+Add CookbookInterface behavior to provide to developer a new way to define recipe to inject into Chef
+Chef support also Cookbook for new recipe or a new sub recipe
+Create a base interface BaseRecipeInterface for RecipeInterface and CookingBookInterface
+Migrate from RecipeInterface to BaseRecipeInterface provide all method needed in execution of recipe (train, prepare and validate)
+Migrate RecipeBowl to use BaseRecipeInterface instead of RecipeInterface
+Migrate Chef to use BaseRecipeInterface instead of RecipeInterface
+Mapping in Bowl can be map to an array of string, instead a string to map several possibilities in the workplan (stop on first found occurence)
+
 ##[2.1.0-beta5] - 2020-10-03
 ###Beta Release
 Fix BaseRecipeInterface doc

@@ -34,8 +34,7 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  * ingredients needed to start the cooking and the excepted dish attempted.
  *
  * A recipe instance must be immutable. Each call to this method must be performed on a clone and not update the state
- * of the recipe.
- * When a chef learn, the recipe returned must be frozen and not accept any new step or ingredient.
+ * of the recipe. When a chef learn, the recipe returned must be frozen and not accept any new step or ingredient.
  *
  * @copyright   Copyright (c) 2009-2020 Richard Déloge (richarddeloge@gmail.com)
  *
