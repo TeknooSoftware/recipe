@@ -39,8 +39,15 @@ use Teknoo\Recipe\ChefInterface;
  */
 class BowlClassTest extends AbstractBowlTest
 {
-    public static function methodToCall(ChefInterface $chef, $bar, $bar2, $foo2, \DateTime $date, $_methodName)
-    {
+    public static function methodToCall(
+        ChefInterface $chef,
+        string $bar,
+        $bar2,
+        $foo2,
+        \DateTime $date,
+        $_methodName,
+        self $self
+    ) {
         $chef->continue([
             'bar' => $bar,
             'bar2' => $bar2,
@@ -58,6 +65,17 @@ class BowlClassTest extends AbstractBowlTest
     protected function getMapping()
     {
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getValidWorkPlan(): array
+    {
+        return \array_merge(
+            parent::getValidWorkPlan(),
+            [self::class => $this]
+        );
     }
 
     /**

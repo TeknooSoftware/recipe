@@ -42,7 +42,7 @@ class DynamicBowlObjectTest extends AbstractBowlTest
     protected function getCallable()
     {
         $object = new class() {
-            public function methodToCall(ChefInterface $chef, $bar, $foo2, \DateTime $date, $_methodName)
+            public function methodToCall(ChefInterface $chef, string $bar, $foo2, \DateTime $date, $_methodName)
             {
                 $chef->continue([
                     'bar' => $bar,

@@ -41,7 +41,7 @@ class DynamicBowlClosureTest extends AbstractBowlTest
 {
     protected function getCallable()
     {
-        return function (ChefInterface $chef, $bar, $foo2, \DateTime $date, $_methodName) {
+        return function (ChefInterface $chef, string $bar, $foo2, \DateTime $date, $_methodName) {
             $chef->continue([
                 'bar' => $bar,
                 'bar2' => $bar,

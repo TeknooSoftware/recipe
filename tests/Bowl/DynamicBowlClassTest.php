@@ -39,8 +39,14 @@ use Teknoo\Recipe\ChefInterface;
  */
 class DynamicBowlClassTest extends AbstractBowlTest
 {
-    public static function methodToCall(ChefInterface $chef, $bar, $foo2, \DateTime $date, $_methodName)
-    {
+    public static function methodToCall(
+        ChefInterface $chef,
+        string $bar,
+        $foo2,
+        \DateTime $date,
+        $_methodName,
+        self $self
+    ) {
         $chef->continue([
             'bar' => $bar,
             'bar2' => $bar,
@@ -65,7 +71,10 @@ class DynamicBowlClassTest extends AbstractBowlTest
      */
     protected function getValidWorkPlan(): array
     {
-        return \array_merge(parent::getValidWorkPlan(), ['callableToExec' => $this->getCallable()]);
+        return \array_merge(
+            parent::getValidWorkPlan(),
+            ['callableToExec' => $this->getCallable(), self::class => $this]
+        );
     }
 
     /**
@@ -73,7 +82,10 @@ class DynamicBowlClassTest extends AbstractBowlTest
      */
     protected function getNotValidWorkPlan(): array
     {
-        return \array_merge(parent::getNotValidWorkPlan(), ['callableToExec' => $this->getCallable()]);
+        return \array_merge(
+            parent::getNotValidWorkPlan(),
+            ['callableToExec' => $this->getCallable(), self::class => $this]
+        );
     }
 
     /**

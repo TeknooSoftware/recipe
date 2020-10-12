@@ -43,7 +43,7 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
     protected function getCallableObject()
     {
         $object = new class() {
-            public function methodToCall(ChefInterface $chef, $bar, $foo2, \DateTime $date)
+            public function methodToCall(ChefInterface $chef, string $bar, $foo2, \DateTime $date)
             {
                 $chef->continue([
                     'bar' => $bar,

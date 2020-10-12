@@ -41,7 +41,7 @@ class BowlClosureTest extends AbstractBowlTest
 {
     protected function getCallable()
     {
-        return function (ChefInterface $chef, $bar, $bar2, $foo2, \DateTime $date, $_methodName) {
+        return function (ChefInterface $chef, string $bar, $bar2, $foo2, \DateTime $date, $_methodName) {
             $chef->continue([
                 'bar' => $bar,
                 'bar2' => $bar,
