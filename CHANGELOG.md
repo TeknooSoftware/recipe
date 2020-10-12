@@ -1,5 +1,11 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.1.1] - 2020-10-12
+###Stable Release
+- Prepare library to support also PHP8.
+- Remove deprecations from PHP8.
+- Support Union type in PHP8.
+
 ##[2.1.0] - 2020-10-04
 ###Stable Release
 Add CookbookInterface behavior to provide to developer a new way to define recipe to inject into Chef
