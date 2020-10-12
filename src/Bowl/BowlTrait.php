@@ -120,17 +120,17 @@ trait BowlTrait
     }
 
     /**
-     * @param \ReflectionClass $class
+     * @param \ReflectionParameter $parameter
      * @param array<string, mixed> $workPlan
      * @param array<mixed> $values
      * @return bool
      */
-    private function findInstanceForParameter(\ReflectionClass $class, array &$workPlan, array &$values): bool
+    private function findInstanceForParameter(\ReflectionParameter $parameter, array &$workPlan, array &$values): bool
     {
         $automaticValueFound = false;
 
         foreach ($workPlan as &$variable) {
-            if (\is_object($variable) && $class->isInstance($variable)) {
+            if (\is_object($variable) && $this->isInstanceOf($parameter, $variable)) {
                 $values[] = $variable;
                 $automaticValueFound = true;
                 break;
@@ -138,6 +138,43 @@ trait BowlTrait
         }
 
         return $automaticValueFound;
+    }
+
+    /**
+     * @param object $instance
+     */
+    private function isInstanceOf(\ReflectionParameter $parameter, object $instance): bool
+    {
+        $type = $parameter->getType();
+        if (!$type instanceof \ReflectionUnionType && !$type instanceof \ReflectionNamedType) {
+            return false;
+        }
+
+        $checkType = static function (\ReflectionNamedType $type) use ($parameter, $instance): bool {
+            if ($type->isBuiltin()) {
+                return false;
+            }
+
+            $className = $type->getName();
+            if ('self' === $className) {
+                return $parameter->getDeclaringClass()->isInstance($instance);
+            }
+
+            $rfClass = new \ReflectionClass($className);
+            return $rfClass->isInstance($instance);
+        };
+
+        if ($type instanceof \ReflectionUnionType) {
+            foreach ($type->getTypes() as $subType) {
+                if ($subType instanceof \ReflectionNamedType && $checkType($subType)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return $checkType($type);
     }
 
     /**
@@ -156,9 +193,7 @@ trait BowlTrait
     {
         $values = [];
         foreach ($this->getParametersInOrder($callable) as $name => $parameter) {
-            $class = $parameter->getClass();
-
-            if ($class instanceof \ReflectionClass && $class->isInstance($chef)) {
+            if ($this->isInstanceOf($parameter, $chef)) {
                 $values[] = $chef;
                 continue;
             }
@@ -180,12 +215,10 @@ trait BowlTrait
                 continue;
             }
 
-            if ($class instanceof \ReflectionClass) {
-                $automaticValueFound = $this->findInstanceForParameter($class, $workPlan, $values);
+            $automaticValueFound = $this->findInstanceForParameter($parameter, $workPlan, $values);
 
-                if (true === $automaticValueFound) {
-                    continue;
-                }
+            if (true === $automaticValueFound) {
+                continue;
             }
 
             if (BowlInterface::METHOD_NAME === $name) {
