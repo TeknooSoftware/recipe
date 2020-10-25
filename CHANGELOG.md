@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.1.2] - 2020-10-25
+###Stable Release
+- Require Teknoo/States ^4.1.3
+
 ##[2.1.1] - 2020-10-12
 ###Stable Release
 - Prepare library to support also PHP8.
