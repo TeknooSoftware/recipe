@@ -16,6 +16,9 @@ parameters:
         -
             message: '#Result of \&\& is always false.#'
             path: src/Chef/Cooking.php
+        -
+            message: '#Generator expects value type [a-zA-Z0-9\\_]+, [a-zA-Z0-9\\_]+\|false given#'
+            path: src/Recipe.php
 services:
 	-
 		class: Teknoo\States\PHPStan\MethodsClassExtension

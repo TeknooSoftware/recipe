@@ -28,7 +28,7 @@
         "pdepend/pdepend": "~2.8",
         "sebastian/phpcpd": "~6.0",
         "phploc/phploc": "~7.0",
-        "phpstan/phpstan": "^0.12.53",
+        "phpstan/phpstan": "^0.12.55",
         "behat/behat": "~3.7"
     },
     "autoload": {
