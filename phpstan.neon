@@ -5,13 +5,13 @@ parameters:
     treatPhpDocTypesAsCertain: false
     ignoreErrors:
         -
-            message: '#Parameter \#1 \$argument of class ReflectionClass constructor expects class-string\<T of object\>\|T of object, callable given.#'
+            message: '#Parameter \#1 \$[a-zA-Z]+ of class ReflectionClass constructor expects class-string\<T of object\>\|T of object, callable given.#'
             path: src/Bowl
         -
             message: '#Cannot call method isInstance\(\) on ReflectionClass\|null#'
             path: src/Bowl
         -
-            message: '#Parameter \#1 \$argument of class ReflectionClass constructor expects class-string\<T of object\>\|T of object, string given#'
+            message: '#Parameter \#1 \$[a-zA-Z]+ of class ReflectionClass constructor expects class-string\<T of object\>\|T of object, string given#'
             path: src/Bowl
         -
             message: '#Result of \&\& is always false.#'
