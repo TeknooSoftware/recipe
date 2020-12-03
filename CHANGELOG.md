@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.1.3] - 2020-12-03
+###Stable Release
+- Official Support of PHP8
+
 ##[2.1.2] - 2020-10-25
 ###Stable Release
 - Require Teknoo/States ^4.1.3
