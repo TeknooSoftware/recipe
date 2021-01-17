@@ -6,6 +6,7 @@ use Behat\Behat\Context\Context;
 use PHPUnit\Framework\Assert;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
 use Teknoo\Recipe\Dish\DishClass;
 use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\Recipe;
@@ -453,6 +454,59 @@ class FeatureContext implements Context
                 return $this;
             }
 
+        };
+    }
+
+    /**
+     * @Given I have a cookbook with the base trait for date management
+     */
+    public function iHaveACookbookWithTheBaseTraitForDateManagement()
+    {
+        $this->cookbook = new class ($this) implements CookbookInterface
+        {
+            use BaseCookbookTrait;
+
+            private FeatureContext $context;
+
+            public string $expectedDate = '2017-07-01 10:00:00';
+
+            public function __construct(FeatureContext $context)
+            {
+                $this->context = $context;
+            }
+
+            protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
+            {
+                $recipe = $recipe->require(new Ingredient(\DateTime::class, 'DateTime'));
+                $recipe = $recipe->cook(
+                    $this->context->parseMethod('DateTimeImmutable::createFromMutable'),
+                    'createImmutable',
+                    [],
+                    1
+                );
+
+                $promise = new Promise(function ($value) {
+                    Assert::assertInstanceOf(\DateTimeImmutable::class, $value);
+                    Assert::assertEquals(new \DateTimeImmutable($this->expectedDate), $value);
+                }, function () {
+                    Assert::fail('The dish is not valid');
+                });
+
+                $recipe = $recipe->cook(
+                    function (ChefInterface $chef, $result) {
+                        $chef->finish($result);
+                    },
+                    'finish',
+                    ['result' => ['DateTimeImmutable', 'DateTime']],
+                    10
+                );
+
+                $recipe = $recipe->given(new DishClass(\DateTimeImmutable::class, $promise));
+
+                $this->recipe = $recipe;
+
+                return $recipe;
+            }
         };
     }
 

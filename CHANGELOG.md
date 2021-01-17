@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.2.0] - 2021-01-17
+###Stable Release
+- Add BaseCookbookTrait to implement quickly a cookbook and manage a shared recipe without implement all methods defined in
+  the CookbookInterface
+
 ##[2.1.3] - 2020-12-03
 ###Stable Release
 - Official Support of PHP8
