@@ -110,4 +110,22 @@ trait BaseCookbookTestTrait
             $this->buildCookbook()->fill($this->createMock(RecipeInterface::class))
         );
     }
+
+    public function testAddToWorkplanWithBadName()
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->buildCookbook()->addToWorkplan(new \stdClass(), 'foo');
+    }
+
+    public function testAddToWorkplanWithRecipe()
+    {
+        self::assertInstanceOf(
+            CookbookInterface::class,
+            $this->buildCookbook()->addToWorkplan(
+                'foo',
+                new \stdClass()
+            )
+        );
+    }
 }

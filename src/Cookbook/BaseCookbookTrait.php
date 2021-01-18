@@ -48,6 +48,11 @@ trait BaseCookbookTrait
 
     private RecipeInterface $recipe;
 
+    /**
+     * @var array<string, mixed>
+     */
+    private array $defaultWorkplan = [];
+
     abstract protected function populateRecipe(RecipeInterface $recipe): RecipeInterface;
 
     private function getRecipe(): RecipeInterface
@@ -71,7 +76,9 @@ trait BaseCookbookTrait
 
     public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface
     {
-        $this->getRecipe()->prepare($workPlan, $chef);
+        $final = \array_merge($this->defaultWorkplan, $workPlan);
+
+        $this->getRecipe()->prepare($final, $chef);
 
         return $this;
     }
@@ -87,6 +94,13 @@ trait BaseCookbookTrait
     {
         $this->recipe = $recipe;
         $this->recipePopulated = false;
+
+        return $this;
+    }
+
+    public function addToWorkplan(string $key, $value): self
+    {
+        $this->defaultWorkplan[$key] = $value;
 
         return $this;
     }

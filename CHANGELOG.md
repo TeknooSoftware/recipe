@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.2.1] - 2021-01-18
+###Stable Release
+- Add BaseCookbookTrait::addToWorkplan
+  
 ##[2.2.0] - 2021-01-17
 ###Stable Release
 - Add BaseCookbookTrait to implement quickly a cookbook and manage a shared recipe without implement all methods defined in
