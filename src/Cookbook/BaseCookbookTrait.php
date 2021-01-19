@@ -71,6 +71,8 @@ trait BaseCookbookTrait
     {
         $chef->read($this->getRecipe());
 
+        $chef->updateWorkPlan($this->defaultWorkplan);
+
         return $this;
     }
 

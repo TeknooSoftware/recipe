@@ -66,7 +66,7 @@ class Cooking implements StateInterface
             $chef = new static();
 
             $recipe->train($chef);
-            $chef->workPlan = $this->workPlan;
+            $chef->workPlan = \array_merge($this->workPlan, $chef->workPlan);
 
             return $chef;
         };
