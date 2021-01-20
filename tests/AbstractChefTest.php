@@ -589,6 +589,83 @@ abstract class AbstractChefTest extends TestCase
         self::assertTrue($called);
     }
 
+    public function testErrorWithNoErrorCatcher()
+    {
+
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+
+        $called = false;
+        $bowl = $this->createMock(BowlInterface::class);
+        $bowl->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function () use ($chef, &$called, $bowl) {
+                $called = true;
+                self::assertInstanceOf(
+                    ChefInterface::class,
+                    $chef->error(
+                        new \Exception('foo')
+                    )
+                );
+
+                return $bowl;
+            });
+
+        $chef->followSteps([$bowl]);
+
+        $this->expectException(\Exception::class);
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->process(['foo'=>'bar'])
+        );
+
+        self::assertTrue($called);
+    }
+
+    public function testErrorWithCatcher()
+    {
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+
+        $called = false;
+        $bowl = $this->createMock(BowlInterface::class);
+        $bowl->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function () use ($chef, &$called, $bowl) {
+                $called = true;
+                self::assertInstanceOf(
+                    ChefInterface::class,
+                    $chef->error(
+                        new \Exception('foo')
+                    )
+                );
+
+                return $bowl;
+            });
+
+        $errorBowl = $this->createMock(BowlInterface::class);
+        $errorBowl->expects(self::once())
+            ->method('execute')
+            ->willReturnSelf();
+
+        $chef->followSteps([$bowl], [$errorBowl]);
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->process(['foo'=>'bar'])
+        );
+
+        self::assertTrue($called);
+    }
+
+    public function testErrorWithBadThrowable()
+    {
+        $this->expectException(\TypeError::class);
+
+        $chef = $this->buildChef();
+        $chef->error(new \stdClass());
+    }
+
     public function testExceptionOnProcessWithBadArray()
     {
         $this->expectException(\TypeError::class);

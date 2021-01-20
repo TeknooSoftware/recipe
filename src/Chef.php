@@ -100,7 +100,6 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     private bool $cooking = false;
 
     /**
-     * @inheritDoc
      * @return array<string>
      */
     protected static function statesListDeclaration(): array
@@ -113,7 +112,6 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     }
 
     /**
-     * @inheritDoc
      * @return array<AssertionInterface>
      */
     protected function listAssertions(): array
@@ -142,9 +140,6 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function read(BaseRecipeInterface $recipe): ChefInterface
     {
         if ($recipe instanceof RecipeInterface) {
@@ -156,25 +151,16 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function reserveAndBegin(BaseRecipeInterface $recipe): ChefInterface
     {
         return $this->begin($recipe);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function missing(IngredientInterface $ingredient, string $message): ChefInterface
     {
         return $this->missingIngredient($ingredient, $message);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function updateWorkPlan(array $with): ChefInterface
     {
         return $this->updateMyWorkPlan($with);
@@ -183,7 +169,6 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     /**
      * @array $steps
      * @param BowlInterface|array $onError
-     * @inheritDoc
      */
     public function followSteps(array $steps, $onError = []): ChefInterface
     {
@@ -195,25 +180,21 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
         return $this->followStepsRecipe($steps, $onError);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function continue(array $with = [], string $nextStep = null): ChefInterface
     {
         return $this->continueRecipe($with, $nextStep);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function finish($result): ChefInterface
     {
         return $this->finishRecipe($result);
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function error(\Throwable $error): ChefInterface
+    {
+        return $this->errorInRecipe($error);
+    }
+
     public function process(array $workPlan): ChefInterface
     {
         return $this->runRecipe($workPlan);

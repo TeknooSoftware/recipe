@@ -47,6 +47,15 @@ Feature: Recipe
     Then I train the chef with the recipe
     And It starts cooking and obtain an error
 
+  Scenario: Train a chef to cook and have step send an error
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define the step "callAnError" to do "FeatureContext::callError" my recipe
+    And I define the excepted dish "DateTimeImmutable" to my recipe
+    And I must obtain an error message "There had an error"
+    Then I train the chef with the recipe
+    And It starts cooking and obtain an error
+
   Scenario: Train a chef to cook and have an error with error handler
     Given I have an empty recipe
     And I have an untrained chef

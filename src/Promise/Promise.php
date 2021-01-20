@@ -54,9 +54,6 @@ class Promise implements PromiseInterface
      */
     private $onFail;
 
-    /**
-     * {@inheritdoc}
-     */
     public function __construct(callable $onSuccess = null, callable $onFail = null)
     {
         $this->onSuccess = $onSuccess;
@@ -65,9 +62,6 @@ class Promise implements PromiseInterface
         $this->uniqueConstructorCheck();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function success($result = null): PromiseInterface
     {
         if (\is_callable($this->onSuccess)) {
@@ -77,9 +71,6 @@ class Promise implements PromiseInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function fail(\Throwable $throwable): PromiseInterface
     {
         if (\is_callable($this->onFail)) {

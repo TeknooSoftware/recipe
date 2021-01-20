@@ -100,7 +100,6 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     }
 
     /**
-     * @inheritDoc
      * @throws StateNotFound
      */
     public function __clone()
@@ -136,33 +135,21 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     }
 
 
-    /**
-     * @inheritDoc
-     */
     public function require(IngredientInterface $ingredient): RecipeInterface
     {
         return $this->addIngredient($ingredient);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function cook($action, string $name, array $with = [], int $position = null): RecipeInterface
     {
         return $this->addStep($action, $name, $with, $position);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function onError($action): RecipeInterface
     {
         return $this->setOnError($action);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function execute(
         BaseRecipeInterface $recipe,
         string $name,
@@ -172,9 +159,6 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
         return $this->addSubRecipe($recipe, $name, $repeat, $position);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function given(DishInterface $dish): RecipeInterface
     {
         return $this->setExceptedDish($dish);
@@ -216,9 +200,6 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
         return $this->compiled;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function train(ChefInterface $chef): RecipeInterface
     {
         $that = $this->cloneMe();
@@ -228,17 +209,11 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
         return $that;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prepare(array &$workPlan, ChefInterface $chef): RecipeInterface
     {
         return $this->prepareCooking($workPlan, $chef);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function validate($value): RecipeInterface
     {
         return $this->validateDish($value);

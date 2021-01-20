@@ -168,6 +168,20 @@ class Cooking implements StateInterface
     }
 
     /**
+     * Called by a step to stop the execution because an error was occured
+     */
+    public function errorInRecipe(): callable
+    {
+        return function (\Throwable $error): ChefInterface {
+            $this->position = \count($this->steps) + 1;
+
+            $this->callErrors($error);
+
+            return $this;
+        };
+    }
+
+    /**
      * Internal method to prepare a cooking, check is all ingredients are available.
      * @internal
      */

@@ -52,9 +52,6 @@ class DishClass extends AbstractDishClass
         $this->class = $class;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function check(&$result): bool
     {
         return \is_object($result)

@@ -102,6 +102,14 @@ interface ChefInterface
     public function finish($result): ChefInterface;
 
     /**
+     * To stop / finish cooking the recipe and check the result.
+     *
+     * @param \Throwable $error
+     * @return ChefInterface
+     */
+    public function error(\Throwable $error): ChefInterface;
+
+    /**
      * To start cooking a recipe with an initial work plan.
      *
      * @param array<string, mixed> $workPlan

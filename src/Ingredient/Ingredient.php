@@ -130,7 +130,6 @@ class Ingredient implements IngredientInterface
     }
 
     /**
-     * @inheritDoc
      * @param array<string, mixed> $workPlan
      */
     public function prepare(array $workPlan, ChefInterface $chef): IngredientInterface

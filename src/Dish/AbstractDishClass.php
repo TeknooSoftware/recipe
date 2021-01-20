@@ -63,9 +63,6 @@ abstract class AbstractDishClass implements DishInterface
      */
     abstract protected function check(&$result): bool;
 
-    /**
-     * @inheritDoc
-     */
     public function isExcepted($result): DishInterface
     {
         if ($this->check($result)) {

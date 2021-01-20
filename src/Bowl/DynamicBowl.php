@@ -109,7 +109,6 @@ class DynamicBowl implements BowlInterface
     }
 
     /**
-     * @inheritDoc
      * @throws \Exception
      */
     public function execute(ChefInterface $chef, array &$workPlan): BowlInterface

@@ -433,6 +433,12 @@ class FeatureContext implements Context
         throw new \RuntimeException('There had an error');
     }
 
+
+    public static function callError(ChefInterface $chef)
+    {
+        $chef->error(new \RuntimeException('There had an error'));
+    }
+
     public static function onError(\Throwable $exception)
     {
         self::$message = $exception->getMessage();
