@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.2.2] - 2021-01-20
+###Stable Release
+- Fix Default Workplan and merge workplans when chef start a subrecipe
+
 ##[2.2.1] - 2021-01-18
 ###Stable Release
 - Add BaseCookbookTrait::addToWorkplan
