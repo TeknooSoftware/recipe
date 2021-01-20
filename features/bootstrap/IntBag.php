@@ -14,6 +14,11 @@ class IntBag
         $this->value = (int) $value;
     }
 
+    public static function addValue(IntBag $bag, IntBag $toAdd)
+    {
+        $bag->value += $toAdd->value;
+    }
+
     public static function initializeTo10(IntBag $bag)
     {
         $bag->value = 10;

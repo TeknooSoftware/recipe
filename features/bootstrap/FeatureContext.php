@@ -35,7 +35,7 @@ class FeatureContext implements Context
     private $recipes = [];
 
     /**
-     * @var RecipeInterface[]
+     * @var BaseRecipeInterface[]
      */
     private $subRecipes = [];
 
@@ -88,7 +88,7 @@ class FeatureContext implements Context
         $this->lastRecipe = $recipe;
     }
 
-    private function setSubRecipe(string $name, RecipeInterface $recipe)
+    private function setSubRecipe(string $name, BaseRecipeInterface $recipe)
     {
         $this->subRecipes[$name] = $recipe;
         $this->lastSubRecipeName = $name;
@@ -184,20 +184,20 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Then It starts cooking with :arg1 as :arg2
+     * @Then It starts cooking with :value as :name
      */
-    public function itStartsCookingWithAs($arg1, $arg2)
+    public function itStartsCookingWithAs($value, $name)
     {
-        $this->chef->process(\array_merge($this->workPlan, [\trim($arg2, '\\') => new $arg2($arg1)]));
+        $this->chef->process(\array_merge($this->workPlan, [\trim($name, '\\') => new $name($value)]));
     }
 
     /**
-     * @Then It starts cooking with :arg1 as :arg2 and get an error
+     * @Then It starts cooking with :value as :name and get an error
      */
-    public function itStartsCookingWithAsAndGetAnError($arg1, $arg2)
+    public function itStartsCookingWithAsAndGetAnError($value, $name)
     {
         try {
-            $this->chef->process(\array_merge($this->workPlan, [$arg2 => new $arg2($arg1)]));
+            $this->chef->process(\array_merge($this->workPlan, [$name => new $name($value)]));
         } catch (\Throwable $e) {
             return;
         }
@@ -222,154 +222,210 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Then It starts cooking and obtain an catched error with message :arg1
+     * @Then It starts cooking and obtain an catched error with message :content
      */
-    public function itStartsCookingAndObtainAnCatchedErrorWithMessage($arg1)
+    public function itStartsCookingAndObtainAnCatchedErrorWithMessage($content)
     {
         $this->chef->process($this->workPlan);
-        Assert::assertEquals($arg1, static::$message);
+        Assert::assertEquals($content, static::$message);
     }
 
     /**
-     * @When I must obtain an DateTime at :arg1
+     * @When I must obtain an DateTime at :content
      */
-    public function iMustObtainAnDatetimeAt($arg1)
+    public function iMustObtainAnDatetimeAt($content)
     {
-        $this->callbackPromiseSuccess = function ($value) use ($arg1) {
+        $this->callbackPromiseSuccess = function ($value) use ($content) {
             Assert::assertInstanceOf(\DateTime::class, $value);
-            Assert::assertEquals(new \DateTime($arg1), $value);
+            Assert::assertEquals(new \DateTime($content), $value);
         };
     }
 
     /**
-     * @Then I must obtain an Immutable DateTime at :arg1
+     * @Then I must obtain an Immutable DateTime at :content
      */
-    public function iMustObtainAnImmutableDatetimeAt($arg1)
+    public function iMustObtainAnImmutableDatetimeAt($content)
     {
-        $this->callbackPromiseSuccess = function ($value) use ($arg1) {
+        $this->callbackPromiseSuccess = function ($value) use ($content) {
             Assert::assertInstanceOf(\DateTimeImmutable::class, $value);
-            Assert::assertEquals(new \DateTimeImmutable($arg1), $value);
+            Assert::assertEquals(new \DateTimeImmutable($content), $value);
         };
     }
 
     /**
-     * @Then I must obtain an Mutable DateTime at :arg1
+     * @Then I must obtain an Mutable DateTime at :content
      */
-    public function iMustObtainAnMutableDatetimeAt($arg1)
+    public function iMustObtainAnMutableDatetimeAt($content)
     {
-        $this->callbackPromiseSuccess = function ($value) use ($arg1) {
+        $this->callbackPromiseSuccess = function ($value) use ($content) {
             Assert::assertInstanceOf(\DateTime::class, $value);
-            Assert::assertEquals(new \DateTime($arg1), $value);
+            Assert::assertEquals(new \DateTime($content), $value);
         };
     }
 
     /**
-     * @Then I must obtain an String with at :arg1
+     * @Then I must obtain an String with at :name
      */
-    public function iMustObtainAnStringWithAt($arg1)
+    public function iMustObtainAnStringWithAt($name)
     {
-        $this->callbackPromiseSuccess = function ($value) use ($arg1) {
+        $this->callbackPromiseSuccess = function ($value) use ($name) {
             Assert::assertInstanceOf(\StringObject::class, $value);
-            Assert::assertEquals($arg1, (string) $value);
+            Assert::assertEquals($name, (string) $value);
         };
     }
 
-
     /**
-     * @Given I create a subrecipe :arg1
+     * @Given I create a subrecipe :name
      */
-    public function iCreateASubrecipe($arg1)
+    public function iCreateASubrecipe($name)
     {
-        $this->setSubRecipe($arg1, new \Teknoo\Recipe\Recipe());
+        $this->setSubRecipe($name, new Recipe());
     }
 
     /**
-     * @Given With the step :arg1 to do :arg2
+     * @Given I create a subrecipe from cookbook :name
      */
-    public function withTheStepToDo($arg1, $arg2)
+    public function iCreateASubCookbook($name)
     {
+        $class = new class(new Recipe()) implements CookbookInterface {
+            use BaseCookbookTrait;
+
+            private array $steps = [];
+
+            public function __construct(RecipeInterface $recipe)
+            {
+                $this->fill($recipe);
+            }
+
+            public function add($name, callable $callback): self
+            {
+                $this->steps[$name] = $callback;
+
+                return $this;
+            }
+
+            protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
+            {
+                foreach ($this->steps as $name => $action) {
+                    $recipe = $recipe->cook($action, $name);
+                }
+
+                return $recipe;
+            }
+        };
+
+        $this->setSubRecipe($name, $class);
+    }
+
+    /**
+     * @Given With the step :name to do :method
+     */
+    public function withTheStepToDo($name, $method)
+    {
+        if ($this->subRecipes[$this->lastSubRecipeName] instanceof CookbookInterface) {
+            $recipe = $this->subRecipes[$this->lastSubRecipeName]->add(
+                $name,
+                $this->parseMethod($method)
+            );
+        } else {
+            $recipe = $this->subRecipes[$this->lastSubRecipeName]->cook(
+                $this->parseMethod($method),
+                $name
+            );
+        }
+
         $this->setSubRecipe(
             $this->lastSubRecipeName,
-            $this->subRecipes[$this->lastSubRecipeName]->cook(
-                $this->parseMethod($arg2),
-                $arg1
-            )
+            $recipe
         );
     }
 
     /**
-     * @When I define the behavior on error to do :arg1 my recipe
+     * @Given And define the default variable :name in the step :step with :value as :class
      */
-    public function iDefineTheBehaviorOnErrorToDoMyRecipe($arg1)
+    public function andDefineTheDefaultVariableInTheStepWithAs($name, $step, $value, $class)
+    {
+        if ($this->subRecipes[$this->lastSubRecipeName] instanceof CookbookInterface) {
+            $this->subRecipes[$step]->addToWorkplan(
+                $name,
+                new $class($value)
+            );
+        }
+    }
+
+    /**
+     * @When I define the behavior on error to do :name my recipe
+     */
+    public function iDefineTheBehaviorOnErrorToDoMyRecipe($name)
     {
         $this->pushRecipe(
-            $this->lastRecipe->onError($this->parseMethod($arg1))
+            $this->lastRecipe->onError($this->parseMethod($name))
         );
     }
 
     /**
-     * @When I include the recipe :arg1 to :arg2 in my recipe to call :arg3 times
+     * @When I include the recipe :name to :method in my recipe to call :count times
      */
-    public function iIncludeTheRecipeToInMyRecipeToCallTimes($arg1, $arg2, $arg3)
+    public function iIncludeTheRecipeToInMyRecipeToCallTimes($name, $method, $count)
     {
         $this->pushRecipe(
-            $this->lastRecipe->execute($this->subRecipes[$arg1], $arg2, (int) $arg3)
+            $this->lastRecipe->execute($this->subRecipes[$name], $method, (int) $count)
         );
     }
 
     /**
-     * @When I must obtain an IntBag with value :arg1
+     * @When I must obtain an IntBag with value :content
      */
-    public function iMustObtainAnIntbagWithValue(int $arg1)
+    public function iMustObtainAnIntbagWithValue(int $content)
     {
-        $this->callbackPromiseSuccess = function ($value) use ($arg1) {
+        $this->callbackPromiseSuccess = function ($value) use ($content) {
             Assert::assertInstanceOf(IntBag::class, $value);
-            Assert::assertEquals(new IntBag($arg1), $value);
+            Assert::assertEquals(new IntBag($content), $value);
         };
     }
 
     /**
-     * @When I must obtain an error message :arg1
+     * @When I must obtain an error message :content
      */
-    public function iMustObtainAnErrorMessage($arg1)
+    public function iMustObtainAnErrorMessage($content)
     {
-        $this->callbackPromiseSuccess = function () use ($arg1) {
-            Assert::assertEquals($arg1, static::$message);
+        $this->callbackPromiseSuccess = function () use ($content) {
+            Assert::assertEquals($content, static::$message);
         };
     }
 
     /**
-     * @When I define the dynamic step :arg1 my recipe
+     * @When I define the dynamic step :name my recipe
      */
-    public function iDefineTheDynamicStepMyRecipe($arg1)
+    public function iDefineTheDynamicStepMyRecipe($name)
     {
         $this->pushRecipe(
             $this->lastRecipe->cook(
-                new \Teknoo\Recipe\Bowl\DynamicBowl($arg1, false, [], $arg1),
-                $arg1
+                new \Teknoo\Recipe\Bowl\DynamicBowl($name, false, [], $name),
+                $name
             )
         );
     }
 
     /**
-     * @When I define the mandatory dynamic step :arg1 my recipe
+     * @When I define the mandatory dynamic step :name my recipe
      */
-    public function iDefineTheMandatoryDynamicStepMyRecipe($arg1)
+    public function iDefineTheMandatoryDynamicStepMyRecipe($name)
     {
         $this->pushRecipe(
             $this->lastRecipe->cook(
-                new \Teknoo\Recipe\Bowl\DynamicBowl($arg1, true, [], $arg1),
-                $arg1
+                new \Teknoo\Recipe\Bowl\DynamicBowl($name, true, [], $name),
+                $name
             )
         );
     }
 
     /**
-     * @When I set the dynamic callable :arg1 to :arg2 my recipe
+     * @When I set the dynamic callable :name to :method my recipe
      */
-    public function iSetTheDynamicCallableToMyRecipe($arg1, $arg2)
+    public function iSetTheDynamicCallableToMyRecipe($name, $method)
     {
-        $this->workPlan[$arg1] = $this->parseMethod($arg2);
+        $this->workPlan[$name] = $this->parseMethod($method);
     }
 
     public static function createException()
