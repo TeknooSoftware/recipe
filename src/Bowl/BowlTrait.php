@@ -58,6 +58,70 @@ trait BowlTrait
     private ?array $parametersCache = null;
 
     /**
+     * @var array<string, array<string, \ReflectionMethod>>
+     */
+    private static array $reflectionsClasses = [];
+
+    /**
+     * @var array<string, \ReflectionFunction>
+     */
+    private static array $reflectionsFunctions = [];
+
+    /**
+     * @var array<string, \ReflectionMethod>
+     */
+    private static array $reflectionsInvokables = [];
+
+    /**
+     * @var array<string, array<\ReflectionParameter>>
+     */
+    private static array $reflectionsParameters = [];
+
+
+    /**
+     * @param object|class-string $objectOrClass
+     */
+    private static function getReflectionClass($objectOrClass, string $methodName): \ReflectionMethod
+    {
+        if (\is_object($objectOrClass)) {
+            $objectOrClass = \get_class($objectOrClass);
+        }
+
+        $getter = static function () use ($objectOrClass, $methodName): \ReflectionMethod {
+            $reflectionClass = new \ReflectionClass($objectOrClass);
+
+            return static::$reflectionsClasses[$objectOrClass][$methodName] = $reflectionClass->getMethod($methodName);
+        };
+
+        return static::$reflectionsClasses[$objectOrClass][$methodName] ?? $getter();
+    }
+
+    private static function getReflectionFunction(string $function): \ReflectionFunction
+    {
+        $getter = static function () use ($function): \ReflectionFunction {
+            return static::$reflectionsFunctions[$function] = new \ReflectionFunction($function);
+        };
+
+        return static::$reflectionsFunctions[$function] ?? $getter();
+    }
+
+    /**
+     * @param object $invokable
+     */
+    private static function getReflectionInvokable(object $invokable): \ReflectionMethod
+    {
+        $invokableClass = \get_class($invokable);
+
+        $getter = static function () use ($invokableClass): \ReflectionMethod {
+            $reflectionClass = new \ReflectionClass($invokableClass);
+
+            return static::$reflectionsInvokables[$invokableClass] = $reflectionClass->getMethod('__invoke');
+        };
+
+        return static::$reflectionsInvokables[$invokableClass] ?? $getter();
+    }
+
+    /**
      * To return the Reflection instance about this callable, supports functions, closures, objects methods or class
      * methods.
      *
@@ -66,23 +130,23 @@ trait BowlTrait
      * @return \ReflectionFunctionAbstract
      * @throws \ReflectionException
      */
-    private function getReflection(callable $callable): \ReflectionFunctionAbstract
+    private static function getReflection(callable $callable): \ReflectionFunctionAbstract
     {
         if (\is_array($callable)) {
-            //The callable is checked by PHP in the constructor by the type hiting
-            $reflectionClass = new \ReflectionClass($callable[0]);
-
-            return $reflectionClass->getMethod($callable[1]);
+            //The callable is checked by PHP in the constructor by the type hitting
+            return static::getReflectionClass($callable[0], $callable[1]);
         }
 
-        if (\is_string($callable) || $callable instanceof \Closure) {
+        if ($callable instanceof \Closure) {
             return new \ReflectionFunction($callable);
         }
 
-        //It's not a closure, so it's mandatory a invokable object (because the callable is valid)
-        $reflectionClass = new \ReflectionClass($callable);
+        if (\is_string($callable)) {
+            return static::getReflectionFunction($callable);
+        }
 
-        return $reflectionClass->getMethod('__invoke');
+        //It's not a closure, so it's mandatory a invokable object (because the callable is valid)
+        return static::getReflectionInvokable((object) $callable);
     }
 
     /**
@@ -95,30 +159,19 @@ trait BowlTrait
      */
     private function listParameters(callable $callable): array
     {
-        $parameters = [];
-        foreach ($this->getReflection($callable)->getParameters() as $parameter) {
-            $parameters[$parameter->getName()] = $parameter;
-        }
+        $reflection = static::getReflection($callable);
+        $oid = $reflection->getFileName() . ':' . $reflection->getStartLine();
 
-        return $parameters;
-    }
+        $getter = static function () use ($oid, $reflection): array {
+            $parameters = [];
+            foreach ($reflection->getParameters() as $parameter) {
+                $parameters[$parameter->getName()] = $parameter;
+            }
 
-    /**
-     * To extract the list of ReflectionParameter instances about the current callable
-     * and cache them for next call.
-     *
-     * @param callable $callable
-     *
-     * @return array<string, \ReflectionParameter>
-     * @throws \ReflectionException
-     */
-    private function getParametersInOrder(callable $callable): array
-    {
-        if (null === $this->parametersCache) {
-            $this->parametersCache = $this->listParameters($callable);
-        }
+            return static::$reflectionsParameters[$oid] = $parameters;
+        };
 
-        return $this->parametersCache;
+        return static::$reflectionsParameters[$oid] ?? $getter();
     }
 
     /**
@@ -194,7 +247,7 @@ trait BowlTrait
     private function extractParameters(callable $callable, ChefInterface $chef, array &$workPlan): array
     {
         $values = [];
-        foreach ($this->getParametersInOrder($callable) as $name => $parameter) {
+        foreach ($this->listParameters($callable) as $name => $parameter) {
             if ($this->isInstanceOf($parameter, $chef)) {
                 $values[] = $chef;
                 continue;

@@ -5,9 +5,6 @@ parameters:
     treatPhpDocTypesAsCertain: false
     ignoreErrors:
         -
-            message: '#Parameter \#1 \$[a-zA-Z]+ of class ReflectionClass constructor expects class-string\<T of object\>\|T of object, callable given.#'
-            path: src/Bowl
-        -
             message: '#Cannot call method isInstance\(\) on ReflectionClass\|null#'
             path: src/Bowl
         -

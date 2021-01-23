@@ -136,8 +136,7 @@ class Ingredient implements IngredientInterface
         array $workPlan,
         ChefInterface $chef,
         ?IngredientBagInterface $bag = null
-    ): IngredientInterface
-    {
+    ): IngredientInterface {
         if (!isset($workPlan[$this->name])) {
             $chef->missing($this, "Missing the ingredient {$this->name}");
 

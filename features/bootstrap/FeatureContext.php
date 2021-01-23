@@ -29,6 +29,8 @@ class FeatureContext implements Context
      */
     private $lastRecipe;
 
+    private ?string $secondVar = null;
+
     /**
      * @var RecipeInterface[]
      */
@@ -126,6 +128,21 @@ class FeatureContext implements Context
     }
 
     /**
+     * @When I define a :className and :secondVar variable to start my recipe
+     */
+    public function iDefineAAndVariableToStartMyRecipe(string $className, string $secondVar)
+    {
+        $this->secondVar = $secondVar;
+
+        $this->pushRecipe(
+            $this->lastRecipe
+                ->require(new Ingredient($className, \trim($className, '\\')))
+                ->require(new Ingredient('string', $secondVar))
+        );
+    }
+
+
+    /**
      * @When I define the step :stepName to do :methodName my recipe
      */
     public function iDefineTheStepToDoMyRecipe(string $stepName, string $methodName)
@@ -188,6 +205,10 @@ class FeatureContext implements Context
      */
     public function itStartsCookingWithAs($value, $name)
     {
+        if (null !== $this->secondVar) {
+            $this->workPlan[$this->secondVar] = \md5($this->secondVar);
+        }
+
         $this->chef->process(\array_merge($this->workPlan, [\trim($name, '\\') => new $name($value)]));
     }
 

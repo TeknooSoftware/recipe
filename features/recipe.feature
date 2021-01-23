@@ -31,6 +31,16 @@ Feature: Recipe
   Scenario: Train a chef to cook a dish
     Given I have an empty recipe
     And I have an untrained chef
+    When I define a "\DateTime" and "temp" variable to start my recipe
+    And I define the step "createImmutable" to do "DateTimeImmutable::createFromMutable" my recipe
+    And I define the excepted dish "DateTimeImmutable" to my recipe
+    And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
+    Then I train the chef with the recipe
+    And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
+
+  Scenario: Train a chef to cook a dish with two ingredient
+    Given I have an empty recipe
+    And I have an untrained chef
     When I define a "\DateTime" to start my recipe
     And I define the step "createImmutable" to do "DateTimeImmutable::createFromMutable" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
