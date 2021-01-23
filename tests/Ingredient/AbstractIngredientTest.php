@@ -24,6 +24,7 @@
 namespace Teknoo\Tests\Recipe\Ingredient;
 
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Ingredient\IngredientBagInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\RecipeInterface;
@@ -93,6 +94,34 @@ abstract class AbstractIngredientTest extends TestCase
             $this->buildIngredient()->prepare(
                 $this->getWorkPlanValid(),
                 $chef
+            )
+        );
+    }
+
+    public function testPrepareWithValidPlanWithBag()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+        $bag = $this->createMock(IngredientBagInterface::class);
+
+        $chef->expects(self::never())
+            ->method('missing');
+
+        $chef->expects(self::never())
+            ->method('updateWorkPlan')
+            ->with($this->getWorkPlanInjected())
+            ->willReturnSelf();
+
+        $bag->expects(self::never())
+            ->method('updateWorkPlan')
+            ->with($this->getWorkPlanInjected())
+            ->willReturnSelf();
+
+        self::assertInstanceOf(
+            IngredientInterface::class,
+            $this->buildIngredient()->prepare(
+                $this->getWorkPlanValid(),
+                $chef,
+                $bag
             )
         );
     }

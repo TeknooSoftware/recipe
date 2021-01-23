@@ -29,8 +29,8 @@ use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Recipe\ChefInterface;
 
 /**
- * Interface to define required ingredient needed to start cooking a recipe, initialize or clean them if it's necessary.
- * Ingredient must be immutable.
+ * Bag definition to bring all prepared ingredient to pass to the chef in a single pass to the chef without call
+ * several time updateWorkPlan
  *
  * @copyright   Copyright (c) 2009-2021 EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) 2020-2021 SASU Teknoo Software (https://teknoo.software)
@@ -40,20 +40,20 @@ use Teknoo\Recipe\ChefInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-interface IngredientInterface extends ImmutableInterface
+interface IngredientBagInterface
 {
     /**
-     * To check if an ingredient is available on the workplan and inject the cleaned ingredient into the workplan.
-     * If the ingredient is not available, the instance must call the method missing of the chef.
-     *
-     * @param array<string, mixed> $workPlan
-     * @param ChefInterface $chef
-     * @param IngredientBagInterface $bag
-     * @return IngredientInterface
+     * Variable to push to the workplan
+     * @param string $name
+     * @param mixed $value
+     * @return IngredientBagInterface
      */
-    public function prepare(
-        array $workPlan,
-        ChefInterface $chef,
-        ?IngredientBagInterface $bag = null
-    ): IngredientInterface;
+    public function set(string $name, $value): IngredientBagInterface;
+
+    /**
+     * Update the chef's workplan
+     * @param ChefInterface $chef
+     * @return IngredientBagInterface
+     */
+    public function updateWorkPlan(ChefInterface $chef): IngredientBagInterface;
 }

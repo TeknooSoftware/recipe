@@ -27,6 +27,7 @@ namespace Teknoo\Recipe\Recipe;
 
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Dish\DishInterface;
+use Teknoo\Recipe\Ingredient\IngredientBag;
 use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\States\State\StateInterface;
@@ -59,9 +60,12 @@ class Written implements StateInterface
             /**
              * @var Recipe $this
              */
+            $bag = new IngredientBag();
             foreach ($this->requiredIngredients as $ingredient) {
-                $ingredient->prepare($workPlan, $chef);
+                $ingredient->prepare($workPlan, $chef, $bag);
             }
+
+            $bag->updateWorkPlan($chef);
 
             return $this;
         };

@@ -132,7 +132,11 @@ class Ingredient implements IngredientInterface
     /**
      * @param array<string, mixed> $workPlan
      */
-    public function prepare(array $workPlan, ChefInterface $chef): IngredientInterface
+    public function prepare(
+        array $workPlan,
+        ChefInterface $chef,
+        ?IngredientBagInterface $bag = null
+    ): IngredientInterface
     {
         if (!isset($workPlan[$this->name])) {
             $chef->missing($this, "Missing the ingredient {$this->name}");
@@ -150,7 +154,16 @@ class Ingredient implements IngredientInterface
             return $this;
         }
 
-        $chef->updateWorkPlan([$this->getNormalizedName() => $this->normalize($value)]);
+        $normalizedName = $this->getNormalizedName();
+        $normalizedValue = $this->normalize($value);
+
+        if ($bag instanceof IngredientBagInterface) {
+            $bag->set($normalizedName, $normalizedValue);
+
+            return $this;
+        }
+
+        $chef->updateWorkPlan([$normalizedName => $normalizedValue]);
 
         return $this;
     }

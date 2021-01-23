@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Recipe.
  *
  * LICENSE
@@ -21,17 +21,14 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-declare(strict_types=1);
+namespace Teknoo\Tests\Recipe\Ingredient;
 
-namespace Teknoo\Recipe\Ingredient;
-
-use Teknoo\Immutable\ImmutableInterface;
+use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Ingredient\IngredientBag;
+use Teknoo\Recipe\Ingredient\IngredientBagInterface;
 
 /**
- * Interface to define required ingredient needed to start cooking a recipe, initialize or clean them if it's necessary.
- * Ingredient must be immutable.
- *
  * @copyright   Copyright (c) 2009-2021 EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) 2020-2021 SASU Teknoo Software (https://teknoo.software)
  *
@@ -39,21 +36,43 @@ use Teknoo\Recipe\ChefInterface;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @covers \Teknoo\Recipe\Ingredient\IngredientBag
  */
-interface IngredientInterface extends ImmutableInterface
+class IngredientBagTest extends TestCase
 {
-    /**
-     * To check if an ingredient is available on the workplan and inject the cleaned ingredient into the workplan.
-     * If the ingredient is not available, the instance must call the method missing of the chef.
-     *
-     * @param array<string, mixed> $workPlan
-     * @param ChefInterface $chef
-     * @param IngredientBagInterface $bag
-     * @return IngredientInterface
-     */
-    public function prepare(
-        array $workPlan,
-        ChefInterface $chef,
-        ?IngredientBagInterface $bag = null
-    ): IngredientInterface;
+    public function buildBag(): IngredientBag
+    {
+        return new IngredientBag();
+    }
+
+    public function testSetBadName()
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->buildBag()->set(new \stdClass(), 'foo');
+    }
+
+    public function testSet()
+    {
+        self::assertInstanceOf(
+            IngredientBagInterface::class,
+            $this->buildBag()->set('foo', new \stdClass())
+        );
+    }
+
+    public function testUpdateWorkPlanBadChef()
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->buildBag()->updateWorkPlan(new \stdClass());
+    }
+
+    public function testUpdateWorkPlan()
+    {
+        self::assertInstanceOf(
+            IngredientBagInterface::class,
+            $this->buildBag()->updateWorkPlan($this->createMock(ChefInterface::class))
+        );
+    }
 }
