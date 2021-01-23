@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Teknoo\Recipe\ChefInterface;
+
 class StringObject
 {
     /**
@@ -21,6 +23,11 @@ class StringObject
     public static function addTest(self $string)
     {
         $string->value .= ' bar';
+    }
+
+    public static function gotTo(ChefInterface $chef)
+    {
+        $chef->continue([], 'final');
     }
 
     /**

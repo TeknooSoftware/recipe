@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.3.1] - 2021-01-23
+###Stable Release
+- Fix recipe compiling lost step's name and allow GoTo.
+- Change fix recipe compiling when several steps share the same name in 1.1.1
+
 ##[2.3.0] - 2021-01-20
 ###Stable Release
 - Add Chef::error()

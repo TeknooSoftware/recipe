@@ -54,13 +54,15 @@ class RecipeTest extends AbstractRecipeTest
         $chef->expects(self::once())
             ->method('followSteps')
             ->with([
-                new Bowl('microtime', [], 'stepB'),
-                new Bowl('microtime', [], 'stepA'),
-                new Bowl('microtime', [], 'stepC')
+                'stepB' => new Bowl('microtime', [], 'stepB'),
+                'stepA' => new Bowl('microtime', [], 'stepA'),
+                'stepA1' => new Bowl('microtime', [], 'stepA'),
+                'stepC' => new Bowl('microtime', [], 'stepC')
             ])
             ->willReturnSelf();
 
         $recipe = $this->buildRecipe();
+        $recipe = $recipe->cook('microtime', 'stepA', [], 2);
         $recipe = $recipe->cook('microtime', 'stepA', [], 2);
         $recipe = $recipe->cook('microtime', 'stepB', [], 1);
         $recipe = $recipe->cook('microtime', 'stepC', [], 2);
