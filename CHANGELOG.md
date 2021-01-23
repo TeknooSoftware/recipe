@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.3.2] - 2021-01-23
+###Optimisation Release
+- Add IngredientBag to limit use of array_merge
+- Improve Reflection use and cache in Bowl
+
 ##[2.3.1] - 2021-01-23
 ###Stable Release
 - Fix recipe compiling lost step's name and allow GoTo.
