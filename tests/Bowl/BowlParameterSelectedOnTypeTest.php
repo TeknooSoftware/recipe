@@ -23,8 +23,8 @@
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
-use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\ChefInterface;
 
 /**
@@ -35,39 +35,51 @@ use Teknoo\Recipe\ChefInterface;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @covers \Teknoo\Recipe\Bowl\Bowl
+ * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
-abstract class AbstractBowlTest extends TestCase
+class BowlParameterSelectedOnTypeTest extends AbstractBowlTest
 {
-    /**
-     * @return BowlInterface
-     */
-    abstract public function buildBowl(): BowlInterface;
-
-    public function testExceptionOnExecuteWithBadChef()
+    protected function getCallable()
     {
-        $this->expectException(\TypeError::class);
-        $values = ['foo'=>'bar'];
-        $this->buildBowl()->execute(new \stdClass(), $values);
+        $object = new class() {
+            public function methodToCall(
+                ChefInterface $chef,
+                string $bar,
+                $bar2,
+                $foo2,
+                \DateTimeInterface $date,
+                $_methodName
+            ) {
+                $chef->continue([
+                    'bar' => $bar,
+                    'bar2' => $bar2,
+                    'foo2' => $foo2,
+                    'date' => $date->getTimestamp(),
+                    '_methodName' => $_methodName,
+                ]);
+            }
+        };
+
+        return [$object, 'methodToCall'];
     }
 
-    public function testExceptionOnExecuteWithBadWorkPlan()
+    protected function getMapping()
     {
-        $this->expectException(\TypeError::class);
-        $values = new \stdClass();
-        $this->buildBowl()->execute($this->createMock(ChefInterface::class), $values);
+        return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
-    protected function getValidWorkPlan(): array
+    public function buildBowl(): BowlInterface
     {
-        return [
-            'foo' => 'foo',
-            'foo2' => 'bar2',
-            'now' => (new \DateTime('2018-01-01')),
-            \DateTimeInterface::class => (new \DateTime('2018-01-02')),
-        ];
+        return new Bowl(
+            $this->getCallable(),
+            $this->getMapping(),
+            'bowlClass'
+        );
     }
 
     public function testExecute()
@@ -79,7 +91,7 @@ abstract class AbstractBowlTest extends TestCase
                 'bar' => 'foo',
                 'bar2' => 'foo',
                 'foo2' => 'bar2',
-                'date' => (new \DateTime('2018-01-01'))->getTimestamp(),
+                'date' => (new \DateTime('2018-01-02'))->getTimestamp(),
                 '_methodName' => 'bowlClass',
             ])
             ->willReturnSelf();
@@ -88,36 +100,6 @@ abstract class AbstractBowlTest extends TestCase
             ->method('updateWorkPlan');
 
         $values = $this->getValidWorkPlan();
-        self::assertInstanceOf(
-            BowlInterface::class,
-            $this->buildBowl()->execute(
-                $chef,
-                $values
-            )
-        );
-    }
-
-    /**
-     * @return array
-     */
-    protected function getNotValidWorkPlan(): array
-    {
-        return [
-            'foo' => 'foo'
-        ];
-    }
-
-    public function testExceptionWhenExecuteAndMissingAndIngredientInWorkPlan()
-    {
-        $this->expectException(\RuntimeException::class);
-        $chef = $this->createMock(ChefInterface::class);
-        $chef->expects(self::never())
-            ->method('continue');
-
-        $chef->expects(self::never())
-            ->method('updateWorkPlan');
-
-        $values = $this->getNotValidWorkPlan();
         self::assertInstanceOf(
             BowlInterface::class,
             $this->buildBowl()->execute(

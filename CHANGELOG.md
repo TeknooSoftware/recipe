@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.3.3] - 2021-02-12
+###Stable Release
+- Bowl will be select parameters, by priority, on mapping, on name, on type (if class name is used as key in workplan),
+  and finaly on instance types
+  
 ##[2.3.2] - 2021-01-23
 ###Optimisation Release
 - Add IngredientBag to limit use of array_merge

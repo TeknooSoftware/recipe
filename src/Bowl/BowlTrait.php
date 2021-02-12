@@ -270,6 +270,12 @@ trait BowlTrait
                 continue;
             }
 
+            $type = $parameter->getType();
+            if ($type instanceof \ReflectionNamedType && isset($workPlan[$type->getName()])) {
+                $values[] = $workPlan[$type->getName()];
+                continue;
+            }
+
             $automaticValueFound = $this->findInstanceForParameter($parameter, $workPlan, $values);
 
             if (true === $automaticValueFound) {
