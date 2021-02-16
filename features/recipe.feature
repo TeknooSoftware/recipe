@@ -48,6 +48,25 @@ Feature: Recipe
     Then I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
 
+  Scenario: Train a chef to cook a dish with two ingredient
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define a "\DateTime" to start my recipe
+    And I define the step "createImmutable" to do "DateTimeImmutable::createFromMutable" my recipe
+    And I define the excepted dish "DateTimeImmutable" to my recipe
+    And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
+    Then I train the chef with the recipe
+    And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
+
+  Scenario: Train a chef to cook a dish and remove an ingredient
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define a "\DateTime" to start my recipe
+    And I define the step "removeIngredient" to do "FeatureContext::removeDate" my recipe
+    And I define the step "checkMissingIngredient" to do "FeatureContext::checkDate" my recipe
+    Then I train the chef with the recipe
+    And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
+
   Scenario: Train a chef to cook and have an error without error handler
     Given I have an empty recipe
     And I have an untrained chef

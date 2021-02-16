@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[2.4.0] - 2021-02-16
+###Stable Release
+- Add `ChefInterface::cleanWorkPlan` to remove some ingredients from workplan
+
 ##[2.3.3] - 2021-02-12
 ###Stable Release
 - Bowl will be select parameters, by priority, on mapping, on name, on type (if class name is used as key in workplan),

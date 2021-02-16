@@ -75,6 +75,14 @@ interface ChefInterface
     public function updateWorkPlan(array $with): ChefInterface;
 
     /**
+     * To remove from the work plan some ingredients.
+     *
+     * @param array<int, string> $ingredients
+     * @return ChefInterface
+     */
+    public function cleanWorkPlan(...$ingredients): ChefInterface;
+
+    /**
      * To learn steps to able to cook the recipe.
      *
      * @param array<BowlInterface> $steps

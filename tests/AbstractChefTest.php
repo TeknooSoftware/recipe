@@ -334,6 +334,26 @@ abstract class AbstractChefTest extends TestCase
         );
     }
 
+    public function testExceptionOnCleanWorkPlanWithBadArray()
+    {
+        $this->expectException(\TypeError::class);
+        $this->buildChef()->missing(new \stdClass());
+    }
+
+    public function testCleanWorkPlan()
+    {
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->followSteps([$this->createMock(BowlInterface::class)]);
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->cleanWorkPlan(
+                'foo', 'bar'
+            )
+        );
+    }
+
     public function testExceptionOnFollowStepsWithBadArray()
     {
         $this->expectException(\TypeError::class);

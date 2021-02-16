@@ -62,6 +62,18 @@ class Trained implements StateInterface
     }
 
     /**
+     * To remove some ingredients from the workplan
+     */
+    public function removeFromMyWorkPlan(): callable
+    {
+        return function (array $ingredients): ChefInterface {
+            $this->workPlan = \array_diff_key($this->workPlan, \array_flip($ingredients));
+
+            return $this;
+        };
+    }
+
+    /**
      * To execute a cooking and switch to cookine state.
      */
     public function runRecipe(): callable

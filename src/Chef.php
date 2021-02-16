@@ -57,6 +57,7 @@ use Teknoo\States\Proxy\ProxyTrait;
  * @method ChefInterface readRecipe(RecipeInterface $recipe)
  * @method ChefInterface followStepsRecipe(array $steps, array $onError)
  * @method ChefInterface updateMyWorkPlan(array $with)
+ * @method ChefInterface removeFromMyWorkPlan(array $ingredients)
  * @method ChefInterface runRecipe(array $workPlan)
  * @method ChefInterface begin(RecipeInterface $recipe)
  * @method ChefInterface missingIngredient(IngredientInterface $ingredient, string $message)
@@ -164,6 +165,11 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     public function updateWorkPlan(array $with): ChefInterface
     {
         return $this->updateMyWorkPlan($with);
+    }
+
+    public function cleanWorkPlan(...$ingredients): ChefInterface
+    {
+        return $this->removeFromMyWorkPlan($ingredients);
     }
 
     /**

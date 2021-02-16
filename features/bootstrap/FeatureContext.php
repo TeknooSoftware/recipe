@@ -449,11 +449,22 @@ class FeatureContext implements Context
         $this->workPlan[$name] = $this->parseMethod($method);
     }
 
+    public static function removeDate(ChefInterface $chef)
+    {
+        $chef->cleanWorkPlan('foo', 'DateTime');
+    }
+
+    public static function checkDate(\DateTime $dateTime = null)
+    {
+        if (null !== $dateTime) {
+            throw new \RuntimeException('This ingredient must be deleted');
+        }
+    }
+
     public static function createException()
     {
         throw new \RuntimeException('There had an error');
     }
-
 
     public static function callError(ChefInterface $chef)
     {
