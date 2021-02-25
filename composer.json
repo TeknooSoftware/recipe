@@ -29,7 +29,7 @@
     "require":{
         "php": "~7.4||~8.0",
         "teknoo/immutable": "^2.0.5",
-        "teknoo/states": "^4.1.6"
+        "teknoo/states": "^4.1.9"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
@@ -38,7 +38,7 @@
         "pdepend/pdepend": "~2.8",
         "sebastian/phpcpd": "^6.0.2",
         "phploc/phploc": "^7.0.1",
-        "phpstan/phpstan": "^0.12.68",
+        "phpstan/phpstan": "^0.12.79",
         "behat/behat": "~3.7"
     },
     "autoload": {
