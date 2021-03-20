@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Bowl;
 
+use Exception;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
 
@@ -72,7 +73,7 @@ class Bowl implements BowlInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function execute(ChefInterface $chef, array &$workPlan): BowlInterface
     {

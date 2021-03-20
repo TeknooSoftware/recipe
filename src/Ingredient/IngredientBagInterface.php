@@ -44,16 +44,11 @@ interface IngredientBagInterface
 {
     /**
      * Variable to push to the workplan
-     * @param string $name
-     * @param mixed $value
-     * @return IngredientBagInterface
      */
-    public function set(string $name, $value): IngredientBagInterface;
+    public function set(string $name, mixed $value): IngredientBagInterface;
 
     /**
      * Update the chef's workplan
-     * @param ChefInterface $chef
-     * @return IngredientBagInterface
      */
     public function updateWorkPlan(ChefInterface $chef): IngredientBagInterface;
 }

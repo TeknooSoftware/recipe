@@ -29,6 +29,9 @@ use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\ChefInterface;
 
+use function array_merge;
+use function is_numeric;
+
 /**
  * Bowl to execute a new recipe, with a new trained chef provided by the current chef, but sharing the a clone of the
  * original workplan.
@@ -49,20 +52,11 @@ class RecipeBowl implements BowlInterface
 
     private BaseRecipeInterface $recipe;
 
-    /**
-     * @var int|BowlInterface
-     */
-    private $repeat;
+    private int | BowlInterface $repeat;
 
-    /**
-     * @var bool
-     */
     private bool $allowToLoop = true;
 
-    /**
-     * @param int|BowlInterface $repeat
-     */
-    public function __construct(BaseRecipeInterface $recipe, $repeat)
+    public function __construct(BaseRecipeInterface $recipe, int | BowlInterface $repeat)
     {
         $this->uniqueConstructorCheck();
 
@@ -82,12 +76,12 @@ class RecipeBowl implements BowlInterface
      */
     private function checkLooping(ChefInterface $chef, int $counter, array &$workPlan): bool
     {
-        if (\is_numeric($this->repeat)) {
+        if (is_numeric($this->repeat)) {
             //Strictly less because the step has been executed at least one time.
             return $counter < $this->repeat;
         }
 
-        $loopWorkPlan = \array_merge($workPlan, ['counter' => $counter, 'bowl' => $this]);
+        $loopWorkPlan = array_merge($workPlan, ['counter' => $counter, 'bowl' => $this]);
         $this->repeat->execute($chef, $loopWorkPlan);
 
         return (true === $this->allowToLoop);

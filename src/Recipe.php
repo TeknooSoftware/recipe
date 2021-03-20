@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe;
 
+use Generator;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Dish\DishInterface;
@@ -40,6 +41,9 @@ use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\Exception\StateNotFound;
 use Teknoo\States\Proxy\ProxyInterface;
 use Teknoo\States\Proxy\ProxyTrait;
+
+use function current;
+use function key;
 
 /**
  * Default implementation to define a recipe. A recipe has several ordered steps (as callable).
@@ -140,12 +144,16 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
         return $this->addIngredient($ingredient);
     }
 
-    public function cook($action, string $name, array $with = [], int $position = null): RecipeInterface
-    {
+    public function cook(
+        callable | BowlInterface $action,
+        string $name,
+        array $with = [],
+        int $position = null
+    ): RecipeInterface {
         return $this->addStep($action, $name, $with, $position);
     }
 
-    public function onError($action): RecipeInterface
+    public function onError(callable | BowlInterface $action): RecipeInterface
     {
         return $this->setOnError($action);
     }
@@ -153,7 +161,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     public function execute(
         BaseRecipeInterface $recipe,
         string $name,
-        $repeat = 1,
+        int | callable $repeat = 1,
         int $position = null
     ): RecipeInterface {
         return $this->addSubRecipe($recipe, $name, $repeat, $position);
@@ -167,16 +175,16 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
     /**
      * To browse steps, stored into an ordered matrix as a single array
      *
-     * @return \Generator<string, BowlInterface>
+     * @return Generator<string, BowlInterface>
      */
-    private function browseSteps(): \Generator
+    private function browseSteps(): iterable
     {
         $steps = $this->steps;
         ksort($steps);
 
         foreach ($steps as &$stepsSublist) {
             foreach ($stepsSublist as &$step) {
-                yield (string) \key($step) => \current($step);
+                yield (string) key($step) => current($step);
             }
         }
     }
@@ -219,7 +227,7 @@ class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
         return $this->prepareCooking($workPlan, $chef);
     }
 
-    public function validate($value): RecipeInterface
+    public function validate(mixed $value): RecipeInterface
     {
         return $this->validateDish($value);
     }

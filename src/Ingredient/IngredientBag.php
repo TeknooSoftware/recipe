@@ -49,7 +49,7 @@ class IngredientBag implements IngredientBagInterface
      */
     private array $workPlan = [];
 
-    public function set(string $name, $value): IngredientBagInterface
+    public function set(string $name, mixed $value): IngredientBagInterface
     {
         $this->workPlan[$name] = $value;
 

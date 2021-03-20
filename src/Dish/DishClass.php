@@ -27,6 +27,9 @@ namespace Teknoo\Recipe\Dish;
 
 use Teknoo\Recipe\Promise\PromiseInterface;
 
+use function is_a;
+use function is_object;
+
 /**
  * To define Dish, instance able to check and validate the result of cooked recipe. The validation is performed on the
  * instance of the result
@@ -52,9 +55,9 @@ class DishClass extends AbstractDishClass
         $this->class = $class;
     }
 
-    protected function check(&$result): bool
+    protected function check(mixed &$result): bool
     {
-        return \is_object($result)
-            && (\is_a($result, $this->class, true));
+        return is_object($result)
+            && (is_a($result, $this->class, true));
     }
 }

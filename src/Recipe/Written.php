@@ -76,7 +76,7 @@ class Written implements StateInterface
      */
     public function validateDish(): callable
     {
-        return function ($value): RecipeInterface {
+        return function (mixed $value): RecipeInterface {
             /**
              * @var Recipe $this
              */

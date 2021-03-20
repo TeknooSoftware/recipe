@@ -49,52 +49,38 @@ interface RecipeInterface extends ImmutableInterface, BaseRecipeInterface
 {
     /**
      * To define required ingredients to start the cooking of the recipe.
-     *
-     * @param IngredientInterface $ingredient
-     * @return RecipeInterface
      */
     public function require(IngredientInterface $ingredient): RecipeInterface;
 
     /**
      * To define actions to realize the recipe.
      *
-     * @param callable|BowlInterface $action
-     * @param string $name
      * @param array<string, string> $with
-     * @param int|null $position
-     * @return RecipeInterface
      */
-    public function cook($action, string $name, array $with = [], int $position = null): RecipeInterface;
+    public function cook(
+        callable | BowlInterface $action,
+        string $name,
+        array $with = [],
+        int $position = null
+    ): RecipeInterface;
 
     /**
      * To define action when an error is occurred
-     *
-     * @param callable|BowlInterface $action
-     * @return RecipeInterface
      */
-    public function onError($action): RecipeInterface;
+    public function onError(callable | BowlInterface $action): RecipeInterface;
 
     /**
      * To define actions to realize the recipe.
-     *
-     * @param BaseRecipeInterface $recipe
-     * @param string $name
-     * @param int|callable $repeat
-     * @param int|null $position
-     * @return RecipeInterface
      */
     public function execute(
         BaseRecipeInterface $recipe,
         string $name,
-        $repeat = 1,
+        int | callable $repeat = 1,
         int $position = null
     ): RecipeInterface;
 
     /**
      * To define the excepted dish attempted at the end.
-     *
-     * @param DishInterface $dish
-     * @return RecipeInterface
      */
     public function given(DishInterface $dish): RecipeInterface;
 }

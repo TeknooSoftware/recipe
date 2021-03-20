@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Dish;
 
+use RuntimeException;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
@@ -56,19 +57,15 @@ abstract class AbstractDishClass implements DishInterface
 
     /**
      * To define in final class to check the result of the cooked recipe.
-     *
-     * @param mixed $result
-     *
-     * @return bool
      */
-    abstract protected function check(&$result): bool;
+    abstract protected function check(mixed &$result): bool;
 
-    public function isExcepted($result): DishInterface
+    public function isExcepted(mixed $result): DishInterface
     {
         if ($this->check($result)) {
             $this->promise->success($result);
         } else {
-            $this->promise->fail(new \RuntimeException('Dish is not accepted'));
+            $this->promise->fail(new RuntimeException('Dish is not accepted'));
         }
 
         return $this;

@@ -53,8 +53,6 @@ interface BaseRecipeInterface
 
     /**
      * To validate the result of the cooking via the dish defined via the method "given".
-     *
-     * @param mixed $value
      */
-    public function validate($value): BaseRecipeInterface;
+    public function validate(mixed $value): BaseRecipeInterface;
 }

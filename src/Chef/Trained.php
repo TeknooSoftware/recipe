@@ -30,6 +30,10 @@ use Teknoo\Recipe\ChefInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
+use function array_diff_key;
+use function array_flip;
+use function array_merge;
+
 /**
  * @see Chef
  *
@@ -55,7 +59,7 @@ class Trained implements StateInterface
     public function updateMyWorkPlan(): callable
     {
         return function (array $with): ChefInterface {
-            $this->workPlan = \array_merge($this->workPlan, $with);
+            $this->workPlan = array_merge($this->workPlan, $with);
 
             return $this;
         };
@@ -67,7 +71,7 @@ class Trained implements StateInterface
     public function removeFromMyWorkPlan(): callable
     {
         return function (array $ingredients): ChefInterface {
-            $this->workPlan = \array_diff_key($this->workPlan, \array_flip($ingredients));
+            $this->workPlan = array_diff_key($this->workPlan, array_flip($ingredients));
 
             return $this;
         };
@@ -80,7 +84,7 @@ class Trained implements StateInterface
     {
         return function (array $workPlan): ChefInterface {
             //If this method is called, $this->recipe is a valid RecipeInterface instance
-            $this->workPlan = \array_merge($this->workPlan, $workPlan);
+            $this->workPlan = array_merge($this->workPlan, $workPlan);
             $this->cooking = true;
 
             $this->updateStates();

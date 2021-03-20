@@ -40,6 +40,7 @@ use Teknoo\States\Automated\AutomatedInterface;
 use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\ProxyInterface;
 use Teknoo\States\Proxy\ProxyTrait;
+use Throwable;
 
 /**
  * Default implementation of chefs able to learn a recipe and execute. It will follow the recipe, like all algorithms.
@@ -172,11 +173,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
         return $this->removeFromMyWorkPlan($ingredients);
     }
 
-    /**
-     * @array $steps
-     * @param BowlInterface|array $onError
-     */
-    public function followSteps(array $steps, $onError = []): ChefInterface
+    public function followSteps(array $steps, BowlInterface | array $onError = []): ChefInterface
     {
         if ($onError instanceof BowlInterface) {
             //Avoid BC Break
@@ -191,12 +188,12 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
         return $this->continueRecipe($with, $nextStep);
     }
 
-    public function finish($result): ChefInterface
+    public function finish(mixed $result): ChefInterface
     {
         return $this->finishRecipe($result);
     }
 
-    public function error(\Throwable $error): ChefInterface
+    public function error(Throwable $error): ChefInterface
     {
         return $this->errorInRecipe($error);
     }

@@ -28,6 +28,11 @@ namespace Teknoo\Recipe\Ingredient;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
 
+use function class_exists;
+use function is_a;
+use function is_callable;
+use function is_subclass_of;
+
 /**
  * Base class to define required ingredient needed to start cooking a recipe,
  * initialize or clean them if it's necessary. This class check only the class of each ingredient.
@@ -80,14 +85,11 @@ class Ingredient implements IngredientInterface
         return $this->normalizedName;
     }
 
-    /**
-     * @param mixed $value
-     */
-    private function testScalarValue(&$value, ChefInterface $chef): bool
+    private function testScalarValue(mixed &$value, ChefInterface $chef): bool
     {
         $isMethod = 'is_' . $this->requiredType;
 
-        if (\is_callable($isMethod) && !$isMethod($value)) {
+        if (is_callable($isMethod) && !$isMethod($value)) {
             $chef->missing($this, "The ingredient {$this->name} must be a {$this->requiredType}");
 
             return false;
@@ -96,17 +98,12 @@ class Ingredient implements IngredientInterface
         return true;
     }
 
-    /**
-     * @param mixed $value
-     * @param ChefInterface $chef
-     * @return bool
-     */
-    private function testObjectValue(&$value, ChefInterface $chef): bool
+    private function testObjectValue(mixed &$value, ChefInterface $chef): bool
     {
         if (
-            \class_exists($this->requiredType)
-            && !\is_a($value, $this->requiredType, true)
-            && !\is_subclass_of($value, $this->requiredType)
+            class_exists($this->requiredType)
+            && !is_a($value, $this->requiredType, true)
+            && !is_subclass_of($value, $this->requiredType)
         ) {
             $chef->missing($this, "The ingredient {$this->name} must implement {$this->requiredType}");
 
@@ -116,13 +113,9 @@ class Ingredient implements IngredientInterface
         return true;
     }
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    private function normalize(&$value)
+    private function normalize(mixed &$value): mixed
     {
-        if (\is_callable($this->normalizeCallback)) {
+        if (is_callable($this->normalizeCallback)) {
             return ($this->normalizeCallback)($value);
         }
 

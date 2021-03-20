@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Recipe\Promise;
 
 use Teknoo\Immutable\ImmutableInterface;
+use Throwable;
 
 /**
  * PromiseInterface is a contract to create to allow an actor, following east,
@@ -44,19 +45,11 @@ interface PromiseInterface extends ImmutableInterface
 {
     /**
     * To call the callback defined when the actor has successfully it's operation.
-    *
-    * @param mixed|null $result
-    *
-    * @return PromiseInterface
     */
-    public function success($result = null): PromiseInterface;
+    public function success(mixed $result = null): PromiseInterface;
 
     /**
-     *To call the callback defined when an error has been occurred.
-     *
-     * @param \Throwable $throwable
-     *
-     * @return PromiseInterface
+     * To call the callback defined when an error has been occurred.
      */
-    public function fail(\Throwable $throwable): PromiseInterface;
+    public function fail(Throwable $throwable): PromiseInterface;
 }

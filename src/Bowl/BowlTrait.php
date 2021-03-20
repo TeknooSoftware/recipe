@@ -25,7 +25,25 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Bowl;
 
+use Closure;
+use Exception;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionFunction;
+use ReflectionFunctionAbstract;
+use ReflectionMethod;
+use ReflectionNamedType;
+use ReflectionParameter;
+use ReflectionUnionType;
+use RuntimeException;
 use Teknoo\Recipe\ChefInterface;
+
+use function current;
+use function is_array;
+use function is_object;
+use function is_string;
+use function next;
+use function reset;
 
 /**
  * Default base implementation for Bowl to manage parameter mapping with the workplan's ingredients.
@@ -53,27 +71,27 @@ trait BowlTrait
 
     /**
      * To cache the reflections about parameters of the callable
-     * @var array<string, \ReflectionParameter>
+     * @var array<string, ReflectionParameter>
      */
     private ?array $parametersCache = null;
 
     /**
-     * @var array<string, array<string, \ReflectionMethod>>
+     * @var array<string, array<string, ReflectionMethod>>
      */
     private static array $reflectionsClasses = [];
 
     /**
-     * @var array<string, \ReflectionFunction>
+     * @var array<string, ReflectionFunction>
      */
     private static array $reflectionsFunctions = [];
 
     /**
-     * @var array<string, \ReflectionMethod>
+     * @var array<string, ReflectionMethod>
      */
     private static array $reflectionsInvokables = [];
 
     /**
-     * @var array<string, array<\ReflectionParameter>>
+     * @var array<string, array<ReflectionParameter>>
      */
     private static array $reflectionsParameters = [];
 
@@ -81,14 +99,14 @@ trait BowlTrait
     /**
      * @param object|class-string $objectOrClass
      */
-    private static function getReflectionClass($objectOrClass, string $methodName): \ReflectionMethod
+    private static function getReflectionClass($objectOrClass, string $methodName): ReflectionMethod
     {
-        if (\is_object($objectOrClass)) {
-            $objectOrClass = \get_class($objectOrClass);
+        if (is_object($objectOrClass)) {
+            $objectOrClass = $objectOrClass::class;
         }
 
-        $getter = static function () use ($objectOrClass, $methodName): \ReflectionMethod {
-            $reflectionClass = new \ReflectionClass($objectOrClass);
+        $getter = static function () use ($objectOrClass, $methodName): ReflectionMethod {
+            $reflectionClass = new ReflectionClass($objectOrClass);
 
             return static::$reflectionsClasses[$objectOrClass][$methodName] = $reflectionClass->getMethod($methodName);
         };
@@ -96,10 +114,10 @@ trait BowlTrait
         return static::$reflectionsClasses[$objectOrClass][$methodName] ?? $getter();
     }
 
-    private static function getReflectionFunction(string $function): \ReflectionFunction
+    private static function getReflectionFunction(string $function): ReflectionFunction
     {
-        $getter = static function () use ($function): \ReflectionFunction {
-            return static::$reflectionsFunctions[$function] = new \ReflectionFunction($function);
+        $getter = static function () use ($function): ReflectionFunction {
+            return static::$reflectionsFunctions[$function] = new ReflectionFunction($function);
         };
 
         return static::$reflectionsFunctions[$function] ?? $getter();
@@ -108,12 +126,12 @@ trait BowlTrait
     /**
      * @param object $invokable
      */
-    private static function getReflectionInvokable(object $invokable): \ReflectionMethod
+    private static function getReflectionInvokable(object $invokable): ReflectionMethod
     {
-        $invokableClass = \get_class($invokable);
+        $invokableClass = $invokable::class;
 
-        $getter = static function () use ($invokableClass): \ReflectionMethod {
-            $reflectionClass = new \ReflectionClass($invokableClass);
+        $getter = static function () use ($invokableClass): ReflectionMethod {
+            $reflectionClass = new ReflectionClass($invokableClass);
 
             return static::$reflectionsInvokables[$invokableClass] = $reflectionClass->getMethod('__invoke');
         };
@@ -127,21 +145,21 @@ trait BowlTrait
      *
      * @param callable $callable
      *
-     * @return \ReflectionFunctionAbstract
-     * @throws \ReflectionException
+     * @return ReflectionFunctionAbstract
+     * @throws ReflectionException
      */
-    private static function getReflection(callable $callable): \ReflectionFunctionAbstract
+    private static function getReflection(callable $callable): ReflectionFunctionAbstract
     {
-        if (\is_array($callable)) {
+        if (is_array($callable)) {
             //The callable is checked by PHP in the constructor by the type hitting
             return static::getReflectionClass($callable[0], $callable[1]);
         }
 
-        if ($callable instanceof \Closure) {
-            return new \ReflectionFunction($callable);
+        if ($callable instanceof Closure) {
+            return new ReflectionFunction($callable);
         }
 
-        if (\is_string($callable)) {
+        if (is_string($callable)) {
             return static::getReflectionFunction($callable);
         }
 
@@ -154,8 +172,8 @@ trait BowlTrait
      *
      * @param callable $callable
      *
-     * @return array<string, \ReflectionParameter>
-     * @throws \ReflectionException
+     * @return array<string, ReflectionParameter>
+     * @throws ReflectionException
      */
     private function listParameters(callable $callable): array
     {
@@ -175,17 +193,17 @@ trait BowlTrait
     }
 
     /**
-     * @param \ReflectionParameter $parameter
+     * @param ReflectionParameter $parameter
      * @param array<string, mixed> $workPlan
      * @param array<mixed> $values
      * @return bool
      */
-    private function findInstanceForParameter(\ReflectionParameter $parameter, array &$workPlan, array &$values): bool
+    private function findInstanceForParameter(ReflectionParameter $parameter, array &$workPlan, array &$values): bool
     {
         $automaticValueFound = false;
 
         foreach ($workPlan as &$variable) {
-            if (\is_object($variable) && $this->isInstanceOf($parameter, $variable)) {
+            if (is_object($variable) && $this->isInstanceOf($parameter, $variable)) {
                 $values[] = $variable;
                 $automaticValueFound = true;
                 break;
@@ -198,14 +216,14 @@ trait BowlTrait
     /**
      * @param object $instance
      */
-    private function isInstanceOf(\ReflectionParameter $parameter, object $instance): bool
+    private function isInstanceOf(ReflectionParameter $parameter, object $instance): bool
     {
         $type = $parameter->getType();
-        if (!$type instanceof \ReflectionUnionType && !$type instanceof \ReflectionNamedType) {
+        if (!$type instanceof ReflectionUnionType && !$type instanceof ReflectionNamedType) {
             return false;
         }
 
-        $checkType = static function (\ReflectionNamedType $type) use ($parameter, $instance): bool {
+        $checkType = static function (ReflectionNamedType $type) use ($parameter, $instance): bool {
             if ($type->isBuiltin()) {
                 return false;
             }
@@ -215,13 +233,13 @@ trait BowlTrait
                 return $parameter->getDeclaringClass()->isInstance($instance);
             }
 
-            $rfClass = new \ReflectionClass($className);
+            $rfClass = new ReflectionClass($className);
             return $rfClass->isInstance($instance);
         };
 
-        if ($type instanceof \ReflectionUnionType) {
+        if ($type instanceof ReflectionUnionType) {
             foreach ($type->getTypes() as $subType) {
-                if ($subType instanceof \ReflectionNamedType && $checkType($subType)) {
+                if ($subType instanceof ReflectionNamedType && $checkType($subType)) {
                     return true;
                 }
             }
@@ -241,7 +259,7 @@ trait BowlTrait
      *
      * @return array<mixed>
      *
-     * @throws \Exception
+     * @throws Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function extractParameters(callable $callable, ChefInterface $chef, array &$workPlan): array
@@ -255,13 +273,13 @@ trait BowlTrait
 
             if (!empty($this->mapping[$name])) {
                 $mapping = $this->mapping[$name];
-                if (\is_string($mapping)) {
+                if (is_string($mapping)) {
                     $name = $mapping;
-                } elseif (\is_array($mapping)) {
-                    \reset($mapping);
+                } elseif (is_array($mapping)) {
+                    reset($mapping);
                     do {
-                        $name = \current($mapping);
-                    } while (!isset($workPlan[$name]) && \next($mapping));
+                        $name = current($mapping);
+                    } while (!isset($workPlan[$name]) && next($mapping));
                 }
             }
 
@@ -271,7 +289,7 @@ trait BowlTrait
             }
 
             $type = $parameter->getType();
-            if ($type instanceof \ReflectionNamedType && isset($workPlan[$type->getName()])) {
+            if ($type instanceof ReflectionNamedType && isset($workPlan[$type->getName()])) {
                 $values[] = $workPlan[$type->getName()];
                 continue;
             }
@@ -288,7 +306,7 @@ trait BowlTrait
             }
 
             if (!$parameter->isOptional()) {
-                throw new \RuntimeException("Missing the parameter {$parameter->getName()} in the WorkPlan");
+                throw new RuntimeException("Missing the parameter {$parameter->getName()} in the WorkPlan");
             }
 
             $values[] = $parameter->getDefaultValue();

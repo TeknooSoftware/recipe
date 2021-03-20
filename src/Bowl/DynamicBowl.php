@@ -25,8 +25,13 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Bowl;
 
+use Exception;
+use RuntimeException;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
+
+use function is_callable;
+use function sprintf;
 
 /**
  * Bowl to execute a callable available into the workplan an not instantiate with a callable
@@ -62,7 +67,7 @@ class DynamicBowl implements BowlInterface
     public function __construct(
         string $callableKeyName,
         bool $throwIfNotExisting,
-        $mapping = [],
+        array $mapping = [],
         string $name = ''
     ) {
         $this->uniqueConstructorCheck();
@@ -87,9 +92,9 @@ class DynamicBowl implements BowlInterface
 
         $callable = $workPlan[$this->callableKeyName];
 
-        if (!\is_callable($callable)) {
-            throw new \RuntimeException(
-                \sprintf(
+        if (!is_callable($callable)) {
+            throw new RuntimeException(
+                sprintf(
                     'Error, the element identified by %s in the work plan is not a callable',
                     $this->callableKeyName
                 )
@@ -109,15 +114,15 @@ class DynamicBowl implements BowlInterface
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function execute(ChefInterface $chef, array &$workPlan): BowlInterface
     {
         $callable = $this->getCallable($workPlan);
 
         if (null === $callable && true === $this->throwIfNotExisting) {
-            throw new \RuntimeException(
-                \sprintf('Error, there are no callable in the work plan at %s', $this->callableKeyName)
+            throw new RuntimeException(
+                sprintf('Error, there are no callable in the work plan at %s', $this->callableKeyName)
             );
         }
 

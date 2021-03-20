@@ -31,6 +31,10 @@ use Teknoo\Recipe\ChefInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
+use function array_flip;
+use function array_keys;
+use function array_values;
+
 /**
  * @see Chef
  *
@@ -76,8 +80,8 @@ class Free implements StateInterface
             /**
              * @var Chef $this
              */
-            $this->steps = \array_values($steps);
-            $this->stepsNames = \array_flip(\array_keys($steps));
+            $this->steps = array_values($steps);
+            $this->stepsNames = array_flip(array_keys($steps));
             $this->onError = $onError;
 
             $this->updateStates();

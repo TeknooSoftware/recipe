@@ -43,9 +43,6 @@ interface DishInterface extends ImmutableInterface
 {
     /**
      * To check if the result if the excepted dish attempted for the recipe.
-     *
-     * @param mixed $result
-     * @return DishInterface
      */
-    public function isExcepted($result): DishInterface;
+    public function isExcepted(mixed $result): DishInterface;
 }

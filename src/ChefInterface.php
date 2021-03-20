@@ -27,6 +27,7 @@ namespace Teknoo\Recipe;
 
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
+use Throwable;
 
 /**
  * Interface to define a chef able to learn a recipe and execute. It will follow the recipe, like all algorithms.
@@ -43,26 +44,16 @@ interface ChefInterface
 {
     /**
      * To read and learn a recipe.
-     *
-     * @param BaseRecipeInterface $recipe
-     * @return ChefInterface
      */
     public function read(BaseRecipeInterface $recipe): ChefInterface;
 
     /**
      * To reserve the current recipe to begin a sub recipe with the actual workplan.
-     *
-     * @param BaseRecipeInterface $recipe
-     * @return ChefInterface
      */
     public function reserveAndBegin(BaseRecipeInterface $recipe): ChefInterface;
 
     /**
      * To known when an ingredient missing in the work plan to start the cooking
-     *
-     * @param IngredientInterface $ingredient
-     * @param string $message
-     * @return ChefInterface
      */
     public function missing(IngredientInterface $ingredient, string $message): ChefInterface;
 
@@ -70,7 +61,6 @@ interface ChefInterface
      * To update the work plan from ingredient.
      *
      * @param array<string, mixed> $with
-     * @return ChefInterface
      */
     public function updateWorkPlan(array $with): ChefInterface;
 
@@ -78,7 +68,6 @@ interface ChefInterface
      * To remove from the work plan some ingredients.
      *
      * @param array<int, string> $ingredients
-     * @return ChefInterface
      */
     public function cleanWorkPlan(...$ingredients): ChefInterface;
 
@@ -87,41 +76,29 @@ interface ChefInterface
      *
      * @param array<BowlInterface> $steps
      * @param array<BowlInterface>|BowlInterface $onError
-     * @return ChefInterface
      */
-    public function followSteps(array $steps, /* BowlInterface */ $onError = []): ChefInterface;
+    public function followSteps(array $steps, array | BowlInterface $onError = []): ChefInterface;
 
     /**
      * To continue to cook the recipe and execute the next step, but before complete the workp lan
      * with this new ingredient.
      *
      * @param array<string, mixed> $with
-     * @param string|null $nextStep
-     * @return ChefInterface
      */
     public function continue(array $with = [], string $nextStep = null): ChefInterface;
 
     /**
      * To stop / finish cooking the recipe and check the result.
-     *
-     * @param mixed $result
-     * @return ChefInterface
      */
-    public function finish($result): ChefInterface;
+    public function finish(mixed $result): ChefInterface;
 
     /**
      * To stop / finish cooking the recipe and check the result.
-     *
-     * @param \Throwable $error
-     * @return ChefInterface
      */
-    public function error(\Throwable $error): ChefInterface;
+    public function error(Throwable $error): ChefInterface;
 
     /**
      * To start cooking a recipe with an initial work plan.
-     *
-     * @param array<string, mixed> $workPlan
-     * @return ChefInterface
      */
     public function process(array $workPlan): ChefInterface;
 }

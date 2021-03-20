@@ -47,9 +47,6 @@ interface IngredientInterface extends ImmutableInterface
      * If the ingredient is not available, the instance must call the method missing of the chef.
      *
      * @param array<string, mixed> $workPlan
-     * @param ChefInterface $chef
-     * @param IngredientBagInterface $bag
-     * @return IngredientInterface
      */
     public function prepare(
         array $workPlan,

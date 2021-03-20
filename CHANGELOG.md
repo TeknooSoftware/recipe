@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[3.0.0] - 2021-03-20
+###Stable Release
+- Migrate to PHP 8.0
+
 ##[2.4.0] - 2021-02-16
 ###Stable Release
 - Add `ChefInterface::cleanWorkPlan` to remove some ingredients from workplan

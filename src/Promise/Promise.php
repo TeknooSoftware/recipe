@@ -26,6 +26,10 @@ declare(strict_types=1);
 namespace Teknoo\Recipe\Promise;
 
 use Teknoo\Immutable\ImmutableTrait;
+use Throwable;
+
+use function func_get_args;
+use function is_callable;
 
 /**
  * Default implementation of PromiseInterface;
@@ -62,19 +66,19 @@ class Promise implements PromiseInterface
         $this->uniqueConstructorCheck();
     }
 
-    public function success($result = null): PromiseInterface
+    public function success(mixed $result = null): PromiseInterface
     {
-        if (\is_callable($this->onSuccess)) {
-            ($this->onSuccess)(...\func_get_args());
+        if (is_callable($this->onSuccess)) {
+            ($this->onSuccess)(...func_get_args());
         }
 
         return $this;
     }
 
-    public function fail(\Throwable $throwable): PromiseInterface
+    public function fail(Throwable $throwable): PromiseInterface
     {
-        if (\is_callable($this->onFail)) {
-            ($this->onFail)(...\func_get_args());
+        if (is_callable($this->onFail)) {
+            ($this->onFail)(...func_get_args());
         }
 
         return $this;

@@ -36,6 +36,8 @@ use Teknoo\Recipe\RecipeInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
+use function is_callable;
+
 /**
  * @see Recipe
  *
@@ -70,11 +72,12 @@ class Draft implements StateInterface
 
     public function addStep(): callable
     {
-        return function ($action, string $name, array $with = [], int $position = null): RecipeInterface {
-            if (!$action instanceof BowlInterface && !\is_callable($action)) {
-                throw new \TypeError('$action accepts only callable value or a BowlInterface instance');
-            }
-
+        return function (
+            callable | BowlInterface $action,
+            string $name,
+            array $with = [],
+            int $position = null
+        ): RecipeInterface {
             /**
              * @var Recipe $this
              */
@@ -97,7 +100,7 @@ class Draft implements StateInterface
 
     public function setOnError(): callable
     {
-        return function ($action): RecipeInterface {
+        return function (callable | BowlInterface $action): RecipeInterface {
             /**
              * @var Recipe $this
              */
@@ -119,7 +122,7 @@ class Draft implements StateInterface
         return function (
             BaseRecipeInterface $recipe,
             string $name,
-            $repeat = 1,
+            int | callable $repeat = 1,
             int $position = null
         ): RecipeInterface {
             /**
@@ -127,7 +130,7 @@ class Draft implements StateInterface
              */
             $that = $this->cloneMe();
 
-            if (\is_callable($repeat)) {
+            if (is_callable($repeat)) {
                 $repeat = new Bowl($repeat, []);
             }
 

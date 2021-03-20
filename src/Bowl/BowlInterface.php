@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Bowl;
 
+use RuntimeException;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Recipe\ChefInterface;
 
@@ -57,7 +58,7 @@ interface BowlInterface extends ImmutableInterface
      * @param ChefInterface $chef
      * @param array<string, mixed> $workPlan
      * @return BowlInterface
-     * @throws \RuntimeException if a required argument can not be mapped.
+     * @throws RuntimeException if a required argument can not be mapped.
      */
     public function execute(ChefInterface $chef, array &$workPlan): BowlInterface;
 }

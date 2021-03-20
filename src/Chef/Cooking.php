@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
+use RuntimeException;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
@@ -33,6 +34,11 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
+use Throwable;
+
+use function array_keys;
+use function array_merge;
+use function count;
 
 /**
  * @see Chef
@@ -66,7 +72,7 @@ class Cooking implements StateInterface
             $chef = new static();
 
             $recipe->train($chef);
-            $chef->workPlan = \array_merge($this->workPlan, $chef->workPlan);
+            $chef->workPlan = array_merge($this->workPlan, $chef->workPlan);
 
             return $chef;
         };
@@ -109,7 +115,7 @@ class Cooking implements StateInterface
 
     private function callErrors(): callable
     {
-        return function (\Throwable $error) {
+        return function (Throwable $error) {
             $this->workPlan['exception'] = $error;
 
             if (empty($this->onError)) {
@@ -136,8 +142,8 @@ class Cooking implements StateInterface
             while (($callable = $this->getNextStep($nextStep)) instanceof BowlInterface) {
                 try {
                     $callable->execute($this, $this->workPlan);
-                } catch (\Throwable $error) {
-                    $this->position = \count($this->steps) + 1;
+                } catch (Throwable $error) {
+                    $this->position = count($this->steps) + 1;
 
                     $this->callErrors($error);
                 }
@@ -161,7 +167,7 @@ class Cooking implements StateInterface
             //This method is called only if $this->recipe is a valid RecipeInterface instance
             $this->recipe->validate($result);
 
-            $this->position = \count($this->steps) + 1;
+            $this->position = count($this->steps) + 1;
 
             return $this;
         };
@@ -172,8 +178,8 @@ class Cooking implements StateInterface
      */
     public function errorInRecipe(): callable
     {
-        return function (\Throwable $error): ChefInterface {
-            $this->position = \count($this->steps) + 1;
+        return function (Throwable $error): ChefInterface {
+            $this->position = count($this->steps) + 1;
 
             $this->callErrors($error);
 
@@ -229,9 +235,9 @@ class Cooking implements StateInterface
                 return;
             }
 
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 'Error, missing some ingredients : '
-                . implode(', ', \array_keys($this->missingIngredients))
+                . implode(', ', array_keys($this->missingIngredients))
             );
         };
     }

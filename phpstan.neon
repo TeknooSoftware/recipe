@@ -16,6 +16,9 @@ parameters:
         -
             message: '#Generator expects value type [a-zA-Z0-9\\_]+, [a-zA-Z0-9\\_]+\|false given#'
             path: src/Recipe.php
+        -
+            message: '#Array \(array<[a-zA-Z0-9\\_]+>\) does not accept \(callable\)\|[a-zA-Z0-9\\_]+#'
+            path: src/Recipe/Draft.php
 services:
 	-
 		class: Teknoo\States\PHPStan\MethodsClassExtension
