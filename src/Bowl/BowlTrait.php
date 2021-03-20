@@ -123,9 +123,6 @@ trait BowlTrait
         return static::$reflectionsFunctions[$function] ?? $getter();
     }
 
-    /**
-     * @param object $invokable
-     */
     private static function getReflectionInvokable(object $invokable): ReflectionMethod
     {
         $invokableClass = $invokable::class;
@@ -143,9 +140,6 @@ trait BowlTrait
      * To return the Reflection instance about this callable, supports functions, closures, objects methods or class
      * methods.
      *
-     * @param callable $callable
-     *
-     * @return ReflectionFunctionAbstract
      * @throws ReflectionException
      */
     private static function getReflection(callable $callable): ReflectionFunctionAbstract
@@ -170,8 +164,6 @@ trait BowlTrait
     /**
      * To extract the list of ReflectionParameter instances about the current callable.
      *
-     * @param callable $callable
-     *
      * @return array<string, ReflectionParameter>
      * @throws ReflectionException
      */
@@ -193,10 +185,8 @@ trait BowlTrait
     }
 
     /**
-     * @param ReflectionParameter $parameter
      * @param array<string, mixed> $workPlan
      * @param array<mixed> $values
-     * @return bool
      */
     private function findInstanceForParameter(ReflectionParameter $parameter, array &$workPlan, array &$values): bool
     {
@@ -213,9 +203,6 @@ trait BowlTrait
         return $automaticValueFound;
     }
 
-    /**
-     * @param object $instance
-     */
     private function isInstanceOf(ReflectionParameter $parameter, object $instance): bool
     {
         $type = $parameter->getType();
@@ -253,8 +240,6 @@ trait BowlTrait
     /**
      * To map each callable's arguments to ingredients available into the workplan.
      *
-     * @param callable $callable
-     * @param ChefInterface $chef
      * @param array<string, mixed> $workPlan
      *
      * @return array<mixed>

@@ -55,9 +55,7 @@ interface BowlInterface extends ImmutableInterface
      * - Else on the argument's class
      * - Throw a RuntTimeException if a mandatory argument can not be mapped
      *
-     * @param ChefInterface $chef
      * @param array<string, mixed> $workPlan
-     * @return BowlInterface
      * @throws RuntimeException if a required argument can not be mapped.
      */
     public function execute(ChefInterface $chef, array &$workPlan): BowlInterface;

@@ -59,9 +59,7 @@ class Bowl implements BowlInterface
     private $callable;
 
     /**
-     * @param callable $callable
      * @param array<string, string|string[]> $mapping
-     * @param string $name
      */
     public function __construct(callable $callable, array $mapping, string $name = '')
     {
