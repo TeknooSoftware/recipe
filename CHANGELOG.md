@@ -3,6 +3,8 @@
 ##[3.0.0] - 2021-03-20
 ###Stable Release
 - Migrate to PHP 8.0
+- QA
+- Fix license header
 
 ##[2.4.0] - 2021-02-16
 ###Stable Release
