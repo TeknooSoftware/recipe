@@ -60,10 +60,10 @@ class Promise implements PromiseInterface
 
     public function __construct(callable $onSuccess = null, callable $onFail = null)
     {
+        $this->uniqueConstructorCheck();
+
         $this->onSuccess = $onSuccess;
         $this->onFail = $onFail;
-
-        $this->uniqueConstructorCheck();
     }
 
     public function success(mixed $result = null): PromiseInterface
