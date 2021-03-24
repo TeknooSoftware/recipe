@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[3.0.1] - 2021-03-24
+###Stable Release
+- Promise immutable check is performed before var assignment
+
 ##[3.0.0] - 2021-03-20
 ###Stable Release
 - Migrate to PHP 8.0
