@@ -1,7 +1,6 @@
 Teknoo Software - Recipe library
 ================================
 
-[![Build Status](https://travis-ci.com/TeknooSoftware/recipe.svg?branch=master)](https://travis-ci.com/TeknooSoftware/recipe)
 [![Latest Stable Version](https://poser.pugx.org/teknoo/recipe/v/stable)](https://packagist.org/packages/teknoo/recipe)
 [![Latest Unstable Version](https://poser.pugx.org/teknoo/recipe/v/unstable)](https://packagist.org/packages/teknoo/recipe)
 [![Total Downloads](https://poser.pugx.org/teknoo/recipe/downloads)](https://packagist.org/packages/teknoo/recipe)
