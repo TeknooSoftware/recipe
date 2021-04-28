@@ -37,7 +37,6 @@ use Teknoo\States\State\StateTrait;
 use Throwable;
 
 use function array_keys;
-use function array_merge;
 use function count;
 
 /**
@@ -72,7 +71,7 @@ class Cooking implements StateInterface
             $chef = new static();
 
             $recipe->train($chef);
-            $chef->workPlan = array_merge($this->workPlan, $chef->workPlan);
+            $chef->workPlan = $chef->workPlan + $this->workPlan;
 
             return $chef;
         };

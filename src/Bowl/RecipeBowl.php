@@ -29,7 +29,6 @@ use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\ChefInterface;
 
-use function array_merge;
 use function is_numeric;
 
 /**
@@ -81,7 +80,7 @@ class RecipeBowl implements BowlInterface
             return $counter < $this->repeat;
         }
 
-        $loopWorkPlan = array_merge($workPlan, ['counter' => $counter, 'bowl' => $this]);
+        $loopWorkPlan = ['counter' => $counter, 'bowl' => $this] + $workPlan;
         $this->repeat->execute($chef, $loopWorkPlan);
 
         return (true === $this->allowToLoop);

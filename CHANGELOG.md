@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[3.0.2] - 2021-04-28
+###Stable Release
+- Some optimisations on array functions to limit O(n)
+
 ##[3.0.1] - 2021-03-24
 ###Stable Release
 - Promise immutable check is performed before var assignment
