@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[3.0.3] - 2021-05-25
+###Stable Release
+- Subs chefs execcuting an embedded recipe inherit also of error handler with the workplan but can be changed without impact
+  the original handler in the main chef.
+
 ##[3.0.2] - 2021-04-28
 ###Stable Release
 - Some optimisations on array functions to limit O(n)

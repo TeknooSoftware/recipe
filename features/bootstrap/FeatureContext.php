@@ -213,12 +213,16 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Then It starts cooking with :value as :name and get an error
+     * @Then It starts cooking with :value as :name and obtain an error
      */
-    public function itStartsCookingWithAsAndGetAnError($value, $name)
+    public function itStartsCookingWithAsAndObtainAnError($value, $name)
     {
         try {
-            $this->chef->process(\array_merge($this->workPlan, [$name => new $name($value)]));
+            if (null !== $this->secondVar) {
+                $this->workPlan[$this->secondVar] = \md5($this->secondVar);
+            }
+
+            $this->chef->process(\array_merge($this->workPlan, [\trim($name, '\\') => new $name($value)]));
         } catch (\Throwable $e) {
             return;
         }
@@ -248,6 +252,20 @@ class FeatureContext implements Context
     public function itStartsCookingAndObtainAnCatchedErrorWithMessage($content)
     {
         $this->chef->process($this->workPlan);
+        Assert::assertEquals($content, static::$message);
+    }
+
+    /**
+     * @Then It starts cooking with :value as :name and obtain an catched error with message :content
+     */
+    public function itStartsCookingWithAsAndObtainAnCatchedErrorWithMessage($value, $name, $content)
+    {
+        if (null !== $this->secondVar) {
+            $this->workPlan[$this->secondVar] = \md5($this->secondVar);
+        }
+
+        $this->chef->process(\array_merge($this->workPlan, [\trim($name, '\\') => new $name($value)]));
+
         Assert::assertEquals($content, static::$message);
     }
 
@@ -385,6 +403,17 @@ class FeatureContext implements Context
     }
 
     /**
+     * @When I define the behavior on error to do :name in my sub recipe
+     */
+    public function iDefineTheBehaviorOnErrorToDoInMySubRecipe($name)
+    {
+        $this->setSubRecipe(
+            $this->lastSubRecipeName,
+            $this->subRecipes[$this->lastSubRecipeName]->onError($this->parseMethod($name))
+        );
+    }
+
+    /**
      * @When I include the recipe :name to :method in my recipe to call :count times
      */
     public function iIncludeTheRecipeToInMyRecipeToCallTimes($name, $method, $count)
@@ -471,9 +500,14 @@ class FeatureContext implements Context
         $chef->error(new \RuntimeException('There had an error'));
     }
 
-    public static function onError(\Throwable $exception)
+    public static function onError(\Throwable $exception, ChefInterface $chef)
     {
-        self::$message = $exception->getMessage();
+        static::$message = $exception->getMessage();
+    }
+
+    public static function onErrorInSub(\Throwable $exception, ChefInterface $chef)
+    {
+        static::$message = 'sub : ' . $exception->getMessage();
     }
 
     /**

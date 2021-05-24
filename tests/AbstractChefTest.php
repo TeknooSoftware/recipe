@@ -370,6 +370,28 @@ abstract class AbstractChefTest extends TestCase
         );
     }
 
+    public function testFollowStepsWithErrorAsArray()
+    {
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $this->buildChef()->followSteps(
+                ['foo'=>'bar'],
+                ['foo2']
+            )
+        );
+    }
+
+    public function testFollowStepsWithErrorAsBowl()
+    {
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $this->buildChef()->followSteps(
+                ['foo'=>'bar'],
+                $this->createMock(BowlInterface::class)
+            )
+        );
+    }
+
     public function testExceptionOnContinueWithBadArray()
     {
         $this->expectException(\TypeError::class);

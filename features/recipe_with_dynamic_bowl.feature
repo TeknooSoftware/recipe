@@ -69,4 +69,4 @@ Feature: Recipe with dynamic bowl
     And I define the excepted dish "DateTimeImmutable" to my recipe
     And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
     Then I train the chef with the recipe
-    And It starts cooking with "2017-07-01 10:00:00" as "DateTime" and get an error
+    And It starts cooking with "2017-07-01 10:00:00" as "DateTime" and obtain an error

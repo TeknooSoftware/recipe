@@ -82,7 +82,10 @@ class Free implements StateInterface
              */
             $this->steps = array_values($steps);
             $this->stepsNames = array_flip(array_keys($steps));
-            $this->onError = $onError;
+
+            if (!empty($onError)) {
+                $this->onError = $onError;
+            }
 
             $this->updateStates();
 

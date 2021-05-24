@@ -61,14 +61,15 @@ class Cooking implements StateInterface
     public function begin(): callable
     {
         return function (BaseRecipeInterface $recipe): ChefInterface {
+            $chef = new static();
+            $chef->onError = $this->onError;
+
             if ($recipe instanceof RecipeInterface) {
-                $chef = new static($recipe);
+                $chef->read($recipe);
                 $chef->workPlan = $this->workPlan;
 
                 return $chef;
             }
-
-            $chef = new static();
 
             $recipe->train($chef);
             $chef->workPlan = $chef->workPlan + $this->workPlan;
