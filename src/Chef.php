@@ -101,6 +101,8 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
 
     private bool $cooking = false;
 
+    private ?self $topChef = null;
+
     /**
      * @return array<string>
      */
@@ -131,9 +133,11 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
         ];
     }
 
-    final public function __construct(BaseRecipeInterface $recipe = null)
+    final public function __construct(BaseRecipeInterface $recipe = null, self $topChef = null)
     {
         $this->initializeStateProxy();
+
+        $this->topChef = $topChef;
 
         $this->updateStates();
 
@@ -201,5 +205,10 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     public function process(array $workPlan): ChefInterface
     {
         return $this->runRecipe($workPlan);
+    }
+
+    public function interruptCooking(): ChefInterface
+    {
+        return $this->interrupt();
     }
 }

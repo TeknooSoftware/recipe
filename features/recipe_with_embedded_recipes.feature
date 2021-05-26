@@ -146,7 +146,7 @@ Feature: Recipe with Embedded recipes
     When I define the step "initializeBag" to do "IntBag::initializeTo10" my recipe
     When I include the recipe "increasingValue" to "increaseValue" in my recipe to call "3" times
     Then I train the chef with the recipe
-    And It starts cooking with "5" as "IntBag" and obtain an catched error with message "There had an error"
+    And It starts cooking with "5" as "IntBag" and obtain an error
 
   Scenario: Train a chef to cook a dish with sub recipes containing an error from a cookbook with different error handler
     Given I have an empty recipe

@@ -23,6 +23,7 @@
 
 namespace Teknoo\Tests\Recipe;
 
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\RecipeInterface;
@@ -43,9 +44,9 @@ use Teknoo\Recipe\RecipeInterface;
  */
 class ChefTest extends AbstractChefTest
 {
-    public function buildChef(): ChefInterface
+    public function buildChef(?ChefInterface $topChef = null): ChefInterface
     {
-        return new Chef();
+        return new Chef(null, $topChef);
     }
 
     public function testReadInConstructor()
@@ -59,5 +60,53 @@ class ChefTest extends AbstractChefTest
             ChefInterface::class,
             new Chef($recipe)
         );
+    }
+
+    public function testErrorWithCatcherWithTopChef()
+    {
+        $topChef = $this->createMock(Chef::class);
+        $topChefCalled = [];
+        $topChef->expects(self::any())
+            ->method('__call')
+            ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled) {
+                $topChefCalled[$name] = true;
+
+                return $topChef;
+            });
+
+        $chef = $this->buildChef($topChef);
+        $chef->read($this->createMock(RecipeInterface::class));
+
+        $called = false;
+        $bowl = $this->createMock(BowlInterface::class);
+        $bowl->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function () use ($chef, &$called, $bowl) {
+                $called = true;
+                self::assertInstanceOf(
+                    ChefInterface::class,
+                    $chef->error(
+                        new \Exception('foo')
+                    )
+                );
+
+                return $bowl;
+            });
+
+        $errorBowl = $this->createMock(BowlInterface::class);
+        $errorBowl->expects(self::once())
+            ->method('execute')
+            ->willReturnSelf();
+
+        $chef->followSteps([$bowl], [$errorBowl]);
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->process(['foo'=>'bar'])
+        );
+
+        self::assertTrue($called);
+
+        self::assertArrayHasKey('callErrors', $topChefCalled);
     }
 }

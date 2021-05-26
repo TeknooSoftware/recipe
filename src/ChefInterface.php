@@ -88,6 +88,11 @@ interface ChefInterface
     public function continue(array $with = [], string $nextStep = null): ChefInterface;
 
     /**
+     * To interrupt cooking, without execute dish validation
+     */
+    public function interruptCooking(): ChefInterface;
+
+    /**
      * To stop / finish cooking the recipe and check the result.
      */
     public function finish(mixed $result): ChefInterface;

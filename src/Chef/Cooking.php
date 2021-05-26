@@ -61,8 +61,7 @@ class Cooking implements StateInterface
     public function begin(): callable
     {
         return function (BaseRecipeInterface $recipe): ChefInterface {
-            $chef = new static();
-            $chef->onError = $this->onError;
+            $chef = new static(null, $this);
 
             if ($recipe instanceof RecipeInterface) {
                 $chef->read($recipe);
@@ -113,9 +112,14 @@ class Cooking implements StateInterface
         };
     }
 
+    /**
+     * To execute steps defined to handle error
+     */
     private function callErrors(): callable
     {
         return function (Throwable $error) {
+            $this->interruptCooking();
+
             $this->workPlan['exception'] = $error;
 
             if (empty($this->onError)) {
@@ -125,6 +129,22 @@ class Cooking implements StateInterface
             foreach ($this->onError as $onError) {
                 $onError->execute($this, $this->workPlan);
             }
+
+            if (null !== $this->topChef) {
+                $this->topChef->callErrors($error);
+            }
+        };
+    }
+
+    /**
+     * To interrupt execution of all next steps, including next steps in top chef
+     */
+    private function interrupt(): callable
+    {
+        return function () {
+            $this->position = count($this->steps) + 1;
+
+            return $this;
         };
     }
 
@@ -143,8 +163,6 @@ class Cooking implements StateInterface
                 try {
                     $callable->execute($this, $this->workPlan);
                 } catch (Throwable $error) {
-                    $this->position = count($this->steps) + 1;
-
                     $this->callErrors($error);
                 }
 
@@ -167,7 +185,7 @@ class Cooking implements StateInterface
             //This method is called only if $this->recipe is a valid RecipeInterface instance
             $this->recipe->validate($result);
 
-            $this->position = count($this->steps) + 1;
+            $this->interruptCooking();
 
             return $this;
         };
@@ -179,8 +197,6 @@ class Cooking implements StateInterface
     public function errorInRecipe(): callable
     {
         return function (Throwable $error): ChefInterface {
-            $this->position = count($this->steps) + 1;
-
             $this->callErrors($error);
 
             return $this;

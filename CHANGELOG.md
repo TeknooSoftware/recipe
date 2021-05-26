@@ -1,8 +1,13 @@
 #Teknoo Software - Recipe - Change Log
 
+##[3.0.4] - 2021-05-27
+###Stable Release
+- Subs chefs call also theirs top chef's callErrors method on error
+- Add `interruptCooking` method to stop execution of chef without execute finals steps (dish validation or error handlers)
+
 ##[3.0.3] - 2021-05-25
 ###Stable Release
-- Subs chefs execcuting an embedded recipe inherit also of error handler with the workplan but can be changed without impact
+- Subs chefs executing an embedded recipe inherit also of error handler with the workplan but can be changed without impact
   the original handler in the main chef.
 
 ##[3.0.2] - 2021-04-28

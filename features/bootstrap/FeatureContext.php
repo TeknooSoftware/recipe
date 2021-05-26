@@ -82,6 +82,7 @@ class FeatureContext implements Context
             Assert::assertEquals('createImmutable', $_methodName);
         };
         $this->definedClosure['DateTimeImmutable::createFromMutable'] = $createFromMutable;
+        static::$message = '';
     }
 
     private function pushRecipe(RecipeInterface $recipe)
@@ -253,6 +254,7 @@ class FeatureContext implements Context
     {
         $this->chef->process($this->workPlan);
         Assert::assertEquals($content, static::$message);
+        static::$message = '';
     }
 
     /**
@@ -267,6 +269,7 @@ class FeatureContext implements Context
         $this->chef->process(\array_merge($this->workPlan, [\trim($name, '\\') => new $name($value)]));
 
         Assert::assertEquals($content, static::$message);
+        static::$message = '';
     }
 
     /**
@@ -441,6 +444,7 @@ class FeatureContext implements Context
     {
         $this->callbackPromiseSuccess = function () use ($content) {
             Assert::assertEquals($content, static::$message);
+            static::$message = '';
         };
     }
 
@@ -502,12 +506,12 @@ class FeatureContext implements Context
 
     public static function onError(\Throwable $exception, ChefInterface $chef)
     {
-        static::$message = $exception->getMessage();
+        static::$message .= $exception->getMessage();
     }
 
     public static function onErrorInSub(\Throwable $exception, ChefInterface $chef)
     {
-        static::$message = 'sub : ' . $exception->getMessage();
+        static::$message .= 'sub : ' . $exception->getMessage();
     }
 
     /**

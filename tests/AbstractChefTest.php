@@ -25,6 +25,7 @@ namespace Teknoo\Tests\Recipe;
 
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\BowlInterface;
+use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\CookbookInterface;
@@ -616,6 +617,38 @@ abstract class AbstractChefTest extends TestCase
                     $chef->finish(
                         ['foo'=>'bar']
                     )
+                );
+
+                return $bowl;
+            });
+
+        $chef->followSteps([$bowl]);
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->process(['foo'=>'bar'])
+        );
+
+        self::assertTrue($called);
+    }
+
+    public function testInterruptCooking()
+    {
+        $topChef = $this->createMock(Chef::class);
+
+
+        $chef = $this->buildChef($topChef);
+        $chef->read($this->createMock(RecipeInterface::class));
+
+        $called = false;
+        $bowl = $this->createMock(BowlInterface::class);
+        $bowl->expects(self::once())
+            ->method('execute')
+            ->willReturnCallback(function () use ($chef, &$called, $bowl) {
+                $called = true;
+                self::assertInstanceOf(
+                    ChefInterface::class,
+                    $chef->interruptCooking()
                 );
 
                 return $bowl;
