@@ -118,8 +118,6 @@ class Cooking implements StateInterface
     private function callErrors(): callable
     {
         return function (Throwable $error) {
-            $this->interruptCooking();
-
             $this->workPlan['exception'] = $error;
 
             if (empty($this->onError)) {
@@ -130,21 +128,11 @@ class Cooking implements StateInterface
                 $onError->execute($this, $this->workPlan);
             }
 
-            if (null !== $this->topChef) {
+            if (null !== $this->topChef && true === $this->errorReporing) {
                 $this->topChef->callErrors($error);
             }
-        };
-    }
 
-    /**
-     * To interrupt execution of all next steps, including next steps in top chef
-     */
-    private function interrupt(): callable
-    {
-        return function () {
-            $this->position = count($this->steps) + 1;
-
-            return $this;
+            $this->interruptCooking();
         };
     }
 
@@ -159,7 +147,7 @@ class Cooking implements StateInterface
              */
             $this->updateMyWorkPlan($with);
 
-            while (($callable = $this->getNextStep($nextStep)) instanceof BowlInterface) {
+            while (true === $this->cooking && ($callable = $this->getNextStep($nextStep)) instanceof BowlInterface) {
                 try {
                     $callable->execute($this, $this->workPlan);
                 } catch (Throwable $error) {
@@ -179,13 +167,13 @@ class Cooking implements StateInterface
     public function finishRecipe(): callable
     {
         return function ($result): ChefInterface {
+            $this->interruptCooking();
+
             /**
              * @var Chef $this
              */
             //This method is called only if $this->recipe is a valid RecipeInterface instance
             $this->recipe->validate($result);
-
-            $this->interruptCooking();
 
             return $this;
         };
@@ -218,23 +206,6 @@ class Cooking implements StateInterface
             $this->checkMissingIngredients();
 
             $this->position = 0;
-        };
-    }
-
-    /**
-     * Internal method to clean the workplan after cooking.
-     * @internal
-     */
-    private function clean(): callable
-    {
-        return function (): void {
-            /**
-             * @var Chef $this
-             */
-            $this->workPlan = [];
-            $this->cooking = false;
-
-            $this->updateStates();
         };
     }
 

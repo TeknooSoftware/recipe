@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[3.0.5] - 2021-05-27
+###Stable Release
+- Add `stopErrorReporting` method to stop error reporting to top chef
+- Fix behavior of chef when a recipe is terminated
+
 ##[3.0.4] - 2021-05-27
 ###Stable Release
 - Subs chefs call also theirs top chef's callErrors method on error

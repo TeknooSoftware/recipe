@@ -77,6 +77,38 @@ class Trained implements StateInterface
     }
 
     /**
+     * To interrupt execution of all next steps, including next steps in top chef
+     */
+    private function interrupt(): callable
+    {
+        return function () {
+            $this->position = count($this->steps) + 1;
+            $this->cooking = false;
+
+            $this->updateStates();
+
+            return $this;
+        };
+    }
+
+    /**
+     * Internal method to clean the workplan after cooking.
+     * @internal
+     */
+    private function clean(): callable
+    {
+        return function (): void {
+            /**
+             * @var Chef $this
+             */
+            $this->workPlan = [];
+            $this->cooking = false;
+
+            $this->updateStates();
+        };
+    }
+
+    /**
      * To execute a cooking and switch to cookine state.
      */
     public function runRecipe(): callable
@@ -85,6 +117,7 @@ class Trained implements StateInterface
             //If this method is called, $this->recipe is a valid RecipeInterface instance
             $this->workPlan = $workPlan + $this->workPlan;
             $this->cooking = true;
+            $this->errorReporing = true;
 
             $this->updateStates();
 

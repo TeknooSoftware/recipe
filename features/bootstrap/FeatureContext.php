@@ -509,6 +509,13 @@ class FeatureContext implements Context
         static::$message .= $exception->getMessage();
     }
 
+    public static function onErrorWithStopRepporing(\Throwable $exception, ChefInterface $chef)
+    {
+        $chef->stopErrorReporting();
+        $chef->interruptCooking();
+        static::$message .= $exception->getMessage();
+    }
+
     public static function onErrorInSub(\Throwable $exception, ChefInterface $chef)
     {
         static::$message .= 'sub : ' . $exception->getMessage();

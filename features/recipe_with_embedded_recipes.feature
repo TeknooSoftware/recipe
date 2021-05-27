@@ -134,7 +134,7 @@ Feature: Recipe with Embedded recipes
     Then I train the chef with the recipe
     And It starts cooking with "5" as "IntBag" and obtain an catched error with message "There had an error"
 
-  Scenario: Train a chef to cook a dish with sub recipes containing an error from a cookbook with error handler
+  Scenario: Train a chef to cook a dish with sub recipes containing an error from a cookbook with error handler only on subrecipe
     Given I have an empty recipe
     And I have an untrained chef
     And I create a subrecipe "increasingValue"
@@ -147,6 +147,20 @@ Feature: Recipe with Embedded recipes
     When I include the recipe "increasingValue" to "increaseValue" in my recipe to call "3" times
     Then I train the chef with the recipe
     And It starts cooking with "5" as "IntBag" and obtain an error
+
+  Scenario: Train a chef to cook a dish with sub recipes containing an error from a cookbook with error handler only on subrecipe but error reporting is disabled
+    Given I have an empty recipe
+    And I have an untrained chef
+    And I create a subrecipe "increasingValue"
+    And With the step "increaseValue" to do "IntBag::increaseValue"
+    And With the step "throwError" to do "FeatureContext::createException"
+    And I define the behavior on error to do "FeatureContext::onErrorWithStopRepporing" in my sub recipe
+    And And define the default variable "toAdd" in the step "increasingValue" with "2" as "IntBag"
+    When I define a "IntBag" to start my recipe
+    When I define the step "initializeBag" to do "IntBag::initializeTo10" my recipe
+    When I include the recipe "increasingValue" to "increaseValue" in my recipe to call "1" times
+    Then I train the chef with the recipe
+    And It starts cooking with "5" as "IntBag" and obtain an catched error with message "There had an error"
 
   Scenario: Train a chef to cook a dish with sub recipes containing an error from a cookbook with different error handler
     Given I have an empty recipe

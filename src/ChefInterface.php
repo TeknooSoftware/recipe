@@ -93,6 +93,11 @@ interface ChefInterface
     public function interruptCooking(): ChefInterface;
 
     /**
+     * To stop the error reporting to the top chef when an error is occured
+     */
+    public function stopErrorReporting(): ChefInterface;
+
+    /**
      * To stop / finish cooking the recipe and check the result.
      */
     public function finish(mixed $result): ChefInterface;
