@@ -28,7 +28,7 @@
     ],
     "require":{
         "php": "~8.0",
-        "teknoo/immutable": "^2.0.6",
+        "teknoo/immutable": "^2.0.7",
         "teknoo/states": "^5.0.2"
     },
     "require-dev": {
@@ -38,7 +38,8 @@
         "pdepend/pdepend": "~2.9",
         "sebastian/phpcpd": "^6.0.3",
         "phploc/phploc": "^7.0.2",
-        "phpstan/phpstan": "^0.12.83",
+        "phpstan/phpstan": "^0.12.88",
+        "nikic/php-parser": "~4.10",
         "behat/behat": "~3.8"
     },
     "autoload": {

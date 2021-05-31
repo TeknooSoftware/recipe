@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[3.0.6] - 2021-05-31
+###Stable Release
+- Minor version about libs requirements
+
 ##[3.0.5] - 2021-05-27
 ###Stable Release
 - Add `stopErrorReporting` method to stop error reporting to top chef
