@@ -31,6 +31,7 @@ use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\MergeableInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
+use Throwable;
 
 use function array_diff_key;
 use function array_flip;
@@ -152,6 +153,30 @@ class Trained implements StateInterface
             $this->clean();
 
             return $this;
+        };
+    }
+
+    /**
+     * To execute steps defined to handle error
+     */
+    private function callErrors(): callable
+    {
+        return function (Throwable $error) {
+            $this->workPlan['exception'] = $error;
+
+            if (empty($this->onError)) {
+                throw $error;
+            }
+
+            foreach ($this->onError as $onError) {
+                $onError->execute($this, $this->workPlan);
+            }
+
+            if (null !== $this->topChef && true === $this->errorReporing) {
+                $this->topChef->callErrors($error);
+            }
+
+            $this->interruptCooking();
         };
     }
 }

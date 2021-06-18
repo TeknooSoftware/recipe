@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-class IntBag
+use Teknoo\Recipe\Ingredient\MergeableInterface;
+
+class IntBag implements MergeableInterface
 {
     /**
      * @var int
@@ -27,5 +29,12 @@ class IntBag
     public static function increaseValue(IntBag $bag)
     {
         $bag->value++;
+    }
+
+    public function merge(MergeableInterface $mergeable): MergeableInterface
+    {
+        $this->value += $mergeable->value;
+
+        return $this;
     }
 }

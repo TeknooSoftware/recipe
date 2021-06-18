@@ -290,7 +290,7 @@ trait BowlTrait
                 BowlInterface::METHOD_NAME === $name => $this->name,
 
                 !$parameter->isOptional() => throw new RuntimeException(
-                    "Missing the parameter {$parameter->getName()} in the WorkPlan"
+                    "Missing the parameter {$parameter->getName()} ({$name}) in the WorkPlan"
                 ),
 
                 default => $parameter->getDefaultValue(),

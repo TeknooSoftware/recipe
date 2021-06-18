@@ -113,30 +113,6 @@ class Cooking implements StateInterface
     }
 
     /**
-     * To execute steps defined to handle error
-     */
-    private function callErrors(): callable
-    {
-        return function (Throwable $error) {
-            $this->workPlan['exception'] = $error;
-
-            if (empty($this->onError)) {
-                throw $error;
-            }
-
-            foreach ($this->onError as $onError) {
-                $onError->execute($this, $this->workPlan);
-            }
-
-            if (null !== $this->topChef && true === $this->errorReporing) {
-                $this->topChef->callErrors($error);
-            }
-
-            $this->interruptCooking();
-        };
-    }
-
-    /**
      * Called by a step to continue the execution of the recipe but before, update ingredients available on the workplan
      */
     public function continueRecipe(): callable

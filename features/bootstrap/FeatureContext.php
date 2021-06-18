@@ -8,11 +8,13 @@ use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
 use Teknoo\Recipe\Dish\DishClass;
+use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\Promise\Promise;
+use Teknoo\Tests\Recipe\Transformable;
 
 /**
  * Defines application features from the specific context.
@@ -76,12 +78,18 @@ class FeatureContext implements Context
      */
     public function __construct()
     {
-        $createFromMutable = function (ChefInterface $chef, \DateTime $datetime, $_methodName) {
-            $immutable = \DateTimeImmutable::createFromMutable($datetime);
-            $chef->updateWorkPlan([\DateTimeImmutable::class => $immutable]);
-            Assert::assertEquals('createImmutable', $_methodName);
-        };
-        $this->definedClosure['DateTimeImmutable::createFromMutable'] = $createFromMutable;
+        $this->definedClosure = [
+            'DateTimeImmutable::createFromMutable' => static function (
+                ChefInterface $chef,
+                \DateTime $datetime,
+                $_methodName
+            ) {
+                $immutable = \DateTimeImmutable::createFromMutable($datetime);
+                $chef->updateWorkPlan([\DateTimeImmutable::class => $immutable]);
+                Assert::assertEquals('createImmutable', $_methodName);
+            }
+        ];
+
         static::$message = '';
     }
 
@@ -206,11 +214,20 @@ class FeatureContext implements Context
      */
     public function itStartsCookingWithAs($value, $name)
     {
+        $value = match ($name) {
+            'TransformableDateTime' => new Transformable(new \DateTime($value)),
+            default => $value
+        };
+
         if (null !== $this->secondVar) {
             $this->workPlan[$this->secondVar] = \md5($this->secondVar);
         }
 
-        $this->chef->process(\array_merge($this->workPlan, [\trim($name, '\\') => new $name($value)]));
+        if (!\class_exists($name)) {
+            $this->chef->process(\array_merge($this->workPlan, [lcfirst($name) => $value]));
+        } else {
+            $this->chef->process(\array_merge($this->workPlan, [\trim($name, '\\') => new $name($value)]));
+        }
     }
 
     /**
@@ -302,6 +319,16 @@ class FeatureContext implements Context
         $this->callbackPromiseSuccess = function ($value) use ($content) {
             Assert::assertInstanceOf(\DateTime::class, $value);
             Assert::assertEquals(new \DateTime($content), $value);
+        };
+    }
+
+    /**
+     * @Then I must obtain an Transform object
+     */
+    public function iMustObtainAnTransformObject()
+    {
+        $this->callbackPromiseSuccess = function ($value) {
+            Assert::assertInstanceOf(Transformable::class, $value);
         };
     }
 
@@ -480,6 +507,30 @@ class FeatureContext implements Context
     public function iSetTheDynamicCallableToMyRecipe($name, $method)
     {
         $this->workPlan[$name] = $this->parseMethod($method);
+    }
+
+    public static function passDateWithTransform(#[Transform] $transformableDateTime, ChefInterface $chef)
+    {
+        Assert::assertInstanceOf(\DateTime::class, $transformableDateTime);
+
+        $chef->updateWorkPlan([\DateTime::class => $transformableDateTime]);
+    }
+
+    public static function passDateWithoutTransform($transformableDateTime, ChefInterface $chef)
+    {
+        Assert::assertInstanceOf(Transformable::class, $transformableDateTime);
+
+        $chef->updateWorkPlan([Transformable::class => $transformableDateTime]);
+    }
+
+    public static function mergeValue(ChefInterface $chef)
+    {
+        $chef->merge(IntBag::class, new IntBag(5));
+    }
+
+    public static function updatedInWorkPlanAMergeableValue(ChefInterface $chef)
+    {
+        $chef->updateWorkPlan([IntBag::class => new IntBag(7)]);
     }
 
     public static function removeDate(ChefInterface $chef)

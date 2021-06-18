@@ -28,7 +28,7 @@ use Teknoo\Recipe\Ingredient\TransformableInterface;
 class Transformable implements TransformableInterface
 {
     public function __construct(
-        private array $values,
+        private mixed $values,
     ) {
     }
 

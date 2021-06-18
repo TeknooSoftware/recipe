@@ -58,6 +58,43 @@ Feature: Recipe
     Then I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
 
+  Scenario: Train a chef to cook a dish with a transformed ingredient
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define the step "createImmutable" to do "FeatureContext::passDateWithTransform" my recipe
+    And I define the excepted dish "DateTime" to my recipe
+    And I must obtain an Mutable DateTime at "2017-07-01 10:00:00"
+    Then I train the chef with the recipe
+    And It starts cooking with "2017-07-01 10:00:00" as "TransformableDateTime"
+
+  Scenario: Train a chef to cook a dish with transformable ingredient
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define the step "createImmutable" to do "FeatureContext::passDateWithoutTransform" my recipe
+    And I define the excepted dish "Teknoo\Tests\Recipe\Transformable" to my recipe
+    And I must obtain an Transform object
+    Then I train the chef with the recipe
+    And It starts cooking with "2017-07-01 10:00:00" as "TransformableDateTime"
+
+  Scenario: Train a chef to cook a dish with merged ingredient
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define the step "increaseValue" to do "FeatureContext::mergeValue" my recipe
+    When I define the step "increaseValue" to do "FeatureContext::mergeValue" my recipe
+    When I define the excepted dish "IntBag" to my recipe
+    And I must obtain an IntBag with value "15"
+    Then I train the chef with the recipe
+    And It starts cooking with "5" as "IntBag"
+
+  Scenario: Train a chef to cook a dish with mergeable ingredient
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define the step "increaseValue" to do "FeatureContext::updatedInWorkPlanAMergeableValue" my recipe
+    When I define the excepted dish "IntBag" to my recipe
+    And I must obtain an IntBag with value "7"
+    Then I train the chef with the recipe
+    And It starts cooking with "5" as "IntBag"
+
   Scenario: Train a chef to cook a dish and remove an ingredient
     Given I have an empty recipe
     And I have an untrained chef
