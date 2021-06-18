@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[3.0.7] - 2021-06-18
+###Stable Release
+- Remove usage of array_merge into BaseCookbookTrait
+
 ##[3.0.6] - 2021-05-31
 ###Stable Release
 - Minor version about libs requirements

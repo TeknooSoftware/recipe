@@ -30,8 +30,6 @@ use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\RecipeInterface;
 
-use function array_merge;
-
 /**
  * Base trait to implement quickly a cookbook and manage a shared recipe without implement all methods defined in
  * the CookbookInterface
@@ -80,7 +78,7 @@ trait BaseCookbookTrait
 
     public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface
     {
-        $final = array_merge($this->defaultWorkplan, $workPlan);
+        $final = $workPlan + $this->defaultWorkplan;
 
         $this->getRecipe()->prepare($final, $chef);
 
