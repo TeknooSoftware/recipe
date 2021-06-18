@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe;
 
+use RuntimeException;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
+use Teknoo\Recipe\Ingredient\MergeableInterface;
 use Throwable;
 
 /**
@@ -63,6 +65,13 @@ interface ChefInterface
      * @param array<string, mixed> $with
      */
     public function updateWorkPlan(array $with): ChefInterface;
+
+    /**
+     * To merge an ingredient in the workplan with another ingredient of the same class
+     *
+     * @throws RuntimeException when the ingredient in the workplan is not mergeable.
+     */
+    public function merge(string $name, MergeableInterface $value): ChefInterface;
 
     /**
      * To remove from the work plan some ingredients.

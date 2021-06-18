@@ -23,12 +23,15 @@
 
 namespace Teknoo\Tests\Recipe;
 
+use RuntimeException;
 use Teknoo\Recipe\BaseRecipeInterface;
+use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
+use Teknoo\Recipe\Ingredient\MergeableInterface;
 use Teknoo\Recipe\RecipeInterface;
 
 /**
@@ -334,6 +337,126 @@ abstract class AbstractChefTest extends TestCase
         );
     }
 
+    public function testExceptionOnUpdateWorkPlanWithBadName()
+    {
+        $this->expectException(\TypeError::class);
+        $this->buildChef()->missing(new \stdClass(), $this->createMock(MergeableInterface::class));
+    }
+
+    public function testExceptionOnUpdateWorkPlanWithBadValue()
+    {
+        $this->expectException(\TypeError::class);
+        $this->buildChef()->missing('foo', new \stdClass());
+    }
+
+    public function testMerge()
+    {
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->followSteps([
+            new Bowl(
+                static function ($foo) {
+                    self::assertEquals(9, $foo->value);
+                },
+                [],
+            )
+        ]);
+
+        $c1 = new class implements MergeableInterface
+        {
+            public int $value = 0;
+
+            public function __clone(): void
+            {
+                $this->value = 0;
+            }
+
+            public function merge(MergeableInterface $mergeable): MergeableInterface
+            {
+                $this->value += $mergeable->value;
+
+                return $this;
+            }
+        };
+
+        $c2 = clone $c1;
+        $c3 = clone $c1;
+
+        $c1->value = 1;
+        $c2->value = 3;
+        $c3->value = 5;
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->merge(
+                'foo', $c1
+            )
+        );
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->merge(
+                'foo', $c2
+            )
+        );
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->merge(
+                'foo', $c3
+            )
+        );
+
+        $chef->process([]);
+
+        self::assertEquals(9, $c1->value);
+    }
+
+    public function testMergeWithNonMergeable()
+    {
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->followSteps([$this->createMock(BowlInterface::class)]);
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->updateWorkPlan(
+                ['foo' => new \stdClass()]
+            )
+        );
+
+        $this->expectException(RuntimeException::class);
+        $chef->merge(
+            'foo', $this->createMock(MergeableInterface::class)
+        );
+    }
+
+    public function testMergeWithNonMergeableAfterUpdate()
+    {
+        $chef = $this->buildChef();
+        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->followSteps([$this->createMock(BowlInterface::class)]);
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->updateWorkPlan(
+                ['foo' => $this->createMock(MergeableInterface::class)]
+            )
+        );
+
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $chef->updateWorkPlan(
+                ['foo' => new \stdClass()]
+            )
+        );
+
+        $this->expectException(RuntimeException::class);
+        $chef->merge(
+            'foo', $this->createMock(MergeableInterface::class)
+        );
+    }
+
     public function testExceptionOnCleanWorkPlanWithBadArray()
     {
         $this->expectException(\TypeError::class);
@@ -447,7 +570,7 @@ abstract class AbstractChefTest extends TestCase
 
     public function testExceptionWithoutExceptionBowlDefined()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $chef = $this->buildChef();
         $chef->read($this->createMock(RecipeInterface::class));
 
@@ -455,7 +578,7 @@ abstract class AbstractChefTest extends TestCase
         $bowl->expects(self::once())
             ->method('execute')
             ->willReturnCallback(function () {
-                throw new \RuntimeException('fooBar');
+                throw new RuntimeException('fooBar');
             });
 
         $bowl2 = $this->createMock(BowlInterface::class);
@@ -480,14 +603,14 @@ abstract class AbstractChefTest extends TestCase
         $bowl->expects(self::once())
             ->method('execute')
             ->willReturnCallback(function () use (&$called) {
-                throw new \RuntimeException('fooBar');
+                throw new RuntimeException('fooBar');
             });
 
         $errorBowl = $this->createMock(BowlInterface::class);
         $errorBowl->expects(self::once())
             ->method('execute')
             ->willReturnCallback(function ($chef, &$workPlan) use (&$called, $errorBowl) {
-                self::assertInstanceOf(\RuntimeException::class, $workPlan['exception']);
+                self::assertInstanceOf(RuntimeException::class, $workPlan['exception']);
                 $called = true;
 
                 return $errorBowl;
@@ -517,14 +640,14 @@ abstract class AbstractChefTest extends TestCase
         $bowl1->expects(self::once())
             ->method('execute')
             ->willReturnCallback(function () use (&$called) {
-                throw new \RuntimeException('fooBar');
+                throw new RuntimeException('fooBar');
             });
 
         $errorBowl1 = $this->createMock(BowlInterface::class);
         $errorBowl1->expects(self::once())
             ->method('execute')
             ->willReturnCallback(function ($chef, &$workPlan) use (&$called, $errorBowl1) {
-                self::assertInstanceOf(\RuntimeException::class, $workPlan['exception']);
+                self::assertInstanceOf(RuntimeException::class, $workPlan['exception']);
                 $called = true;
 
                 return $errorBowl1;
@@ -534,7 +657,7 @@ abstract class AbstractChefTest extends TestCase
         $errorBowl2->expects(self::once())
             ->method('execute')
             ->willReturnCallback(function ($chef, &$workPlan) use (&$called, $errorBowl2) {
-                self::assertInstanceOf(\RuntimeException::class, $workPlan['exception']);
+                self::assertInstanceOf(RuntimeException::class, $workPlan['exception']);
                 $called = true;
 
                 return $errorBowl2;
@@ -768,7 +891,7 @@ abstract class AbstractChefTest extends TestCase
 
     public function testExceptionProcessWithMissingIngredient()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $chef = $this->buildChef();
         $ingredient = $this->createMock(IngredientInterface::class);
 

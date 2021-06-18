@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
+use RuntimeException;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Ingredient\MergeableInterface;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
@@ -59,6 +61,28 @@ class Trained implements StateInterface
     {
         return function (array $with): ChefInterface {
             $this->workPlan = $with + $this->workPlan;
+
+            return $this;
+        };
+    }
+
+    /**
+     * To update/prepare ingredients available on the workplan for the cooking
+     */
+    public function mergeInMyWorkPlan(): callable
+    {
+        return function (string $name, MergeableInterface $value): ChefInterface {
+            if (!isset($this->workPlan[$name])) {
+                $this->workPlan[$name] = $value;
+
+                return $this;
+            }
+
+            if (!$this->workPlan[$name] instanceof MergeableInterface) {
+                throw new RuntimeException("Error $name in the workplan is not mergeable");
+            }
+
+            $this->workPlan[$name]->merge($value);
 
             return $this;
         };

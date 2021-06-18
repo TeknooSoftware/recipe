@@ -30,6 +30,7 @@ use Teknoo\Recipe\Chef\Cooking;
 use Teknoo\Recipe\Chef\Free;
 use Teknoo\Recipe\Chef\Trained;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
+use Teknoo\Recipe\Ingredient\MergeableInterface;
 use Teknoo\States\Automated\Assertion\AssertionInterface;
 use Teknoo\States\Automated\Assertion\Property;
 use Teknoo\States\Automated\Assertion\Property\IsNull;
@@ -58,6 +59,7 @@ use Throwable;
  * @method ChefInterface readRecipe(RecipeInterface $recipe)
  * @method ChefInterface followStepsRecipe(array $steps, array $onError)
  * @method ChefInterface updateMyWorkPlan(array $with)
+ * @method ChefInterface mergeInMyWorkPlan(string $name, MergeableInterface $value)
  * @method ChefInterface removeFromMyWorkPlan(array $ingredients)
  * @method ChefInterface runRecipe(array $workPlan)
  * @method ChefInterface begin(RecipeInterface $recipe)
@@ -172,6 +174,11 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     public function updateWorkPlan(array $with): ChefInterface
     {
         return $this->updateMyWorkPlan($with);
+    }
+
+    public function merge(string $name, MergeableInterface $value): ChefInterface
+    {
+        return $this->mergeInMyWorkPlan($name, $value);
     }
 
     public function cleanWorkPlan(...$ingredients): ChefInterface

@@ -1,5 +1,10 @@
 #Teknoo Software - Recipe - Change Log
 
+##[3.1.0] - 2021-06-18
+###Stable Release
+- Add MergeableInterface and ChefInterface::merge() to allow merge ingredient instead of replace it with updateWorkplan
+  without fetch it into step.
+
 ##[3.0.7] - 2021-06-18
 ###Stable Release
 - Remove usage of array_merge into BaseCookbookTrait
