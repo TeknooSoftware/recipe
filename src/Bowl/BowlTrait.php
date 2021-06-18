@@ -37,6 +37,8 @@ use ReflectionParameter;
 use ReflectionUnionType;
 use RuntimeException;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Ingredient\Attributes\Transform;
+use Teknoo\Recipe\Ingredient\TransformableInterface;
 
 use function current;
 use function is_array;
@@ -164,7 +166,7 @@ trait BowlTrait
     /**
      * To extract the list of ReflectionParameter instances about the current callable.
      *
-     * @return array<string, ReflectionParameter>
+     * @return array<string, ReflectionParameter>|ReflectionParameter[]
      * @throws ReflectionException
      */
     private function listParameters(callable $callable): array
@@ -195,6 +197,7 @@ trait BowlTrait
         foreach ($workPlan as &$variable) {
             if (is_object($variable) && $this->isInstanceOf($parameter, $variable)) {
                 $values[] = $variable;
+
                 $automaticValueFound = true;
                 break;
             }
@@ -256,6 +259,12 @@ trait BowlTrait
                 continue;
             }
 
+            //Check if we must transform an ingredient before put it into the bowl
+            $allowTransform = false;
+            if ($parameter->getAttributes(Transform::class)) {
+                $allowTransform = true;
+            }
+
             if (!empty($this->mapping[$name])) {
                 $mapping = $this->mapping[$name];
                 if (is_string($mapping)) {
@@ -268,33 +277,34 @@ trait BowlTrait
                 }
             }
 
-            if (isset($workPlan[$name])) {
-                $values[] = $workPlan[$name];
+            //Pick the good value from the workplan
+            $skip = false;
+            $tempValue = match (true) {
+                isset($workPlan[$name]) => $workPlan[$name],
+
+                ($type = $parameter->getType()) instanceof ReflectionNamedType
+                    && isset($workPlan[$type->getName()]) => $workPlan[$type->getName()],
+
+                $this->findInstanceForParameter($parameter, $workPlan, $values) => $skip = true,
+
+                BowlInterface::METHOD_NAME === $name => $this->name,
+
+                !$parameter->isOptional() => throw new RuntimeException(
+                    "Missing the parameter {$parameter->getName()} in the WorkPlan"
+                ),
+
+                default => $parameter->getDefaultValue(),
+            };
+
+            if (true === $skip) {
                 continue;
             }
 
-            $type = $parameter->getType();
-            if ($type instanceof ReflectionNamedType && isset($workPlan[$type->getName()])) {
-                $values[] = $workPlan[$type->getName()];
-                continue;
+            if ($allowTransform && $tempValue instanceof TransformableInterface) {
+                $values[] = $tempValue->transform();
+            } else {
+                $values[] = $tempValue;
             }
-
-            $automaticValueFound = $this->findInstanceForParameter($parameter, $workPlan, $values);
-
-            if (true === $automaticValueFound) {
-                continue;
-            }
-
-            if (BowlInterface::METHOD_NAME === $name) {
-                $values[] = $this->name;
-                continue;
-            }
-
-            if (!$parameter->isOptional()) {
-                throw new RuntimeException("Missing the parameter {$parameter->getName()} in the WorkPlan");
-            }
-
-            $values[] = $parameter->getDefaultValue();
         }
 
         return $values;

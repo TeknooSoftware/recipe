@@ -2,8 +2,9 @@
 
 ##[3.1.0] - 2021-06-18
 ###Stable Release
-- Add MergeableInterface and ChefInterface::merge() to allow merge ingredient instead of replace it with updateWorkplan
+- Add `MergeableInterface` and `ChefInterface::merge()` to allow merge ingredient instead of replace it with `updateWorkplan`
   without fetch it into step.
+- Add `TransformableInterface` and attribute `Transform` to allow transform an ingredient before to put it into the bowl
 
 ##[3.0.7] - 2021-06-18
 ###Stable Release
