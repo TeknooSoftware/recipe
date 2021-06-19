@@ -40,6 +40,7 @@ use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Teknoo\Recipe\Ingredient\TransformableInterface;
 
+use function class_exists;
 use function current;
 use function is_array;
 use function is_object;
@@ -78,9 +79,14 @@ trait BowlTrait
     private ?array $parametersCache = null;
 
     /**
-     * @var array<string, array<string, ReflectionMethod>>
+     * @var array<string, ReflectionClass>
      */
     private static array $reflectionsClasses = [];
+
+    /**
+     * @var array<string, array<string, ReflectionMethod>>
+     */
+    private static array $reflectionsMethods = [];
 
     /**
      * @var array<string, ReflectionFunction>
@@ -97,23 +103,34 @@ trait BowlTrait
      */
     private static array $reflectionsParameters = [];
 
+    /**
+     * @param class-string $objectOrClass
+     */
+    private static function getReflectionClass(string $objectOrClass): ReflectionClass
+    {
+        $getter = static function () use ($objectOrClass): ReflectionClass {
+            return static::$reflectionsClasses[$objectOrClass] = new ReflectionClass($objectOrClass);
+        };
+
+        return static::$reflectionsClasses[$objectOrClass] ?? $getter();
+    }
 
     /**
      * @param object|class-string $objectOrClass
      */
-    private static function getReflectionClass($objectOrClass, string $methodName): ReflectionMethod
+    private static function getReflectionMethod(object|string $objectOrClass, string $methodName): ReflectionMethod
     {
         if (is_object($objectOrClass)) {
             $objectOrClass = $objectOrClass::class;
         }
 
         $getter = static function () use ($objectOrClass, $methodName): ReflectionMethod {
-            $reflectionClass = new ReflectionClass($objectOrClass);
+            $reflectionClass = static::getReflectionClass($objectOrClass);
 
-            return static::$reflectionsClasses[$objectOrClass][$methodName] = $reflectionClass->getMethod($methodName);
+            return static::$reflectionsMethods[$objectOrClass][$methodName] = $reflectionClass->getMethod($methodName);
         };
 
-        return static::$reflectionsClasses[$objectOrClass][$methodName] ?? $getter();
+        return static::$reflectionsMethods[$objectOrClass][$methodName] ?? $getter();
     }
 
     private static function getReflectionFunction(string $function): ReflectionFunction
@@ -148,7 +165,7 @@ trait BowlTrait
     {
         if (is_array($callable)) {
             //The callable is checked by PHP in the constructor by the type hitting
-            return static::getReflectionClass($callable[0], $callable[1]);
+            return static::getReflectionMethod($callable[0], $callable[1]);
         }
 
         if ($callable instanceof Closure) {
@@ -190,13 +207,39 @@ trait BowlTrait
      * @param array<string, mixed> $workPlan
      * @param array<mixed> $values
      */
-    private function findInstanceForParameter(ReflectionParameter $parameter, array &$workPlan, array &$values): bool
-    {
+    private function findInstanceForParameter(
+        ReflectionParameter $parameter,
+        array &$workPlan,
+        array &$values,
+        bool $allowTransform,
+        ?string $transformClassName
+    ): bool {
         $automaticValueFound = false;
 
+        $refClass = null;
+        if ($allowTransform && null !== $transformClassName && class_exists($transformClassName)) {
+            $refClass = static::getReflectionClass($transformClassName);
+        }
+
         foreach ($workPlan as &$variable) {
-            if (is_object($variable) && $this->isInstanceOf($parameter, $variable)) {
+            if (!is_object($variable)) {
+                continue;
+            }
+
+            if ($this->isInstanceOf($parameter, $variable)) {
                 $values[] = $variable;
+
+                $automaticValueFound = true;
+                break;
+            }
+
+            if (
+                $allowTransform
+                && null !== $refClass
+                && $variable instanceof TransformableInterface
+                && $refClass->isInstance($variable)
+            ) {
+                $values[] = $variable->transform();
 
                 $automaticValueFound = true;
                 break;
@@ -261,7 +304,11 @@ trait BowlTrait
 
             //Check if we must transform an ingredient before put it into the bowl
             $allowTransform = false;
-            if ($parameter->getAttributes(Transform::class)) {
+            $transformClassName = null;
+            if (!empty($attributes = $parameter->getAttributes(Transform::class))) {
+                /** @var Transform $attr */
+                $attr = $attributes[0]->newInstance();
+                $transformClassName = $attr->getClassName();
                 $allowTransform = true;
             }
 
@@ -285,7 +332,13 @@ trait BowlTrait
                 ($type = $parameter->getType()) instanceof ReflectionNamedType
                     && isset($workPlan[$type->getName()]) => $workPlan[$type->getName()],
 
-                $this->findInstanceForParameter($parameter, $workPlan, $values) => $skip = true,
+                $this->findInstanceForParameter(
+                    $parameter,
+                    $workPlan,
+                    $values,
+                    $allowTransform,
+                    $transformClassName
+                ) => $skip = true,
 
                 BowlInterface::METHOD_NAME === $name => $this->name,
 

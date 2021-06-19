@@ -509,7 +509,14 @@ class FeatureContext implements Context
         $this->workPlan[$name] = $this->parseMethod($method);
     }
 
-    public static function passDateWithTransform(#[Transform] $transformableDateTime, ChefInterface $chef)
+    public static function passDateWithTransform(#[Transform] \DateTime $transformableDateTime, ChefInterface $chef)
+    {
+        Assert::assertInstanceOf(\DateTime::class, $transformableDateTime);
+
+        $chef->updateWorkPlan([\DateTime::class => $transformableDateTime]);
+    }
+
+    public static function passDateWithTransformNonNamed(#[Transform(Transformable::class)] \DateTime $transformableDateTime, ChefInterface $chef)
     {
         Assert::assertInstanceOf(\DateTime::class, $transformableDateTime);
 

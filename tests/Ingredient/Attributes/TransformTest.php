@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Recipe.
  *
  * LICENSE
@@ -21,18 +21,13 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-declare(strict_types=1);
+namespace Teknoo\Tests\Recipe\Ingredient\Attributes;
 
-namespace Teknoo\Recipe\Ingredient\Attributes;
-
-use Attribute;
-use RuntimeException;
-
-use function class_exists;
+use PHPUnit\Framework\TestCase;
+use Teknoo\Recipe\Ingredient\Attributes\Transform;
+use Teknoo\Tests\Recipe\Transformable;
 
 /**
- * Class to implement attribute `Transform` to transform an ingredient before to put it into the bowl
- *
  * @copyright   Copyright (c) 2009-2021 EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) 2020-2021 SASU Teknoo Software (https://teknoo.software)
  *
@@ -40,20 +35,35 @@ use function class_exists;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @covers \Teknoo\Recipe\Ingredient\Attributes\Transform
  */
-#[Attribute(Attribute::TARGET_PARAMETER)]
-class Transform
+class TransformTest extends TestCase
 {
-    public function __construct(
-        private ?string $className = null,
-    ) {
-        if (!empty($this->className) && !class_exists($this->className)) {
-            throw new RuntimeException("Error the required class {$this->className} does not exist");
-        }
+    public function testEmptyClass()
+    {
+        self::assertInstanceOf(
+            Transform::class,
+            new Transform()
+        );
     }
 
-    public function getClassName(): ?string
+    public function testValidClass()
     {
-        return $this->className;
+        self::assertInstanceOf(
+            Transform::class,
+            $transform = new Transform(Transformable::class)
+        );
+
+        self::assertEquals(
+            Transformable::class,
+            $transform->getClassName()
+        );
+    }
+
+    public function testInvalidClass()
+    {
+        $this->expectException(\RuntimeException::class);
+        new Transform('fooBar');
     }
 }
