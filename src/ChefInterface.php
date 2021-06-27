@@ -44,17 +44,17 @@ use Throwable;
  */
 interface ChefInterface
 {
-    /**
+    /*
      * To read and learn a recipe.
      */
     public function read(BaseRecipeInterface $recipe): ChefInterface;
 
-    /**
+    /*
      * To reserve the current recipe to begin a sub recipe with the actual workplan.
      */
     public function reserveAndBegin(BaseRecipeInterface $recipe): ChefInterface;
 
-    /**
+    /*
      * To known when an ingredient missing in the work plan to start the cooking
      */
     public function missing(IngredientInterface $ingredient, string $message): ChefInterface;
@@ -96,27 +96,27 @@ interface ChefInterface
      */
     public function continue(array $with = [], string $nextStep = null): ChefInterface;
 
-    /**
+    /*
      * To interrupt cooking, without execute dish validation
      */
     public function interruptCooking(): ChefInterface;
 
-    /**
+    /*
      * To stop the error reporting to the top chef when an error is occured
      */
     public function stopErrorReporting(): ChefInterface;
 
-    /**
+    /*
      * To stop / finish cooking the recipe and check the result.
      */
     public function finish(mixed $result): ChefInterface;
 
-    /**
+    /*
      * To stop / finish cooking the recipe and check the result.
      */
     public function error(Throwable $error): ChefInterface;
 
-    /**
+    /*
      * To start cooking a recipe with an initial work plan.
      */
     public function process(array $workPlan): ChefInterface;

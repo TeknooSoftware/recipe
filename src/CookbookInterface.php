@@ -41,7 +41,7 @@ namespace Teknoo\Recipe;
  */
 interface CookbookInterface extends BaseRecipeInterface
 {
-    /**
+    /*
      * To transform a recipe (can be prefilled with additional step), business rule
      */
     public function fill(RecipeInterface $recipe): CookbookInterface;

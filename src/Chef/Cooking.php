@@ -58,6 +58,10 @@ class Cooking implements StateInterface
 {
     use StateTrait;
 
+    /*
+     * To start a sub recipe with a subchef, cloned from the current chef with a copy of its workplan.
+     * Two worplans will evolve independently
+     */
     public function begin(): callable
     {
         return function (BaseRecipeInterface $recipe): ChefInterface {
@@ -77,7 +81,7 @@ class Cooking implements StateInterface
         };
     }
 
-    /**
+    /*
      * To memorize a missing ingredients to stop the cooking of the recipe.
      */
     public function missingIngredient(): callable
@@ -89,7 +93,7 @@ class Cooking implements StateInterface
         };
     }
 
-    /**
+    /*
      * To get the next step in the cooking to execute
      */
     private function getNextStep(): callable
@@ -112,7 +116,7 @@ class Cooking implements StateInterface
         };
     }
 
-    /**
+    /*
      * Called by a step to continue the execution of the recipe but before, update ingredients available on the workplan
      */
     public function continueRecipe(): callable
@@ -137,7 +141,7 @@ class Cooking implements StateInterface
         };
     }
 
-    /**
+    /*
      * Called by a step to stop the execution of the recipe and check if the dish is the result excepted.
      */
     public function finishRecipe(): callable
@@ -155,7 +159,7 @@ class Cooking implements StateInterface
         };
     }
 
-    /**
+    /*
      * Called by a step to stop the execution because an error was occured
      */
     public function errorInRecipe(): callable
@@ -167,7 +171,7 @@ class Cooking implements StateInterface
         };
     }
 
-    /**
+    /*
      * Internal method to prepare a cooking, check is all ingredients are available.
      * @internal
      */
@@ -185,7 +189,7 @@ class Cooking implements StateInterface
         };
     }
 
-    /**
+    /*
      * To check if the chef has memorized some missing ingredients
      */
     private function checkMissingIngredients(): callable

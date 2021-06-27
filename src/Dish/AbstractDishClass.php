@@ -55,7 +55,7 @@ abstract class AbstractDishClass implements DishInterface
         $this->promise = $promise;
     }
 
-    /**
+    /*
      * To define in final class to check the result of the cooked recipe.
      */
     abstract protected function check(mixed &$result): bool;

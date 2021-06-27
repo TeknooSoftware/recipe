@@ -55,7 +55,7 @@ class Trained implements StateInterface
 {
     use StateTrait;
 
-    /**
+    /*
      * To update/prepare ingredients available on the workplan for the cooking
      */
     public function updateMyWorkPlan(): callable
@@ -67,7 +67,7 @@ class Trained implements StateInterface
         };
     }
 
-    /**
+    /*
      * To update/prepare ingredients available on the workplan for the cooking
      */
     public function mergeInMyWorkPlan(): callable
@@ -89,7 +89,7 @@ class Trained implements StateInterface
         };
     }
 
-    /**
+    /*
      * To remove some ingredients from the workplan
      */
     public function removeFromMyWorkPlan(): callable
@@ -101,7 +101,7 @@ class Trained implements StateInterface
         };
     }
 
-    /**
+    /*
      * To interrupt execution of all next steps, including next steps in top chef
      */
     private function interrupt(): callable
@@ -116,7 +116,7 @@ class Trained implements StateInterface
         };
     }
 
-    /**
+    /*
      * Internal method to clean the workplan after cooking.
      * @internal
      */
@@ -133,7 +133,7 @@ class Trained implements StateInterface
         };
     }
 
-    /**
+    /*
      * To execute a cooking and switch to cookine state.
      */
     public function runRecipe(): callable
@@ -156,7 +156,7 @@ class Trained implements StateInterface
         };
     }
 
-    /**
+    /*
      * To execute steps defined to handle error
      */
     private function callErrors(): callable

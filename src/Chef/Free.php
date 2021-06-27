@@ -54,7 +54,7 @@ class Free implements StateInterface
 {
     use StateTrait;
 
-    /**
+    /*
      * To read and lean a recipe.
      */
     public function readRecipe(): callable
@@ -71,7 +71,7 @@ class Free implements StateInterface
         };
     }
 
-    /**
+    /*
      * To learn steps in the recipe, in the good order
      */
     public function followStepsRecipe(): callable

@@ -39,7 +39,7 @@ namespace Teknoo\Recipe;
  */
 interface BaseRecipeInterface
 {
-    /**
+    /*
      * To train a chef about this recipe.
      */
     public function train(ChefInterface $chef): BaseRecipeInterface;
@@ -51,7 +51,7 @@ interface BaseRecipeInterface
      */
     public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface;
 
-    /**
+    /*
      * To validate the result of the cooking via the dish defined via the method "given".
      */
     public function validate(mixed $value): BaseRecipeInterface;

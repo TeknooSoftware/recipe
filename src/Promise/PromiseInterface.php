@@ -43,12 +43,12 @@ use Throwable;
  */
 interface PromiseInterface extends ImmutableInterface
 {
-    /**
+    /*
     * To call the callback defined when the actor has successfully it's operation.
     */
     public function success(mixed $result = null): PromiseInterface;
 
-    /**
+    /*
      * To call the callback defined when an error has been occurred.
      */
     public function fail(Throwable $throwable): PromiseInterface;

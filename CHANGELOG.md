@@ -1,5 +1,9 @@
 #Teknoo Software - Recipe - Change Log
 
+##[3.1.1] - 2021-06-27
+###Stable Release
+- Update documents and dev libs requirements
+
 ##[3.1.0] - 2021-06-18
 ###Stable Release
 - Add `MergeableInterface` and `ChefInterface::merge()` to allow merge ingredient instead of replace it with `updateWorkplan`

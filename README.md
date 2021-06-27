@@ -68,9 +68,12 @@ Quick Example
     
     $chef = new Chef;
     $chef->read($recipe);
-    $chef->process(['date' => new \DateTime('2017-12-25 00:00:00', new \DateTimeZone('Europe/Paris'))]);
-    //Show : 2017-12-24 23:00:00 UTC
+    $chef->process(['date' => new \DateTime('2020-06-27 00:00:00', new \DateTimeZone('Europe/Paris'))]);
+
+    //Show : 2020-06-26 22:00:00 UTC
     echo $output.PHP_EOL;
+
+Others examples are available into demo
 
 Support this project
 ---------------------
@@ -87,10 +90,32 @@ To install this library with composer, run this command :
 
 This library requires :
 
-    * PHP 7.4+
+    * PHP 8.0+
     * A PHP autoloader (Composer is recommended)
     * Teknoo/Immutable.
     * Teknoo/States.
+
+News from Teknoo Recipe 3.1
+----------------------------
+
+This library requires PHP 8.0 or newer.
+
+- Add `MergeableInterface` and `ChefInterface::merge()` to allow merge ingredient instead of replace it with `updateWorkplan`
+  without fetch it into step.
+- Add `TransformableInterface` and attribute `Transform` to allow transform an ingredient before to put it into the bowl
+
+News from Teknoo Recipe 3.0
+----------------------------
+
+This library requires PHP 8.0 or newer. Some change causes bc breaks.
+
+- Promise immutable check is performed before var assignment
+- Some optimisations on array functions to limit O(n)
+- Subs chefs executing an embedded recipe inherit also of error handler with the workplan but can be changed without impact
+  the original handler in the main chef.
+- Subs chefs call also theirs top chef's callErrors method on error
+- Add `interruptCooking` method to stop execution of chef without execute finals steps (dish validation or error handlers)
+- Add `stopErrorReporting` method to stop error reporting to top chef
 
 News from Teknoo Recipe 2.0
 ----------------------------

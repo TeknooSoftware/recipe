@@ -47,7 +47,7 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  */
 interface RecipeInterface extends ImmutableInterface, BaseRecipeInterface
 {
-    /**
+    /*
      * To define required ingredients to start the cooking of the recipe.
      */
     public function require(IngredientInterface $ingredient): RecipeInterface;
@@ -64,13 +64,14 @@ interface RecipeInterface extends ImmutableInterface, BaseRecipeInterface
         int $position = null
     ): RecipeInterface;
 
-    /**
+    /*
      * To define action when an error is occurred
      */
     public function onError(callable | BowlInterface $action): RecipeInterface;
 
-    /**
-     * To define actions to realize the recipe.
+    /*
+     * To define / add a sub recipe into this recipe recipe. It will be wrapped into a RecipeBowl instance. The repeat
+     * condition can be a callable and will be wrapped into a bowl in this case.
      */
     public function execute(
         BaseRecipeInterface $recipe,
@@ -79,7 +80,7 @@ interface RecipeInterface extends ImmutableInterface, BaseRecipeInterface
         int $position = null
     ): RecipeInterface;
 
-    /**
+    /*
      * To define the excepted dish attempted at the end.
      */
     public function given(DishInterface $dish): RecipeInterface;

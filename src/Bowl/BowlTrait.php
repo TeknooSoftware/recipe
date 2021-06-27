@@ -327,11 +327,14 @@ trait BowlTrait
             //Pick the good value from the workplan
             $skip = false;
             $tempValue = match (true) {
+                //Found from ingredient's name in workplan
                 isset($workPlan[$name]) => $workPlan[$name],
 
+                //Found from ingredient's class in workplan
                 ($type = $parameter->getType()) instanceof ReflectionNamedType
                     && isset($workPlan[$type->getName()]) => $workPlan[$type->getName()],
 
+                //Found from ingredient's instance type
                 $this->findInstanceForParameter(
                     $parameter,
                     $workPlan,
@@ -340,12 +343,15 @@ trait BowlTrait
                     $transformClassName
                 ) => $skip = true,
 
+                //Special name `_methodName`
                 BowlInterface::METHOD_NAME === $name => $this->name,
 
+                //Not found, if it is not optional, throw an exception
                 !$parameter->isOptional() => throw new RuntimeException(
                     "Missing the parameter {$parameter->getName()} ({$name}) in the WorkPlan"
                 ),
 
+                //Return the default value
                 default => $parameter->getDefaultValue(),
             };
 

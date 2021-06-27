@@ -42,12 +42,12 @@ use Teknoo\Recipe\ChefInterface;
  */
 interface IngredientBagInterface
 {
-    /**
+    /*
      * Variable to push to the workplan
      */
     public function set(string $name, mixed $value): IngredientBagInterface;
 
-    /**
+    /*
      * Update the chef's workplan
      */
     public function updateWorkPlan(ChefInterface $chef): IngredientBagInterface;

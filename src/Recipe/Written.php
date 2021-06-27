@@ -51,7 +51,7 @@ class Written implements StateInterface
 {
     use StateTrait;
 
-    /**
+    /*
      * To check if all ingredients are available and valid on the workplan
      */
     public function prepareCooking(): callable
@@ -71,7 +71,7 @@ class Written implements StateInterface
         };
     }
 
-    /**
+    /*
      * To validate the result of the cooking.
      */
     public function validateDish(): callable
