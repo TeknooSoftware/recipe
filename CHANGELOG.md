@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [3.1.2] - 2021-06-27
+### Stable Release
+- Fix PhpStan
+
 ## [3.1.1] - 2021-06-27
 ### Stable Release
 - Update documents and dev libs requirements

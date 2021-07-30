@@ -38,7 +38,7 @@
         "pdepend/pdepend": "~2.9",
         "sebastian/phpcpd": "^6.0.3",
         "phploc/phploc": "^7.0.2",
-        "phpstan/phpstan": "^0.12.90",
+        "phpstan/phpstan": "^0.12.94",
         "nikic/php-parser": "~4.10",
         "behat/behat": "~3.8"
     },

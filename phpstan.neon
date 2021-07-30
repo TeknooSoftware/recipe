@@ -11,9 +11,6 @@ parameters:
             message: '#Parameter \#1 \$[a-zA-Z]+ of class ReflectionClass constructor expects class-string\<T of object\>\|T of object, string given#'
             path: src/Bowl
         -
-            message: '#Result of \&\& is always false.#'
-            path: src/Chef/Cooking.php
-        -
             message: '#Generator expects value type [a-zA-Z0-9\\_]+, [a-zA-Z0-9\\_]+\|false given#'
             path: src/Recipe.php
         -

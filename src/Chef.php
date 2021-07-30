@@ -88,7 +88,7 @@ class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
     private array $onError = [];
 
     /**
-     * @var array<int, string>
+     * @var array<string, int>
      */
     private array $stepsNames = [];
 
