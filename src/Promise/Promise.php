@@ -48,6 +48,8 @@ class Promise implements PromiseInterface
 {
     use ImmutableTrait;
 
+    private ?PromiseInterface $nextPromise = null;
+
     /**
      * @var callable|null
      */
@@ -66,20 +68,44 @@ class Promise implements PromiseInterface
         $this->onFail = $onFail;
     }
 
+    public function next(?PromiseInterface $promise = null): PromiseInterface
+    {
+        $clone = clone $this;
+        $clone->nextPromise = $promise;
+
+        return $clone;
+    }
+
+    private function call(?callable $callable, string $method, array &$args): void
+    {
+        if (!is_callable($callable)) {
+            return;
+        }
+
+        if ($this->nextPromise instanceof PromiseInterface) {
+            $args[] = [$this->nextPromise, $method];
+        } else {
+            //Create an empty closure to provide a void callable for callable requiring
+            // a next argument
+            $args[] = static function () {
+            };
+        }
+
+        $callable(...$args);
+    }
+
     public function success(mixed $result = null): PromiseInterface
     {
-        if (is_callable($this->onSuccess)) {
-            ($this->onSuccess)(...func_get_args());
-        }
+        $args = func_get_args();
+        $this->call($this->onSuccess, 'success', $args);
 
         return $this;
     }
 
     public function fail(Throwable $throwable): PromiseInterface
     {
-        if (is_callable($this->onFail)) {
-            ($this->onFail)(...func_get_args());
-        }
+        $args = func_get_args();
+        $this->call($this->onFail, 'fail', $args);
 
         return $this;
     }

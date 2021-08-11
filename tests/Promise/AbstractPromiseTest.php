@@ -83,10 +83,40 @@ abstract class AbstractPromiseTest extends TestCase
             });
     }
 
+    public function testNextSetNotCallable()
+    {
+        $this->expectException(\Throwable::class);
+        $this->buildPromise(function () {
+        }, function () {
+        })->next('fooBar');
+    }
+
+    public function testNextSetNull()
+    {
+        $promise = $this->buildPromise(function () {
+        }, function () {
+        });
+        $nextPromise = $promise->next(null);
+
+        self::assertInstanceOf(PromiseInterface::class, $nextPromise);
+        self::assertNotSame($promise, $nextPromise);
+    }
+
+    public function testNextSetCallable()
+    {
+        $promise = $this->buildPromise(function () {
+        }, function () {
+        });
+        $nextPromise = $promise->next($this->createMock(PromiseInterface::class));
+
+        self::assertInstanceOf(PromiseInterface::class, $nextPromise);
+        self::assertNotSame($promise, $nextPromise);
+    }
+
     public function testSuccess()
     {
         $called = false;
-        $promiseWithSuccessCallback = $this->buildPromise(
+        $promiseWithCallback = $this->buildPromise(
             function ($result) use (&$called) {
                 $called = true;
                 self::assertEquals('foo', $result);
@@ -98,7 +128,7 @@ abstract class AbstractPromiseTest extends TestCase
 
         self::assertInstanceOf(
             PromiseInterface::class,
-            $promiseWithSuccessCallback->success('foo')
+            $promiseWithCallback->success('foo')
         );
 
         self::assertTrue($called, 'Error the success callback must be called');
@@ -116,10 +146,58 @@ abstract class AbstractPromiseTest extends TestCase
         );
     }
 
+    public function testSuccessWithNextNotDefined()
+    {
+        $called = false;
+        $promiseWithCallback = $this->buildPromise(
+            function ($result, $next) use (&$called) {
+                $called = true;
+                self::assertEquals('foo', $result);
+                self::assertIsCallable($next);
+                $next($result);
+            },
+            function () {
+                self::fail('Error, fail callback must not be called');
+            }
+        );
+
+        self::assertInstanceOf(
+            PromiseInterface::class,
+            $promiseWithCallback->success('foo')
+        );
+
+        self::assertTrue($called, 'Error the success callback must be called');
+    }
+
+    public function testSuccessWithNexDefined()
+    {
+        $called = 0;
+        $promiseWithCallback = $this->buildPromise(
+            function ($result, $next) use (&$called) {
+                $called++;
+                self::assertEquals('foo', $result);
+                self::assertIsCallable($next);
+                $next($result);
+            },
+            function () {
+                self::fail('Error, fail callback must not be called');
+            }
+        );
+
+        $promiseWithCallback = $promiseWithCallback->next($promiseWithCallback);
+
+        self::assertInstanceOf(
+            PromiseInterface::class,
+            $promiseWithCallback->success('foo')
+        );
+
+        self::assertEquals(2, $called, 'Error the success callback must be called');
+    }
+
     public function testFail()
     {
         $called = false;
-        $promiseWithSuccessCallback = $this->buildPromise(
+        $promiseWithCallback = $this->buildPromise(
             function () {
                 self::fail('Error, success callback must not be called');
             },
@@ -131,7 +209,7 @@ abstract class AbstractPromiseTest extends TestCase
 
         self::assertInstanceOf(
             PromiseInterface::class,
-            $promiseWithSuccessCallback->fail(new \Exception('fooBar'))
+            $promiseWithCallback->fail(new \Exception('fooBar'))
         );
 
         self::assertTrue($called, 'Error the success callback must be called');
@@ -147,5 +225,53 @@ abstract class AbstractPromiseTest extends TestCase
             PromiseInterface::class,
             $promiseWithoutSuccessCallback->fail(new \Exception('fooBar'))
         );
+    }
+
+    public function testFailWithNextNotDefined()
+    {
+        $called = false;
+        $promiseWithCallback = $this->buildPromise(
+            function () {
+                self::fail('Error, success callback must not be called');
+            },
+            function ($result, $next) use (&$called) {
+                $called = true;
+                self::assertEquals(new \Exception('fooBar'), $result);
+                self::assertIsCallable($next);
+                $next($result);
+            }
+        );
+
+        self::assertInstanceOf(
+            PromiseInterface::class,
+            $promiseWithCallback->fail(new \Exception('fooBar'))
+        );
+
+        self::assertTrue($called, 'Error the success callback must be called');
+    }
+
+    public function testFailWithNextDefined()
+    {
+        $called = 0;
+        $promiseWithCallback = $this->buildPromise(
+            function () {
+                self::fail('Error, success callback must not be called');
+            },
+            function ($result, $next) use (&$called) {
+                $called++;
+                self::assertEquals(new \Exception('fooBar'), $result);
+                self::assertIsCallable($next);
+                $next($result);
+            }
+        );
+
+        $promiseWithCallback = $promiseWithCallback->next($promiseWithCallback);
+
+        self::assertInstanceOf(
+            PromiseInterface::class,
+            $promiseWithCallback->fail(new \Exception('fooBar'))
+        );
+
+        self::assertEquals(2, $called, 'Error the success callback must be called');
     }
 }

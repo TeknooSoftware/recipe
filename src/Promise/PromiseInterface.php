@@ -44,6 +44,11 @@ use Throwable;
 interface PromiseInterface extends ImmutableInterface
 {
     /*
+     * To define a new promise to pass to the called callback.
+     */
+    public function next(?PromiseInterface $promise = null): PromiseInterface;
+
+    /*
     * To call the callback defined when the actor has successfully it's operation.
     */
     public function success(mixed $result = null): PromiseInterface;
