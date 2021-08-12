@@ -96,12 +96,11 @@ class Promise implements PromiseInterface
         }
 
         if ($this->nextPromise instanceof PromiseInterface) {
-            $args[] = [$this->nextPromise, $method];
+            $args[] = $this->nextPromise;
         } else {
             //Create an empty closure to provide a void callable for callable requiring
             // a next argument
-            $args[] = static function () {
-            };
+            $args[] = new self(null, null, true);
         }
 
         $callable(...$args);

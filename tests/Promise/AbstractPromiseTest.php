@@ -171,8 +171,11 @@ abstract class AbstractPromiseTest extends TestCase
             function ($result, $next) use (&$called) {
                 $called = true;
                 self::assertEquals('foo', $result);
-                self::assertIsCallable($next);
-                $next($result);
+                self::assertInstanceOf(
+                    PromiseInterface::class,
+                    $next
+                );
+                $next->success($result);
             },
             function () {
                 self::fail('Error, fail callback must not be called');
@@ -218,8 +221,11 @@ abstract class AbstractPromiseTest extends TestCase
             function ($result, $next) use (&$called) {
                 $called++;
                 self::assertEquals('foo', $result);
-                self::assertIsCallable($next);
-                $next($result);
+                self::assertInstanceOf(
+                    PromiseInterface::class,
+                    $next
+                );
+                $next->success($result);
             },
             function () {
                 self::fail('Error, fail callback must not be called');
@@ -280,8 +286,11 @@ abstract class AbstractPromiseTest extends TestCase
             function ($result, $next) use (&$called) {
                 $called = true;
                 self::assertEquals(new \Exception('fooBar'), $result);
-                self::assertIsCallable($next);
-                $next($result);
+                self::assertInstanceOf(
+                    PromiseInterface::class,
+                    $next
+                );
+                $next->fail($result);
             },
             true
         );
@@ -327,8 +336,11 @@ abstract class AbstractPromiseTest extends TestCase
             function ($result, $next) use (&$called) {
                 $called++;
                 self::assertEquals(new \Exception('fooBar'), $result);
-                self::assertIsCallable($next);
-                $next($result);
+                self::assertInstanceOf(
+                    PromiseInterface::class,
+                    $next
+                );
+                $next->fail($result);
             },
             true
         );
