@@ -1,9 +1,13 @@
 # Teknoo Software - Recipe - Change Log
 
+## [3.2.1] - 2021-08-12
+### Stable Release
+- Fix new behavior next promise to enable it only if the promise will be crreated with parameter $allowNext to true.
+ 
 ## [3.2.0] - 2021-08-11
 ### Stable Release
 - Import from East Foundation, Next promise behavior in Recipe' promise.
-- Promise will also pass as last arguments a callable to permit call the following promise defined. If any following 
+- Promise will also pass as last parameters a callable to permit call the following promise defined. If any following 
   promise has been defined, an empty closure is passed.
  
 ## [3.1.2] - 2021-06-27

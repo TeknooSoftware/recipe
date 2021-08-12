@@ -60,16 +60,23 @@ class Promise implements PromiseInterface
      */
     private $onFail;
 
-    public function __construct(callable $onSuccess = null, callable $onFail = null)
+    private bool $allowNext = false;
+
+    public function __construct(callable $onSuccess = null, callable $onFail = null, bool $allowNext = false)
     {
         $this->uniqueConstructorCheck();
 
         $this->onSuccess = $onSuccess;
         $this->onFail = $onFail;
+        $this->allowNext = $allowNext;
     }
 
     public function next(?PromiseInterface $promise = null): PromiseInterface
     {
+        if (false === $this->allowNext) {
+            throw new \RuntimeException('Error, following promise is not allowed here');
+        }
+
         $clone = clone $this;
         $clone->nextPromise = $promise;
 
@@ -79,6 +86,12 @@ class Promise implements PromiseInterface
     private function call(?callable $callable, string $method, array &$args): void
     {
         if (!is_callable($callable)) {
+            return;
+        }
+
+        if (!$this->allowNext) {
+            $callable(...$args);
+
             return;
         }
 

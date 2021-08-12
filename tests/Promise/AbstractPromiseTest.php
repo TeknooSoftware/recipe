@@ -38,7 +38,7 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class AbstractPromiseTest extends TestCase
 {
-    abstract public function buildPromise($onSuccess, $onFail): PromiseInterface;
+    abstract public function buildPromise($onSuccess, $onFail, bool $allowNext = false): PromiseInterface;
 
     public function testConstructorBadSuccessCallable()
     {
@@ -93,9 +93,12 @@ abstract class AbstractPromiseTest extends TestCase
 
     public function testNextSetNull()
     {
-        $promise = $this->buildPromise(function () {
-        }, function () {
-        });
+        $promise = $this->buildPromise(
+            function () {
+            }, function () {
+            },
+            true
+        );
         $nextPromise = $promise->next(null);
 
         self::assertInstanceOf(PromiseInterface::class, $nextPromise);
@@ -106,11 +109,25 @@ abstract class AbstractPromiseTest extends TestCase
     {
         $promise = $this->buildPromise(function () {
         }, function () {
-        });
+        }, true);
         $nextPromise = $promise->next($this->createMock(PromiseInterface::class));
 
         self::assertInstanceOf(PromiseInterface::class, $nextPromise);
         self::assertNotSame($promise, $nextPromise);
+    }
+
+    public function testNextSetCallableNotAllowed()
+    {
+        $promise = $this->buildPromise(
+            function () {
+            },
+            function () {
+            },
+            false
+        );
+
+        $this->expectException(\RuntimeException::class);
+        $promise->next($this->createMock(PromiseInterface::class));
     }
 
     public function testSuccess()
@@ -123,7 +140,8 @@ abstract class AbstractPromiseTest extends TestCase
             },
             function () {
                 self::fail('Error, fail callback must not be called');
-            }
+            },
+            true
         );
 
         self::assertInstanceOf(
@@ -158,7 +176,31 @@ abstract class AbstractPromiseTest extends TestCase
             },
             function () {
                 self::fail('Error, fail callback must not be called');
-            }
+            },
+            true
+        );
+
+        self::assertInstanceOf(
+            PromiseInterface::class,
+            $promiseWithCallback->success('foo')
+        );
+
+        self::assertTrue($called, 'Error the success callback must be called');
+    }
+
+    public function testSuccessWithNextNotAllowed()
+    {
+        $called = false;
+        $promiseWithCallback = $this->buildPromise(
+            function ($result, $next = null) use (&$called) {
+                $called = true;
+                self::assertEquals('foo', $result);
+                self::assertNull($next);
+            },
+            function () {
+                self::fail('Error, fail callback must not be called');
+            },
+            false
         );
 
         self::assertInstanceOf(
@@ -181,7 +223,8 @@ abstract class AbstractPromiseTest extends TestCase
             },
             function () {
                 self::fail('Error, fail callback must not be called');
-            }
+            },
+            true
         );
 
         $promiseWithCallback = $promiseWithCallback->next($promiseWithCallback);
@@ -239,7 +282,31 @@ abstract class AbstractPromiseTest extends TestCase
                 self::assertEquals(new \Exception('fooBar'), $result);
                 self::assertIsCallable($next);
                 $next($result);
-            }
+            },
+            true
+        );
+
+        self::assertInstanceOf(
+            PromiseInterface::class,
+            $promiseWithCallback->fail(new \Exception('fooBar'))
+        );
+
+        self::assertTrue($called, 'Error the success callback must be called');
+    }
+
+    public function testFailWithNextNotAllowed()
+    {
+        $called = false;
+        $promiseWithCallback = $this->buildPromise(
+            function () {
+                self::fail('Error, success callback must not be called');
+            },
+            function ($result, $next = null) use (&$called) {
+                $called = true;
+                self::assertEquals(new \Exception('fooBar'), $result);
+                self::assertNull($next);
+            },
+            false
         );
 
         self::assertInstanceOf(
@@ -262,7 +329,8 @@ abstract class AbstractPromiseTest extends TestCase
                 self::assertEquals(new \Exception('fooBar'), $result);
                 self::assertIsCallable($next);
                 $next($result);
-            }
+            },
+            true
         );
 
         $promiseWithCallback = $promiseWithCallback->next($promiseWithCallback);
