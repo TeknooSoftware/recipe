@@ -100,7 +100,7 @@ class Promise implements PromiseInterface
         } else {
             //Create an empty closure to provide a void callable for callable requiring
             // a next argument
-            $args[] = new self(null, null, true);
+            $args[] = new static(null, null, true);
         }
 
         $callable(...$args);
