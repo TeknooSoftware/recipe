@@ -83,7 +83,10 @@ class Promise implements PromiseInterface
         return $clone;
     }
 
-    private function call(?callable $callable, string $method, array &$args): void
+    /**
+     * @param array<int, mixed> $args
+     */
+    private function call(?callable $callable, array &$args): void
     {
         if (!is_callable($callable)) {
             return;
@@ -109,7 +112,7 @@ class Promise implements PromiseInterface
     public function success(mixed $result = null): PromiseInterface
     {
         $args = func_get_args();
-        $this->call($this->onSuccess, 'success', $args);
+        $this->call($this->onSuccess, $args);
 
         return $this;
     }
@@ -117,7 +120,7 @@ class Promise implements PromiseInterface
     public function fail(Throwable $throwable): PromiseInterface
     {
         $args = func_get_args();
-        $this->call($this->onFail, 'fail', $args);
+        $this->call($this->onFail, $args);
 
         return $this;
     }

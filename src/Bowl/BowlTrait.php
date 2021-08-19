@@ -79,7 +79,7 @@ trait BowlTrait
     private ?array $parametersCache = null;
 
     /**
-     * @var array<string, ReflectionClass>
+     * @var array<string, ReflectionClass<object>>
      */
     private static array $reflectionsClasses = [];
 
@@ -105,6 +105,7 @@ trait BowlTrait
 
     /**
      * @param class-string $objectOrClass
+     * @return ReflectionClass<object>
      */
     private static function getReflectionClass(string $objectOrClass): ReflectionClass
     {

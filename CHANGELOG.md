@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [3.2.1] - 2021-08-19
+### Stable Release
+- QA, Fix PHPDoc.
+
 ## [3.2.0] - 2021-08-12
 ### Stable Release
 - Import from East Foundation, Next promise behavior in Recipe' promise.

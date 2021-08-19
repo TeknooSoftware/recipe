@@ -119,5 +119,8 @@ interface ChefInterface
     /*
      * To start cooking a recipe with an initial work plan.
      */
+    /**
+     * @param array<string, mixed> $workPlan
+     */
     public function process(array $workPlan): ChefInterface;
 }
