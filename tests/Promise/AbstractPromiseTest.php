@@ -354,4 +354,21 @@ abstract class AbstractPromiseTest extends TestCase
 
         self::assertEquals(2, $called, 'Error the success callback must be called');
     }
+
+    public function testFetchResultNotCalled()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->buildPromise(function () {}, function () {})->fetchResult();
+    }
+
+    public function testFetchResultCalled()
+    {
+        $promise = $this->buildPromise(function () {return 'foo';}, function () {return 'bar';});
+
+        $promise->success();
+        self::assertEquals('foo', $promise->fetchResult());
+
+        $promise->fail(new \Exception('foo'));
+        self::assertEquals('bar', $promise->fetchResult());
+    }
 }

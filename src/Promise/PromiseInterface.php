@@ -57,4 +57,10 @@ interface PromiseInterface extends ImmutableInterface
      * To call the callback defined when an error has been occurred.
      */
     public function fail(Throwable $throwable): PromiseInterface;
+
+    /*
+     * To get the returned value by the callback on the promise (Can be null if the callback return nothing).
+     * (Not east compliant, but useful to integrate east code with an non-east code).
+     */
+    public function fetchResult(): mixed;
 }

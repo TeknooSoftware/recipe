@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Promise;
 
+use RuntimeException;
 use Teknoo\Immutable\ImmutableTrait;
 use Throwable;
 
@@ -62,6 +63,10 @@ class Promise implements PromiseInterface
 
     private bool $allowNext = false;
 
+    private mixed $result = null;
+
+    private bool $called = false;
+
     public function __construct(callable $onSuccess = null, callable $onFail = null, bool $allowNext = false)
     {
         $this->uniqueConstructorCheck();
@@ -74,7 +79,7 @@ class Promise implements PromiseInterface
     public function next(?PromiseInterface $promise = null): PromiseInterface
     {
         if (false === $this->allowNext) {
-            throw new \RuntimeException('Error, following promise is not allowed here');
+            throw new RuntimeException('Error, following promise is not allowed here');
         }
 
         $clone = clone $this;
@@ -92,8 +97,10 @@ class Promise implements PromiseInterface
             return;
         }
 
+        $this->called = true;
+
         if (!$this->allowNext) {
-            $callable(...$args);
+            $this->result = $callable(...$args);
 
             return;
         }
@@ -106,7 +113,7 @@ class Promise implements PromiseInterface
             $args[] = new static(null, null, true);
         }
 
-        $callable(...$args);
+        $this->result = $callable(...$args);
     }
 
     public function success(mixed $result = null): PromiseInterface
@@ -123,5 +130,14 @@ class Promise implements PromiseInterface
         $this->call($this->onFail, $args);
 
         return $this;
+    }
+
+    public function fetchResult(): mixed
+    {
+        if (true !== $this->called) {
+            throw new RuntimeException("The promise was not be previously executted");
+        }
+
+        return $this->result;
     }
 }
