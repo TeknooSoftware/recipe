@@ -61,6 +61,17 @@ interface PromiseInterface extends ImmutableInterface
     /*
      * To get the returned value by the callback on the promise (Can be null if the callback return nothing).
      * (Not east compliant, but useful to integrate east code with an non-east code).
+     * If the promise was not called, the method will throw an exception.
      */
     public function fetchResult(): mixed;
+
+    /*
+     * To get the returned value by the callback on the promise (Can be null if the callback return nothing).
+     * (Not east compliant, but useful to integrate east code with an non-east code).
+     * If the promise was not called, the method will return $default value.
+     */
+    /**
+     * @internal
+     */
+    public function fetchResultIfCalled(mixed $default): mixed;
 }

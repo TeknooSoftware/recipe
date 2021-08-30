@@ -1,7 +1,6 @@
 # Teknoo Software - Recipe - Change Log
 
-
-## [3.3.0] - 2021-08-12
+## [3.3.0] - 2021-08-30
 ### Stable Release
 - Add `Promise::fetchResult`, To get the returned value by the callback on the promise (Can be null if the callback 
   return nothing). *(Not east compliant, but useful to integrate east code with an non-east code).*

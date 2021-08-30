@@ -93,11 +93,11 @@ class Promise implements PromiseInterface
      */
     private function call(?callable $callable, array &$args): void
     {
+        $this->called = true;
+
         if (!is_callable($callable)) {
             return;
         }
-
-        $this->called = true;
 
         if (!$this->allowNext) {
             $this->result = $callable(...$args);
@@ -138,6 +138,22 @@ class Promise implements PromiseInterface
             throw new RuntimeException("The promise was not be previously executted");
         }
 
+        if (
+            empty($this->result)
+            && $this->nextPromise instanceof PromiseInterface
+        ) {
+            return $this->nextPromise->fetchResultIfCalled($this->result);
+        }
+
         return $this->result;
+    }
+
+    public function fetchResultIfCalled(mixed $default): mixed
+    {
+        if (true !== $this->called) {
+            return $default;
+        }
+
+        return $this->fetchResult();
     }
 }

@@ -361,6 +361,17 @@ abstract class AbstractPromiseTest extends TestCase
         $this->buildPromise(function () {}, function () {})->fetchResult();
     }
 
+    public function testFetchResultCalledWithNullFunction()
+    {
+        $promise = $this->buildPromise(null, null);
+
+        $promise->success();
+        self::assertNull($promise->fetchResult());
+
+        $promise->fail(new \Exception('foo'));
+        self::assertNull($promise->fetchResult());
+    }
+
     public function testFetchResultCalled()
     {
         $promise = $this->buildPromise(function () {return 'foo';}, function () {return 'bar';});
@@ -370,5 +381,69 @@ abstract class AbstractPromiseTest extends TestCase
 
         $promise->fail(new \Exception('foo'));
         self::assertEquals('bar', $promise->fetchResult());
+    }
+    
+    public function testFetchResultIfCalledNotCalled()
+    {
+        self::assertEquals(
+            'default',
+            $this->buildPromise(function () {}, function () {})->fetchResultIfCalled('default')
+        );
+    }
+
+    public function testFetchResultIfCalledCalledWithNullFunction()
+    {
+        $promise = $this->buildPromise(null, null);
+
+        $promise->success();
+        self::assertNull($promise->fetchResultIfCalled('default'));
+
+        $promise->fail(new \Exception('foo'));
+        self::assertNull($promise->fetchResultIfCalled('default'));
+    }
+
+    public function testFetchResultIfCalledCalled()
+    {
+        $promise = $this->buildPromise(function () {return 'foo';}, function () {return 'bar';});
+
+        $promise->success();
+        self::assertEquals('foo', $promise->fetchResultIfCalled('default'));
+
+        $promise->fail(new \Exception('foo'));
+        self::assertEquals('bar', $promise->fetchResultIfCalled('default'));
+    }
+
+    public function testFetchResultWithNestedPromise()
+    {
+        $promiseNested = $this->buildPromise(function () {return 'foo';}, function () {return 'bar';});
+        $promise = $this->buildPromise(
+            function (PromiseInterface $next) {$next->success('foo');},
+            function (\Throwable $error, PromiseInterface $next) {$next->fail($error);}
+            , true
+        );
+
+        $promise = $promise->next($promiseNested);
+        $promise->success();
+        self::assertEquals('foo', $promise->fetchResult());
+
+        $promise->fail(new \Exception('foo'));
+        self::assertEquals('bar', $promise->fetchResult());
+    }
+
+    public function testFetchResultWithNonCalledNestedPromise()
+    {
+        $promiseNested = $this->buildPromise(function () {return 'foo';}, function () {return 'bar';});
+        $promise = $this->buildPromise(
+            function (PromiseInterface $next) {},
+            function (\Throwable $error, PromiseInterface $next) {}
+            , true
+        );
+
+        $promise = $promise->next($promiseNested);
+        $promise->success();
+        self::assertNull($promise->fetchResult());
+
+        $promise->fail(new \Exception('foo'));
+        self::assertNull($promise->fetchResult());
     }
 }
