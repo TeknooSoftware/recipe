@@ -48,6 +48,8 @@ class FeatureContext implements Context
      */
     private $lastSubRecipeName;
 
+    public $notDefaultCookbook = false;
+
     /**
      * @var CookbookInterface
      */
@@ -659,6 +661,7 @@ class FeatureContext implements Context
      */
     public function iHaveACookbookWithTheBaseTraitForDateManagement()
     {
+        $this->notDefaultCookbook = false;
         $this->cookbook = new class ($this) implements CookbookInterface
         {
             use BaseCookbookTrait;
@@ -688,6 +691,21 @@ class FeatureContext implements Context
                 }, function () {
                     Assert::fail('The dish is not valid');
                 });
+
+                $that = $this;
+                $notDefaultCookbook = $this->context->notDefaultCookbook;
+                $recipe = $recipe->cook(
+                    function (CookbookInterface $cookbook) use ($that, $notDefaultCookbook) {
+                        if (true === $notDefaultCookbook) {
+                            Assert::assertNotSame($that, $cookbook);
+                        } else {
+                            Assert::assertSame($that, $cookbook);
+                        }
+                    },
+                    'cookbook aware',
+                    [],
+                    5
+                );
 
                 $recipe = $recipe->cook(
                     function (ChefInterface $chef, $result) {
@@ -743,4 +761,25 @@ class FeatureContext implements Context
 
         $this->cookbook->expectedDate = '2017-07-01 12:00:00';
     }
+
+    /**
+     * @Given I add a cookbook instance to the default workplan
+     */
+    public function iAddACookbookInstanceToTheDefaultWorkplan()
+    {
+        $this->notDefaultCookbook = true;
+        $this->cookbook->addToWorkplan(
+            CookbookInterface::class,
+            new class implements CookbookInterface {
+                public function train(ChefInterface $chef): BaseRecipeInterface {}
+
+                public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface {}
+
+                public function validate(mixed $value): BaseRecipeInterface {}
+
+                public function fill(RecipeInterface $recipe): CookbookInterface {}
+            }
+        );
+    }
+
 }

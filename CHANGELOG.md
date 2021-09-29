@@ -1,5 +1,10 @@
 # Teknoo Software - Recipe - Change Log
 
+## [3.4.0] - 2021-98-29
+### Stable Release
+- `Coobook Aware` : Cookbook written with the `BaseCookbookTrait` add them (if it is not already defined) in
+  the default workplan to help developers to write recipe's step aware of the cookbook.
+
 ## [3.3.0] - 2021-08-30
 ### Stable Release
 - Add `Promise::fetchResult`, To get the returned value by the callback on the promise (Can be null if the callback 

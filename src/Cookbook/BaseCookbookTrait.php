@@ -71,14 +71,18 @@ trait BaseCookbookTrait
     {
         $chef->read($this->getRecipe());
 
-        $chef->updateWorkPlan($this->defaultWorkplan);
+        $chef->updateWorkPlan(
+            $this->defaultWorkplan
+            +
+            [CookbookInterface::class => $this]
+        );
 
         return $this;
     }
 
     public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface
     {
-        $final = $workPlan + $this->defaultWorkplan;
+        $final = $workPlan + $this->defaultWorkplan + [CookbookInterface::class => $this];
 
         $this->getRecipe()->prepare($final, $chef);
 

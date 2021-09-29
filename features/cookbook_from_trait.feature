@@ -10,6 +10,14 @@ Feature: Recipe
     Then I train the chef with the cookbook
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
 
+  Scenario: Train a chef to cook dish from a cookbook with the base trait
+    Given I have an empty recipe
+    And I have a cookbook with the base trait for date management
+    And I add a cookbook instance to the default workplan
+    And I have an untrained chef
+    Then I train the chef with the cookbook
+    And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
+
   Scenario: Train a chef to cook a dish from a cookbook and custom the recipe with the base trait
     Given I have an empty recipe
     And I have a cookbook with the base trait for date management
