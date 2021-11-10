@@ -110,15 +110,14 @@ class Draft implements StateInterface
      */
     public function setOnError(): callable
     {
-        return function (callable | BowlInterface $action): RecipeInterface {
+        return function (callable | BowlInterface $callable): RecipeInterface {
             /**
              * @var Recipe $this
              */
             $that = $this->cloneMe();
 
-            $callable = $action;
-            if (!$action instanceof BowlInterface) {
-                $callable = new Bowl($action, []);
+            if (!$callable instanceof BowlInterface) {
+                $callable = new Bowl($callable, []);
             }
 
             $that->onError[] = $callable;

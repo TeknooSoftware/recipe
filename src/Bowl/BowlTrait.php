@@ -110,10 +110,10 @@ trait BowlTrait
     private static function getReflectionClass(string $objectOrClass): ReflectionClass
     {
         $getter = static function () use ($objectOrClass): ReflectionClass {
-            return static::$reflectionsClasses[$objectOrClass] = new ReflectionClass($objectOrClass);
+            return self::$reflectionsClasses[$objectOrClass] = new ReflectionClass($objectOrClass);
         };
 
-        return static::$reflectionsClasses[$objectOrClass] ?? $getter();
+        return self::$reflectionsClasses[$objectOrClass] ?? $getter();
     }
 
     /**
@@ -126,21 +126,21 @@ trait BowlTrait
         }
 
         $getter = static function () use ($objectOrClass, $methodName): ReflectionMethod {
-            $reflectionClass = static::getReflectionClass($objectOrClass);
+            $reflectionClass = self::getReflectionClass($objectOrClass);
 
-            return static::$reflectionsMethods[$objectOrClass][$methodName] = $reflectionClass->getMethod($methodName);
+            return self::$reflectionsMethods[$objectOrClass][$methodName] = $reflectionClass->getMethod($methodName);
         };
 
-        return static::$reflectionsMethods[$objectOrClass][$methodName] ?? $getter();
+        return self::$reflectionsMethods[$objectOrClass][$methodName] ?? $getter();
     }
 
     private static function getReflectionFunction(string $function): ReflectionFunction
     {
         $getter = static function () use ($function): ReflectionFunction {
-            return static::$reflectionsFunctions[$function] = new ReflectionFunction($function);
+            return self::$reflectionsFunctions[$function] = new ReflectionFunction($function);
         };
 
-        return static::$reflectionsFunctions[$function] ?? $getter();
+        return self::$reflectionsFunctions[$function] ?? $getter();
     }
 
     private static function getReflectionInvokable(object $invokable): ReflectionMethod
@@ -150,10 +150,10 @@ trait BowlTrait
         $getter = static function () use ($invokableClass): ReflectionMethod {
             $reflectionClass = new ReflectionClass($invokableClass);
 
-            return static::$reflectionsInvokables[$invokableClass] = $reflectionClass->getMethod('__invoke');
+            return self::$reflectionsInvokables[$invokableClass] = $reflectionClass->getMethod('__invoke');
         };
 
-        return static::$reflectionsInvokables[$invokableClass] ?? $getter();
+        return self::$reflectionsInvokables[$invokableClass] ?? $getter();
     }
 
     /**
@@ -166,7 +166,7 @@ trait BowlTrait
     {
         if (is_array($callable)) {
             //The callable is checked by PHP in the constructor by the type hitting
-            return static::getReflectionMethod($callable[0], $callable[1]);
+            return self::getReflectionMethod($callable[0], $callable[1]);
         }
 
         if ($callable instanceof Closure) {
@@ -174,11 +174,11 @@ trait BowlTrait
         }
 
         if (is_string($callable)) {
-            return static::getReflectionFunction($callable);
+            return self::getReflectionFunction($callable);
         }
 
         //It's not a closure, so it's mandatory a invokable object (because the callable is valid)
-        return static::getReflectionInvokable((object) $callable);
+        return self::getReflectionInvokable((object) $callable);
     }
 
     /**
@@ -189,7 +189,7 @@ trait BowlTrait
      */
     private function listParameters(callable $callable): array
     {
-        $reflection = static::getReflection($callable);
+        $reflection = self::getReflection($callable);
         $oid = $reflection->getFileName() . ':' . $reflection->getStartLine();
 
         $getter = static function () use ($oid, $reflection): array {
@@ -198,10 +198,10 @@ trait BowlTrait
                 $parameters[$parameter->getName()] = $parameter;
             }
 
-            return static::$reflectionsParameters[$oid] = $parameters;
+            return self::$reflectionsParameters[$oid] = $parameters;
         };
 
-        return static::$reflectionsParameters[$oid] ?? $getter();
+        return self::$reflectionsParameters[$oid] ?? $getter();
     }
 
     /**
@@ -219,7 +219,7 @@ trait BowlTrait
 
         $refClass = null;
         if ($allowTransform && null !== $transformClassName && class_exists($transformClassName)) {
-            $refClass = static::getReflectionClass($transformClassName);
+            $refClass = self::getReflectionClass($transformClassName);
         }
 
         foreach ($workPlan as &$variable) {

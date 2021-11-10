@@ -31,6 +31,8 @@ use Teknoo\Recipe\ChefInterface;
 use function class_exists;
 use function is_a;
 use function is_callable;
+use function is_object;
+use function is_string;
 use function is_subclass_of;
 
 /**
@@ -102,6 +104,7 @@ class Ingredient implements IngredientInterface
     {
         if (
             class_exists($this->requiredType)
+            && (is_object($value) || is_string($value))
             && !is_a($value, $this->requiredType, true)
             && !is_subclass_of($value, $this->requiredType)
         ) {
