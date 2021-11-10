@@ -1,5 +1,4 @@
 parameters:
-    treatPhpDocTypesAsCertain: false
     ignoreErrors:
         -
             message: '#Cannot call method isInstance\(\) on ReflectionClass\|null#'
