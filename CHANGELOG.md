@@ -1,6 +1,12 @@
 # Teknoo Software - Recipe - Change Log
 
-## [3.4.0] - 2021-98-29
+## [3.4.1] - 2021-11-11
+### Stable Release
+- Update QA tool with PHPStan 1.0
+- Update State lib
+- Fix QA issues
+
+## [3.4.0] - 2021-08-29
 ### Stable Release
 - `Coobook Aware` : Cookbook written with the `BaseCookbookTrait` add them (if it is not already defined) in
   the default workplan to help developers to write recipe's step aware of the cookbook.
