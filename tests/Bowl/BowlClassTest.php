@@ -23,6 +23,10 @@
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use ReflectionNamedType;
+use ReflectionClass;
+use ReflectionParameter;
+use RuntimeException;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
@@ -89,6 +93,44 @@ class BowlClassTest extends AbstractBowlTest
             $this->getCallable(),
             $this->getMapping(),
             'bowlClass'
+        );
+    }
+
+    public function testBadDeclaringClassForSelfParameter()
+    {
+        $method = static function (self $parameter) {};
+        $bowl = new Bowl(
+            $method,
+            $this->getMapping(),
+            'bowlClass'
+        );
+
+        $refClass = new ReflectionClass(Bowl::class);
+        $parameter = $refClass->getProperty('reflectionsParameters');
+        $parameter->setAccessible(true);
+
+        $refType = $this->createMock(ReflectionNamedType::class);
+        $refType->expects(self::any())
+            ->method('getName')
+            ->willReturn('self');
+
+        $refParam = $this->createMock(ReflectionParameter::class);
+        $refParam->expects(self::any())
+            ->method('getType')
+            ->willReturn($refType);
+
+        $parameter->setValue(
+            [
+                __FILE__ . ':101' => [$refParam]
+            ]
+        );
+
+        $workplan = ['foo' => 'bar'];
+
+        $this->expectException(RuntimeException::class);
+        $bowl->execute(
+            $this->createMock(ChefInterface::class),
+            $workplan
         );
     }
 }

@@ -266,7 +266,7 @@ trait BowlTrait
             $className = $type->getName();
             if ('self' === $className) {
                 if (null === ($declaringClass = $parameter->getDeclaringClass())) {
-                    throw new RuntimeException("Can not fetch declaring class from 'self' from parameter in this bowl");
+                    throw new RuntimeException("Can not fetch declaring class from 'self' for parameter in this bowl");
                 }
 
                 return $declaringClass->isInstance($instance);
