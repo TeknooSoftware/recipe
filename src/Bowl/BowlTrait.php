@@ -262,9 +262,14 @@ trait BowlTrait
                 return false;
             }
 
+            /** @var class-string|'self' $className */
             $className = $type->getName();
             if ('self' === $className) {
-                return $parameter->getDeclaringClass()->isInstance($instance);
+                if (null === ($declaringClass = $parameter->getDeclaringClass())) {
+                    throw new RuntimeException("Can not fetch declaring class from 'self' from parameter in this bowl");
+                }
+
+                return $declaringClass->isInstance($instance);
             }
 
             $rfClass = new ReflectionClass($className);

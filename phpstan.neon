@@ -1,12 +1,6 @@
 parameters:
     ignoreErrors:
         -
-            message: '#Cannot call method isInstance\(\) on ReflectionClass\|null#'
-            path: src/Bowl
-        -
-            message: '#Parameter \#1 \$[a-zA-Z]+ of class ReflectionClass constructor expects class-string\<T of object\>\|T of object, string given#'
-            path: src/Bowl
-        -
             message: '#Unsafe usage of new static#'
             path: src/Promise/Promise.php
         -
