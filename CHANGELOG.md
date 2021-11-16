@@ -1,5 +1,11 @@
 # Teknoo Software - Recipe - Change Log
 
+## [3.4.2] - 2021-11-16
+### Stable Release
+- QA 
+- Prevent bug with nullable attribute
+- Prevent bug with Reflection
+
 ## [3.4.1] - 2021-11-11
 ### Stable Release
 - Update QA tool with PHPStan 1.0
