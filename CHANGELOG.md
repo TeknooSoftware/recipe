@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [3.4.4] - 2021-12-12
+### Stable Release
+- Remove unused QA tool
+
 ## [3.4.3] - 2021-12-03
 ### Stable Release
 - Fix some deprecated with PHP 8.1
