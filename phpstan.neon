@@ -24,7 +24,7 @@ services:
         autowired: PHPStan\Analyser\NodeScopeResolver
         arguments:
             parser: @defaultAnalysisParser
-            classReflector: @nodeScopeResolverClassReflector
+            reflector: @nodeScopeResolverReflector
             polluteScopeWithLoopInitialAssignments: %polluteScopeWithLoopInitialAssignments%
             polluteScopeWithAlwaysIterableForeach: %polluteScopeWithAlwaysIterableForeach%
             earlyTerminatingMethodCalls: %earlyTerminatingMethodCalls%
