@@ -1,5 +1,10 @@
 # Teknoo Software - Recipe - Change Log
 
+## [3.4.5] - 2022-02-09
+### Stable Release
+- Support Immutable 3.0
+- Support State 6.0
+
 ## [3.4.4] - 2021-12-12
 ### Stable Release
 - Remove unused QA tool
