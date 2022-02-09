@@ -29,7 +29,7 @@
     "require":{
         "php": "~8.0",
         "teknoo/immutable": "^2.0.10||~3.0",
-        "teknoo/states": "^5.1.6||~6.0"
+        "teknoo/states": "^5.1.9||~6.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
