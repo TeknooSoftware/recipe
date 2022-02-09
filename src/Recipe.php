@@ -39,7 +39,6 @@ use Teknoo\States\Automated\Assertion\Property\IsNotNull;
 use Teknoo\States\Automated\AutomatedInterface;
 use Teknoo\States\Automated\AutomatedTrait;
 use Teknoo\States\Proxy\Exception\StateNotFound;
-use Teknoo\States\Proxy\ProxyInterface;
 use Teknoo\States\Proxy\ProxyTrait;
 
 use function current;
