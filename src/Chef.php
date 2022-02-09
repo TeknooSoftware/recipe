@@ -67,7 +67,7 @@ use Throwable;
  * @method ChefInterface continueRecipe(array $with = [], string $nextStep = null)
  * @method ChefInterface finishRecipe($result)
  */
-class Chef implements ProxyInterface, AutomatedInterface, ChefInterface
+class Chef implements AutomatedInterface, ChefInterface
 {
     use ProxyTrait;
     use AutomatedTrait;

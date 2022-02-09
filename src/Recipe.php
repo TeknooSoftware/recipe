@@ -63,7 +63,7 @@ use function key;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Recipe implements ProxyInterface, AutomatedInterface, RecipeInterface
+class Recipe implements AutomatedInterface, RecipeInterface
 {
     use ImmutableTrait;
     use ProxyTrait;
