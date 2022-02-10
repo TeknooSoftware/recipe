@@ -23,16 +23,22 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Recipe\Dish;
+namespace Teknoo\Recipe\Bowl;
 
-use RuntimeException;
+use Exception;
+use Fiber;
 use Teknoo\Immutable\ImmutableTrait;
-use Teknoo\Recipe\Promise\PromiseInterface;
+use Teknoo\Recipe\ChefInterface;
 
 /**
- * Base class dish
+ * Fiber implementation of BowlInterface. A container with a callable to perform a step in a recipe.
+ * The callable must be valid. It will not be check in the execute() method, so it's check automatically by the PHP
+ * engine thanks to the type hitting in the constructor.
  *
- * @see DishInterface
+ * With this Bowl, you can map an argument name to another name. The fiber created to wrap and run the callable can
+ * be passed as parameter to the callable
+ *
+ * @see BowlInterface
  *
  * @copyright   Copyright (c) 2009-2021 EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) 2020-2021 SASU Teknoo Software (https://teknoo.software)
@@ -42,28 +48,40 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-abstract class AbstractDishClass implements DishInterface
+class FiberBowl implements BowlInterface
 {
     use ImmutableTrait;
+    use BowlTrait;
 
+    /**
+     * Valid callable contained in thos bawl.
+     *
+     * @var callable
+     */
+    private $callable;
+
+    /**
+     * @param array<string, string|string[]> $mapping
+     */
     public function __construct(
-        private readonly PromiseInterface $promise
+        callable $callable,
+        private readonly array $mapping,
+        private readonly string $name = '',
     ) {
         $this->uniqueConstructorCheck();
+
+        $this->callable = $callable;
     }
 
-    /*
-     * To define in final class to check the result of the cooked recipe.
+    /**
+     * @throws Exception
      */
-    abstract protected function check(mixed &$result): bool;
-
-    public function isExcepted(mixed $result): DishInterface
+    public function execute(ChefInterface $chef, array &$workPlan): BowlInterface
     {
-        if ($this->check($result)) {
-            $this->promise->success($result);
-        } else {
-            $this->promise->fail(new RuntimeException('Dish is not accepted'));
-        }
+        $fiber = new Fiber($this->callable);
+        $values = $this->extractParameters($this->callable, $chef, $workPlan, $fiber);
+
+        $fiber->start(...$values);
 
         return $this;
     }

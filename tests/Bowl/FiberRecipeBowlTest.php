@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Recipe.
  *
  * LICENSE
@@ -21,15 +21,13 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-declare(strict_types=1);
+namespace Teknoo\Tests\Recipe\Bowl;
 
-namespace Teknoo\Recipe\Promise;
+use Teknoo\Recipe\Bowl\AbstractRecipeBowl;
+use Teknoo\Recipe\Bowl\FiberRecipeBowl;
+use Teknoo\Recipe\RecipeInterface;
 
 /**
- * Default implementation of PromiseInterface;
- *
- * @see PromiseInterface
- *
  * @copyright   Copyright (c) 2009-2021 EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) 2020-2021 SASU Teknoo Software (https://teknoo.software)
  *
@@ -37,11 +35,19 @@ namespace Teknoo\Recipe\Promise;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @covers \Teknoo\Recipe\Bowl\AbstractRecipeBowl
+ * @covers \Teknoo\Recipe\Bowl\FiberRecipeBowl
  */
-class Promise extends AbstractPromise
+class FiberRecipeBowlTest extends AbstractRecipeBowlTest
 {
-    protected function processToExecution(callable $callable, array &$args): mixed
+    /**
+     * @param RecipeInterface $recipe
+     * @param int $repeat
+     * @return FiberRecipeBowl
+     */
+    public function buildBowl($recipe, $repeat): AbstractRecipeBowl
     {
-        return $callable(...$args);
+        return new FiberRecipeBowl($recipe, $repeat);
     }
 }

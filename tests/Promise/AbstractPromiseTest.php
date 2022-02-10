@@ -74,7 +74,7 @@ abstract class AbstractPromiseTest extends TestCase
 
     public function testConstructorImmutable()
     {
-        $this->expectException(ImmutableException::class);
+        $this->expectException(\Error::class);
         $this->buildPromise(function () {
         }, function () {
         })

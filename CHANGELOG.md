@@ -1,5 +1,17 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.0.0] - 2022-02-10
+### Stable Release
+- Remove PHP 8.0 support.
+- Use readonly properties for immutables objects.
+- Constant `BowlInterface::METHOD_NAME` is final.
+- Support `Fiber` into `Promise`.
+- Support `Fiber` into `Bowl` and `DynamicBowl` thanks to dynamics classes : 
+  - callable will be automatically wrapped by a fiber, 
+  - the fiber object will be available as parameter for bowls.
+- Add Fiber support to RecipeBowl, also in a dedicated class `FiberRecipeBowl`. 
+  The Fiber instance is also passed into workplan.
+
 ## [3.4.5] - 2022-02-09
 ### Stable Release
 - Support Immutable 3.0

@@ -25,8 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Promise;
 
+use Fiber;
+
 /**
- * Default implementation of PromiseInterface;
+ * Default implementation of PromiseInterface, executing success or fail callback into
+ * a fiber. The fiber instance will not passed to the callable.
  *
  * @see PromiseInterface
  *
@@ -38,10 +41,12 @@ namespace Teknoo\Recipe\Promise;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Promise extends AbstractPromise
+class FiberPromise extends AbstractPromise
 {
     protected function processToExecution(callable $callable, array &$args): mixed
     {
-        return $callable(...$args);
+        $fiber = new Fiber($callable);
+        $fiber->start(...$args);
+        return $fiber->getReturn();
     }
 }

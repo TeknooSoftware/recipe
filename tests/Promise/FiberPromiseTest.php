@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Recipe.
  *
  * LICENSE
@@ -21,15 +21,12 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
-declare(strict_types=1);
+namespace Teknoo\Tests\Recipe\Promise;
 
-namespace Teknoo\Recipe\Promise;
+use Teknoo\Recipe\Promise\FiberPromise;
+use Teknoo\Recipe\Promise\PromiseInterface;
 
 /**
- * Default implementation of PromiseInterface;
- *
- * @see PromiseInterface
- *
  * @copyright   Copyright (c) 2009-2021 EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) 2020-2021 SASU Teknoo Software (https://teknoo.software)
  *
@@ -37,11 +34,14 @@ namespace Teknoo\Recipe\Promise;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @covers \Teknoo\Recipe\Promise\AbstractPromise
+ * @covers \Teknoo\Recipe\Promise\FiberPromise
  */
-class Promise extends AbstractPromise
+class FiberPromiseTest extends AbstractPromiseTest
 {
-    protected function processToExecution(callable $callable, array &$args): mixed
+    public function buildPromise($onSuccess, $onFail, bool $allowNext = false): PromiseInterface
     {
-        return $callable(...$args);
+        return new FiberPromise($onSuccess, $onFail, $allowNext);
     }
 }

@@ -27,6 +27,7 @@ namespace Teknoo\Recipe\Bowl;
 
 use Closure;
 use Exception;
+use Fiber;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
@@ -61,17 +62,6 @@ use function reset;
  */
 trait BowlTrait
 {
-    /**
-     * Name of the action
-     */
-    private string $name;
-
-    /**
-     * To map some argument's name to another ingredient name on the workplan.
-     * @var array<string, string|string[]>
-     */
-    private array $mapping = [];
-
     /**
      * To cache the reflections about parameters of the callable
      * @var array<string, ReflectionParameter>
@@ -293,18 +283,28 @@ trait BowlTrait
      * To map each callable's arguments to ingredients available into the workplan.
      *
      * @param array<string, mixed> $workPlan
+     * @param Fiber<mixed, mixed, mixed, mixed> $fiber
      *
      * @return array<mixed>
      *
      * @throws Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function extractParameters(callable $callable, ChefInterface $chef, array &$workPlan): array
-    {
+    protected function extractParameters(
+        callable $callable,
+        ChefInterface $chef,
+        array &$workPlan,
+        ?Fiber $fiber = null,
+    ): array {
         $values = [];
         foreach ($this->listParameters($callable) as $name => $parameter) {
             if ($this->isInstanceOf($parameter, $chef)) {
                 $values[] = $chef;
+                continue;
+            }
+
+            if (null !== $fiber && $this->isInstanceOf($parameter, $fiber)) {
+                $values[] = $fiber;
                 continue;
             }
 

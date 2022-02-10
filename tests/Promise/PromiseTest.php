@@ -35,6 +35,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *
+ * @covers \Teknoo\Recipe\Promise\AbstractPromise
  * @covers \Teknoo\Recipe\Promise\Promise
  */
 class PromiseTest extends AbstractPromiseTest
