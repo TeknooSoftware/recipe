@@ -37,6 +37,7 @@ use Teknoo\Recipe\ChefInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *
+ * @covers \Teknoo\Recipe\Bowl\AbstractDynamicBowl
  * @covers \Teknoo\Recipe\Bowl\DynamicBowl
  * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */

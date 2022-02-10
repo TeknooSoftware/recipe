@@ -25,14 +25,6 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Ingredient;
 
-use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\Dish\DishInterface;
-use Teknoo\Recipe\Ingredient\IngredientBag;
-use Teknoo\Recipe\Recipe;
-use Teknoo\Recipe\RecipeInterface;
-use Teknoo\States\State\StateInterface;
-use Teknoo\States\State\StateTrait;
-
 /**
  * Interface to define ingredient able to be merge with another ingredient of the same class instead of to be replaced
  *

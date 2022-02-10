@@ -46,13 +46,11 @@ use function is_object;
  */
 class DishClass extends AbstractDishClass
 {
-    private string $class;
-
-    public function __construct(string $class, PromiseInterface $promise)
-    {
+    public function __construct(
+        private readonly string $class,
+        PromiseInterface $promise
+    ) {
         parent::__construct($promise);
-
-        $this->class = $class;
     }
 
     protected function check(mixed &$result): bool

@@ -23,12 +23,16 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Recipe\Promise;
+namespace Teknoo\Recipe\Bowl;
+
+use Fiber;
+use Teknoo\Recipe\ChefInterface;
 
 /**
- * Default implementation of PromiseInterface;
+ * Bowl to execute a new recipe, with a new trained chef provided by the current chef, but sharing the a clone of the
+ * original workplan.
  *
- * @see PromiseInterface
+ * @see BowlInterface
  *
  * @copyright   Copyright (c) 2009-2021 EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) 2020-2021 SASU Teknoo Software (https://teknoo.software)
@@ -38,10 +42,11 @@ namespace Teknoo\Recipe\Promise;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class Promise extends AbstractPromise
+class FiberRecipeBowl extends AbstractRecipeBowl
 {
-    protected function processToExecution(callable $callable, array &$args): mixed
+    protected function processToExecution(ChefInterface $subchef): void
     {
-        return $callable(...$args);
+        $fiber = new Fiber($subchef->process(...));
+        $fiber->start([Fiber::class => $fiber]);
     }
 }

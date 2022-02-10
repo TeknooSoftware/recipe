@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Ingredient;
 
-use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Recipe\ChefInterface;
 
 /**

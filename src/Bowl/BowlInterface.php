@@ -31,8 +31,7 @@ use Teknoo\Recipe\ChefInterface;
 
 /**
  * Interface to define a "bowl". A container with a callable to perform a step in a recipe.
- * The callable must be valid. It will not be check in the execute() method, the bowl must check it during its
- * initialization.
+ *
  * A Bowl must be immutable. Any call to execution must not change its state.
  *
  * @copyright   Copyright (c) 2009-2021 EIRL Richard Déloge (richarddeloge@gmail.com)
@@ -45,7 +44,7 @@ use Teknoo\Recipe\ChefInterface;
  */
 interface BowlInterface extends ImmutableInterface
 {
-    public const METHOD_NAME = '_methodName';
+    final public const METHOD_NAME = '_methodName';
 
     /**
      * To execute the callable contained into the bowl. The bowl instance must automatically map ingredients contained

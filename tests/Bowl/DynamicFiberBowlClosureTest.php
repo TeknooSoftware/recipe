@@ -23,7 +23,7 @@
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
-use Teknoo\Recipe\Bowl\DynamicBowl;
+use Teknoo\Recipe\Bowl\DynamicFiberBowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
 
@@ -37,27 +37,22 @@ use Teknoo\Recipe\ChefInterface;
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *
  * @covers \Teknoo\Recipe\Bowl\AbstractDynamicBowl
- * @covers \Teknoo\Recipe\Bowl\DynamicBowl
+ * @covers \Teknoo\Recipe\Bowl\DynamicFiberBowl
  * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
-class DynamicBowlInvokableTest extends AbstractBowlTest
+class DynamicFiberBowlClosureTest extends AbstractBowlTest
 {
-    protected function getCallable(): callable
+    protected function getCallable()
     {
-        $object = new class() {
-            public function __invoke(ChefInterface $chef, string $bar, $foo2, \DateTime $date, $_methodName)
-            {
-                $chef->continue([
-                    'bar' => $bar,
-                    'bar2' => $bar,
-                    'foo2' => $foo2,
-                    'date' => $date->getTimestamp(),
-                    '_methodName' => $_methodName,
-                ]);
-            }
+        return function (ChefInterface $chef, string $bar, $foo2, \DateTime $date, $_methodName) {
+            $chef->continue([
+                'bar' => $bar,
+                'bar2' => $bar,
+                'foo2' => $foo2,
+                'date' => $date->getTimestamp(),
+                '_methodName' => $_methodName,
+            ]);
         };
-
-        return $object;
     }
 
     protected function getMapping()
@@ -86,7 +81,7 @@ class DynamicBowlInvokableTest extends AbstractBowlTest
      */
     public function buildBowl(): BowlInterface
     {
-        return new DynamicBowl(
+        return new DynamicFiberBowl(
             'callableToExec',
             false,
             $this->getMapping(),

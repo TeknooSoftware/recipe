@@ -53,28 +53,19 @@ class Ingredient implements IngredientInterface
 {
     use ImmutableTrait;
 
-    private string $requiredType;
-
-    private string $name;
-
-    private ?string $normalizedName;
-
     /**
      * @var callable|null
      */
     private $normalizeCallback;
 
     public function __construct(
-        string $requiredType,
-        string $name,
-        string $normalizedName = null,
+        private readonly string $requiredType,
+        private readonly string $name,
+        private readonly ?string $normalizedName = null,
         ?callable $normalizeCallback = null
     ) {
         $this->uniqueConstructorCheck();
 
-        $this->requiredType = $requiredType;
-        $this->name = $name;
-        $this->normalizedName = $normalizedName;
         $this->normalizeCallback = $normalizeCallback;
     }
 

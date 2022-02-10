@@ -61,13 +61,14 @@ class Bowl implements BowlInterface
     /**
      * @param array<string, string|string[]> $mapping
      */
-    public function __construct(callable $callable, array $mapping, string $name = '')
-    {
+    public function __construct(
+        callable $callable,
+        private readonly array $mapping,
+        private readonly string $name = '',
+    ) {
         $this->uniqueConstructorCheck();
 
         $this->callable = $callable;
-        $this->mapping = $mapping;
-        $this->name = $name;
     }
 
     /**
