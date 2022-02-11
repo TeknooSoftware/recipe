@@ -1,4 +1,4 @@
-Feature: Recipe
+Feature: Cookbook
   As a developer, i need to define an ordered and unambiguous operations defined dynamically
   to solve algorithm like a chef cooks a dish.
   This definition is prewritten into a cookbook, but i can complete the recipe thanks DI container.

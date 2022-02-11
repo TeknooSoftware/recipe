@@ -77,7 +77,8 @@ interface RecipeInterface extends ImmutableInterface, BaseRecipeInterface
         BaseRecipeInterface $recipe,
         string $name,
         int | callable $repeat = 1,
-        int $position = null
+        int $position = null,
+        bool $inFiber = false,
     ): RecipeInterface;
 
     /*

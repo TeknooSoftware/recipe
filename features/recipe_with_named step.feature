@@ -1,4 +1,4 @@
-Feature: Recipe
+Feature: Recipe with named step
   As a developer, i need to define an ordered and unambiguous operations defined dynamically
   to solve algorithm with several repeated actions, like a chef cooks a dish.
   This definition must be done via a DI container or any solution ables to configure some object following

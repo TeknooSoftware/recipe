@@ -161,6 +161,24 @@ class FeatureContext implements Context
         $this->pushRecipe($this->lastRecipe->cook($this->parseMethod($methodName), $stepName));
     }
 
+
+    /**
+     * @When I define the step in fiber :stepName to do :methodName my recipe
+     */
+    public function iDefineTheStepInFiberToDoMyRecipe(string $stepName, string $methodName)
+    {
+        $this->pushRecipe(
+            $this->lastRecipe->cook(
+                new \Teknoo\Recipe\Bowl\FiberBowl(
+                    $this->parseMethod($methodName),
+                    [],
+                    $stepName,
+                ),
+                $stepName
+            )
+        );
+    }
+
     /**
      * @When I define the excepted dish :className to my recipe
      */
@@ -456,6 +474,21 @@ class FeatureContext implements Context
     }
 
     /**
+     * @When I include the recipe :name to :method in my recipe in fiber to call :count times
+     */
+    public function iIncludeTheRecipeToInMyRecipeInFiberToCallTimes($name, $method, $count)
+    {
+        $this->pushRecipe(
+            $this->lastRecipe->execute(
+                recipe: $this->subRecipes[$name],
+                name: $method,
+                repeat: (int) $count,
+                inFiber: true
+            )
+        );
+    }
+
+    /**
      * @When I must obtain an IntBag with value :content
      */
     public function iMustObtainAnIntbagWithValue(int $content)
@@ -491,6 +524,19 @@ class FeatureContext implements Context
     }
 
     /**
+     * @When I define the dynamic fiber step :name my recipe
+     */
+    public function iDefineTheDynamicFiberStepMyRecipe($name)
+    {
+        $this->pushRecipe(
+            $this->lastRecipe->cook(
+                new \Teknoo\Recipe\Bowl\DynamicFiberBowl($name, false, [], $name),
+                $name
+            )
+        );
+    }
+
+    /**
      * @When I define the mandatory dynamic step :name my recipe
      */
     public function iDefineTheMandatoryDynamicStepMyRecipe($name)
@@ -498,6 +544,19 @@ class FeatureContext implements Context
         $this->pushRecipe(
             $this->lastRecipe->cook(
                 new \Teknoo\Recipe\Bowl\DynamicBowl($name, true, [], $name),
+                $name
+            )
+        );
+    }
+
+    /**
+     * @When I define the mandatory dynamic fiber step :name my recipe
+     */
+    public function iDefineTheMandatoryDynamicFiberStepMyRecipe($name)
+    {
+        $this->pushRecipe(
+            $this->lastRecipe->cook(
+                new \Teknoo\Recipe\Bowl\DynamicFiberBowl($name, true, [], $name),
                 $name
             )
         );

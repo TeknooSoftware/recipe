@@ -200,6 +200,26 @@ abstract class AbstractRecipeTest extends TestCase
         );
     }
 
+    public function testExecuteWithRecipeInFiber()
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithStep = $recipe->execute(
+            recipe: $this->createMock(RecipeInterface::class),
+            name: 'foo',
+            inFiber: true
+        );
+
+        self::assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithStep
+        );
+
+        self::assertNotSame(
+            $recipe,
+            $recipeWithStep
+        );
+    }
+
     public function testExecuteWithBaseRecipe()
     {
         $recipe = $this->buildRecipe();

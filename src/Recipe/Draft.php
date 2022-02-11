@@ -29,6 +29,7 @@ use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Bowl\RecipeBowl;
+use Teknoo\Recipe\Bowl\FiberRecipeBowl;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Recipe;
@@ -137,7 +138,8 @@ class Draft implements StateInterface
             BaseRecipeInterface $recipe,
             string $name,
             int | callable $repeat = 1,
-            int $position = null
+            int $position = null,
+            bool $inFiber = false,
         ): RecipeInterface {
             /**
              * @var Recipe $this
@@ -148,7 +150,11 @@ class Draft implements StateInterface
                 $repeat = new Bowl($repeat, []);
             }
 
-            $callable = new RecipeBowl($recipe, $repeat);
+            if (false === $inFiber) {
+                $callable = new RecipeBowl($recipe, $repeat);
+            } else {
+                $callable = new FiberRecipeBowl($recipe, $repeat);
+            }
 
             if (empty($position)) {
                 $that->steps[] = [[$name => $callable]];

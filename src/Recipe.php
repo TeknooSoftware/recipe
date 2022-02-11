@@ -161,9 +161,10 @@ class Recipe implements AutomatedInterface, RecipeInterface
         BaseRecipeInterface $recipe,
         string $name,
         int | callable $repeat = 1,
-        int $position = null
+        int $position = null,
+        bool $inFiber = false,
     ): RecipeInterface {
-        return $this->addSubRecipe($recipe, $name, $repeat, $position);
+        return $this->addSubRecipe($recipe, $name, $repeat, $position, $inFiber);
     }
 
     public function given(DishInterface $dish): RecipeInterface
