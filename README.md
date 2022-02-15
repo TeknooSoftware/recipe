@@ -95,6 +95,20 @@ This library requires :
     * Teknoo/Immutable.
     * Teknoo/States.
 
+News from Teknoo Recipe 4.0
+----------------------------
+
+This library requires PHP 8.1 or newer. Some change causes bc breaks.
+
+- Use readonly properties for immutables objects.
+- Constant `BowlInterface::METHOD_NAME` is final.
+- Support `Fiber` into `Promise`.
+- Support `Fiber` into `Bowl` and `DynamicBowl` thanks to dynamics classes :
+    - callable will be automatically wrapped by a fiber,
+    - the fiber object will be available as parameter for bowls.
+- Add Fiber support to RecipeBowl, also in a dedicated class `FiberRecipeBowl`.
+  The Fiber instance is also passed into workplan.
+
 News from Teknoo Recipe 3.1
 ----------------------------
 
