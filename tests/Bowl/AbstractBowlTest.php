@@ -26,6 +26,7 @@ namespace Teknoo\Tests\Recipe\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
@@ -92,7 +93,8 @@ abstract class AbstractBowlTest extends TestCase
             BowlInterface::class,
             $this->buildBowl()->execute(
                 $chef,
-                $values
+                $values,
+                $this->createMock(CookingSupervisorInterface::class),
             )
         );
     }

@@ -28,6 +28,7 @@ namespace Teknoo\Recipe\Bowl;
 use RuntimeException;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 
 /**
  * Interface to define a "bowl". A container with a callable to perform a step in a recipe.
@@ -57,5 +58,9 @@ interface BowlInterface extends ImmutableInterface
      * @param array<string, mixed> $workPlan
      * @throws RuntimeException if a required argument can not be mapped.
      */
-    public function execute(ChefInterface $chef, array &$workPlan): BowlInterface;
+    public function execute(
+        ChefInterface $chef,
+        array &$workPlan,
+        ?CookingSupervisorInterface $cookingSupervisor = null,
+    ): BowlInterface;
 }

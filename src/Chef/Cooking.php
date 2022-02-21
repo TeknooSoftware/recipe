@@ -65,7 +65,7 @@ class Cooking implements StateInterface
     public function begin(): callable
     {
         return function (BaseRecipeInterface $recipe): ChefInterface {
-            $chef = new static(null, $this);
+            $chef = new static(null, $this, $this->cookingSupervisor);
 
             if ($recipe instanceof RecipeInterface) {
                 $chef->read($recipe);
@@ -129,7 +129,7 @@ class Cooking implements StateInterface
 
             while (true === $this->cooking && ($callable = $this->getNextStep($nextStep)) instanceof BowlInterface) {
                 try {
-                    $callable->execute($this, $this->workPlan);
+                    $callable->execute($this, $this->workPlan, $this->cookingSupervisor);
                 } catch (Throwable $error) {
                     $this->callErrors($error);
                 }

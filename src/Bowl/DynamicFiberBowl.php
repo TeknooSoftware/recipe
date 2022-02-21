@@ -27,6 +27,7 @@ namespace Teknoo\Recipe\Bowl;
 
 use Fiber;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 
 /**
  * Bowl to execute a callable available into the workplan in a fiber, not available directly at the recipe writing
@@ -46,10 +47,15 @@ class DynamicFiberBowl extends AbstractDynamicBowl
     protected function processToExecution(
         callable $callable,
         ChefInterface $chef,
-        array &$workPlan
+        array &$workPlan,
+        ?CookingSupervisorInterface $cookingSupervisor,
     ): void {
         $fiber = new Fiber($callable);
-        $values = $this->extractParameters($callable, $chef, $workPlan, $fiber);
+        $values = $this->extractParameters($callable, $chef, $workPlan, $fiber, $cookingSupervisor);
+
+        if (null !== $cookingSupervisor) {
+            $cookingSupervisor->supervise($fiber);
+        }
 
         $fiber->start(...$values);
     }

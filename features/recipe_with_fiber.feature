@@ -85,6 +85,32 @@ Feature: Recipe with fiber
     Then I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "TransformableDateTime"
 
+  Scenario: Train a chef to cook with two dishes in same time
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define the step in fiber "fiberStep1" to do "Fiber::step" my recipe
+    When I define the step in fiber "fiberStep2" to do "Fiber::step" my recipe
+    When I define the step "checkSupervisor" to do "Fiber::checkSupervisorCount" my recipe
+    When I define the step "looping" to do "Fiber::looping" my recipe
+    When I define the excepted dish "IntBag" to my recipe
+    And I must obtain an IntBag with value "30"
+    Then I train the chef with the recipe
+    And It starts cooking with "0" as "IntBag"
+
+  Scenario: Train a chef to cook with several dishes in sames times with subrecipes
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define the step in fiber "fiberStep1" to do "Fiber::step" my recipe
+    And I create a subrecipe "subrecipe"
+    And With the step "increaseValue" to do "Fiber::step"
+    When I include the recipe "subrecipe" to "increaseInSubRecipe" in my recipe in fiber to call "3" times
+    When I define the step "checkSupervisor" to do "Fiber::checkSupervisorCount" my recipe
+    When I define the step "looping" to do "Fiber::looping" my recipe
+    When I define the excepted dish "IntBag" to my recipe
+    And I must obtain an IntBag with value "60"
+    Then I train the chef with the recipe
+    And It starts cooking with "0" as "IntBag"
+
   Scenario: Train a chef to cook a dish with merged ingredient
     Given I have an empty recipe
     And I have an untrained chef

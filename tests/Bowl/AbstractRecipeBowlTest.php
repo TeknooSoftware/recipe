@@ -29,6 +29,7 @@ use Teknoo\Recipe\Bowl\AbstractRecipeBowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Bowl\RecipeBowl;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\RecipeInterface;
 
 /**
@@ -60,7 +61,11 @@ abstract class AbstractRecipeBowlTest extends TestCase
         $this->expectException(\TypeError::class);
         $values = ['foo'=>'bar'];
         $this->buildBowl($this->createMock(RecipeInterface::class), 1)
-            ->execute(new \stdClass(), $values);
+            ->execute(
+                new \stdClass(),
+                $values,
+                $this->createMock(CookingSupervisorInterface::class),
+            );
     }
 
     public function testExceptionOnExecuteWithBadWorkPlan()
@@ -68,7 +73,23 @@ abstract class AbstractRecipeBowlTest extends TestCase
         $this->expectException(\TypeError::class);
         $values = new \stdClass();
         $this->buildBowl($this->createMock(RecipeInterface::class), 1)
-            ->execute($this->createMock(ChefInterface::class), $values);
+            ->execute(
+                $this->createMock(ChefInterface::class),
+                $values,
+                $this->createMock(CookingSupervisorInterface::class),
+            );
+    }
+
+    public function testExceptionOnExecuteWithBadSupervisor()
+    {
+        $this->expectException(\TypeError::class);
+        $values = [];
+        $this->buildBowl($this->createMock(RecipeInterface::class), 1)
+            ->execute(
+                $this->createMock(ChefInterface::class),
+                $values,
+                new \stdClass()
+            );
     }
 
     public function testExecuteWithBasicCounterWithRecipe()
@@ -94,7 +115,11 @@ abstract class AbstractRecipeBowlTest extends TestCase
 
         self::assertInstanceOf(
             AbstractRecipeBowl::class,
-            $bowl->execute($chef, $workplan)
+            $bowl->execute(
+                $chef,
+                $workplan,
+                $this->createMock(CookingSupervisorInterface::class),
+            )
         );
     }
 
@@ -131,7 +156,11 @@ abstract class AbstractRecipeBowlTest extends TestCase
 
         self::assertInstanceOf(
             AbstractRecipeBowl::class,
-            $bowl->execute($chef, $workplan)
+            $bowl->execute(
+                $chef,
+                $workplan,
+                $this->createMock(CookingSupervisorInterface::class),
+            )
         );
 
         self::assertEquals(
@@ -163,7 +192,11 @@ abstract class AbstractRecipeBowlTest extends TestCase
 
         self::assertInstanceOf(
             AbstractRecipeBowl::class,
-            $bowl->execute($chef, $workplan)
+            $bowl->execute(
+                $chef,
+                $workplan,
+                $this->createMock(CookingSupervisorInterface::class),
+            )
         );
     }
 
@@ -200,7 +233,11 @@ abstract class AbstractRecipeBowlTest extends TestCase
 
         self::assertInstanceOf(
             AbstractRecipeBowl::class,
-            $bowl->execute($chef, $workplan)
+            $bowl->execute(
+                $chef,
+                $workplan,
+                $this->createMock(CookingSupervisorInterface::class),
+            )
         );
 
         self::assertEquals(

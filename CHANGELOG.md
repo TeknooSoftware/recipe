@@ -9,8 +9,11 @@
 - Support `Fiber` into `Bowl` and `DynamicBowl` thanks to dynamics classes : 
   - callable will be automatically wrapped by a fiber, 
   - the fiber object will be available as parameter for bowls.
-- Add Fiber support to RecipeBowl, also in a dedicated class `FiberRecipeBowl`. 
+- Add `Fiber` support to RecipeBowl, also in a dedicated class `FiberRecipeBowl`. 
   The Fiber instance is also passed into workplan.
+- Add a `CookingSupervisorInterface` and its default implementation `CookingSupervisor` to manage
+  Bowls Fibers executions and loop on each active fiber.
+  `CookingSupervisor` are also available as parameter for bowls.
 
 ## [3.4.5] - 2022-02-09
 ### Stable Release
