@@ -28,6 +28,7 @@ namespace Teknoo\Recipe\Bowl;
 use Exception;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 
 /**
  * Default implementation of BowlInterface. A container with a callable to perform a step in a recipe.
@@ -74,9 +75,12 @@ class Bowl implements BowlInterface
     /**
      * @throws Exception
      */
-    public function execute(ChefInterface $chef, array &$workPlan): BowlInterface
-    {
-        $values = $this->extractParameters($this->callable, $chef, $workPlan);
+    public function execute(
+        ChefInterface $chef,
+        array &$workPlan,
+        ?CookingSupervisorInterface $cookingSupervisor = null,
+    ): BowlInterface {
+        $values = $this->extractParameters($this->callable, $chef, $workPlan, null, $cookingSupervisor);
 
         $callable = $this->callable;
         $callable(...$values);

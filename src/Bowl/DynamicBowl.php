@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Recipe\Bowl;
 
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 
 /**
  * Bowl to execute a callable available into the workplan, not available directly at the recipe writing
@@ -45,9 +46,10 @@ class DynamicBowl extends AbstractDynamicBowl
     protected function processToExecution(
         callable $callable,
         ChefInterface $chef,
-        array &$workPlan
+        array &$workPlan,
+        ?CookingSupervisorInterface $cookingSupervisor,
     ): void {
-        $values = $this->extractParameters($callable, $chef, $workPlan);
+        $values = $this->extractParameters($callable, $chef, $workPlan, null, $cookingSupervisor);
 
         $callable(...$values);
     }

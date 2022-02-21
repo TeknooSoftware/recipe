@@ -23,17 +23,10 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Recipe\Bowl;
-
-use Fiber;
-use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\CookingSupervisorInterface;
+namespace Teknoo\Recipe\CookingSupervisor;
 
 /**
- * Bowl to execute a new recipe, with a new trained chef provided by the current chef, but sharing the a clone of the
- * original workplan.
- *
- * @see BowlInterface
+ * Enum to list actions available on CookingSupervisorInterface
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
@@ -43,21 +36,10 @@ use Teknoo\Recipe\CookingSupervisorInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-class FiberRecipeBowl extends AbstractRecipeBowl
+enum Action: string
 {
-    protected function processToExecution(
-        ChefInterface $subchef,
-        ?CookingSupervisorInterface $cookingSupervisor,
-    ): void {
-        $fiber = new Fiber($subchef->process(...));
-
-        if (null !== $cookingSupervisor) {
-            $cookingSupervisor->supervise($fiber);
-        }
-
-        $fiber->start([
-            Fiber::class => $fiber,
-            CookingSupervisorInterface::class => $cookingSupervisor,
-        ]);
-    }
+    case Switch = 'switch';
+    case Throw = 'throw';
+    case Loop = 'loop';
+    case Finish = 'finish';
 }

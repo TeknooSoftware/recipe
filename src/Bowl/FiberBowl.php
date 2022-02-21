@@ -29,6 +29,7 @@ use Exception;
 use Fiber;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 
 /**
  * Fiber implementation of BowlInterface. A container with a callable to perform a step in a recipe.
@@ -76,10 +77,17 @@ class FiberBowl implements BowlInterface
     /**
      * @throws Exception
      */
-    public function execute(ChefInterface $chef, array &$workPlan): BowlInterface
-    {
+    public function execute(
+        ChefInterface $chef,
+        array &$workPlan,
+        ?CookingSupervisorInterface $cookingSupervisor = null,
+    ): BowlInterface {
         $fiber = new Fiber($this->callable);
-        $values = $this->extractParameters($this->callable, $chef, $workPlan, $fiber);
+        $values = $this->extractParameters($this->callable, $chef, $workPlan, $fiber, $cookingSupervisor);
+
+        if (null !== $cookingSupervisor) {
+            $cookingSupervisor->supervise($fiber);
+        }
 
         $fiber->start(...$values);
 

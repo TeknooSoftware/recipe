@@ -7,6 +7,7 @@ use PHPUnit\Framework\Assert;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
+use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\Dish\DishClass;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Teknoo\Recipe\Ingredient\Ingredient;
@@ -89,7 +90,43 @@ class FeatureContext implements Context
                 $immutable = \DateTimeImmutable::createFromMutable($datetime);
                 $chef->updateWorkPlan([\DateTimeImmutable::class => $immutable]);
                 Assert::assertEquals('createImmutable', $_methodName);
-            }
+            },
+            'Fiber::step' => static function (IntBag $bag) {
+                for ($i=0; $i<15; $i++) {
+                    Fiber::suspend();
+                    IntBag::increaseValue($bag);
+                }
+            },
+            'Fiber::checkSupervisorCount' => static function (CookingSupervisorInterface $supervisor) {
+                //Tests to check integrity of the cooking supervisor in a complex situation
+
+                $ro = new \ReflectionObject($supervisor);
+                $rp = $ro->getProperty('items');
+                $rp->setAccessible(true);
+                $iterator = $rp->getValue($supervisor);
+                $rp->setAccessible(false);
+                //They are only two fiber in the first scenario and one fiber and three supervisor
+                Assert::assertEquals(0, $iterator->count() % 2);
+
+                if (2 === $iterator->count()) {
+                    foreach ($iterator as $item) {
+                        Assert::assertInstanceOf(\Fiber::class, $item);
+                    }
+                } else {
+                    Assert::assertInstanceOf(\Fiber::class, $iterator->current());
+                    $iterator->next();
+                    Assert::assertInstanceOf(CookingSupervisorInterface::class, $iterator->current());
+                    $iterator->next();
+                    Assert::assertInstanceOf(CookingSupervisorInterface::class, $iterator->current());
+                    $iterator->next();
+                    Assert::assertInstanceOf(CookingSupervisorInterface::class, $iterator->current());
+                }
+
+                $iterator->rewind();
+            },
+            'Fiber::looping' => static function (CookingSupervisorInterface $supervisor) {
+                $supervisor->finish();
+            },
         ];
 
         static::$message = '';
@@ -419,6 +456,34 @@ class FeatureContext implements Context
         } else {
             $recipe = $this->subRecipes[$this->lastSubRecipeName]->cook(
                 $this->parseMethod($method),
+                $name
+            );
+        }
+
+        $this->setSubRecipe(
+            $this->lastSubRecipeName,
+            $recipe
+        );
+    }
+    /**
+     * @Given With the step in fiber :name to do :method
+     */
+    public function withTheStepInFiberToDo($name, $method)
+    {
+        $bowl = new \Teknoo\Recipe\Bowl\FiberBowl(
+            $this->parseMethod($method),
+            [],
+            $name
+        );
+
+        if ($this->subRecipes[$this->lastSubRecipeName] instanceof CookbookInterface) {
+            $recipe = $this->subRecipes[$this->lastSubRecipeName]->add(
+                $name,
+                $bowl
+            );
+        } else {
+            $recipe = $this->subRecipes[$this->lastSubRecipeName]->cook(
+                $bowl,
                 $name
             );
         }

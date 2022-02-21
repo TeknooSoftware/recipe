@@ -45,6 +45,11 @@ use Throwable;
 interface ChefInterface
 {
     /*
+     * Update cooking supervisor linked to this chef to manage fibers executions
+     */
+    public function setCookingSupervisor(CookingSupervisorInterface $supervisor): ChefInterface;
+
+    /*
      * To read and learn a recipe.
      */
     public function read(BaseRecipeInterface $recipe): ChefInterface;

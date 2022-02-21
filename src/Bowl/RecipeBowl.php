@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Recipe\Bowl;
 
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 
 /**
  * Bowl to execute a new recipe, with a new trained chef provided by the current chef, but sharing the a clone of the
@@ -43,8 +44,14 @@ use Teknoo\Recipe\ChefInterface;
  */
 class RecipeBowl extends AbstractRecipeBowl
 {
-    protected function processToExecution(ChefInterface $subchef): void
-    {
-        $subchef->process([]);
+    protected function processToExecution(
+        ChefInterface $subchef,
+        ?CookingSupervisorInterface $cookingSupervisor,
+    ): void {
+        $subchef->process(
+            [
+                CookingSupervisorInterface::class => $cookingSupervisor,
+            ]
+        );
     }
 }

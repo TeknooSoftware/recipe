@@ -29,6 +29,7 @@ use Exception;
 use RuntimeException;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 
 use function is_callable;
 use function sprintf;
@@ -112,14 +113,18 @@ abstract class AbstractDynamicBowl implements BowlInterface
     abstract protected function processToExecution(
         callable $callable,
         ChefInterface $chef,
-        array &$workPlan
+        array &$workPlan,
+        ?CookingSupervisorInterface $cookingSupervisor,
     ): void;
 
     /**
      * @throws Exception
      */
-    public function execute(ChefInterface $chef, array &$workPlan): BowlInterface
-    {
+    public function execute(
+        ChefInterface $chef,
+        array &$workPlan,
+        ?CookingSupervisorInterface $cookingSupervisor = null,
+    ): BowlInterface {
         $callable = $this->getCallable($workPlan);
 
         if (null === $callable && true === $this->throwIfNotExisting) {
@@ -134,7 +139,7 @@ abstract class AbstractDynamicBowl implements BowlInterface
 
         $this->checkToClearsParametersCache($callable);
 
-        $this->processToExecution($callable, $chef, $workPlan);
+        $this->processToExecution($callable, $chef, $workPlan, $cookingSupervisor);
 
         return $this;
     }

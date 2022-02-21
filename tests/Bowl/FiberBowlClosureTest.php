@@ -25,10 +25,10 @@ namespace Teknoo\Tests\Recipe\Bowl;
 
 use DateTime;
 use Fiber;
-use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Bowl\FiberBowl;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
@@ -56,10 +56,16 @@ class FiberBowlClosureTest extends AbstractBowlTest
             DateTime $date,
             $_methodName,
             Fiber $fiber,
+            CookingSupervisorInterface $cookingSupervisor,
         ) use ($that) {
             $that->assertInstanceOf(
                 Fiber::class,
                 $fiber
+            );
+
+            $that->assertInstanceOf(
+                CookingSupervisorInterface::class,
+                $cookingSupervisor
             );
 
             $chef->continue([
@@ -129,7 +135,8 @@ class FiberBowlClosureTest extends AbstractBowlTest
             BowlInterface::class,
             $bowl->execute(
                 $chef,
-                $values
+                $values,
+                $this->createMock(CookingSupervisorInterface::class)
             )
         );
     }

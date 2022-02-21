@@ -30,6 +30,7 @@ use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\CookbookInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Ingredient\MergeableInterface;
 use Teknoo\Recipe\RecipeInterface;
@@ -63,6 +64,22 @@ abstract class AbstractChefTest extends TestCase
         self::assertInstanceOf(
             ChefInterface::class,
             $this->buildChef()->read($recipe)
+        );
+    }
+
+    public function testExceptionOnSetCookingSupervisorWithBadSupervisor()
+    {
+        $this->expectException(\TypeError::class);
+        $this->buildChef()->setCookingSupervisor(new \stdClass());
+    }
+
+    public function testSetCookingSupervisor()
+    {
+        self::assertInstanceOf(
+            ChefInterface::class,
+            $this->buildChef()->setCookingSupervisor(
+                $this->createMock(CookingSupervisorInterface::class)
+            )
         );
     }
 

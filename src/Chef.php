@@ -102,8 +102,6 @@ class Chef implements AutomatedInterface, ChefInterface
 
     private bool $cooking = false;
 
-    private ?self $topChef = null;
-
     private bool $errorReporing = false;
 
     /**
@@ -136,17 +134,25 @@ class Chef implements AutomatedInterface, ChefInterface
         ];
     }
 
-    final public function __construct(BaseRecipeInterface $recipe = null, self $topChef = null)
-    {
+    final public function __construct(
+        BaseRecipeInterface $recipe = null,
+        private ?self $topChef = null,
+        private CookingSupervisorInterface $cookingSupervisor = new CookingSupervisor(),
+    ) {
         $this->initializeStateProxy();
-
-        $this->topChef = $topChef;
 
         $this->updateStates();
 
         if ($recipe instanceof BaseRecipeInterface) {
             $this->read($recipe);
         }
+    }
+
+    public function setCookingSupervisor(CookingSupervisorInterface $supervisor): ChefInterface
+    {
+        $this->cookingSupervisor = $supervisor;
+
+        return $this;
     }
 
     public function read(BaseRecipeInterface $recipe): ChefInterface

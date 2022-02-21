@@ -38,6 +38,7 @@ use ReflectionParameter;
 use ReflectionUnionType;
 use RuntimeException;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Teknoo\Recipe\Ingredient\TransformableInterface;
 
@@ -294,7 +295,8 @@ trait BowlTrait
         callable $callable,
         ChefInterface $chef,
         array &$workPlan,
-        ?Fiber $fiber = null,
+        ?Fiber $fiber,
+        ?CookingSupervisorInterface $cookingSupervisor,
     ): array {
         $values = [];
         foreach ($this->listParameters($callable) as $name => $parameter) {
@@ -305,6 +307,11 @@ trait BowlTrait
 
             if (null !== $fiber && $this->isInstanceOf($parameter, $fiber)) {
                 $values[] = $fiber;
+                continue;
+            }
+
+            if (null !== $cookingSupervisor && $this->isInstanceOf($parameter, $cookingSupervisor)) {
+                $values[] = $cookingSupervisor;
                 continue;
             }
 

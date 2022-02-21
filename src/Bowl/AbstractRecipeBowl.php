@@ -28,6 +28,7 @@ namespace Teknoo\Recipe\Bowl;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 
 use function is_numeric;
 
@@ -73,28 +74,48 @@ abstract class AbstractRecipeBowl implements BowlInterface
     /**
      * @param array<string, mixed> $workPlan
      */
-    private function checkLooping(ChefInterface $chef, int $counter, array &$workPlan): bool
-    {
+    private function checkLooping(
+        ChefInterface $chef,
+        int $counter,
+        array &$workPlan,
+        ?CookingSupervisorInterface $cookingSupervisor,
+    ): bool {
         if (is_numeric($this->repeat)) {
             //Strictly less because the step has been executed at least one time.
             return $counter < $this->repeat;
         }
 
         $loopWorkPlan = ['counter' => $counter, 'bowl' => $this] + $workPlan;
-        $this->repeat->execute($chef, $loopWorkPlan);
+        $this->repeat->execute($chef, $loopWorkPlan, $cookingSupervisor);
 
         return (true === $this->allowToLoop);
     }
 
-    abstract protected function processToExecution(ChefInterface $subchef): void;
+    abstract protected function processToExecution(
+        ChefInterface $subchef,
+        ?CookingSupervisorInterface $cookingSupervisor,
+    ): void;
 
-    public function execute(ChefInterface $chef, array &$workPlan): BowlInterface
-    {
+    public function execute(
+        ChefInterface $chef,
+        array &$workPlan,
+        ?CookingSupervisorInterface $cookingSupervisor = null,
+    ): BowlInterface {
         $counter = 0;
         do {
             $subchef = $chef->reserveAndBegin($this->recipe);
-            $this->processToExecution($subchef);
-        } while ($this->checkLooping($subchef, ++$counter, $workPlan));
+
+            $subSupervisor = null;
+            if (null !== $cookingSupervisor) {
+                $subSupervisor = clone $cookingSupervisor;
+
+                $subSupervisor->setParentSupervisor($cookingSupervisor);
+                $cookingSupervisor->manage($subSupervisor);
+                $subchef->setCookingSupervisor($subSupervisor);
+            }
+
+            $this->processToExecution($subchef, $subSupervisor);
+        } while ($this->checkLooping($subchef, ++$counter, $workPlan, $cookingSupervisor));
 
         return $this;
     }

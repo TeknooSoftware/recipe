@@ -6,6 +6,15 @@ parameters:
         -
             message: '#Generator expects value type [a-zA-Z0-9\\_]+, [a-zA-Z0-9\\_]+\|false given#'
             path: src/Recipe.php
+        -
+            message: '#expects Throwable, mixed given#'
+            path: src/CookingSupervisor.php
+        -
+            message: '#If condition is always false#'
+            path: src/CookingSupervisor.php
+        -
+            message: '#Strict comparison using === between false and Fiber#'
+            path: src/CookingSupervisor/FiberIterator.php
 services:
     -
         class: Teknoo\States\PHPStan\MethodsClassExtension

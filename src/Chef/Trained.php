@@ -169,7 +169,7 @@ class Trained implements StateInterface
             }
 
             foreach ($this->onError as $onError) {
-                $onError->execute($this, $this->workPlan);
+                $onError->execute($this, $this->workPlan, $this->cookingSupervisor);
             }
 
             if (null !== $this->topChef && true === $this->errorReporing) {
