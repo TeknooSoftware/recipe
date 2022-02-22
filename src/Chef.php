@@ -61,7 +61,7 @@ use Throwable;
  * @method ChefInterface mergeInMyWorkPlan(string $name, MergeableInterface $value)
  * @method ChefInterface removeFromMyWorkPlan(array $ingredients)
  * @method ChefInterface runRecipe(array $workPlan)
- * @method ChefInterface begin(RecipeInterface $recipe)
+ * @method ChefInterface begin(RecipeInterface $recipe, ?CookingSupervisorInterface $supervisor)
  * @method ChefInterface missingIngredient(IngredientInterface $ingredient, string $message)
  * @method ChefInterface continueRecipe(array $with = [], string $nextStep = null)
  * @method ChefInterface finishRecipe($result)
@@ -148,13 +148,6 @@ class Chef implements AutomatedInterface, ChefInterface
         }
     }
 
-    public function setCookingSupervisor(CookingSupervisorInterface $supervisor): ChefInterface
-    {
-        $this->cookingSupervisor = $supervisor;
-
-        return $this;
-    }
-
     public function read(BaseRecipeInterface $recipe): ChefInterface
     {
         if ($recipe instanceof RecipeInterface) {
@@ -166,9 +159,11 @@ class Chef implements AutomatedInterface, ChefInterface
         return $this;
     }
 
-    public function reserveAndBegin(BaseRecipeInterface $recipe): ChefInterface
-    {
-        return $this->begin($recipe);
+    public function reserveAndBegin(
+        BaseRecipeInterface $recipe,
+        ?CookingSupervisorInterface $supervisor = null,
+    ): ChefInterface {
+        return $this->begin($recipe, $supervisor);
     }
 
     public function missing(IngredientInterface $ingredient, string $message): ChefInterface

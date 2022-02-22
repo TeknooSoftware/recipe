@@ -30,6 +30,7 @@ use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\States\State\StateInterface;
@@ -64,8 +65,11 @@ class Cooking implements StateInterface
      */
     public function begin(): callable
     {
-        return function (BaseRecipeInterface $recipe): ChefInterface {
-            $chef = new static(null, $this, $this->cookingSupervisor);
+        return function (
+            BaseRecipeInterface $recipe,
+            ?CookingSupervisorInterface $supervisor,
+        ): ChefInterface {
+            $chef = new static(null, $this, $supervisor ?? $this->cookingSupervisor);
 
             if ($recipe instanceof RecipeInterface) {
                 $chef->read($recipe);

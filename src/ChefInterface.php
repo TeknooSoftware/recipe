@@ -45,11 +45,6 @@ use Throwable;
 interface ChefInterface
 {
     /*
-     * Update cooking supervisor linked to this chef to manage fibers executions
-     */
-    public function setCookingSupervisor(CookingSupervisorInterface $supervisor): ChefInterface;
-
-    /*
      * To read and learn a recipe.
      */
     public function read(BaseRecipeInterface $recipe): ChefInterface;
@@ -57,7 +52,10 @@ interface ChefInterface
     /*
      * To reserve the current recipe to begin a sub recipe with the actual workplan.
      */
-    public function reserveAndBegin(BaseRecipeInterface $recipe): ChefInterface;
+    public function reserveAndBegin(
+        BaseRecipeInterface $recipe,
+        ?CookingSupervisorInterface $supervisor = null,
+    ): ChefInterface;
 
     /*
      * To known when an ingredient missing in the work plan to start the cooking

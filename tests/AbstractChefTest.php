@@ -67,22 +67,6 @@ abstract class AbstractChefTest extends TestCase
         );
     }
 
-    public function testExceptionOnSetCookingSupervisorWithBadSupervisor()
-    {
-        $this->expectException(\TypeError::class);
-        $this->buildChef()->setCookingSupervisor(new \stdClass());
-    }
-
-    public function testSetCookingSupervisor()
-    {
-        self::assertInstanceOf(
-            ChefInterface::class,
-            $this->buildChef()->setCookingSupervisor(
-                $this->createMock(CookingSupervisorInterface::class)
-            )
-        );
-    }
-
     public function testReadWithCookbook()
     {
         $recipe = $this->createMock(CookbookInterface::class);
@@ -113,6 +97,13 @@ abstract class AbstractChefTest extends TestCase
     {
         $this->expectException(\TypeError::class);
         $this->buildChef()->reserveAndBegin(new \stdClass());
+    }
+
+    public function testReserveAndBeginChefWithBaseSupervisor()
+    {
+        $this->expectException(\TypeError::class);
+        $recipe = $this->createMock(BaseRecipeInterface::class);
+        $this->buildChef()->reserveAndBegin($recipe, new \stdClass());
     }
 
     public function testReserveAndBeginAvailableOnCookingWithRecipe()
@@ -165,7 +156,6 @@ abstract class AbstractChefTest extends TestCase
         );
     }
 
-
     public function testReserveAndBeginAvailableOnCookingWithBaseRecipe()
     {
         $mainRecipe = $this->createMock(RecipeInterface::class);
@@ -194,7 +184,7 @@ abstract class AbstractChefTest extends TestCase
             ->willReturnCallback(function (ChefInterface $chef) use ($step, $subRecipe) {
                 self::assertInstanceOf(
                     ChefInterface::class,
-                    $subchef = $chef->reserveAndBegin($subRecipe)
+                    $subchef = $chef->reserveAndBegin($subRecipe, $this->createMock(CookingSupervisorInterface::class))
                 );
 
                 self::assertNotSame(
@@ -244,7 +234,7 @@ abstract class AbstractChefTest extends TestCase
             ->willReturnCallback(function (ChefInterface $chef) use ($step, $subRecipe) {
                 self::assertInstanceOf(
                     ChefInterface::class,
-                    $subchef = $chef->reserveAndBegin($subRecipe)
+                    $subchef = $chef->reserveAndBegin($subRecipe, $this->createMock(CookingSupervisorInterface::class))
                 );
 
                 self::assertNotSame(

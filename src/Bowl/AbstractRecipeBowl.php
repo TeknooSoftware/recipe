@@ -103,17 +103,15 @@ abstract class AbstractRecipeBowl implements BowlInterface
     ): BowlInterface {
         $counter = 0;
         do {
-            $subchef = $chef->reserveAndBegin($this->recipe);
-
             $subSupervisor = null;
             if (null !== $cookingSupervisor) {
                 $subSupervisor = clone $cookingSupervisor;
 
                 $subSupervisor->setParentSupervisor($cookingSupervisor);
                 $cookingSupervisor->manage($subSupervisor);
-                $subchef->setCookingSupervisor($subSupervisor);
             }
 
+            $subchef = $chef->reserveAndBegin($this->recipe, $subSupervisor);
             $this->processToExecution($subchef, $subSupervisor);
         } while ($this->checkLooping($subchef, ++$counter, $workPlan, $cookingSupervisor));
 
