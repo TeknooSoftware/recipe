@@ -57,7 +57,6 @@ class FiberRecipeBowl extends AbstractRecipeBowl
 
         $fiber->start([
             Fiber::class => $fiber,
-            CookingSupervisorInterface::class => $cookingSupervisor,
         ]);
     }
 }

@@ -108,6 +108,19 @@ class CookingSupervisorTest extends TestCase
         );
     }
 
+    public function testSuperviseRunningFiber()
+    {
+        $this->expectException(\RuntimeException::class);
+        
+        $supervisor = $this->buildSupervisor();
+
+        $fiber = new Fiber(function($fiber) use ($supervisor) {
+            $supervisor->supervise($fiber);
+        });
+
+        $fiber->start($fiber);
+    }
+
     public function testManageBadArgumentSupervisor()
     {
         $this->expectException(TypeError::class);

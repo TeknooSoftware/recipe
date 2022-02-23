@@ -111,6 +111,22 @@ Feature: Recipe with fiber
     Then I train the chef with the recipe
     And It starts cooking with "0" as "IntBag"
 
+  Scenario: Train a chef to cook with several dishes in sames times with subsubrecipes
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define the step in fiber "fiberStep1" to do "Fiber::step" my recipe
+    And I create a subrecipe "subsubrecipe"
+    And With the step "increaseValue" to do "Fiber::step"
+    And I create a subrecipe "subrecipe"
+    When I include the recipe "subsubrecipe" to "increaseInSubRecipe" in my subrecipe in fiber to call "2" times
+    When I include the recipe "subrecipe" to "increaseInSubRecipe" in my recipe in fiber to call "3" times
+    When I define the step "checkSupervisor" to do "Fiber::checkSupervisorCount" my recipe
+    When I define the step "looping" to do "Fiber::looping" my recipe
+    When I define the excepted dish "IntBag" to my recipe
+    And I must obtain an IntBag with value "105"
+    Then I train the chef with the recipe
+    And It starts cooking with "0" as "IntBag"
+
   Scenario: Train a chef to cook a dish with merged ingredient
     Given I have an empty recipe
     And I have an untrained chef

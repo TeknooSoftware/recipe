@@ -105,8 +105,6 @@ class FeatureContext implements Context
                 $rp->setAccessible(true);
                 $iterator = $rp->getValue($supervisor);
                 $rp->setAccessible(false);
-                //They are only two fiber in the first scenario and one fiber and three supervisor
-                Assert::assertEquals(0, $iterator->count() % 2);
 
                 if (2 === $iterator->count()) {
                     foreach ($iterator as $item) {
@@ -117,9 +115,15 @@ class FeatureContext implements Context
                     $iterator->next();
                     Assert::assertInstanceOf(CookingSupervisorInterface::class, $iterator->current());
                     $iterator->next();
-                    Assert::assertInstanceOf(CookingSupervisorInterface::class, $iterator->current());
+                    Assert::assertInstanceOf(\Fiber::class, $iterator->current());
                     $iterator->next();
                     Assert::assertInstanceOf(CookingSupervisorInterface::class, $iterator->current());
+                    $iterator->next();
+                    Assert::assertInstanceOf(\Fiber::class, $iterator->current());
+                    $iterator->next();
+                    Assert::assertInstanceOf(CookingSupervisorInterface::class, $iterator->current());
+                    $iterator->next();
+                    Assert::assertInstanceOf(\Fiber::class, $iterator->current());
                 }
 
                 $iterator->rewind();
@@ -550,6 +554,24 @@ class FeatureContext implements Context
                 repeat: (int) $count,
                 inFiber: true
             )
+        );
+    }
+
+    /**
+     * @When I include the recipe :name to :method in my subrecipe in fiber to call :count times
+     */
+    public function iIncludeTheRecipeToInMySubRecipeInFiberToCallTimes($name, $method, $count)
+    {
+        $recipe = $this->subRecipes[$this->lastSubRecipeName]->execute(
+            recipe: $this->subRecipes[$name],
+            name: $method,
+            repeat: (int) $count,
+            inFiber: true
+        );
+
+        $this->setSubRecipe(
+            $this->lastSubRecipeName,
+            $recipe
         );
     }
 
