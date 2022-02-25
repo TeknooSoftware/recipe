@@ -104,10 +104,13 @@ This library requires PHP 8.1 or newer. Some change causes bc breaks.
 - Constant `BowlInterface::METHOD_NAME` is final.
 - Support `Fiber` into `Promise`.
 - Support `Fiber` into `Bowl` and `DynamicBowl` thanks to dynamics classes :
-    - callable will be automatically wrapped by a fiber,
-    - the fiber object will be available as parameter for bowls.
-- Add Fiber support to RecipeBowl, also in a dedicated class `FiberRecipeBowl`.
+  - callable will be automatically wrapped by a fiber,
+  - the fiber object will be available as parameter for bowls.
+- Add `Fiber` support to RecipeBowl, also in a dedicated class `FiberRecipeBowl`.
   The Fiber instance is also passed into workplan.
+- Add a `CookingSupervisorInterface` and its default implementation `CookingSupervisor` to manage
+  Bowls Fibers executions and loop on each active fiber.
+  `CookingSupervisor` are also available as parameter for bowls.
 
 News from Teknoo Recipe 3.1
 ----------------------------
