@@ -102,6 +102,14 @@ abstract class AbstractRecipeBowlTest extends TestCase
 
         $workplan = ['foo' => 'bar'];
 
+        $chef->expects(self::never())
+            ->method('updateWorkPlan');
+
+        $subchef->expects(self::exactly(2))
+            ->method('updateWorkPlan')
+            ->with($workplan)
+            ->willReturnSelf();
+
         $chef->expects(self::exactly(2))
             ->method('reserveAndBegin')
             ->with($recipe)
@@ -143,6 +151,14 @@ abstract class AbstractRecipeBowlTest extends TestCase
 
         $workplan = ['foo' => 'bar'];
 
+        $chef->expects(self::never())
+            ->method('updateWorkPlan');
+
+        $subchef->expects(self::exactly(3))
+            ->method('updateWorkPlan')
+            ->with($workplan)
+            ->willReturnSelf();
+
         $chef->expects(self::exactly(3))
             ->method('reserveAndBegin')
             ->with($recipe)
@@ -178,6 +194,14 @@ abstract class AbstractRecipeBowlTest extends TestCase
         $subchef = $this->createMock(ChefInterface::class);
 
         $workplan = ['foo' => 'bar'];
+
+        $chef->expects(self::never())
+            ->method('updateWorkPlan');
+
+        $subchef->expects(self::exactly(2))
+            ->method('updateWorkPlan')
+            ->with($workplan)
+            ->willReturnSelf();
 
         $chef->expects(self::exactly(2))
             ->method('reserveAndBegin')
@@ -219,6 +243,14 @@ abstract class AbstractRecipeBowlTest extends TestCase
         $subchef = $this->createMock(ChefInterface::class);
 
         $workplan = ['foo' => 'bar'];
+
+        $chef->expects(self::never())
+            ->method('updateWorkPlan');
+
+        $subchef->expects(self::exactly(3))
+            ->method('updateWorkPlan')
+            ->with($workplan)
+            ->willReturnSelf();
 
         $chef->expects(self::exactly(3))
             ->method('reserveAndBegin')

@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.0.1] - 2022-02-27
+### Stable Release
+- Fix issue with `RecipeBowl` and `FiberRecipeBowl`, workplan was not updated after reserving
+
 ## [4.0.0] - 2022-02-10
 ### Stable Release
 - Remove PHP 8.0 support.

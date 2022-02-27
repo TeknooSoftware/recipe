@@ -111,6 +111,7 @@ abstract class AbstractRecipeBowl implements BowlInterface
             }
 
             $subchef = $chef->reserveAndBegin($this->recipe, $subSupervisor);
+            $subchef->updateWorkPlan($workPlan);
             $this->processToExecution($subchef, $cookingSupervisor);
         } while ($this->checkLooping($subchef, ++$counter, $workPlan, $cookingSupervisor));
 
