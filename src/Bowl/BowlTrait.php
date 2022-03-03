@@ -45,6 +45,7 @@ use Teknoo\Recipe\Ingredient\TransformableInterface;
 use function class_exists;
 use function current;
 use function is_array;
+use function is_callable;
 use function is_object;
 use function is_string;
 use function next;
@@ -204,7 +205,7 @@ trait BowlTrait
         array &$workPlan,
         array &$values,
         bool $allowTransform,
-        ?string $transformClassName
+        ?string $transformClassName,
     ): bool {
         $automaticValueFound = false;
 
@@ -318,10 +319,12 @@ trait BowlTrait
             //Check if we must transform an ingredient before put it into the bowl
             $allowTransform = false;
             $transformClassName = null;
+            $transformer = null;
             if (!empty($attributes = $parameter->getAttributes(Transform::class))) {
                 /** @var Transform $attr */
                 $attr = $attributes[0]->newInstance();
                 $transformClassName = $attr->getClassName();
+                $transformer = $attr->getTransformer();
                 $allowTransform = true;
             }
 
@@ -353,7 +356,7 @@ trait BowlTrait
                     $workPlan,
                     $values,
                     $allowTransform,
-                    $transformClassName
+                    $transformClassName,
                 ) => $skip = true,
 
                 //Special name `_methodName`
@@ -372,11 +375,17 @@ trait BowlTrait
                 continue;
             }
 
-            if ($allowTransform && $tempValue instanceof TransformableInterface) {
-                $values[] = $tempValue->transform();
-            } else {
-                $values[] = $tempValue;
+            if ($allowTransform) {
+                if (is_callable($transformer)) {
+                    $tempValue = $transformer($tempValue);
+                }
+
+                if ($tempValue instanceof TransformableInterface) {
+                    $tempValue = $tempValue->transform();
+                }
             }
+
+            $values[] = $tempValue;
         }
 
         return $values;

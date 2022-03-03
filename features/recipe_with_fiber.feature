@@ -67,6 +67,15 @@ Feature: Recipe with fiber
     Then I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "TransformableDateTime"
 
+  Scenario: Train a chef to cook a dish with a transformed ingredient via a transformer
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define the step in fiber "createImmutable" to do "FeatureContext::passDateWithTransformer" my recipe
+    And I define the excepted dish "DateTime" to my recipe
+    And I must obtain an Mutable DateTime at "2017-07-01 10:00:00"
+    Then I train the chef with the recipe
+    And It starts cooking with "2017-07-01 10:00:00" as "string"
+
   Scenario: Train a chef to cook a dish with a transformed non-named ingredient
     Given I have an empty recipe
     And I have an untrained chef
@@ -75,6 +84,15 @@ Feature: Recipe with fiber
     And I must obtain an Mutable DateTime at "2017-07-01 10:00:00"
     Then I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "TransformableDateTime"
+
+  Scenario: Train a chef to cook a dish with a transformed non-named ingredient via a transformer
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define the step in fiber "createImmutable" to do "FeatureContext::passDateWithTransformerNonNamed" my recipe
+    And I define the excepted dish "DateTime" to my recipe
+    And I must obtain an Mutable DateTime at "2017-07-01 10:00:00"
+    Then I train the chef with the recipe
+    And It starts cooking with "2017-07-01 10:00:00" as "string"
 
   Scenario: Train a chef to cook a dish with transformable ingredient
     Given I have an empty recipe

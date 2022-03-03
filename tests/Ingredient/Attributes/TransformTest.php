@@ -66,4 +66,27 @@ class TransformTest extends TestCase
         $this->expectException(\RuntimeException::class);
         new Transform('fooBar');
     }
+
+    public function testValidTransformer()
+    {
+        $callable = function () {};
+        self::assertInstanceOf(
+            Transform::class,
+            $transform = new Transform(
+                null,
+                $callable
+            )
+        );
+
+        self::assertEquals(
+            $callable,
+            $transform->getTransformer()
+        );
+    }
+
+    public function testInvalidTransformer()
+    {
+        $this->expectException(\TypeError::class);
+        new Transform(null, 'fooBar');
+    }
 }

@@ -1,5 +1,11 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.1.0] - 2022-03-03
+### Stable Release
+- Add transformer option to `#[Trasnform]` to use a callable instead an object
+ with the interface `TransformableInterface`. 
+ The callable can also return a Transformable object.
+
 ## [4.0.1] - 2022-02-27
 ### Stable Release
 - Fix issue with `RecipeBowl` and `FiberRecipeBowl`, workplan was not updated after reserving

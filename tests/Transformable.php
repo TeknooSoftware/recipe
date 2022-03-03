@@ -23,6 +23,7 @@
 
 namespace Teknoo\Tests\Recipe;
 
+use DateTime;
 use Teknoo\Recipe\Ingredient\TransformableInterface;
 
 class Transformable implements TransformableInterface
@@ -35,5 +36,10 @@ class Transformable implements TransformableInterface
     public function transform(): mixed
     {
         return $this->values;
+    }
+
+    public static function toTransformable(mixed $value): self
+    {
+        return new self(new DateTime($value));
     }
 }

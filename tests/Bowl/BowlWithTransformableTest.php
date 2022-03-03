@@ -29,6 +29,7 @@ use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Teknoo\Tests\Recipe\Transformable;
+use function explode;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
@@ -114,6 +115,54 @@ class BowlWithTransformableTest extends TestCase
         $this->called = true;
     }
 
+    public static function transformerToArray(string $value) : array
+    {
+        return explode('-', $value);
+    }
+
+    public static function transformerToArray2(string $value) : Transformable
+    {
+        return new Transformable(explode('-', $value));
+    }
+
+    public function transformWithTransformer(
+        string $param1,
+        #[Transform(null, [self::class, 'transformerToArray2'])] array $param2
+    ) {
+        self::assertEquals(
+            'foo',
+            $param1
+        );
+
+        self::assertIsArray($param2);
+
+        self::assertEquals(
+            ['foo', 'bar'],
+            $param2
+        );
+
+        $this->called = true;
+    }
+
+    public function transformHintingWithClassAndTransformer(
+        string $param1,
+        #[Transform(Transformable::class, [self::class, 'transformerToArray'])] array $anotherName
+    ) {
+        self::assertEquals(
+            'foo',
+            $param1
+        );
+
+        self::assertIsArray($anotherName);
+
+        self::assertEquals(
+            ['foo', 'bar'],
+            $anotherName
+        );
+
+        $this->called = true;
+    }
+
     public function testWithoutAttributeTransform()
     {
         $workplan = [
@@ -186,6 +235,46 @@ class BowlWithTransformableTest extends TestCase
         self::assertInstanceOf(
             BowlInterface::class,
             (new Bowl([$this, 'transformHintingWithClass'], []))->execute(
+                $this->createMock(ChefInterface::class),
+                $workplan
+            )
+        );
+
+        self::assertTrue($this->called);
+    }
+
+    public function testWithAttributeTransformWithTransformer()
+    {
+        $workplan = [
+            'param1' => 'foo',
+            'param2' => 'foo-bar'
+        ];
+
+        $this->called = false;
+
+        self::assertInstanceOf(
+            BowlInterface::class,
+            (new Bowl([$this, 'transformWithTransformer'], []))->execute(
+                $this->createMock(ChefInterface::class),
+                $workplan
+            )
+        );
+
+        self::assertTrue($this->called);
+    }
+
+    public function testWithAttributeTransformWithTypeHintingWithClassAndWithTransformer()
+    {
+        $workplan = [
+            'param1' => 'foo',
+            'param2' => 'foo-bar',
+        ];
+
+        $this->called = false;
+
+        self::assertInstanceOf(
+            BowlInterface::class,
+            (new Bowl([$this, 'transformWithTransformer'], []))->execute(
                 $this->createMock(ChefInterface::class),
                 $workplan
             )

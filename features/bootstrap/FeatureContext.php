@@ -277,8 +277,13 @@ class FeatureContext implements Context
     {
         $value = match ($name) {
             'TransformableDateTime' => new Transformable(new \DateTime($value)),
+            'string' => $value,
             default => $value
         };
+
+        if ('string' === $name) {
+            $name = 'TransformableDateTime';
+        }
 
         if (null !== $this->secondVar) {
             $this->workPlan[$this->secondVar] = \md5($this->secondVar);
@@ -665,6 +670,20 @@ class FeatureContext implements Context
     }
 
     public static function passDateWithTransformNonNamed(#[Transform(Transformable::class)] \DateTime $transformableDateTime, ChefInterface $chef)
+    {
+        Assert::assertInstanceOf(\DateTime::class, $transformableDateTime);
+
+        $chef->updateWorkPlan([\DateTime::class => $transformableDateTime]);
+    }
+
+    public static function passDateWithTransformer(#[Transform(transformer: [Transformable::class, 'toTransformable'])] \DateTime $transformableDateTime, ChefInterface $chef)
+    {
+        Assert::assertInstanceOf(\DateTime::class, $transformableDateTime);
+
+        $chef->updateWorkPlan([\DateTime::class => $transformableDateTime]);
+    }
+
+    public static function passDateWithTransformerNonNamed(#[Transform(Transformable::class, [Transformable::class, 'toTransformable'])] \DateTime $transformableDateTime, ChefInterface $chef)
     {
         Assert::assertInstanceOf(\DateTime::class, $transformableDateTime);
 
