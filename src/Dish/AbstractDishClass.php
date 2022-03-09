@@ -46,6 +46,9 @@ abstract class AbstractDishClass implements DishInterface
 {
     use ImmutableTrait;
 
+    /**
+     * @param PromiseInterface<mixed, mixed> $promise
+     */
     public function __construct(
         private readonly PromiseInterface $promise
     ) {

@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.1.2] - 2022-03-09
+### Stable Release
+- Add templates on `PromiseInterface` to improve QA
+
 ## [4.1.1] - 2022-03-08
 ### Stable Release
 - Require Immutable 3.0.1 or later

@@ -40,6 +40,12 @@ use Fiber;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @template TSuccessArgType
+ * @template TResultType
+ * @template TNextSuccessArgType
+ *
+ * @extends  AbstractPromise<TSuccessArgType, TResultType, TNextSuccessArgType>
  */
 class FiberPromise extends AbstractPromise
 {

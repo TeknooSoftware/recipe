@@ -40,38 +40,52 @@ use Throwable;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @template TSuccessArgType
+ * @template TResultType
  */
 interface PromiseInterface extends ImmutableInterface
 {
-    /*
+    /**
      * To define a new promise to pass to the called callback.
+     *
+     * @param PromiseInterface<mixed, TResultType>|null $promise
+     * @return PromiseInterface<TSuccessArgType, TResultType>
      */
     public function next(?PromiseInterface $promise = null): PromiseInterface;
 
-    /*
-    * To call the callback defined when the actor has successfully it's operation.
-    */
+    /**
+     * To call the callback defined when the actor has successfully it's operation.
+     *
+     * @param TSuccessArgType|null $result
+     * @return PromiseInterface<TSuccessArgType, TResultType>
+     */
     public function success(mixed $result = null): PromiseInterface;
 
-    /*
+    /**
      * To call the callback defined when an error has been occurred.
+     * @return PromiseInterface<TSuccessArgType, TResultType>
      */
     public function fail(Throwable $throwable): PromiseInterface;
 
-    /*
+    /**
      * To get the returned value by the callback on the promise (Can be null if the callback return nothing).
      * (Not east compliant, but useful to integrate east code with an non-east code).
      * If the promise was not called, the method will throw an exception.
+     *
+     * @return TResultType
      */
     public function fetchResult(): mixed;
 
-    /*
+    /**
      * To get the returned value by the callback on the promise (Can be null if the callback return nothing).
      * (Not east compliant, but useful to integrate east code with an non-east code).
      * If the promise was not called, the method will return $default value.
-     */
-    /**
+     *
      * @internal
+     *
+     * @param TResultType $default
+     * @return TResultType
      */
     public function fetchResultIfCalled(mixed $default): mixed;
 }

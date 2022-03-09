@@ -44,11 +44,20 @@ use function is_callable;
  *
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
+ *
+ * @template TSuccessArgType
+ * @template TResultType
+ * @template TNextSuccessArgType
+ *
+ * @implements PromiseInterface<TSuccessArgType, TResultType>
  */
 abstract class AbstractPromise implements PromiseInterface
 {
     use ImmutableTrait;
 
+    /**
+     * @var PromiseInterface<TNextSuccessArgType, TResultType>|null
+     */
     private ?PromiseInterface $nextPromise = null;
 
     /**
@@ -76,6 +85,9 @@ abstract class AbstractPromise implements PromiseInterface
         $this->onFail = $onFail;
     }
 
+    /**
+     * @param PromiseInterface<TNextSuccessArgType, TResultType>|null $promise
+     */
     public function next(?PromiseInterface $promise = null): PromiseInterface
     {
         if (false === $this->allowNext) {
