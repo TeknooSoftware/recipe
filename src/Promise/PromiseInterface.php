@@ -41,15 +41,15 @@ use Throwable;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  *
- * @template TSuccessArgType
- * @template TResultType
+ * @template-covariant TSuccessArgType
+ * @template-covariant TResultType
  */
 interface PromiseInterface extends ImmutableInterface
 {
     /**
      * To define a new promise to pass to the called callback.
      *
-     * @param PromiseInterface<mixed, TResultType>|null $promise
+     * @param PromiseInterface<TSuccessArgType, TResultType>|null $promise
      * @return PromiseInterface<TSuccessArgType, TResultType>
      */
     public function next(?PromiseInterface $promise = null): PromiseInterface;
