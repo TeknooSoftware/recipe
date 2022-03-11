@@ -73,7 +73,7 @@ interface PromiseInterface extends ImmutableInterface
      * (Not east compliant, but useful to integrate east code with an non-east code).
      * If the promise was not called, the method will throw an exception.
      *
-     * @return TResultType
+     * @return null|TResultType
      */
     public function fetchResult(): mixed;
 
@@ -85,7 +85,7 @@ interface PromiseInterface extends ImmutableInterface
      * @internal
      *
      * @param TResultType $default
-     * @return TResultType
+     * @return null|TResultType
      */
     public function fetchResultIfCalled(mixed $default): mixed;
 }
