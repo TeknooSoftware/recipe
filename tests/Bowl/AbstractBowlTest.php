@@ -111,7 +111,7 @@ abstract class AbstractBowlTest extends TestCase
 
     public function testExceptionWhenExecuteAndMissingAndIngredientInWorkPlan()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\BadMethodCallException::class);
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects(self::never())
             ->method('continue');

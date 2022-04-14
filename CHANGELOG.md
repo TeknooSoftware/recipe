@@ -1,5 +1,10 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.1.3] - 2022-04-14
+### Stable Release
+- Complete errors messages in bowl when missed parameter's value or bad parameter definition
+  to help to debug
+
 ## [4.1.2] - 2022-03-09
 ### Stable Release
 - Add templates on `PromiseInterface` to improve QA

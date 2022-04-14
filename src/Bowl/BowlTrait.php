@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Bowl;
 
+use BadMethodCallException;
 use Closure;
 use Exception;
 use Fiber;
@@ -50,6 +51,7 @@ use function is_object;
 use function is_string;
 use function next;
 use function reset;
+use function sprintf;
 
 /**
  * Default base implementation for Bowl to manage parameter mapping with the workplan's ingredients.
@@ -258,7 +260,15 @@ trait BowlTrait
             $className = $type->getName();
             if ('self' === $className) {
                 if (null === ($declaringClass = $parameter->getDeclaringClass())) {
-                    throw new RuntimeException("Can not fetch declaring class from 'self' for parameter in this bowl");
+                    $function = $parameter->getDeclaringFunction();
+                    throw new RuntimeException(
+                        sprintf(
+                            "Can not fetch declaring class from 'self' for parameter in this bowl for %s in %s:%s",
+                            $function->getName(),
+                            $function->getFileName(),
+                            $function->getStartLine(),
+                        )
+                    );
                 }
 
                 return $declaringClass->isInstance($instance);
@@ -363,8 +373,16 @@ trait BowlTrait
                 BowlInterface::METHOD_NAME === $name => $this->name,
 
                 //Not found, if it is not optional, throw an exception
-                !$parameter->isOptional() => throw new RuntimeException(
-                    "Missing the parameter {$parameter->getName()} ({$name}) in the WorkPlan"
+                !$parameter->isOptional() => throw new BadMethodCallException(
+                    sprintf(
+                        "Missing the parameter %s (%s) in the WorkPlan for %s::%s in %s:%s",
+                        $parameter->getName(),
+                        $name,
+                        $parameter->getDeclaringClass()?->getName(),
+                        $parameter->getDeclaringFunction()->getName(),
+                        $parameter->getDeclaringFunction()->getFileName(),
+                        $parameter->getDeclaringFunction()->getStartLine(),
+                    )
                 ),
 
                 //Return the default value
