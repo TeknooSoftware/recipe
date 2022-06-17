@@ -33,7 +33,7 @@ phpstan:
 	${PHP} -d memory_limit=256M vendor/bin/phpstan analyse src --level max
 
 phpcs:
-	${PHP} vendor/bin/phpcs --ignore=src/CookingSupervisor/Action.php --standard=PSR12 --extensions=php src/
+	${PHP} vendor/bin/phpcs --standard=PSR12 --extensions=php src/
 
 phpcpd:
 	${PHP} vendor/bin/phpcpd src/

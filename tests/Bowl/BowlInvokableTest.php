@@ -56,7 +56,6 @@ class BowlInvokableTest extends AbstractBowlTest
                 ]);
             }
         };
-
         return $object;
     }
 

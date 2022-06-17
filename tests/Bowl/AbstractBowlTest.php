@@ -58,9 +58,6 @@ abstract class AbstractBowlTest extends TestCase
         $this->buildBowl()->execute($this->createMock(ChefInterface::class), $values);
     }
 
-    /**
-     * @return array
-     */
     protected function getValidWorkPlan(): array
     {
         return [
@@ -99,9 +96,6 @@ abstract class AbstractBowlTest extends TestCase
         );
     }
 
-    /**
-     * @return array
-     */
     protected function getNotValidWorkPlan(): array
     {
         return [

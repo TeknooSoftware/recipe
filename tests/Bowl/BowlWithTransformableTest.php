@@ -174,7 +174,7 @@ class BowlWithTransformableTest extends TestCase
 
         self::assertInstanceOf(
             BowlInterface::class,
-            (new Bowl([$this, 'noTransform'], []))->execute(
+            (new Bowl($this->noTransform(...), []))->execute(
                 $this->createMock(ChefInterface::class),
                 $workplan
             )
@@ -194,7 +194,7 @@ class BowlWithTransformableTest extends TestCase
 
         self::assertInstanceOf(
             BowlInterface::class,
-            (new Bowl([$this, 'transformNoHinting'], []))->execute(
+            (new Bowl($this->transformNoHinting(...), []))->execute(
                 $this->createMock(ChefInterface::class),
                 $workplan
             )
@@ -214,7 +214,7 @@ class BowlWithTransformableTest extends TestCase
 
         self::assertInstanceOf(
             BowlInterface::class,
-            (new Bowl([$this, 'transformHinting'], []))->execute(
+            (new Bowl($this->transformHinting(...), []))->execute(
                 $this->createMock(ChefInterface::class),
                 $workplan
             )
@@ -234,7 +234,7 @@ class BowlWithTransformableTest extends TestCase
 
         self::assertInstanceOf(
             BowlInterface::class,
-            (new Bowl([$this, 'transformHintingWithClass'], []))->execute(
+            (new Bowl($this->transformHintingWithClass(...), []))->execute(
                 $this->createMock(ChefInterface::class),
                 $workplan
             )
@@ -254,7 +254,7 @@ class BowlWithTransformableTest extends TestCase
 
         self::assertInstanceOf(
             BowlInterface::class,
-            (new Bowl([$this, 'transformWithTransformer'], []))->execute(
+            (new Bowl($this->transformWithTransformer(...), []))->execute(
                 $this->createMock(ChefInterface::class),
                 $workplan
             )
@@ -274,7 +274,7 @@ class BowlWithTransformableTest extends TestCase
 
         self::assertInstanceOf(
             BowlInterface::class,
-            (new Bowl([$this, 'transformWithTransformer'], []))->execute(
+            (new Bowl($this->transformWithTransformer(...), []))->execute(
                 $this->createMock(ChefInterface::class),
                 $workplan
             )

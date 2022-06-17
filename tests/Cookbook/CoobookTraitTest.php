@@ -65,7 +65,7 @@ class CoobookTraitTest extends TestCase
                     'convertToUTC'
                 );
 
-                $recipe = $recipe->cook(
+                return $recipe->cook(
                     function (\DateTime $date, ChefInterface $chef): void {
                         $immutable = \DateTimeImmutable::createFromMutable($date);
 
@@ -73,8 +73,6 @@ class CoobookTraitTest extends TestCase
                     },
                     'immutableDate'
                 );
-
-                return $recipe;
             }
         };
     }

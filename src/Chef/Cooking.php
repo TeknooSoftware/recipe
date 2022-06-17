@@ -79,7 +79,7 @@ class Cooking implements StateInterface
             }
 
             $recipe->train($chef);
-            $chef->workPlan = $chef->workPlan + $this->workPlan;
+            $chef->workPlan += $this->workPlan;
 
             return $chef;
         };

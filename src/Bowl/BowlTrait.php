@@ -103,9 +103,8 @@ trait BowlTrait
      */
     private static function getReflectionClass(string $objectOrClass): ReflectionClass
     {
-        $getter = static function () use ($objectOrClass): ReflectionClass {
-            return self::$reflectionsClasses[$objectOrClass] = new ReflectionClass($objectOrClass);
-        };
+        $getter = static fn(): ReflectionClass =>
+            self::$reflectionsClasses[$objectOrClass] = new ReflectionClass($objectOrClass);
 
         return self::$reflectionsClasses[$objectOrClass] ?? $getter();
     }
@@ -130,9 +129,8 @@ trait BowlTrait
 
     private static function getReflectionFunction(string $function): ReflectionFunction
     {
-        $getter = static function () use ($function): ReflectionFunction {
-            return self::$reflectionsFunctions[$function] = new ReflectionFunction($function);
-        };
+        $getter = static fn(): ReflectionFunction =>
+            self::$reflectionsFunctions[$function] = new ReflectionFunction($function);
 
         return self::$reflectionsFunctions[$function] ?? $getter();
     }

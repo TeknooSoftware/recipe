@@ -584,7 +584,7 @@ abstract class AbstractChefTest extends TestCase
         $bowl = $this->createMock(BowlInterface::class);
         $bowl->expects(self::once())
             ->method('execute')
-            ->willReturnCallback(function () {
+            ->willReturnCallback(function (): never {
                 throw new RuntimeException('fooBar');
             });
 
@@ -609,7 +609,7 @@ abstract class AbstractChefTest extends TestCase
         $bowl = $this->createMock(BowlInterface::class);
         $bowl->expects(self::once())
             ->method('execute')
-            ->willReturnCallback(function () use (&$called) {
+            ->willReturnCallback(function () use (&$called): never {
                 throw new RuntimeException('fooBar');
             });
 
@@ -646,7 +646,7 @@ abstract class AbstractChefTest extends TestCase
         $bowl1 = $this->createMock(BowlInterface::class);
         $bowl1->expects(self::once())
             ->method('execute')
-            ->willReturnCallback(function () use (&$called) {
+            ->willReturnCallback(function () use (&$called): never {
                 throw new RuntimeException('fooBar');
             });
 

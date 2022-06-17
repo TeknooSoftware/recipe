@@ -56,7 +56,6 @@ class DynamicBowlInvokableTest extends AbstractBowlTest
                 ]);
             }
         };
-
         return $object;
     }
 

@@ -50,18 +50,13 @@ abstract class AbstractRecipeBowl implements BowlInterface
 {
     use ImmutableTrait;
 
-    private BaseRecipeInterface $recipe;
-
-    private int | BowlInterface $repeat;
-
     private bool $allowToLoop = true;
 
-    public function __construct(BaseRecipeInterface $recipe, int | BowlInterface $repeat)
-    {
+    public function __construct(
+        private readonly BaseRecipeInterface $recipe,
+        private readonly int | BowlInterface $repeat
+    ) {
         $this->uniqueConstructorCheck();
-
-        $this->recipe = $recipe;
-        $this->repeat = $repeat;
     }
 
     public function stopLooping(): self

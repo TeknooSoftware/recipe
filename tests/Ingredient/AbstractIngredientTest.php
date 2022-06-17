@@ -45,24 +45,12 @@ abstract class AbstractIngredientTest extends TestCase
      */
     abstract public function buildIngredient(): IngredientInterface;
 
-    /**
-     * @return array
-     */
     abstract public function getWorkPlanValid(): array;
 
-    /**
-     * @return array
-     */
     abstract public function getWorkPlanInvalidMissing(): array;
 
-    /**
-     * @return array
-     */
     abstract public function getWorkPlanInvalidNotInstanceOf(): array;
 
-    /**
-     * @return array
-     */
     abstract public function getWorkPlanInjected(): array;
 
     public function testExceptionOnPrepareWhenWorkPlanIsNotAnArray()

@@ -150,7 +150,7 @@ class Draft implements StateInterface
                 $repeat = new Bowl($repeat, []);
             }
 
-            if (false === $inFiber) {
+            if (!$inFiber) {
                 $callable = new RecipeBowl($recipe, $repeat);
             } else {
                 $callable = new FiberRecipeBowl($recipe, $repeat);

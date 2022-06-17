@@ -51,7 +51,7 @@ class Transform
     private $transformer = null;
 
     public function __construct(
-        private ?string $className = null,
+        private readonly ?string $className = null,
         ?callable $transformer = null,
     ) {
         if (!empty($this->className) && !class_exists($this->className)) {

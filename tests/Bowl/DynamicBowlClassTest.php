@@ -42,11 +42,14 @@ use Teknoo\Recipe\ChefInterface;
  */
 class DynamicBowlClassTest extends AbstractBowlTest
 {
+    /**
+     * @param \DateTime|\DateTimeImmutable $date
+     */
     public static function methodToCall(
         ChefInterface $chef,
         string $bar,
         $foo2,
-        \DateTime $date,
+        \DateTime|\DateTimeImmutable $date,
         $_methodName,
         self $self
     ) {

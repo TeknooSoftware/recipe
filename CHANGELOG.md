@@ -1,5 +1,10 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.1.4] - 2022-06-17
+### Stable Release
+- Clean code and test thanks to Rector
+- Update libs requirements
+
 ## [4.1.3] - 2022-04-14
 ### Stable Release
 - Complete errors messages in bowl when missed parameter's value or bad parameter definition

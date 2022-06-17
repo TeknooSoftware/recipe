@@ -136,7 +136,7 @@ class Chef implements AutomatedInterface, ChefInterface
 
     final public function __construct(
         BaseRecipeInterface $recipe = null,
-        private ?self $topChef = null,
+        private readonly ?self $topChef = null,
         private CookingSupervisorInterface $cookingSupervisor = new CookingSupervisor(),
     ) {
         $this->initializeStateProxy();

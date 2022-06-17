@@ -52,10 +52,7 @@ class DishTest extends AbstractDishTest
         return new \DateTime('2018-01-01');
     }
 
-    /**
-     * @return MockObject|PromiseInterface
-     */
-    protected function getPromise()
+    protected function getPromise(): MockObject&PromiseInterface
     {
         if (!$this->promise instanceof PromiseInterface) {
             $this->promise = $this->createMock(PromiseInterface::class);

@@ -381,11 +381,7 @@ abstract class AbstractPromiseTest extends TestCase
 
     public function testFetchResultCalled()
     {
-        $promise = $this->buildPromise(function () {
-            return 'foo';
-        }, function () {
-            return 'bar';
-        });
+        $promise = $this->buildPromise(fn() => 'foo', fn() => 'bar');
 
         $promise->success();
         self::assertEquals('foo', $promise->fetchResult());
@@ -417,11 +413,7 @@ abstract class AbstractPromiseTest extends TestCase
 
     public function testFetchResultIfCalledCalled()
     {
-        $promise = $this->buildPromise(function () {
-            return 'foo';
-        }, function () {
-            return 'bar';
-        });
+        $promise = $this->buildPromise(fn() => 'foo', fn() => 'bar');
 
         $promise->success();
         self::assertEquals('foo', $promise->fetchResultIfCalled('default'));
@@ -432,11 +424,7 @@ abstract class AbstractPromiseTest extends TestCase
 
     public function testFetchResultWithNestedPromise()
     {
-        $promiseNested = $this->buildPromise(function () {
-            return 'foo';
-        }, function () {
-            return 'bar';
-        });
+        $promiseNested = $this->buildPromise(fn() => 'foo', fn() => 'bar');
         $promise = $this->buildPromise(
             function (PromiseInterface $next) {
                 $next->success('foo');
@@ -457,11 +445,7 @@ abstract class AbstractPromiseTest extends TestCase
 
     public function testFetchResultWithNonCalledNestedPromise()
     {
-        $promiseNested = $this->buildPromise(function () {
-            return 'foo';
-        }, function () {
-            return 'bar';
-        });
+        $promiseNested = $this->buildPromise(fn() => 'foo', fn() => 'bar');
         $promise = $this->buildPromise(
             function (PromiseInterface $next) {
             },

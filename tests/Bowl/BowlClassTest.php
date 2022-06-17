@@ -45,12 +45,15 @@ use Teknoo\Recipe\ChefInterface;
  */
 class BowlClassTest extends AbstractBowlTest
 {
+    /**
+     * @param \DateTime|\DateTimeImmutable $date
+     */
     public static function methodToCall(
         ChefInterface $chef,
         string $bar,
         $bar2,
         $foo2,
-        \DateTime $date,
+        \DateTime|\DateTimeImmutable $date,
         $_methodName,
         self $self
     ) {
@@ -73,9 +76,6 @@ class BowlClassTest extends AbstractBowlTest
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
 
-    /**
-     * @return array
-     */
     protected function getValidWorkPlan(): array
     {
         return \array_merge(

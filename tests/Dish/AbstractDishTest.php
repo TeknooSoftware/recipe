@@ -44,10 +44,7 @@ abstract class AbstractDishTest extends TestCase
      */
     abstract public function buildDish(): DishInterface;
 
-    /**
-     * @return MockObject|PromiseInterface
-     */
-    abstract protected function getPromise();
+    abstract protected function getPromise(): MockObject&PromiseInterface;
 
     abstract protected function getExceptedValue();
 
