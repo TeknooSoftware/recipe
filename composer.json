@@ -48,6 +48,11 @@
             "Teknoo\\Tests\\Recipe\\": ["tests/"]
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Teknoo\\Tests\\Behat\\": ["features/bootstrap/"]
+        }
+    },
     "minimum-stability": "stable",
     "archive": {
         "exclude": ["features", "vendor", ".idea"]

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Teknoo\Tests\Behat;
+
 use Behat\Behat\Context\Context;
 use PHPUnit\Framework\Assert;
 use Teknoo\Recipe\BaseRecipeInterface;
@@ -286,7 +288,7 @@ class FeatureContext implements Context
         }
 
         if (null !== $this->secondVar) {
-            $this->workPlan[$this->secondVar] = \md5($this->secondVar);
+            $this->workPlan[$this->secondVar] = \hash('sha256', $this->secondVar);
         }
 
         if (!\class_exists($name)) {
@@ -303,7 +305,7 @@ class FeatureContext implements Context
     {
         try {
             if (null !== $this->secondVar) {
-                $this->workPlan[$this->secondVar] = \md5($this->secondVar);
+                $this->workPlan[$this->secondVar] = \hash('sha256', $this->secondVar);
             }
 
             $this->chef->process(\array_merge($this->workPlan, [\trim($name, '\\') => new $name($value)]));
@@ -346,7 +348,7 @@ class FeatureContext implements Context
     public function itStartsCookingWithAsAndObtainAnCatchedErrorWithMessage($value, $name, $content)
     {
         if (null !== $this->secondVar) {
-            $this->workPlan[$this->secondVar] = \md5($this->secondVar);
+            $this->workPlan[$this->secondVar] = \hash('sha256', $this->secondVar);
         }
 
         $this->chef->process(\array_merge($this->workPlan, [\trim($name, '\\') => new $name($value)]));
