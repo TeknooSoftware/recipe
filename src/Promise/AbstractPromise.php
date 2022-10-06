@@ -70,6 +70,9 @@ abstract class AbstractPromise implements PromiseInterface
      */
     private $onFail;
 
+    /**
+     * @var TResultType
+     */
     private mixed $result = null;
 
     private bool $called = false;

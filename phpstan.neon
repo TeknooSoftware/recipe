@@ -18,9 +18,6 @@ parameters:
         -
             message: '#is declared as covariant#'
             path: src/Promise
-        -
-            message: '#should return TResultType\|null but returns mixed#'
-            path: src/Promise
 services:
     -
         class: Teknoo\States\PHPStan\MethodsClassExtension

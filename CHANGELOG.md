@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.1.5] - 2022-10-06
+### Stable Release
+- Support of PHPStan 1.8.8+
+
 ## [4.1.4] - 2022-06-17
 ### Stable Release
 - Clean code and test thanks to Rector
