@@ -1,5 +1,15 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.2.0] - 2022-10-14
+### Stable Release
+- Add `bool $autoCall = false` to `PromiseInterface::next` to call automatically a next
+ promise if it was already called in the promise (the next promise is wrapped in a proxy
+ promise to allow call only a one time the method `success`). If the promise is automatically
+ called, the result of the current promise is passed to the next promise.
+- If a promise A is added as next to a promise B, all anothers promises added as next to B will be
+ redirect to A (and recursively to the last added promise). the writing of chains of promises is thus facilitated.
+- Fix a bug, if `fetchResult` return the result of last promise instead the first.
+
 ## [4.1.5] - 2022-10-06
 ### Stable Release
 - Support of PHPStan 1.8.8+

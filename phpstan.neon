@@ -18,6 +18,9 @@ parameters:
         -
             message: '#is declared as covariant#'
             path: src/Promise
+        -
+            message: '#success\(\) expects TNextSuccessArgType\|null, TResultType given#'
+            path: src/Promise
 services:
     -
         class: Teknoo\States\PHPStan\MethodsClassExtension

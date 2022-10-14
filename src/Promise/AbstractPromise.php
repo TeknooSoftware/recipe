@@ -60,6 +60,8 @@ abstract class AbstractPromise implements PromiseInterface
      */
     private ?PromiseInterface $nextPromise = null;
 
+    private bool $autoCallNextPromise = false;
+
     /**
      * @var callable|null
      */
@@ -91,14 +93,22 @@ abstract class AbstractPromise implements PromiseInterface
     /**
      * @param PromiseInterface<TNextSuccessArgType, TResultType>|null $promise
      */
-    public function next(?PromiseInterface $promise = null): PromiseInterface
+    public function next(?PromiseInterface $promise = null, bool $autoCall = false): PromiseInterface
     {
         if (false === $this->allowNext) {
             throw new RuntimeException('Error, following promise is not allowed here');
         }
 
+        $wrappedPromise = $promise;
+        if (null !== $wrappedPromise && null !== $this->nextPromise) {
+            $wrappedPromise = $this->nextPromise->next($wrappedPromise, $autoCall);
+        } elseif (true === $autoCall && null !== $promise) {
+            $wrappedPromise = new WrappedOneCalledPromise($promise);
+        }
+
         $clone = clone $this;
-        $clone->nextPromise = $promise;
+        $clone->nextPromise = $wrappedPromise;
+        $clone->autoCallNextPromise = $autoCall;
 
         return $clone;
     }
@@ -141,6 +151,10 @@ abstract class AbstractPromise implements PromiseInterface
         $args = func_get_args();
         $this->call($this->onSuccess, $args);
 
+        if ($this->nextPromise instanceof PromiseInterface && true === $this->autoCallNextPromise) {
+            $this->nextPromise->success($this->result);
+        }
+
         return $this;
     }
 
@@ -148,6 +162,14 @@ abstract class AbstractPromise implements PromiseInterface
     {
         $args = func_get_args();
         $this->call($this->onFail, $args);
+
+        if (
+            $this->nextPromise instanceof PromiseInterface
+            && true === $this->autoCallNextPromise
+            && ($r = $this->result ?? $throwable) instanceof Throwable
+        ) {
+            $this->nextPromise->fail($r);
+        }
 
         return $this;
     }
@@ -158,11 +180,8 @@ abstract class AbstractPromise implements PromiseInterface
             throw new RuntimeException("The promise was not be previously executted");
         }
 
-        if (
-            empty($this->result)
-            && $this->nextPromise instanceof PromiseInterface
-        ) {
-            return $this->nextPromise->fetchResultIfCalled($this->result);
+        if ($this->nextPromise instanceof PromiseInterface) {
+            return $this->nextPromise->fetchResultIfCalled($this->result) ?? $this->result;
         }
 
         return $this->result;

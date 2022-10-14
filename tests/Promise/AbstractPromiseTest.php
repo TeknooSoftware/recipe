@@ -461,4 +461,84 @@ abstract class AbstractPromiseTest extends TestCase
         $promise->fail(new \Exception('foo'));
         self::assertNull($promise->fetchResult());
     }
+
+    public function testFetchResultWithNonCalledNestedPromiseWithAutoCall()
+    {
+        $promiseNested = $this->buildPromise(fn() => 'foo', fn() => 'bar');
+        $promise = $this->buildPromise(
+            function (PromiseInterface $next) {
+            },
+            function (\Throwable $error, PromiseInterface $next) {
+            }
+            , true
+        );
+
+        $promise = $promise->next($promiseNested, true);
+        $promise->success();
+        self::assertEquals('foo', $promise->fetchResult());
+
+        $promise->fail(new \Exception('foo'));
+        self::assertEquals('bar', $promise->fetchResult());
+    }
+
+    public function testWithSeveralNextWithoutAutoCall()
+    {
+        $pm1 = $this->buildPromise(
+            fn(int $value): int => $value * 2,
+            fn(\Throwable $error) => 0,
+            true
+        );
+
+        $pm1 = $pm1->next(
+            $this->buildPromise(
+                fn(int $value): int => $value * 3,
+                fn(\Throwable $error) => 1,
+                true
+            )
+        );
+
+        $pm1 = $pm1->next(
+            $this->buildPromise(
+                fn(int $value): int => $value - 2,
+                fn(\Throwable $error) => 1,
+                true
+            )
+        );
+
+        self::assertEquals(
+            6,
+            $pm1->success(3)->fetchResult(),
+        );
+    }
+
+    public function testWithSeveralNextWithAutoCall()
+    {
+        $pm1 = $this->buildPromise(
+            fn (int $value): int => $value * 2,
+            fn (\Throwable $error) => 0,
+            true
+        );
+
+        $pm1 = $pm1->next(
+            promise: $this->buildPromise(
+                fn (int $value): int => $value * 3,
+                fn (\Throwable $error) => 1,
+                true
+            ),
+            autoCall: true,
+        );
+
+        $pm1 = $pm1->next(
+            promise: $this->buildPromise(
+                fn (int $value): int => $value - 2,
+                fn (\Throwable $error) => 1
+            ),
+            autoCall: true,
+        );
+
+        self::assertEquals(
+            16,
+            $pm1->success(3)->fetchResult(),
+        );
+    }
 }
