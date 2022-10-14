@@ -86,7 +86,7 @@ class WrappedOneCalledPromiseTest extends TestCase
         $promise = $this->createMock(PromiseInterface::class);
         $excp = new \Exception();
 
-        $promise->expects(self::exactly(2))->method('fail')->with($excp)->willReturnSelf();
+        $promise->expects(self::once())->method('fail')->with($excp)->willReturnSelf();
 
         $wp = $this->buildPromise($promise);
         self::assertInstanceOf(

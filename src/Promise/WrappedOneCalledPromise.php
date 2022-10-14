@@ -48,6 +48,8 @@ class WrappedOneCalledPromise implements PromiseInterface
 
     private bool $called = false;
 
+    private bool $failed = false;
+
     /**
      * @param PromiseInterface<TSuccessArgType, TResultType> $promise
      */
@@ -75,7 +77,11 @@ class WrappedOneCalledPromise implements PromiseInterface
 
     public function fail(Throwable $throwable): PromiseInterface
     {
-        $this->promise->fail($throwable);
+        if (!$this->failed) {
+            $this->called = true;
+            $this->failed = true;
+            $this->promise->fail($throwable);
+        }
 
         return $this;
     }
