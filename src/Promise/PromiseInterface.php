@@ -48,11 +48,14 @@ interface PromiseInterface extends ImmutableInterface
 {
     /**
      * To define a new promise to pass to the called callback.
+     * If $autoCall is set to true, the promise is automatically called with the result
+     * of the current promise
      *
      * @param PromiseInterface<TSuccessArgType, TResultType>|null $promise
+     * @param bool $autoCall to autocall the next promise at end of this promise
      * @return PromiseInterface<TSuccessArgType, TResultType>
      */
-    public function next(?PromiseInterface $promise = null): PromiseInterface;
+    public function next(?PromiseInterface $promise = null, bool $autoCall = false): PromiseInterface;
 
     /**
      * To call the callback defined when the actor has successfully it's operation.
