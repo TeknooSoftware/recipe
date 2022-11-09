@@ -110,10 +110,10 @@ Feature: Recipe with fiber
     When I define the step in fiber "fiberStep2" to do "Fiber::step" my recipe
     When I define the step "checkSupervisor" to do "Fiber::checkSupervisorCount" my recipe
     When I define the step "looping" to do "Fiber::looping" my recipe
-    When I define the excepted dish "IntBag" to my recipe
+    When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "30"
     Then I train the chef with the recipe
-    And It starts cooking with "0" as "IntBag"
+    And It starts cooking with "0" as "Teknoo\Tests\Recipe\Behat\IntBag"
 
   Scenario: Train a chef to cook with several dishes in sames times with subrecipes
     Given I have an empty recipe
@@ -124,10 +124,10 @@ Feature: Recipe with fiber
     When I include the recipe "subrecipe" to "increaseInSubRecipe" in my recipe in fiber to call "3" times
     When I define the step "checkSupervisor" to do "Fiber::checkSupervisorCount" my recipe
     When I define the step "looping" to do "Fiber::looping" my recipe
-    When I define the excepted dish "IntBag" to my recipe
+    When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "60"
     Then I train the chef with the recipe
-    And It starts cooking with "0" as "IntBag"
+    And It starts cooking with "0" as "Teknoo\Tests\Recipe\Behat\IntBag"
 
   Scenario: Train a chef to cook with several dishes in sames times with subsubrecipes
     Given I have an empty recipe
@@ -140,29 +140,29 @@ Feature: Recipe with fiber
     When I include the recipe "subrecipe" to "increaseInSubRecipe" in my recipe in fiber to call "3" times
     When I define the step "checkSupervisor" to do "Fiber::checkSupervisorCount" my recipe
     When I define the step "looping" to do "Fiber::looping" my recipe
-    When I define the excepted dish "IntBag" to my recipe
+    When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "105"
     Then I train the chef with the recipe
-    And It starts cooking with "0" as "IntBag"
+    And It starts cooking with "0" as "Teknoo\Tests\Recipe\Behat\IntBag"
 
   Scenario: Train a chef to cook a dish with merged ingredient
     Given I have an empty recipe
     And I have an untrained chef
     When I define the step in fiber "increaseValue" to do "FeatureContext::mergeValue" my recipe
     When I define the step in fiber "increaseValue" to do "FeatureContext::mergeValue" my recipe
-    When I define the excepted dish "IntBag" to my recipe
+    When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "15"
     Then I train the chef with the recipe
-    And It starts cooking with "5" as "IntBag"
+    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
 
   Scenario: Train a chef to cook a dish with mergeable ingredient
     Given I have an empty recipe
     And I have an untrained chef
     When I define the step in fiber "increaseValue" to do "FeatureContext::updatedInWorkPlanAMergeableValue" my recipe
-    When I define the excepted dish "IntBag" to my recipe
+    When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "7"
     Then I train the chef with the recipe
-    And It starts cooking with "5" as "IntBag"
+    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
 
   Scenario: Train a chef to cook a dish and remove an ingredient
     Given I have an empty recipe

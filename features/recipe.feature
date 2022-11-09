@@ -108,19 +108,19 @@ Feature: Recipe
     And I have an untrained chef
     When I define the step "increaseValue" to do "FeatureContext::mergeValue" my recipe
     When I define the step "increaseValue" to do "FeatureContext::mergeValue" my recipe
-    When I define the excepted dish "IntBag" to my recipe
+    When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "15"
     Then I train the chef with the recipe
-    And It starts cooking with "5" as "IntBag"
+    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
 
   Scenario: Train a chef to cook a dish with mergeable ingredient
     Given I have an empty recipe
     And I have an untrained chef
     When I define the step "increaseValue" to do "FeatureContext::updatedInWorkPlanAMergeableValue" my recipe
-    When I define the excepted dish "IntBag" to my recipe
+    When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "7"
     Then I train the chef with the recipe
-    And It starts cooking with "5" as "IntBag"
+    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
 
   Scenario: Train a chef to cook a dish and remove an ingredient
     Given I have an empty recipe

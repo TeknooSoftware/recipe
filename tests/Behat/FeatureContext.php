@@ -1,12 +1,37 @@
 <?php
 
+/**
+ * Recipe.
+ *
+ * LICENSE
+ *
+ * This source file is subject to the MIT license
+ * license that are bundled with this package in the folder licences
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to richarddeloge@gmail.com so we can send you a copy immediately.
+ *
+ *
+ * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
+ * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
+ *
+ * @link        http://teknoo.software/recipe Project website
+ *
+ * @license     http://teknoo.software/license/mit         MIT License
+ * @author      Richard Déloge <richarddeloge@gmail.com>
+ */
+
 declare(strict_types=1);
 
-use Teknoo\Tests\Behat;
+namespace Teknoo\Tests\Recipe\Behat;
 
 use Behat\Behat\Context\Context;
+use DateTime;
+use DateTimeImmutable;
+use Fiber;
 use PHPUnit\Framework\Assert;
 use Teknoo\Recipe\BaseRecipeInterface;
+use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
 use Teknoo\Recipe\CookingSupervisorInterface;
@@ -18,6 +43,13 @@ use Teknoo\Recipe\RecipeInterface;
 use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\Tests\Recipe\Transformable;
+use Throwable;
+
+use function array_merge;
+use function explode;
+use function lcfirst;
+use function strpos;
+use function trim;
 
 /**
  * Defines application features from the specific context.
@@ -86,11 +118,11 @@ class FeatureContext implements Context
         $this->definedClosure = [
             'DateTimeImmutable::createFromMutable' => static function (
                 ChefInterface $chef,
-                \DateTime $datetime,
+                DateTime $datetime,
                 $_methodName
             ) {
-                $immutable = \DateTimeImmutable::createFromMutable($datetime);
-                $chef->updateWorkPlan([\DateTimeImmutable::class => $immutable]);
+                $immutable = DateTimeImmutable::createFromMutable($datetime);
+                $chef->updateWorkPlan([DateTimeImmutable::class => $immutable]);
                 Assert::assertEquals('createImmutable', $_methodName);
             },
             'Fiber::step' => static function (IntBag $bag) {
@@ -110,22 +142,22 @@ class FeatureContext implements Context
 
                 if (2 === $iterator->count()) {
                     foreach ($iterator as $item) {
-                        Assert::assertInstanceOf(\Fiber::class, $item);
+                        Assert::assertInstanceOf(Fiber::class, $item);
                     }
                 } else {
-                    Assert::assertInstanceOf(\Fiber::class, $iterator->current());
+                    Assert::assertInstanceOf(Fiber::class, $iterator->current());
                     $iterator->next();
                     Assert::assertInstanceOf(CookingSupervisorInterface::class, $iterator->current());
                     $iterator->next();
-                    Assert::assertInstanceOf(\Fiber::class, $iterator->current());
+                    Assert::assertInstanceOf(Fiber::class, $iterator->current());
                     $iterator->next();
                     Assert::assertInstanceOf(CookingSupervisorInterface::class, $iterator->current());
                     $iterator->next();
-                    Assert::assertInstanceOf(\Fiber::class, $iterator->current());
+                    Assert::assertInstanceOf(Fiber::class, $iterator->current());
                     $iterator->next();
                     Assert::assertInstanceOf(CookingSupervisorInterface::class, $iterator->current());
                     $iterator->next();
-                    Assert::assertInstanceOf(\Fiber::class, $iterator->current());
+                    Assert::assertInstanceOf(Fiber::class, $iterator->current());
                 }
 
                 $iterator->rewind();
@@ -156,8 +188,14 @@ class FeatureContext implements Context
             return $this->definedClosure[$method];
         }
 
-        if (false !== \strpos($method, '::')) {
-            return \explode('::', $method);
+        if (false !== strpos($method, '::')) {
+            $callable = explode('::', $method);
+
+            if ('FeatureContext' === $callable[0]) {
+                return self::{$callable[1]}(...);
+            }
+
+            return $callable;
         }
 
         return $method;
@@ -177,7 +215,7 @@ class FeatureContext implements Context
     public function iDefineAToStartMyRecipe(string $className)
     {
         $this->pushRecipe(
-            $this->lastRecipe->require(new Ingredient($className, \trim($className, '\\')))
+            $this->lastRecipe->require(new Ingredient($className, trim($className, '\\')))
         );
     }
 
@@ -190,7 +228,7 @@ class FeatureContext implements Context
 
         $this->pushRecipe(
             $this->lastRecipe
-                ->require(new Ingredient($className, \trim($className, '\\')))
+                ->require(new Ingredient($className, trim($className, '\\')))
                 ->require(new Ingredient('string', $secondVar))
         );
     }
@@ -235,7 +273,7 @@ class FeatureContext implements Context
 
         $this->pushRecipe($this->lastRecipe->cook(function (ChefInterface $chef, $result) {
             $chef->finish($result);
-        }, 'finish', ['result' => \trim($className, '\\')]));
+        }, 'finish', ['result' => trim($className, '\\')]));
 
         $this->pushRecipe($this->lastRecipe->given(new DishClass($className, $promise)));
     }
@@ -261,7 +299,7 @@ class FeatureContext implements Context
      */
     public function iHaveAnUntrainedChef()
     {
-        $this->chef = new Teknoo\Recipe\Chef();
+        $this->chef = new Chef();
     }
 
     /**
@@ -278,7 +316,7 @@ class FeatureContext implements Context
     public function itStartsCookingWithAs($value, $name)
     {
         $value = match ($name) {
-            'TransformableDateTime' => new Transformable(new \DateTime($value)),
+            'TransformableDateTime' => new Transformable(new DateTime($value)),
             'string' => $value,
             default => $value
         };
@@ -292,9 +330,9 @@ class FeatureContext implements Context
         }
 
         if (!\class_exists($name)) {
-            $this->chef->process(\array_merge($this->workPlan, [lcfirst($name) => $value]));
+            $this->chef->process(array_merge($this->workPlan, [lcfirst($name) => $value]));
         } else {
-            $this->chef->process(\array_merge($this->workPlan, [\trim($name, '\\') => new $name($value)]));
+            $this->chef->process(array_merge($this->workPlan, [trim($name, '\\') => new $name($value)]));
         }
     }
 
@@ -308,8 +346,8 @@ class FeatureContext implements Context
                 $this->workPlan[$this->secondVar] = \hash('sha256', $this->secondVar);
             }
 
-            $this->chef->process(\array_merge($this->workPlan, [\trim($name, '\\') => new $name($value)]));
-        } catch (\Throwable $e) {
+            $this->chef->process(array_merge($this->workPlan, [trim($name, '\\') => new $name($value)]));
+        } catch (Throwable $e) {
             return;
         }
 
@@ -323,7 +361,7 @@ class FeatureContext implements Context
     {
         try {
             $this->chef->process($this->workPlan);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             static::$message = $e->getMessage();
             ($this->callbackPromiseSuccess)();
             return;
@@ -351,7 +389,7 @@ class FeatureContext implements Context
             $this->workPlan[$this->secondVar] = \hash('sha256', $this->secondVar);
         }
 
-        $this->chef->process(\array_merge($this->workPlan, [\trim($name, '\\') => new $name($value)]));
+        $this->chef->process(array_merge($this->workPlan, [trim($name, '\\') => new $name($value)]));
 
         Assert::assertEquals($content, static::$message);
         static::$message = '';
@@ -363,8 +401,8 @@ class FeatureContext implements Context
     public function iMustObtainAnDatetimeAt($content)
     {
         $this->callbackPromiseSuccess = function ($value) use ($content) {
-            Assert::assertInstanceOf(\DateTime::class, $value);
-            Assert::assertEquals(new \DateTime($content), $value);
+            Assert::assertInstanceOf(DateTime::class, $value);
+            Assert::assertEquals(new DateTime($content), $value);
         };
     }
 
@@ -374,8 +412,8 @@ class FeatureContext implements Context
     public function iMustObtainAnImmutableDatetimeAt($content)
     {
         $this->callbackPromiseSuccess = function ($value) use ($content) {
-            Assert::assertInstanceOf(\DateTimeImmutable::class, $value);
-            Assert::assertEquals(new \DateTimeImmutable($content), $value);
+            Assert::assertInstanceOf(DateTimeImmutable::class, $value);
+            Assert::assertEquals(new DateTimeImmutable($content), $value);
         };
     }
 
@@ -385,8 +423,8 @@ class FeatureContext implements Context
     public function iMustObtainAnMutableDatetimeAt($content)
     {
         $this->callbackPromiseSuccess = function ($value) use ($content) {
-            Assert::assertInstanceOf(\DateTime::class, $value);
-            Assert::assertEquals(new \DateTime($content), $value);
+            Assert::assertInstanceOf(DateTime::class, $value);
+            Assert::assertEquals(new DateTime($content), $value);
         };
     }
 
@@ -406,7 +444,7 @@ class FeatureContext implements Context
     public function iMustObtainAnStringWithAt($name)
     {
         $this->callbackPromiseSuccess = function ($value) use ($name) {
-            Assert::assertInstanceOf(\StringObject::class, $value);
+            Assert::assertInstanceOf(StringObject::class, $value);
             Assert::assertEquals($name, (string) $value);
         };
     }
@@ -664,32 +702,32 @@ class FeatureContext implements Context
         $this->workPlan[$name] = $this->parseMethod($method);
     }
 
-    public static function passDateWithTransform(#[Transform] \DateTime $transformableDateTime, ChefInterface $chef)
+    public static function passDateWithTransform(#[Transform] DateTime $transformableDateTime, ChefInterface $chef)
     {
-        Assert::assertInstanceOf(\DateTime::class, $transformableDateTime);
+        Assert::assertInstanceOf(DateTime::class, $transformableDateTime);
 
-        $chef->updateWorkPlan([\DateTime::class => $transformableDateTime]);
+        $chef->updateWorkPlan([DateTime::class => $transformableDateTime]);
     }
 
-    public static function passDateWithTransformNonNamed(#[Transform(Transformable::class)] \DateTime $transformableDateTime, ChefInterface $chef)
+    public static function passDateWithTransformNonNamed(#[Transform(Transformable::class)] DateTime $transformableDateTime, ChefInterface $chef)
     {
-        Assert::assertInstanceOf(\DateTime::class, $transformableDateTime);
+        Assert::assertInstanceOf(DateTime::class, $transformableDateTime);
 
-        $chef->updateWorkPlan([\DateTime::class => $transformableDateTime]);
+        $chef->updateWorkPlan([DateTime::class => $transformableDateTime]);
     }
 
-    public static function passDateWithTransformer(#[Transform(transformer: [Transformable::class, 'toTransformable'])] \DateTime $transformableDateTime, ChefInterface $chef)
+    public static function passDateWithTransformer(#[Transform(transformer: [Transformable::class, 'toTransformable'])] DateTime $transformableDateTime, ChefInterface $chef)
     {
-        Assert::assertInstanceOf(\DateTime::class, $transformableDateTime);
+        Assert::assertInstanceOf(DateTime::class, $transformableDateTime);
 
-        $chef->updateWorkPlan([\DateTime::class => $transformableDateTime]);
+        $chef->updateWorkPlan([DateTime::class => $transformableDateTime]);
     }
 
-    public static function passDateWithTransformerNonNamed(#[Transform(Transformable::class, [Transformable::class, 'toTransformable'])] \DateTime $transformableDateTime, ChefInterface $chef)
+    public static function passDateWithTransformerNonNamed(#[Transform(Transformable::class, [Transformable::class, 'toTransformable'])] DateTime $transformableDateTime, ChefInterface $chef)
     {
-        Assert::assertInstanceOf(\DateTime::class, $transformableDateTime);
+        Assert::assertInstanceOf(DateTime::class, $transformableDateTime);
 
-        $chef->updateWorkPlan([\DateTime::class => $transformableDateTime]);
+        $chef->updateWorkPlan([DateTime::class => $transformableDateTime]);
     }
 
     public static function passDateWithoutTransform($transformableDateTime, ChefInterface $chef)
@@ -714,7 +752,7 @@ class FeatureContext implements Context
         $chef->cleanWorkPlan('foo', 'DateTime');
     }
 
-    public static function checkDate(\DateTime $dateTime = null)
+    public static function checkDate(DateTime $dateTime = null)
     {
         if (null !== $dateTime) {
             throw new \RuntimeException('This ingredient must be deleted');
@@ -731,19 +769,19 @@ class FeatureContext implements Context
         $chef->error(new \RuntimeException('There had an error'));
     }
 
-    public static function onError(\Throwable $exception, ChefInterface $chef)
+    public static function onError(Throwable $exception, ChefInterface $chef)
     {
         static::$message .= $exception->getMessage();
     }
 
-    public static function onErrorWithStopRepporing(\Throwable $exception, ChefInterface $chef)
+    public static function onErrorWithStopRepporing(Throwable $exception, ChefInterface $chef)
     {
         $chef->stopErrorReporting();
         $chef->interruptCooking();
         static::$message .= $exception->getMessage();
     }
 
-    public static function onErrorInSub(\Throwable $exception, ChefInterface $chef)
+    public static function onErrorInSub(Throwable $exception, ChefInterface $chef)
     {
         static::$message .= 'sub : ' . $exception->getMessage();
     }
@@ -789,7 +827,7 @@ class FeatureContext implements Context
 
             public function fill(RecipeInterface $recipe): CookbookInterface
             {
-                $recipe = $recipe->require(new Ingredient(\DateTime::class, 'DateTime'));
+                $recipe = $recipe->require(new Ingredient(DateTime::class, 'DateTime'));
                 $recipe = $recipe->cook(
                     $this->context->parseMethod('DateTimeImmutable::createFromMutable'),
                     'createImmutable',
@@ -798,8 +836,8 @@ class FeatureContext implements Context
                 );
 
                 $promise = new Promise(function ($value) {
-                    Assert::assertInstanceOf(\DateTimeImmutable::class, $value);
-                    Assert::assertEquals(new \DateTimeImmutable($this->expectedDate), $value);
+                    Assert::assertInstanceOf(DateTimeImmutable::class, $value);
+                    Assert::assertEquals(new DateTimeImmutable($this->expectedDate), $value);
                 }, function () {
                     Assert::fail('The dish is not valid');
                 });
@@ -813,7 +851,7 @@ class FeatureContext implements Context
                     10
                 );
 
-                $recipe = $recipe->given(new DishClass(\DateTimeImmutable::class, $promise));
+                $recipe = $recipe->given(new DishClass(DateTimeImmutable::class, $promise));
 
                 $this->recipe = $recipe;
 
@@ -844,7 +882,7 @@ class FeatureContext implements Context
 
             protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
             {
-                $recipe = $recipe->require(new Ingredient(\DateTime::class, 'DateTime'));
+                $recipe = $recipe->require(new Ingredient(DateTime::class, 'DateTime'));
                 $recipe = $recipe->cook(
                     $this->context->parseMethod('DateTimeImmutable::createFromMutable'),
                     'createImmutable',
@@ -853,8 +891,8 @@ class FeatureContext implements Context
                 );
 
                 $promise = new Promise(function ($value) {
-                    Assert::assertInstanceOf(\DateTimeImmutable::class, $value);
-                    Assert::assertEquals(new \DateTimeImmutable($this->expectedDate), $value);
+                    Assert::assertInstanceOf(DateTimeImmutable::class, $value);
+                    Assert::assertEquals(new DateTimeImmutable($this->expectedDate), $value);
                 }, function () {
                     Assert::fail('The dish is not valid');
                 });
@@ -883,7 +921,7 @@ class FeatureContext implements Context
                     10
                 );
 
-                $recipe = $recipe->given(new DishClass(\DateTimeImmutable::class, $promise));
+                $recipe = $recipe->given(new DishClass(DateTimeImmutable::class, $promise));
 
                 $this->recipe = $recipe;
 
@@ -913,7 +951,7 @@ class FeatureContext implements Context
         $this->pushRecipe(new Recipe());
         $this->pushRecipe(
             $this->lastRecipe->cook(
-                function (\DateTime $dateTime, ChefInterface $chef) {
+                function (DateTime $dateTime, ChefInterface $chef) {
                     $dateTime = $dateTime->modify('+ 2 hours');
 
                     $chef->updateWorkPlan([
