@@ -21,6 +21,8 @@
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
 
+declare(strict_types=1);
+
 namespace Teknoo\Tests\Recipe\Promise;
 
 use Teknoo\Recipe\Promise\FiberPromise;
