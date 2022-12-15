@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.2.1] - 2022-12-15
+### Stable Release
+- QA Fixes
+
 ## [4.2.0] - 2022-10-14
 ### Stable Release
 - Add `bool $autoCall = false` to `PromiseInterface::next` to call automatically a next

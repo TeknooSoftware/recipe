@@ -23,18 +23,16 @@ $recipe = $recipe->require(
 );
 
 $recipe = $recipe->cook(
-    function (DateTime $date, ChefInterface $chef): void {
+    static function (DateTime $date, ChefInterface $chef) : void {
         $date = $date->setTimezone(new \DateTimeZone('UTC'));
-
         $chef->continue(['date' => $date]);
     },
     'convertToUTC',
 );
 
 $recipe = $recipe->cook(
-    function (DateTime $date, ChefInterface $chef): void {
+    static function (DateTime $date, ChefInterface $chef) : void {
         $immutable = DateTimeImmutable::createFromMutable($date);
-
         $chef->finish($immutable);
     },
     'immutableDate',
@@ -45,10 +43,10 @@ $recipe = $recipe->given(
     new DishClass(
         DateTimeImmutable::class,
         new Promise(
-            function (DateTimeImmutable $immutable) use (&$output): void {
+            static function (DateTimeImmutable $immutable) use (&$output) : void {
                 $output = $immutable->format('Y-m-d H:i:s T');
             },
-            function (Throwable $error) use (&$output): void {
+            static function (Throwable $error) use (&$output) : void {
                 $output = $error->getMessage();
             }
         )

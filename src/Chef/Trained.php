@@ -106,7 +106,7 @@ class Trained implements StateInterface
      */
     private function interrupt(): callable
     {
-        return function () {
+        return function (): static {
             $this->position = count($this->steps) + 1;
             $this->cooking = false;
 
@@ -161,7 +161,7 @@ class Trained implements StateInterface
      */
     private function callErrors(): callable
     {
-        return function (Throwable $error) {
+        return function (Throwable $error): void {
             $this->workPlan['exception'] = $error;
 
             if (empty($this->onError)) {

@@ -111,7 +111,7 @@ class Cooking implements StateInterface
                 $position = $this->position;
 
                 $step = $this->steps[$position];
-                $this->position++;
+                ++$this->position;
 
                 return $step;
             }

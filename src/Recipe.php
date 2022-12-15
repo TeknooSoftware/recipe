@@ -204,6 +204,7 @@ class Recipe implements AutomatedInterface, RecipeInterface
                 while (isset($this->compiled[$name])) {
                     $name = $originalName . $counter++;
                 }
+
                 $this->compiled[$name] = $step;
             }
 

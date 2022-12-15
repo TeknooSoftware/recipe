@@ -77,7 +77,7 @@ class FiberIterator implements Iterator, Countable
     public function remove(Fiber|CookingSupervisorInterface $item): self
     {
         $count = count($this->items);
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             if ($this->items[$i] !== $item) {
                 continue;
             }
