@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.2.2] - 2023-02-03
+### Stable Release
+- Update dev libs to support PHPUnit 10 and remove unused phploc
+
 ## [4.2.1] - 2022-12-15
 ### Stable Release
 - QA Fixes
