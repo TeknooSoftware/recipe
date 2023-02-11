@@ -39,7 +39,7 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  *
  * @covers \Teknoo\Recipe\Ingredient\Ingredient
  */
-class IngredientScalarNormalizeTest extends AbstractIngredientTest
+class IngredientScalarNormalizeTest extends AbstractIngredientTests
 {
     /**
      * @inheritDoc

@@ -397,9 +397,14 @@ class CookingSupervisorTest extends TestCase
 
         $this->getFiberIterator()->expects(self::any())->method('count')->willReturn(2);
         $this->getFiberIterator()->expects(self::exactly(2))->method('remove')
-            ->withConsecutive(
-                [$f1],
-                [$f2]
+            ->with(
+                $this->callback(
+                    fn ($value) => match ($value) {
+                        $f1 => true,
+                        $f2 => true,
+                        default => false,
+                    }
+                )
             );
         $this->getFiberIterator()->expects(self::any())->method('valid')
             ->willReturnOnConsecutiveCalls(true, true, false, true, false);
@@ -438,9 +443,14 @@ class CookingSupervisorTest extends TestCase
 
         $this->getFiberIterator()->expects(self::any())->method('count')->willReturn(2);
         $this->getFiberIterator()->expects(self::exactly(2))->method('remove')
-            ->withConsecutive(
-                [$s1],
-                [$s2]
+            ->with(
+                $this->callback(
+                    fn ($value) => match ($value) {
+                        $s1 => true,
+                        $s2 => true,
+                        default => false,
+                    }
+                )
             );
         $this->getFiberIterator()->expects(self::any())->method('valid')
             ->willReturnOnConsecutiveCalls(true, true, false, true, false);

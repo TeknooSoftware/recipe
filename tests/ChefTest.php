@@ -44,7 +44,7 @@ use Teknoo\Recipe\RecipeInterface;
  * @covers \Teknoo\Recipe\Chef\Free
  * @covers \Teknoo\Recipe\Chef\Trained
  */
-class ChefTest extends AbstractChefTest
+class ChefTest extends AbstractChefTests
 {
     public function buildChef(?ChefInterface $topChef = null): ChefInterface
     {

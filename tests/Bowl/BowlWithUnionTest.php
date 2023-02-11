@@ -40,7 +40,7 @@ use Teknoo\Recipe\Bowl\BowlInterface;
  * @covers \Teknoo\Recipe\Bowl\Bowl
  * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
-class BowlWithUnionTest extends AbstractBowlTest
+class BowlWithUnionTest extends AbstractBowlTests
 {
     protected function getCallable()
     {

@@ -42,7 +42,7 @@ use Teknoo\Recipe\ChefInterface;
  * @covers \Teknoo\Recipe\Bowl\DynamicBowl
  * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
-class DynamicBowlClassTest extends AbstractBowlTest
+class DynamicBowlClassTest extends AbstractBowlTests
 {
     /**
      * @param \DateTime|\DateTimeImmutable $date

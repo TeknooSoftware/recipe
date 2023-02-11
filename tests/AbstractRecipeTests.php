@@ -42,7 +42,7 @@ use PHPUnit\Framework\TestCase;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-abstract class AbstractRecipeTest extends TestCase
+abstract class AbstractRecipeTests extends TestCase
 {
     abstract public function buildRecipe(): RecipeInterface;
 

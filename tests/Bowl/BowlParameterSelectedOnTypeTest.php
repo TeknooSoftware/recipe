@@ -41,7 +41,7 @@ use Teknoo\Recipe\ChefInterface;
  * @covers \Teknoo\Recipe\Bowl\Bowl
  * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
-class BowlParameterSelectedOnTypeTest extends AbstractBowlTest
+class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
 {
     protected function getCallable()
     {

@@ -42,7 +42,7 @@ use Teknoo\Recipe\ChefInterface;
  * @covers \Teknoo\Recipe\Bowl\DynamicBowl
  * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
-class DynamicBowlClosureTest extends AbstractBowlTest
+class DynamicBowlClosureTest extends AbstractBowlTests
 {
     protected function getCallable()
     {

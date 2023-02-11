@@ -43,7 +43,7 @@ use Teknoo\Recipe\RecipeInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-abstract class AbstractRecipeBowlTest extends TestCase
+abstract class AbstractRecipeBowlTests extends TestCase
 {
     /**
      * @param RecipeInterface $recipe

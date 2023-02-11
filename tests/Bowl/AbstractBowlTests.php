@@ -39,7 +39,7 @@ use Teknoo\Recipe\CookingSupervisorInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-abstract class AbstractBowlTest extends TestCase
+abstract class AbstractBowlTests extends TestCase
 {
     /**
      * @return BowlInterface

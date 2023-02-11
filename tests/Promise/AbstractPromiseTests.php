@@ -38,7 +38,7 @@ use PHPUnit\Framework\TestCase;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-abstract class AbstractPromiseTest extends TestCase
+abstract class AbstractPromiseTests extends TestCase
 {
     abstract public function buildPromise($onSuccess, $onFail, bool $allowNext = false): PromiseInterface;
 

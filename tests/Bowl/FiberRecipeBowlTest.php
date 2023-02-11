@@ -41,7 +41,7 @@ use Teknoo\Recipe\RecipeInterface;
  * @covers \Teknoo\Recipe\Bowl\AbstractRecipeBowl
  * @covers \Teknoo\Recipe\Bowl\FiberRecipeBowl
  */
-class FiberRecipeBowlTest extends AbstractRecipeBowlTest
+class FiberRecipeBowlTest extends AbstractRecipeBowlTests
 {
     /**
      * @param RecipeInterface $recipe

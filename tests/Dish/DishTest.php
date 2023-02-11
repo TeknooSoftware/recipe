@@ -42,7 +42,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @covers \Teknoo\Recipe\Dish\AbstractDishClass
  * @covers \Teknoo\Recipe\Dish\DishClass
  */
-class DishTest extends AbstractDishTest
+class DishTest extends AbstractDishTests
 {
     /**
      * @var PromiseInterface

@@ -40,7 +40,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @covers \Teknoo\Recipe\Promise\AbstractPromise
  * @covers \Teknoo\Recipe\Promise\FiberPromise
  */
-class FiberPromiseTest extends AbstractPromiseTest
+class FiberPromiseTest extends AbstractPromiseTests
 {
     public function buildPromise($onSuccess, $onFail, bool $allowNext = false): PromiseInterface
     {

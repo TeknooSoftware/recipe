@@ -44,7 +44,7 @@ use Teknoo\Recipe\CookingSupervisorInterface;
  * @covers \Teknoo\Recipe\Bowl\FiberBowl
  * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
-class FiberBowlClosureTest extends AbstractBowlTest
+class FiberBowlClosureTest extends AbstractBowlTests
 {
     protected function getCallable()
     {

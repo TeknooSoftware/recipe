@@ -39,7 +39,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-abstract class AbstractDishTest extends TestCase
+abstract class AbstractDishTests extends TestCase
 {
     /**
      * @return DishInterface

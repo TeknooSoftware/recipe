@@ -100,10 +100,15 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects(self::exactly(3))
             ->method('continue')
-            ->withConsecutive(
-                [['bar' => 'foo', 'foo2' => 'bar2', 'date' => (new \DateTime('2018-01-01'))->getTimestamp()]],
-                [['bar' => 'foo', 'foo2' => 'bar2', 'date' => (new \DateTime('2018-01-01'))->getTimestamp()]],
-                [['bar' => 'foo', 'foo2' => 'foo', 'date' => (new \DateTime('2018-01-01'))->getTimestamp()]]
+            ->with(
+                $this->callback(
+                    fn ($value) => match ($value) {
+                        ['bar' => 'foo', 'foo2' => 'bar2', 'date' => (new \DateTime('2018-01-01'))->getTimestamp()] => true,
+                        ['bar' => 'foo', 'foo2' => 'bar2', 'date' => (new \DateTime('2018-01-01'))->getTimestamp()] => true,
+                        ['bar' => 'foo', 'foo2' => 'foo', 'date' => (new \DateTime('2018-01-01'))->getTimestamp()] => true,
+                        default => false,
+                    }
+                ),
             )
             ->willReturnSelf();
 

@@ -40,7 +40,7 @@ use Teknoo\Recipe\RecipeInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-abstract class AbstractIngredientTest extends TestCase
+abstract class AbstractIngredientTests extends TestCase
 {
     /**
      * @return IngredientInterface

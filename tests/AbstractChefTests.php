@@ -46,7 +46,7 @@ use Teknoo\Recipe\RecipeInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-abstract class AbstractChefTest extends TestCase
+abstract class AbstractChefTests extends TestCase
 {
     abstract public function buildChef(): ChefInterface;
 

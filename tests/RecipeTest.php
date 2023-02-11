@@ -43,7 +43,7 @@ use Teknoo\Recipe\RecipeInterface;
  * @covers \Teknoo\Recipe\Recipe\Draft
  * @covers \Teknoo\Recipe\Recipe\Written
  */
-class RecipeTest extends AbstractRecipeTest
+class RecipeTest extends AbstractRecipeTests
 {
     public function buildRecipe(): RecipeInterface
     {
