@@ -45,3 +45,4 @@ services:
             earlyTerminatingMethodCalls: %earlyTerminatingMethodCalls%
             earlyTerminatingFunctionCalls: %earlyTerminatingFunctionCalls%
             implicitThrows: %exceptions.implicitThrows%
+            treatPhpDocTypesAsCertain: %treatPhpDocTypesAsCertain%
