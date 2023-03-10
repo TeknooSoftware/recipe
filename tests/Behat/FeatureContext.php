@@ -709,22 +709,28 @@ class FeatureContext implements Context
         $chef->updateWorkPlan([DateTime::class => $transformableDateTime]);
     }
 
-    public static function passDateWithTransformNonNamed(#[Transform(Transformable::class)] DateTime $transformableDateTime, ChefInterface $chef)
-    {
+    public static function passDateWithTransformNonNamed(
+        #[Transform(Transformable::class)] DateTime $transformableDateTime,
+        ChefInterface $chef
+    ) {
         Assert::assertInstanceOf(DateTime::class, $transformableDateTime);
 
         $chef->updateWorkPlan([DateTime::class => $transformableDateTime]);
     }
 
-    public static function passDateWithTransformer(#[Transform(transformer: [Transformable::class, 'toTransformable'])] DateTime $transformableDateTime, ChefInterface $chef)
-    {
+    public static function passDateWithTransformer(
+        #[Transform(transformer: [Transformable::class, 'toTransformable'])] DateTime $transformableDateTime,
+        ChefInterface $chef
+    ) {
         Assert::assertInstanceOf(DateTime::class, $transformableDateTime);
 
         $chef->updateWorkPlan([DateTime::class => $transformableDateTime]);
     }
 
-    public static function passDateWithTransformerNonNamed(#[Transform(Transformable::class, [Transformable::class, 'toTransformable'])] DateTime $transformableDateTime, ChefInterface $chef)
-    {
+    public static function passDateWithTransformerNonNamed(
+        #[Transform(Transformable::class, [Transformable::class, 'toTransformable'])] DateTime $transformableDateTime,
+        ChefInterface $chef
+    ) {
         Assert::assertInstanceOf(DateTime::class, $transformableDateTime);
 
         $chef->updateWorkPlan([DateTime::class => $transformableDateTime]);

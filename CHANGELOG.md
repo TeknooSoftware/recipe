@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.2.4] - 2023-03-10
+### Stable Release
+- Q\A
+
 ## [4.2.3] - 2023-02-11
 ### Stable Release
 - Remove phpcpd and upgrade phpunit.xml

@@ -206,7 +206,7 @@ class Cooking implements StateInterface
                 return;
             }
 
-            throw new RuntimeException(
+            throw new Chef\Exception\MissingIngredientException(
                 'Error, missing some ingredients : '
                 . implode(', ', array_keys($this->missingIngredients))
             );

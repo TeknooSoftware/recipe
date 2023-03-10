@@ -23,16 +23,11 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Recipe\Ingredient\Attributes;
+namespace Teknoo\Recipe\Ingredient\Exception;
 
-use Attribute;
-use Teknoo\Recipe\Ingredient\Exception\WrongClassException;
-
-use function class_exists;
+use RuntimeException;
 
 /**
- * Class to implement attribute `Transform` to transform an ingredient before to put it into the bowl
- *
  * @copyright   Copyright (c) EIRL Richard Déloge (richarddeloge@gmail.com)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software)
  *
@@ -41,32 +36,6 @@ use function class_exists;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richarddeloge@gmail.com>
  */
-#[Attribute(Attribute::TARGET_PARAMETER)]
-class Transform
+class WrongClassException extends RuntimeException
 {
-    /**
-     * @var callable|null
-     */
-    private $transformer = null;
-
-    public function __construct(
-        private readonly ?string $className = null,
-        ?callable $transformer = null,
-    ) {
-        if (!empty($this->className) && !class_exists($this->className)) {
-            throw new WrongClassException("Error the required class {$this->className} does not exist");
-        }
-
-        $this->transformer = $transformer;
-    }
-
-    public function getClassName(): ?string
-    {
-        return $this->className;
-    }
-
-    public function getTransformer(): ?callable
-    {
-        return $this->transformer;
-    }
 }

@@ -25,8 +25,9 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Promise;
 
-use RuntimeException;
 use Teknoo\Immutable\ImmutableTrait;
+use Teknoo\Recipe\Promise\Exception\NotExecutedPromiseException;
+use Teknoo\Recipe\Promise\Exception\NotGrantedPromiseException;
 use Throwable;
 
 use function func_get_args;
@@ -96,7 +97,7 @@ abstract class AbstractPromise implements PromiseInterface
     public function next(?PromiseInterface $promise = null, bool $autoCall = false): PromiseInterface
     {
         if (false === $this->allowNext) {
-            throw new RuntimeException('Error, following promise is not allowed here');
+            throw new NotGrantedPromiseException('Error, following promise is not allowed here');
         }
 
         $wrappedPromise = $promise;
@@ -177,7 +178,7 @@ abstract class AbstractPromise implements PromiseInterface
     public function fetchResult(): mixed
     {
         if (true !== $this->called) {
-            throw new RuntimeException("The promise was not be previously executted");
+            throw new NotExecutedPromiseException("The promise was not be previously executed");
         }
 
         if ($this->nextPromise instanceof PromiseInterface) {

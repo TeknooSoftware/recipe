@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\Recipe;
 
 use Fiber;
-use RuntimeException;
 use Teknoo\Recipe\CookingSupervisor\Action;
+use Teknoo\Recipe\CookingSupervisor\Exception\SupervisorInRunningFiberException;
 use Teknoo\Recipe\CookingSupervisor\FiberIterator;
 use Throwable;
 
@@ -99,7 +99,7 @@ class CookingSupervisor implements CookingSupervisorInterface
         Fiber $fiber,
     ): CookingSupervisorInterface {
         if ($fiber->isRunning()) {
-            throw new RuntimeException(
+            throw new SupervisorInRunningFiberException(
                 "Error a cooking supervisor can not supervise a running fiber, where the supervisor is included"
             );
         }

@@ -28,6 +28,8 @@ namespace Teknoo\Recipe\Bowl;
 use Exception;
 use RuntimeException;
 use Teknoo\Immutable\ImmutableTrait;
+use Teknoo\Recipe\Bowl\Exception\MissingCallableIngredientException;
+use Teknoo\Recipe\Bowl\Exception\MissingIngredientException;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
 
@@ -86,7 +88,7 @@ abstract class AbstractDynamicBowl implements BowlInterface
         $callable = $workPlan[$this->callableKeyName];
 
         if (!is_callable($callable)) {
-            throw new RuntimeException(
+            throw new MissingCallableIngredientException(
                 sprintf(
                     'Error, the element identified by %s in the work plan is not a callable',
                     $this->callableKeyName
@@ -128,7 +130,7 @@ abstract class AbstractDynamicBowl implements BowlInterface
         $callable = $this->getCallable($workPlan);
 
         if (null === $callable && true === $this->throwIfNotExisting) {
-            throw new RuntimeException(
+            throw new MissingIngredientException(
                 sprintf('Error, there are no callable in the work plan at %s', $this->callableKeyName)
             );
         }

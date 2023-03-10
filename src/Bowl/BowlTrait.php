@@ -38,6 +38,7 @@ use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionUnionType;
 use RuntimeException;
+use Teknoo\Recipe\Bowl\Exception\SelfParameterNotInstantiableException;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
@@ -259,7 +260,7 @@ trait BowlTrait
             if ('self' === $className) {
                 if (null === ($declaringClass = $parameter->getDeclaringClass())) {
                     $function = $parameter->getDeclaringFunction();
-                    throw new RuntimeException(
+                    throw new SelfParameterNotInstantiableException(
                         sprintf(
                             "Can not fetch declaring class from 'self' for parameter in this bowl for %s in %s:%s",
                             $function->getName(),

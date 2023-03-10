@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
-use RuntimeException;
 use Teknoo\Recipe\Chef;
+use Teknoo\Recipe\Chef\Exception\NotMergeableException;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\MergeableInterface;
 use Teknoo\States\State\StateInterface;
@@ -80,7 +80,7 @@ class Trained implements StateInterface
             }
 
             if (!$this->workPlan[$name] instanceof MergeableInterface) {
-                throw new RuntimeException("Error $name in the workplan is not mergeable");
+                throw new NotMergeableException("Error $name in the workplan is not mergeable");
             }
 
             $this->workPlan[$name]->merge($value);
