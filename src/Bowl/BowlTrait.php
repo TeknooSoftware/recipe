@@ -291,6 +291,86 @@ trait BowlTrait
     }
 
     /**
+     * @param array<string, mixed> $values
+     * @param Fiber<mixed, mixed, mixed, mixed> $fiber
+     */
+    protected function findReservedParameterInstance(
+        ReflectionParameter $parameter,
+        array &$values,
+        ChefInterface $chef,
+        ?Fiber $fiber,
+        ?CookingSupervisorInterface $cookingSupervisor,
+    ): bool {
+        if ($this->isInstanceOf($parameter, $chef)) {
+            $values[] = $chef;
+            return true;
+        }
+
+        if (null !== $fiber && $this->isInstanceOf($parameter, $fiber)) {
+            $values[] = $fiber;
+            return true;
+        }
+
+        if (null !== $cookingSupervisor && $this->isInstanceOf($parameter, $cookingSupervisor)) {
+            $values[] = $cookingSupervisor;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array<string, mixed> $workPlan
+     * @param array<string, mixed> $values
+     */
+    public function findParameterValueFromWorkplan(
+        ReflectionParameter $parameter,
+        string $name,
+        array &$values,
+        array &$workPlan,
+        bool &$skip,
+        bool $allowTransform,
+        ?string $transformClassName,
+    ): mixed {
+        return match (true) {
+            //Found from ingredient's name in workplan
+            isset($workPlan[$name]) => $workPlan[$name],
+
+            //Found from ingredient's class in workplan
+            ($type = $parameter->getType()) instanceof ReflectionNamedType
+            && isset($workPlan[$type->getName()]) => $workPlan[$type->getName()],
+
+            //Found from ingredient's instance type
+            $this->findInstanceForParameter(
+                $parameter,
+                $workPlan,
+                $values,
+                $allowTransform,
+                $transformClassName,
+            ) => $skip = true,
+
+            //Special name `_methodName`
+            BowlInterface::METHOD_NAME === $name => $this->name,
+
+            //Not found, if it is not optional, throw an exception
+            !$parameter->isOptional() => throw new BadMethodCallException(
+                sprintf(
+                    "Missing the parameter %s (%s) in the WorkPlan for %s::%s in %s:%s",
+                    $parameter->getName(),
+                    $name,
+                    $parameter->getDeclaringClass()?->getName(),
+                    $parameter->getDeclaringFunction()->getName(),
+                    $parameter->getDeclaringFunction()->getFileName(),
+                    $parameter->getDeclaringFunction()->getStartLine(),
+                )
+            ),
+
+            //Return the default value
+            default => $parameter->getDefaultValue(),
+        };
+    }
+
+    /**
      * To map each callable's arguments to ingredients available into the workplan.
      *
      * @param array<string, mixed> $workPlan
@@ -310,18 +390,7 @@ trait BowlTrait
     ): array {
         $values = [];
         foreach ($this->listParameters($callable) as $name => $parameter) {
-            if ($this->isInstanceOf($parameter, $chef)) {
-                $values[] = $chef;
-                continue;
-            }
-
-            if (null !== $fiber && $this->isInstanceOf($parameter, $fiber)) {
-                $values[] = $fiber;
-                continue;
-            }
-
-            if (null !== $cookingSupervisor && $this->isInstanceOf($parameter, $cookingSupervisor)) {
-                $values[] = $cookingSupervisor;
+            if ($this->findReservedParameterInstance($parameter, $values, $chef, $fiber, $cookingSupervisor)) {
                 continue;
             }
 
@@ -351,42 +420,15 @@ trait BowlTrait
 
             //Pick the good value from the workplan
             $skip = false;
-            $tempValue = match (true) {
-                //Found from ingredient's name in workplan
-                isset($workPlan[$name]) => $workPlan[$name],
-
-                //Found from ingredient's class in workplan
-                ($type = $parameter->getType()) instanceof ReflectionNamedType
-                    && isset($workPlan[$type->getName()]) => $workPlan[$type->getName()],
-
-                //Found from ingredient's instance type
-                $this->findInstanceForParameter(
-                    $parameter,
-                    $workPlan,
-                    $values,
-                    $allowTransform,
-                    $transformClassName,
-                ) => $skip = true,
-
-                //Special name `_methodName`
-                BowlInterface::METHOD_NAME === $name => $this->name,
-
-                //Not found, if it is not optional, throw an exception
-                !$parameter->isOptional() => throw new BadMethodCallException(
-                    sprintf(
-                        "Missing the parameter %s (%s) in the WorkPlan for %s::%s in %s:%s",
-                        $parameter->getName(),
-                        $name,
-                        $parameter->getDeclaringClass()?->getName(),
-                        $parameter->getDeclaringFunction()->getName(),
-                        $parameter->getDeclaringFunction()->getFileName(),
-                        $parameter->getDeclaringFunction()->getStartLine(),
-                    )
-                ),
-
-                //Return the default value
-                default => $parameter->getDefaultValue(),
-            };
+            $tempValue = $this->findParameterValueFromWorkplan(
+                $parameter,
+                $name,
+                $values,
+                $workPlan,
+                $skip,
+                $allowTransform,
+                $transformClassName,
+            );
 
             if (true === $skip) {
                 continue;

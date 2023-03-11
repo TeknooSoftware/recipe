@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.2.5] - 2023-03-11
+### Stable Release
+- Q\A
+
 ## [4.2.4] - 2023-03-10
 ### Stable Release
 - Q\A
