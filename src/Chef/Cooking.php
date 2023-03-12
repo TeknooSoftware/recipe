@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
-use RuntimeException;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
