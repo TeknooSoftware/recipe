@@ -118,7 +118,7 @@ class BowlClassTest extends AbstractBowlTests
 
         $parameter->setValue(
             [
-                __FILE__ . ':101' => [$refParam]
+                __FILE__ . ':98' => [$refParam]
             ]
         );
 
