@@ -7,8 +7,10 @@ currently being supported with security updates.
 
 | Version | Supported          |
 |---------|--------------------|
-| 4.0.x   | :white_check_mark: |
-| 3.4.x   | :white_check_mark: |
+| 4.2.x   | :white_check_mark: |
+| 4.1.x   | :x:                |
+| 4.0.x   | :x:                |
+| 3.4.x   | :x:                |
 | 3.x.x   | :x:                |
 | 2.4.x   | :x:                |
 | < 2.4   | :x:                |

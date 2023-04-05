@@ -150,7 +150,7 @@ _ All files use strict typing. Please make sure to not rely on type coercion.
 
 Credits
 -------
-Richard Déloge - <richarddeloge@gmail.com> - Lead developer.
+Richard Déloge - <richard@teknoo.software> - Lead developer.
 Teknoo Software - <https://teknoo.software>
 
 About Teknoo Software
