@@ -1,5 +1,11 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.2.6] - 2023-04-16
+### Stable Release
+- Update dev lib requirements
+- Support PHPUnit 10.1+
+- Migrate phpunit.xml
+
 ## [4.2.5] - 2023-03-11
 ### Stable Release
 - Q\A
