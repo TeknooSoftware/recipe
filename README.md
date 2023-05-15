@@ -150,14 +150,14 @@ _ All files use strict typing. Please make sure to not rely on type coercion.
 
 Credits
 -------
-Richard Déloge - <richard@teknoo.software> - Lead developer.
-Teknoo Software - <https://teknoo.software>
+EIRL Richard Déloge - <https://deloge.io> - Lead developer.
+SASU Teknoo Software - <https://teknoo.software>
 
 About Teknoo Software
 ---------------------
-**Teknoo Software** is a PHP software editor, founded by Richard Déloge.
+**Teknoo Software** is a PHP software editor, founded by Richard Déloge, as part of EIRL Richard Déloge.
 Teknoo Software's goals : Provide to our partners and to the community a set of high quality services or software,
- sharing knowledge and skills.
+sharing knowledge and skills.
 
 License
 -------
