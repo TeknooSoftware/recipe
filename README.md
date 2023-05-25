@@ -77,10 +77,26 @@ Others examples are available into demo
 
 Support this project
 ---------------------
+This project is free and will remain free. It is fully supported by the activities of the EIRL.
+If you like it and help me maintain it and evolve it, don't hesitate to support me on
+[Patreon](https://patreon.com/teknoo_software) or [Github](https://github.com/sponsors/TeknooSoftware).
 
-This project is free and will remain free, but it is developed on my personal time. 
-If you like it and help me maintain it and evolve it, don't hesitate to support me on [Patreon](https://patreon.com/teknoo_software).
-Thanks :) Richard. 
+Thanks :) Richard.
+
+Credits
+-------
+EIRL Richard Déloge - <https://deloge.io> - Lead developer.
+SASU Teknoo Software - <https://teknoo.software>
+
+About Teknoo Software
+---------------------
+**Teknoo Software** is a PHP software editor, founded by Richard Déloge, as part of EIRL Richard Déloge.
+Teknoo Software's goals : Provide to our partners and to the community a set of high quality services or software,
+sharing knowledge and skills.
+
+License
+-------
+Space is licensed under the MIT License - see the licenses folder for details.
 
 Installation & Requirements
 ---------------------------
@@ -97,7 +113,6 @@ This library requires :
 
 News from Teknoo Recipe 4.0
 ----------------------------
-
 This library requires PHP 8.1 or newer. Some change causes bc breaks.
 
 - Use readonly properties for immutables objects.
@@ -114,7 +129,6 @@ This library requires PHP 8.1 or newer. Some change causes bc breaks.
 
 News from Teknoo Recipe 3.1
 ----------------------------
-
 This library requires PHP 8.0 or newer.
 
 - Add `MergeableInterface` and `ChefInterface::merge()` to allow merge ingredient instead of replace it with `updateWorkplan`
@@ -123,7 +137,6 @@ This library requires PHP 8.0 or newer.
 
 News from Teknoo Recipe 3.0
 ----------------------------
-
 This library requires PHP 8.0 or newer. Some change causes bc breaks.
 
 - Promise immutable check is performed before var assignment
@@ -136,7 +149,6 @@ This library requires PHP 8.0 or newer. Some change causes bc breaks.
 
 News from Teknoo Recipe 2.0
 ----------------------------
-
 This library requires PHP 7.4 or newer. Some change causes bc breaks :
 
 - PHP 7.4 is the minimum required
@@ -148,22 +160,6 @@ _ All files use strict typing. Please make sure to not rely on type coercion.
 - Enable PHPStan in QA Tools and disable PHPMd
 - Enable PHPStan extension dedicated to support Stated classes
 
-Credits
--------
-EIRL Richard Déloge - <https://deloge.io> - Lead developer.
-SASU Teknoo Software - <https://teknoo.software>
-
-About Teknoo Software
----------------------
-**Teknoo Software** is a PHP software editor, founded by Richard Déloge, as part of EIRL Richard Déloge.
-Teknoo Software's goals : Provide to our partners and to the community a set of high quality services or software,
-sharing knowledge and skills.
-
-License
--------
-Recipe is licensed under the MIT License - see the licenses folder for details
-
 Contribute :)
 -------------
-
 You are welcome to contribute to this project. [Fork it on Github](CONTRIBUTING.md)
