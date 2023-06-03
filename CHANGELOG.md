@@ -1,5 +1,10 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.2.8] - 2023-06-03
+### Stable Release
+- Update lib requirements
+- Improve the documentation
+
 ## [4.2.7] - 2023-05-15
 ### Stable Release
 - Update dev lib requirements

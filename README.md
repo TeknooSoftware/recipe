@@ -11,6 +11,8 @@ Inspired by cooking, allows the creation of dynamic algorithm, called here recip
 following the #east programming and using middleware, configurable via DI or any configuration,
 if a set of conditions (ingredients) are available.
 
+A complete documentation is available in [documentation/README.md](documentation/README.md)
+
 Quick Example
 -------------
 
@@ -74,6 +76,8 @@ Quick Example
     echo $output.PHP_EOL;
 
 Others examples are available into demo
+
+A complete documentation is available in [documentation/README.md](documentation/README.md)
 
 Support this project
 ---------------------
