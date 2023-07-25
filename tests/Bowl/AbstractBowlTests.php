@@ -25,10 +25,15 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use BadMethodCallException;
+use DateTime;
+use DateTimeInterface;
+use stdClass;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
+use TypeError;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -45,15 +50,15 @@ abstract class AbstractBowlTests extends TestCase
 
     public function testExceptionOnExecuteWithBadChef()
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
         $values = ['foo'=>'bar'];
-        $this->buildBowl()->execute(new \stdClass(), $values);
+        $this->buildBowl()->execute(new stdClass(), $values);
     }
 
     public function testExceptionOnExecuteWithBadWorkPlan()
     {
-        $this->expectException(\TypeError::class);
-        $values = new \stdClass();
+        $this->expectException(TypeError::class);
+        $values = new stdClass();
         $this->buildBowl()->execute($this->createMock(ChefInterface::class), $values);
     }
 
@@ -62,8 +67,8 @@ abstract class AbstractBowlTests extends TestCase
         return [
             'foo' => 'foo',
             'foo2' => 'bar2',
-            'now' => (new \DateTime('2018-01-01')),
-            \DateTimeInterface::class => (new \DateTime('2018-01-02')),
+            'now' => (new DateTime('2018-01-01')),
+            DateTimeInterface::class => (new DateTime('2018-01-02')),
         ];
     }
 
@@ -76,7 +81,7 @@ abstract class AbstractBowlTests extends TestCase
                 'bar' => 'foo',
                 'bar2' => 'foo',
                 'foo2' => 'bar2',
-                'date' => (new \DateTime('2018-01-01'))->getTimestamp(),
+                'date' => (new DateTime('2018-01-01'))->getTimestamp(),
                 '_methodName' => 'bowlClass',
             ])
             ->willReturnSelf();
@@ -104,7 +109,7 @@ abstract class AbstractBowlTests extends TestCase
 
     public function testExceptionWhenExecuteAndMissingAndIngredientInWorkPlan()
     {
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects(self::never())
             ->method('continue');
