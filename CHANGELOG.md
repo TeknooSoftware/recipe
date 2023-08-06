@@ -1,5 +1,10 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.3.0] - 2023-06-03
+### Stable Release
+- Fix methods visibilities in `Chef` and `Recipe` stated classes
+- Add `IngredientWithCondition` to create optional tests according to some ingredients
+
 ## [4.2.8] - 2023-06-03
 ### Stable Release
 - Update lib requirements

@@ -54,7 +54,7 @@ class Free implements StateInterface
     /*
      * To read and lean a recipe.
      */
-    public function readRecipe(): callable
+    private function readRecipe(): callable
     {
         return function (BaseRecipeInterface $recipe): ChefInterface {
             /**
@@ -71,7 +71,7 @@ class Free implements StateInterface
     /*
      * To learn steps in the recipe, in the good order
      */
-    public function followStepsRecipe(): callable
+    private function followStepsRecipe(): callable
     {
         return function (array $steps, array $onError): ChefInterface {
             /**

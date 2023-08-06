@@ -26,59 +26,102 @@ declare(strict_types=1);
 namespace Teknoo\Tests\Recipe\Ingredient;
 
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\Ingredient\IngredientBagInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
-use PHPUnit\Framework\TestCase;
-use Teknoo\Recipe\RecipeInterface;
+use Teknoo\Recipe\Ingredient\IngredientWithCondition;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
+ *
+ * @covers \Teknoo\Recipe\Ingredient\Ingredient
+ * @covers \Teknoo\Recipe\Ingredient\IngredientWithCondition
  */
-abstract class AbstractIngredientTests extends TestCase
+class IngredientScalarWithConditionTest extends AbstractIngredientTests
 {
     /**
-     * @return IngredientInterface
+     * @inheritDoc
      */
-    abstract public function buildIngredient(): IngredientInterface;
-
-    abstract public function getWorkPlanValid(): array;
-
-    abstract public function getWorkPlanInvalidMissing(): array;
-
-    abstract public function getWorkPlanInvalidNotInstanceOf(): array;
-
-    abstract public function getWorkPlanInjected(): array;
-
-    public function testExceptionOnPrepareWhenWorkPlanIsNotAnArray()
+    public function buildIngredient($requiredType = 'string', $name='IngName'): IngredientInterface
     {
-        $this->expectException(\TypeError::class);
-        $s = new \stdClass();
-        $this->buildIngredient()->prepare($s, $this->createMock(RecipeInterface::class));
+        $conditon = function (
+            array $workplan,
+            ChefInterface $chef,
+            ?IngredientBagInterface $bag = null,
+        ): bool {
+            self::assertInstanceOf(ChefInterface::class, $chef);
+            return empty($workplan['byPass']);
+        };
+
+        return new IngredientWithCondition($conditon, $requiredType, $name);
     }
 
-    public function testExceptionOnPrepareWhenWorkPlanIsNotPromise()
+    public function getWorkPlanValid(): array
     {
-        $this->expectException(\TypeError::class);
-        $a = [];
-        $this->buildIngredient()->prepare($a, new \stdClass());
+        return [
+            'IngName' => 'fooBar'
+        ];
     }
 
-    public function testPrepareWithValidPlan()
+    public function getWorkPlanValidAndByPass(): array
+    {
+        return [
+            'IngName' => 'fooBar',
+            'byPass' => true,
+        ];
+    }
+
+    public function getWorkPlanInvalidMissing(): array
+    {
+        return [
+            'foo' => 'fooBar'
+        ];
+    }
+
+    public function getWorkPlanInvalidMissingAndByPass(): array
+    {
+        return [
+            'foo' => 'fooBar',
+            'byPass' => true,
+        ];
+    }
+
+    public function getWorkPlanInvalidNotInstanceOf(): array
+    {
+        return [
+            'IngName' => 123
+        ];
+    }
+
+    public function getWorkPlanInvalidNotInstanceOfAndByPass(): array
+    {
+        return [
+            'IngName' => 123,
+            'byPass' => true,
+        ];
+    }
+
+    public function getWorkPlanInjected(): array
+    {
+        return [
+            'IngName' => 'fooBar'
+        ];
+    }
+
+    public function testPrepareWithValidPlanAndCondition()
     {
         $chef = $this->createMock(ChefInterface::class);
 
         $chef->expects(self::never())
             ->method('missing');
 
-        $chef->expects(self::once())
-            ->method('updateWorkPlan')
-            ->with($this->getWorkPlanInjected())
-            ->willReturnSelf();
+        $chef->expects(self::never())
+            ->method('updateWorkPlan');
 
-        $a = $this->getWorkPlanValid();
+        $a = $this->getWorkPlanValidAndByPass();
         self::assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
@@ -88,7 +131,7 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
-    public function testPrepareWithValidPlanWithBag()
+    public function testPrepareWithValidPlanWithBagAndCondition()
     {
         $chef = $this->createMock(ChefInterface::class);
         $bag = $this->createMock(IngredientBagInterface::class);
@@ -106,7 +149,7 @@ abstract class AbstractIngredientTests extends TestCase
             ->with($this->getWorkPlanInjected())
             ->willReturnSelf();
 
-        $a = $this->getWorkPlanValid();
+        $a = $this->getWorkPlanValidAndByPass();
         self::assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
@@ -117,18 +160,18 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
-    public function testPrepareWithInvalidPlanTheIngredientIsNotPresent()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentAndCondition()
     {
         $chef = $this->createMock(ChefInterface::class);
 
-        $chef->expects(self::once())
+        $chef->expects(self::never())
             ->method('missing');
 
         $chef->expects(self::never())
             ->method('updateWorkPlan')
             ->willReturnSelf();
 
-        $a = $this->getWorkPlanInvalidMissing();
+        $a = $this->getWorkPlanInvalidMissingAndByPass();
         self::assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
@@ -138,18 +181,18 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
-    public function testPrepareWithInvalidPlanTheIngredientIsNotOfTheRequiredClass()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotOfTheRequiredClassAndCondition()
     {
         $chef = $this->createMock(ChefInterface::class);
 
-        $chef->expects(self::once())
+        $chef->expects(self::never())
             ->method('missing');
 
         $chef->expects(self::never())
             ->method('updateWorkPlan')
             ->willReturnSelf();
 
-        $a = $this->getWorkPlanInvalidNotInstanceOf();
+        $a = $this->getWorkPlanInvalidNotInstanceOfAndByPass();
         self::assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(

@@ -58,7 +58,7 @@ class Draft implements StateInterface
     /*
      * To define a new required ingredient to execute the recipe, a new recipe object will be returned
      */
-    public function addIngredient(): callable
+    private function addIngredient(): callable
     {
         return function (IngredientInterface $ingredient): RecipeInterface {
             /**
@@ -75,7 +75,7 @@ class Draft implements StateInterface
      * To push a step in the recipe, a new recipe object will be returned. If the step is a callable, it will be wrapped
      * into a Bowl object, else, the BowlInterface instance will be directly used
      */
-    public function addStep(): callable
+    private function addStep(): callable
     {
         return function (
             callable | BowlInterface $action,
@@ -106,7 +106,7 @@ class Draft implements StateInterface
     /*
      * To define an error handler about this recipe, a new recipe object will be returned
      */
-    public function setOnError(): callable
+    private function setOnError(): callable
     {
         return function (callable | BowlInterface $callable): RecipeInterface {
             /**
@@ -129,7 +129,7 @@ class Draft implements StateInterface
      * condition can be a callable and will be wrapped into a bowl in this case.
      * A new recipe object will be returned
      */
-    public function addSubRecipe(): callable
+    private function addSubRecipe(): callable
     {
         return function (
             BaseRecipeInterface $recipe,
@@ -166,7 +166,7 @@ class Draft implements StateInterface
     /*
      * To define excepted dish resulting of the recipe, a new recipe object will be returned
      */
-    public function setExceptedDish(): callable
+    private function setExceptedDish(): callable
     {
         return function (DishInterface $dish): RecipeInterface {
             /**

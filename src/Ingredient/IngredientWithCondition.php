@@ -25,29 +25,63 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Ingredient;
 
-use Teknoo\Immutable\ImmutableInterface;
+use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
 
+use function class_exists;
+use function is_a;
+use function is_callable;
+use function is_object;
+use function is_string;
+use function is_subclass_of;
+
 /**
- * Interface to define required ingredient needed to start cooking a recipe, initialize or clean them if it's necessary.
- * Ingredient must be immutable.
+ * Base class to define required ingredient needed to start cooking a recipe,
+ * initialize or clean them if it's necessary. This class check only the class of each ingredient.
+ *
+ * @see IngredientInterface
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-interface IngredientInterface extends ImmutableInterface
+class IngredientWithCondition extends Ingredient
 {
     /**
-     * To check if an ingredient is available on the workplan and inject the cleaned ingredient into the workplan.
-     * If the ingredient is not available, the instance must call the method missing of the chef.
-     *
+     * @var callable
+     */
+    private $conditionCallback;
+
+    public function __construct(
+        callable $conditionCallback,
+        string $requiredType,
+        string $name,
+        ?string $normalizedName = null,
+        ?callable $normalizeCallback = null,
+    ) {
+        parent::__construct(
+            requiredType: $requiredType,
+            name: $name,
+            normalizedName: $normalizedName,
+            normalizeCallback: $normalizeCallback,
+        );
+
+        $this->conditionCallback = $conditionCallback;
+    }
+
+    /**
      * @param array<string, mixed> $workPlan
      */
     public function prepare(
         array &$workPlan,
         ChefInterface $chef,
         ?IngredientBagInterface $bag = null
-    ): IngredientInterface;
+    ): IngredientInterface {
+        if (!($this->conditionCallback)($workPlan, $chef, $bag)) {
+            return $this;
+        }
+
+        return parent::prepare($workPlan, $chef, $bag);
+    }
 }

@@ -59,7 +59,7 @@ class Ingredient implements IngredientInterface
         private readonly string $requiredType,
         private readonly string $name,
         private readonly ?string $normalizedName = null,
-        ?callable $normalizeCallback = null
+        ?callable $normalizeCallback = null,
     ) {
         $this->uniqueConstructorCheck();
 
@@ -117,9 +117,9 @@ class Ingredient implements IngredientInterface
      * @param array<string, mixed> $workPlan
      */
     public function prepare(
-        array $workPlan,
+        array &$workPlan,
         ChefInterface $chef,
-        ?IngredientBagInterface $bag = null
+        ?IngredientBagInterface $bag = null,
     ): IngredientInterface {
         if (!isset($workPlan[$this->name])) {
             $chef->missing($this, "Missing the ingredient {$this->name}");

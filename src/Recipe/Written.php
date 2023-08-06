@@ -51,7 +51,7 @@ class Written implements StateInterface
     /*
      * To check if all ingredients are available and valid on the workplan
      */
-    public function prepareCooking(): callable
+    private function prepareCooking(): callable
     {
         return function (array $workPlan, ChefInterface $chef): RecipeInterface {
             /**
@@ -71,7 +71,7 @@ class Written implements StateInterface
     /*
      * To validate the result of the cooking.
      */
-    public function validateDish(): callable
+    private function validateDish(): callable
     {
         return function (mixed $value): RecipeInterface {
             /**

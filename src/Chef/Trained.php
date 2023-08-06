@@ -55,7 +55,7 @@ class Trained implements StateInterface
     /*
      * To update/prepare ingredients available on the workplan for the cooking
      */
-    public function updateMyWorkPlan(): callable
+    private function updateMyWorkPlan(): callable
     {
         return function (array $with): ChefInterface {
             $this->workPlan = $with + $this->workPlan;
@@ -67,7 +67,7 @@ class Trained implements StateInterface
     /*
      * To update/prepare ingredients available on the workplan for the cooking
      */
-    public function mergeInMyWorkPlan(): callable
+    private function mergeInMyWorkPlan(): callable
     {
         return function (string $name, MergeableInterface $value): ChefInterface {
             if (!isset($this->workPlan[$name])) {
@@ -89,7 +89,7 @@ class Trained implements StateInterface
     /*
      * To remove some ingredients from the workplan
      */
-    public function removeFromMyWorkPlan(): callable
+    private function removeFromMyWorkPlan(): callable
     {
         return function (array $ingredients): ChefInterface {
             $this->workPlan = array_diff_key($this->workPlan, array_flip($ingredients));
@@ -133,7 +133,7 @@ class Trained implements StateInterface
     /*
      * To execute a cooking and switch to cookine state.
      */
-    public function runRecipe(): callable
+    private function runRecipe(): callable
     {
         return function (array $workPlan): ChefInterface {
             //If this method is called, $this->recipe is a valid RecipeInterface instance
