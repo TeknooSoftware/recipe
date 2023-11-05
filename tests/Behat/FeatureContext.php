@@ -131,7 +131,7 @@ class FeatureContext implements Context
                 Assert::assertEquals('createImmutable', $_methodName);
             },
             'Fiber::step' => static function (IntBag $bag) {
-                for ($i=0; $i<15; $i++) {
+                for ($i = 0; $i < 15; $i++) {
                     Fiber::suspend();
                     IntBag::increaseValue($bag);
                 }
@@ -467,7 +467,7 @@ class FeatureContext implements Context
      */
     public function iCreateASubCookbook($name)
     {
-        $class = new class(new Recipe()) implements CookbookInterface {
+        $class = new class (new Recipe()) implements CookbookInterface {
             use BaseCookbookTrait;
 
             private array $steps = [];
@@ -802,8 +802,7 @@ class FeatureContext implements Context
      */
     public function iHaveACookbookForDateManagement()
     {
-        $this->cookbook = new class ($this) implements CookbookInterface
-        {
+        $this->cookbook = new class ($this) implements CookbookInterface {
             private FeatureContext $context;
 
             private ?BaseRecipeInterface $recipe;
@@ -878,8 +877,7 @@ class FeatureContext implements Context
     public function iHaveACookbookWithTheBaseTraitForDateManagement()
     {
         $this->notDefaultCookbook = false;
-        $this->cookbook = new class ($this) implements CookbookInterface
-        {
+        $this->cookbook = new class ($this) implements CookbookInterface {
             use BaseCookbookTrait;
 
             private FeatureContext $context;
@@ -986,14 +984,22 @@ class FeatureContext implements Context
         $this->notDefaultCookbook = true;
         $this->cookbook->addToWorkplan(
             CookbookInterface::class,
-            new class implements CookbookInterface {
-                public function train(ChefInterface $chef): BaseRecipeInterface {}
+            new class () implements CookbookInterface {
+                public function train(ChefInterface $chef): BaseRecipeInterface
+                {
+                }
 
-                public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface {}
+                public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface
+                {
+                }
 
-                public function validate(mixed $value): BaseRecipeInterface {}
+                public function validate(mixed $value): BaseRecipeInterface
+                {
+                }
 
-                public function fill(RecipeInterface $recipe): CookbookInterface {}
+                public function fill(RecipeInterface $recipe): CookbookInterface
+                {
+                }
             }
         );
     }

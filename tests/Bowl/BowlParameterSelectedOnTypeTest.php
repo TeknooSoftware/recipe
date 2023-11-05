@@ -42,7 +42,7 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
 {
     protected function getCallable()
     {
-        $object = new class() {
+        $object = new class () {
             public function methodToCall(
                 ChefInterface $chef,
                 string $bar,

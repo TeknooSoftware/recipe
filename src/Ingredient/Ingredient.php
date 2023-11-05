@@ -25,10 +25,13 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Ingredient;
 
+use ReflectionEnum;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
+use Throwable;
 
 use function class_exists;
+use function enum_exists;
 use function is_a;
 use function is_callable;
 use function is_object;
@@ -64,6 +67,14 @@ class Ingredient implements IngredientInterface
         $this->uniqueConstructorCheck();
 
         $this->normalizeCallback = $normalizeCallback;
+
+        if (
+            null === $this->normalizeCallback
+            && enum_exists($this->requiredType)
+            && (new ReflectionEnum($this->requiredType))->isBacked()
+        ) {
+            $this->normalizeCallback = ($this->requiredType)::from(...);
+        }
     }
 
     private function getNormalizedName(): string
@@ -92,6 +103,7 @@ class Ingredient implements IngredientInterface
     {
         if (
             class_exists($this->requiredType)
+            && (!enum_exists($this->requiredType) || null === $this->normalizeCallback)
             && (is_object($value) || is_string($value))
             && !is_a($value, $this->requiredType, true)
             && !is_subclass_of($value, $this->requiredType)
@@ -138,7 +150,13 @@ class Ingredient implements IngredientInterface
         }
 
         $normalizedName = $this->getNormalizedName();
-        $normalizedValue = $this->normalize($value);
+        try {
+            $normalizedValue = $this->normalize($value);
+        } catch (Throwable $error) {
+            $chef->missing($this, "The ingredient {$this->name} can not be normalized : {$error->getMessage()}");
+
+            return $this;
+        }
 
         if ($bag instanceof IngredientBagInterface) {
             $bag->set($normalizedName, $normalizedValue);

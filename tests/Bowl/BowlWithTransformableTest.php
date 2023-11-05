@@ -31,6 +31,7 @@ use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Teknoo\Tests\Recipe\Transformable;
+
 use function explode;
 
 /**
@@ -114,12 +115,12 @@ class BowlWithTransformableTest extends TestCase
         $this->called = true;
     }
 
-    public static function transformerToArray(string $value) : array
+    public static function transformerToArray(string $value): array
     {
         return explode('-', $value);
     }
 
-    public static function transformerToArray2(string $value) : Transformable
+    public static function transformerToArray2(string $value): Transformable
     {
         return new Transformable(explode('-', $value));
     }

@@ -41,7 +41,7 @@ class IngredientObjectTest extends AbstractIngredientTests
     /**
      * @inheritDoc
      */
-    public function buildIngredient($requiredType = \stdClass::class, $name='IngName'): IngredientInterface
+    public function buildIngredient($requiredType = \stdClass::class, $name = 'IngName'): IngredientInterface
     {
         return new Ingredient($requiredType, $name);
     }

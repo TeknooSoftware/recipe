@@ -25,8 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Ingredient;
 
+use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
+use Teknoo\Tests\Recipe\Support\BackedEnumExample;
+use Teknoo\Tests\Recipe\Support\EnumExample;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -36,14 +39,23 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  *
  * @covers \Teknoo\Recipe\Ingredient\Ingredient
  */
-class IngredientScalarTest extends AbstractIngredientTests
+class IngredientEnumNormalizeTest extends AbstractIngredientTests
 {
     /**
      * @inheritDoc
      */
-    public function buildIngredient($requiredType = 'string', $name = 'IngName'): IngredientInterface
-    {
-        return new Ingredient($requiredType, $name);
+    public function buildIngredient(
+        $requiredType = BackedEnumExample::class,
+        $name = 'ing_name',
+        $normalize = 'IngName',
+        callable $callback = null,
+    ): IngredientInterface {
+        return new Ingredient(
+            requiredType: $requiredType,
+            name: $name,
+            normalizedName: $normalize,
+            normalizeCallback: $callback,
+        );
     }
 
     /**
@@ -52,7 +64,7 @@ class IngredientScalarTest extends AbstractIngredientTests
     public function getWorkPlanValid(): array
     {
         return [
-            'IngName' => 'fooBar'
+            'ing_name' => 'val1'
         ];
     }
 
@@ -73,7 +85,7 @@ class IngredientScalarTest extends AbstractIngredientTests
     public function getWorkPlanInvalidNotInstanceOf(): array
     {
         return [
-            'IngName' => 123
+            'ing_name' => 'fooBar'
         ];
     }
 
@@ -83,7 +95,33 @@ class IngredientScalarTest extends AbstractIngredientTests
     public function getWorkPlanInjected(): array
     {
         return [
-            'IngName' => 'fooBar'
+            'IngName' => BackedEnumExample::VAL1
         ];
+    }
+
+    public function testPrepareWithInvalidPlanTheIngredientIsNotANonBackedEnum()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+
+        $chef->expects(self::once())
+            ->method('missing');
+
+        $chef->expects(self::never())
+            ->method('updateWorkPlan')
+            ->willReturnSelf();
+
+        $a = [
+            'ing_name' => 'val1'
+        ];
+
+        self::assertInstanceOf(
+            IngredientInterface::class,
+            $this->buildIngredient(
+                requiredType: EnumExample::class,
+            )->prepare(
+                $a,
+                $chef
+            )
+        );
     }
 }

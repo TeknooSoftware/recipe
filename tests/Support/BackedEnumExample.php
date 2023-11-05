@@ -23,67 +23,17 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Tests\Recipe\Ingredient;
-
-use Teknoo\Recipe\Ingredient\Ingredient;
-use Teknoo\Recipe\Ingredient\IngredientInterface;
+namespace Teknoo\Tests\Recipe\Support;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- *
- * @covers \Teknoo\Recipe\Ingredient\Ingredient
  */
-class IngredientScalarTest extends AbstractIngredientTests
+enum BackedEnumExample: string
 {
-    /**
-     * @inheritDoc
-     */
-    public function buildIngredient($requiredType = 'string', $name = 'IngName'): IngredientInterface
-    {
-        return new Ingredient($requiredType, $name);
-    }
+    CASE VAL1 = 'val1';
 
-    /**
-     * @inheritDoc
-     */
-    public function getWorkPlanValid(): array
-    {
-        return [
-            'IngName' => 'fooBar'
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getWorkPlanInvalidMissing(): array
-    {
-        return [
-            'foo' => 'fooBar'
-        ];
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function getWorkPlanInvalidNotInstanceOf(): array
-    {
-        return [
-            'IngName' => 123
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getWorkPlanInjected(): array
-    {
-        return [
-            'IngName' => 'fooBar'
-        ];
-    }
+    CASE VAL2 = 'val2';
 }

@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.4.0] - 2023-11-05
+### Stable Release
+- Ingredient can support Enum and convert automatically backed enum to enum value
+
 ## [4.3.0] - 2023-06-03
 ### Stable Release
 - Fix methods visibilities in `Chef` and `Recipe` stated classes

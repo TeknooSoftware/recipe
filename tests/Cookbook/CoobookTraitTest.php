@@ -44,7 +44,7 @@ class CoobookTraitTest extends TestCase
 
     public function buildCookbook(): CookbookInterface
     {
-        return new class($this->createMock(RecipeInterface::class)) implements CookbookInterface {
+        return new class ($this->createMock(RecipeInterface::class)) implements CookbookInterface {
             use BaseCookbookTrait;
 
             public function __construct(RecipeInterface $recipe)

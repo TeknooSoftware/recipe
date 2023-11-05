@@ -58,7 +58,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
     public function testExceptionOnExecuteWithBadChef()
     {
         $this->expectException(\TypeError::class);
-        $values = ['foo'=>'bar'];
+        $values = ['foo' => 'bar'];
         $this->buildBowl($this->createMock(RecipeInterface::class), 1)
             ->execute(
                 new \stdClass(),

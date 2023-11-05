@@ -51,7 +51,7 @@ abstract class AbstractBowlTests extends TestCase
     public function testExceptionOnExecuteWithBadChef()
     {
         $this->expectException(TypeError::class);
-        $values = ['foo'=>'bar'];
+        $values = ['foo' => 'bar'];
         $this->buildBowl()->execute(new stdClass(), $values);
     }
 

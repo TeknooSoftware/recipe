@@ -101,7 +101,7 @@ class ChefTest extends AbstractChefTests
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
 
         self::assertTrue($called);
@@ -150,7 +150,7 @@ class ChefTest extends AbstractChefTests
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
 
         self::assertTrue($called);

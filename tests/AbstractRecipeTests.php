@@ -91,7 +91,7 @@ abstract class AbstractRecipeTests extends TestCase
     {
         $this->expectException(\TypeError::class);
         $this->buildRecipe()->cook(function () {
-        }, 'foo', ['foo'=>'bar'], new \stdClass());
+        }, 'foo', ['foo' => 'bar'], new \stdClass());
     }
 
     public function testCookWithDefaultMapping()
@@ -387,7 +387,7 @@ abstract class AbstractRecipeTests extends TestCase
     public function testExceptionOnPrepareWithABadChef()
     {
         $this->expectException(\TypeError::class);
-        $array = ['foo'=>'bar'];
+        $array = ['foo' => 'bar'];
         $this->buildRecipe()->prepare($array, new \stdClass());
     }
 

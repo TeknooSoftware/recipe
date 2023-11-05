@@ -42,7 +42,7 @@ class BowlInvokableTest extends AbstractBowlTests
 {
     protected function getCallable(): callable
     {
-        $object = new class() {
+        $object = new class () {
             public function __invoke(ChefInterface $chef, string $bar, $foo2, \DateTime $date, $_methodName)
             {
                 $chef->continue([

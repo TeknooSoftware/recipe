@@ -102,7 +102,7 @@ class CookingSupervisorTest extends TestCase
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->supervise(
-                new Fiber(function() {}),
+                new Fiber(function () {}),
             )
         );
     }
@@ -110,10 +110,10 @@ class CookingSupervisorTest extends TestCase
     public function testSuperviseRunningFiber()
     {
         $this->expectException(\RuntimeException::class);
-        
+
         $supervisor = $this->buildSupervisor();
 
-        $fiber = new Fiber(function($fiber) use ($supervisor) {
+        $fiber = new Fiber(function ($fiber) use ($supervisor) {
             $supervisor->supervise($fiber);
         });
 

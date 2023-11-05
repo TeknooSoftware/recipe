@@ -41,8 +41,12 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTests
     /**
      * @inheritDoc
      */
-    public function buildIngredient($requiredType = 'numeric', $name='ing_name', $normalize='IngName', $callback = 'intval'): IngredientInterface
-    {
+    public function buildIngredient(
+        $requiredType = 'numeric',
+        $name = 'ing_name',
+        $normalize = 'IngName',
+        $callback = 'intval'
+    ): IngredientInterface {
         return new Ingredient($requiredType, $name, $normalize, $callback);
     }
 

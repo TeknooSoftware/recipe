@@ -151,7 +151,7 @@ abstract class AbstractChefTests extends TestCase
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
     }
 
@@ -201,7 +201,7 @@ abstract class AbstractChefTests extends TestCase
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
     }
 
@@ -251,7 +251,7 @@ abstract class AbstractChefTests extends TestCase
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
     }
 
@@ -317,7 +317,7 @@ abstract class AbstractChefTests extends TestCase
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
 
         self::assertTrue($called);
@@ -338,7 +338,7 @@ abstract class AbstractChefTests extends TestCase
         self::assertInstanceOf(
             ChefInterface::class,
             $chef->updateWorkPlan(
-                ['foo'=>'bar']
+                ['foo' => 'bar']
             )
         );
     }
@@ -368,8 +368,7 @@ abstract class AbstractChefTests extends TestCase
             )
         ]);
 
-        $c1 = new class implements MergeableInterface
-        {
+        $c1 = new class () implements MergeableInterface {
             public int $value = 0;
 
             public function __clone(): void
@@ -395,21 +394,24 @@ abstract class AbstractChefTests extends TestCase
         self::assertInstanceOf(
             ChefInterface::class,
             $chef->merge(
-                'foo', $c1
+                'foo',
+                $c1
             )
         );
 
         self::assertInstanceOf(
             ChefInterface::class,
             $chef->merge(
-                'foo', $c2
+                'foo',
+                $c2
             )
         );
 
         self::assertInstanceOf(
             ChefInterface::class,
             $chef->merge(
-                'foo', $c3
+                'foo',
+                $c3
             )
         );
 
@@ -433,7 +435,8 @@ abstract class AbstractChefTests extends TestCase
 
         $this->expectException(RuntimeException::class);
         $chef->merge(
-            'foo', $this->createMock(MergeableInterface::class)
+            'foo',
+            $this->createMock(MergeableInterface::class)
         );
     }
 
@@ -459,7 +462,8 @@ abstract class AbstractChefTests extends TestCase
 
         $this->expectException(RuntimeException::class);
         $chef->merge(
-            'foo', $this->createMock(MergeableInterface::class)
+            'foo',
+            $this->createMock(MergeableInterface::class)
         );
     }
 
@@ -478,7 +482,8 @@ abstract class AbstractChefTests extends TestCase
         self::assertInstanceOf(
             ChefInterface::class,
             $chef->cleanWorkPlan(
-                'foo', 'bar'
+                'foo',
+                'bar'
             )
         );
     }
@@ -494,7 +499,7 @@ abstract class AbstractChefTests extends TestCase
         self::assertInstanceOf(
             ChefInterface::class,
             $this->buildChef()->followSteps(
-                ['foo'=>'bar']
+                ['foo' => 'bar']
             )
         );
     }
@@ -504,7 +509,7 @@ abstract class AbstractChefTests extends TestCase
         self::assertInstanceOf(
             ChefInterface::class,
             $this->buildChef()->followSteps(
-                ['foo'=>'bar'],
+                ['foo' => 'bar'],
                 ['foo2']
             )
         );
@@ -515,7 +520,7 @@ abstract class AbstractChefTests extends TestCase
         self::assertInstanceOf(
             ChefInterface::class,
             $this->buildChef()->followSteps(
-                ['foo'=>'bar'],
+                ['foo' => 'bar'],
                 $this->createMock(BowlInterface::class)
             )
         );
@@ -544,11 +549,11 @@ abstract class AbstractChefTests extends TestCase
             ->method('execute')
             ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl) {
                 $called = true;
-                self::assertEquals(['foo'=>'bar'], $workPlan);
+                self::assertEquals(['foo' => 'bar'], $workPlan);
                 self::assertInstanceOf(
                     ChefInterface::class,
                     $chef->continue(
-                        ['foo'=>'bar2']
+                        ['foo' => 'bar2']
                     )
                 );
 
@@ -559,7 +564,7 @@ abstract class AbstractChefTests extends TestCase
         $bowl2->expects(self::once())
             ->method('execute')
             ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl2) {
-                self::assertEquals(['foo'=>'bar2'], $workPlan);
+                self::assertEquals(['foo' => 'bar2'], $workPlan);
 
                 return $bowl2;
             });
@@ -568,7 +573,7 @@ abstract class AbstractChefTests extends TestCase
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
 
         self::assertTrue($called);
@@ -595,7 +600,7 @@ abstract class AbstractChefTests extends TestCase
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
     }
 
@@ -630,7 +635,7 @@ abstract class AbstractChefTests extends TestCase
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
 
         self::assertTrue($called);
@@ -677,7 +682,7 @@ abstract class AbstractChefTests extends TestCase
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
 
         self::assertTrue($called);
@@ -694,11 +699,11 @@ abstract class AbstractChefTests extends TestCase
             ->method('execute')
             ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl) {
                 $called = true;
-                self::assertEquals(['foo'=>'bar'], $workPlan);
+                self::assertEquals(['foo' => 'bar'], $workPlan);
                 self::assertInstanceOf(
                     ChefInterface::class,
                     $chef->continue(
-                        ['foo'=>'bar2'],
+                        ['foo' => 'bar2'],
                         'bowl3'
                     )
                 );
@@ -714,7 +719,7 @@ abstract class AbstractChefTests extends TestCase
         $bowl3->expects(self::once())
             ->method('execute')
             ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl3) {
-                self::assertEquals(['foo'=>'bar2'], $workPlan);
+                self::assertEquals(['foo' => 'bar2'], $workPlan);
 
                 return $bowl3;
             });
@@ -723,7 +728,7 @@ abstract class AbstractChefTests extends TestCase
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
 
         self::assertTrue($called);
@@ -743,7 +748,7 @@ abstract class AbstractChefTests extends TestCase
                 self::assertInstanceOf(
                     ChefInterface::class,
                     $chef->finish(
-                        ['foo'=>'bar']
+                        ['foo' => 'bar']
                     )
                 );
 
@@ -754,7 +759,7 @@ abstract class AbstractChefTests extends TestCase
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
 
         self::assertTrue($called);
@@ -783,7 +788,7 @@ abstract class AbstractChefTests extends TestCase
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
 
         self::assertTrue($called);
@@ -825,7 +830,7 @@ abstract class AbstractChefTests extends TestCase
         $this->expectException(\Exception::class);
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
 
         self::assertTrue($called);
@@ -861,7 +866,7 @@ abstract class AbstractChefTests extends TestCase
 
         self::assertInstanceOf(
             ChefInterface::class,
-            $chef->process(['foo'=>'bar'])
+            $chef->process(['foo' => 'bar'])
         );
 
         self::assertTrue($called);
@@ -890,7 +895,7 @@ abstract class AbstractChefTests extends TestCase
         self::assertInstanceOf(
             ChefInterface::class,
             $chef->process(
-                ['foo'=>'bar']
+                ['foo' => 'bar']
             )
         );
     }
@@ -920,6 +925,6 @@ abstract class AbstractChefTests extends TestCase
         $chef->read($recipe);
         $chef->followSteps([$this->createMock(BowlInterface::class)]);
 
-        $chef->process(['foo'=>'bar']);
+        $chef->process(['foo' => 'bar']);
     }
 }

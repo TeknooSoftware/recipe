@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Teknoo\Tests\Recipe\Ingredient;
 
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\Ingredient\IngredientBagInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Ingredient\IngredientWithCondition;
@@ -45,7 +44,7 @@ class IngredientScalarWithConditionTest extends AbstractIngredientTests
     /**
      * @inheritDoc
      */
-    public function buildIngredient($requiredType = 'string', $name='IngName'): IngredientInterface
+    public function buildIngredient($requiredType = 'string', $name = 'IngName'): IngredientInterface
     {
         $conditon = function (
             array $workplan,
