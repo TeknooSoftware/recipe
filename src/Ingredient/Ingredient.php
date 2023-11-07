@@ -63,6 +63,8 @@ class Ingredient implements IngredientInterface
         private readonly string $name,
         private readonly ?string $normalizedName = null,
         ?callable $normalizeCallback = null,
+        private readonly bool $mandatory = true,
+        private readonly mixed $default = null,
     ) {
         $this->uniqueConstructorCheck();
 
@@ -133,13 +135,19 @@ class Ingredient implements IngredientInterface
         ChefInterface $chef,
         ?IngredientBagInterface $bag = null,
     ): IngredientInterface {
-        if (!isset($workPlan[$this->name])) {
+        if (
+            !isset($workPlan[$this->name])
+            && true === $this->mandatory
+        ) {
             $chef->missing($this, "Missing the ingredient {$this->name}");
 
             return $this;
         }
 
-        $value = $workPlan[$this->name];
+        $value = $this->default;
+        if (isset($workPlan[$this->name])) {
+            $value = $workPlan[$this->name];
+        }
 
         if (!$this->testScalarValue($value, $chef)) {
             return $this;

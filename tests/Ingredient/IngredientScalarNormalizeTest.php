@@ -45,9 +45,18 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTests
         $requiredType = 'numeric',
         $name = 'ing_name',
         $normalize = 'IngName',
-        $callback = 'intval'
+        $callback = 'intval',
+        bool $mandatory = true,
+        mixed $default = null,
     ): IngredientInterface {
-        return new Ingredient($requiredType, $name, $normalize, $callback);
+        return new Ingredient(
+            requiredType: $requiredType,
+            name: $name,
+            normalizedName: $normalize,
+            normalizeCallback: $callback,
+            mandatory: $mandatory,
+            default: $default,
+        );
     }
 
     /**
@@ -89,5 +98,10 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTests
         return [
             'IngName' => 123
         ];
+    }
+
+    public function getDefaultValue(): mixed
+    {
+        return 123;
     }
 }

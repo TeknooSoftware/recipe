@@ -49,12 +49,16 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
         $name = 'ing_name',
         $normalize = 'IngName',
         callable $callback = null,
+        bool $mandatory = true,
+        mixed $default = null,
     ): IngredientInterface {
         return new Ingredient(
             requiredType: $requiredType,
             name: $name,
             normalizedName: $normalize,
             normalizeCallback: $callback,
+            mandatory: $mandatory,
+            default: $default,
         );
     }
 
@@ -99,6 +103,11 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
         ];
     }
 
+    public function getDefaultValue(): mixed
+    {
+        return 'val1';
+    }
+
     public function testPrepareWithInvalidPlanTheIngredientIsNotANonBackedEnum()
     {
         $chef = $this->createMock(ChefInterface::class);
@@ -118,6 +127,30 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
             IngredientInterface::class,
             $this->buildIngredient(
                 requiredType: EnumExample::class,
+            )->prepare(
+                $a,
+                $chef
+            )
+        );
+    }
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentButNotBandatory()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+
+        $chef->expects(self::never())
+            ->method('missing');
+
+        $chef->expects(self::once())
+            ->method('updateWorkPlan')
+            ->with(['IngName' => BackedEnumExample::VAL1])
+            ->willReturnSelf();
+
+        $a = $this->getWorkPlanInvalidMissing();
+        self::assertInstanceOf(
+            IngredientInterface::class,
+            $this->buildIngredient(
+                mandatory: false,
+                default: $this->getDefaultValue(),
             )->prepare(
                 $a,
                 $chef

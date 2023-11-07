@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.5.0] - 2023-11-07
+### Stable Release
+- Ingredient can be non mandatory and provides default value
+
 ## [4.4.0] - 2023-11-05
 ### Stable Release
 - Ingredient can support Enum and convert automatically backed enum to enum value

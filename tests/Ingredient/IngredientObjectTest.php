@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Ingredient;
 
+use stdClass;
 use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 
@@ -41,9 +42,18 @@ class IngredientObjectTest extends AbstractIngredientTests
     /**
      * @inheritDoc
      */
-    public function buildIngredient($requiredType = \stdClass::class, $name = 'IngName'): IngredientInterface
-    {
-        return new Ingredient($requiredType, $name);
+    public function buildIngredient(
+        $requiredType = stdClass::class,
+        $name = 'IngName',
+        bool $mandatory = true,
+        mixed $default = null,
+    ): IngredientInterface {
+        return new Ingredient(
+            requiredType: $requiredType,
+            name: $name,
+            mandatory: $mandatory,
+            default: $default,
+        );
     }
 
     /**
@@ -52,7 +62,7 @@ class IngredientObjectTest extends AbstractIngredientTests
     public function getWorkPlanValid(): array
     {
         return [
-            'IngName' => new \stdClass()
+            'IngName' => new stdClass()
         ];
     }
 
@@ -83,7 +93,12 @@ class IngredientObjectTest extends AbstractIngredientTests
     public function getWorkPlanInjected(): array
     {
         return [
-            'IngName' => new \stdClass()
+            'IngName' => new stdClass()
         ];
+    }
+
+    public function getDefaultValue(): mixed
+    {
+        return new stdClass();
     }
 }

@@ -59,12 +59,16 @@ class IngredientWithCondition extends Ingredient
         string $name,
         ?string $normalizedName = null,
         ?callable $normalizeCallback = null,
+        bool $mandatory = true,
+        mixed $default = null,
     ) {
         parent::__construct(
             requiredType: $requiredType,
             name: $name,
             normalizedName: $normalizedName,
             normalizeCallback: $normalizeCallback,
+            mandatory: $mandatory,
+            default: $default,
         );
 
         $this->conditionCallback = $conditionCallback;

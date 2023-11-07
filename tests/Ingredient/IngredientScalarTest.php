@@ -41,9 +41,18 @@ class IngredientScalarTest extends AbstractIngredientTests
     /**
      * @inheritDoc
      */
-    public function buildIngredient($requiredType = 'string', $name = 'IngName'): IngredientInterface
-    {
-        return new Ingredient($requiredType, $name);
+    public function buildIngredient(
+        $requiredType = 'string',
+        $name = 'IngName',
+        bool $mandatory = true,
+        mixed $default = null,
+    ): IngredientInterface {
+        return new Ingredient(
+            requiredType: $requiredType,
+            name: $name,
+            mandatory: $mandatory,
+            default: $default,
+        );
     }
 
     /**
@@ -85,5 +94,10 @@ class IngredientScalarTest extends AbstractIngredientTests
         return [
             'IngName' => 'fooBar'
         ];
+    }
+
+    public function getDefaultValue(): mixed
+    {
+        return 'fooBar';
     }
 }

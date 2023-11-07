@@ -44,8 +44,12 @@ class IngredientScalarWithConditionTest extends AbstractIngredientTests
     /**
      * @inheritDoc
      */
-    public function buildIngredient($requiredType = 'string', $name = 'IngName'): IngredientInterface
-    {
+    public function buildIngredient(
+        $requiredType = 'string',
+        $name = 'IngName',
+        bool $mandatory = true,
+        mixed $default = null,
+    ): IngredientInterface {
         $conditon = function (
             array $workplan,
             ChefInterface $chef,
@@ -55,7 +59,13 @@ class IngredientScalarWithConditionTest extends AbstractIngredientTests
             return empty($workplan['byPass']);
         };
 
-        return new IngredientWithCondition($conditon, $requiredType, $name);
+        return new IngredientWithCondition(
+            conditionCallback: $conditon,
+            requiredType: $requiredType,
+            name: $name,
+            mandatory: $mandatory,
+            default: $default,
+        );
     }
 
     public function getWorkPlanValid(): array
@@ -108,6 +118,11 @@ class IngredientScalarWithConditionTest extends AbstractIngredientTests
         return [
             'IngName' => 'fooBar'
         ];
+    }
+
+    public function getDefaultValue(): mixed
+    {
+        return 'fooBar';
     }
 
     public function testPrepareWithValidPlanAndCondition()

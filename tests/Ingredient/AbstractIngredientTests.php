@@ -42,7 +42,7 @@ abstract class AbstractIngredientTests extends TestCase
     /**
      * @return IngredientInterface
      */
-    abstract public function buildIngredient(): IngredientInterface;
+    abstract public function buildIngredient(bool $mandatory = true, mixed $default = null): IngredientInterface;
 
     abstract public function getWorkPlanValid(): array;
 
@@ -51,6 +51,8 @@ abstract class AbstractIngredientTests extends TestCase
     abstract public function getWorkPlanInvalidNotInstanceOf(): array;
 
     abstract public function getWorkPlanInjected(): array;
+
+    abstract public function getDefaultValue(): mixed;
 
     public function testExceptionOnPrepareWhenWorkPlanIsNotAnArray()
     {
@@ -132,6 +134,31 @@ abstract class AbstractIngredientTests extends TestCase
         self::assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
+                $a,
+                $chef
+            )
+        );
+    }
+
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentButNotBandatory()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+
+        $chef->expects(self::never())
+            ->method('missing');
+
+        $chef->expects(self::once())
+            ->method('updateWorkPlan')
+            ->with(['IngName' => $this->getDefaultValue()])
+            ->willReturnSelf();
+
+        $a = $this->getWorkPlanInvalidMissing();
+        self::assertInstanceOf(
+            IngredientInterface::class,
+            $this->buildIngredient(
+                mandatory: false,
+                default: $this->getDefaultValue(),
+            )->prepare(
                 $a,
                 $chef
             )
