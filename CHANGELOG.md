@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.5.1] - 2023-11-07
+### Stable Release
+- Fix issue with valid enum ingredient value can not be normalized with the new behavior
+
 ## [4.5.0] - 2023-11-07
 ### Stable Release
 - Ingredient can be non mandatory and provides default value

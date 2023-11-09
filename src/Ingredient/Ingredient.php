@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Ingredient;
 
+use BackedEnum;
 use ReflectionEnum;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
@@ -75,7 +76,13 @@ class Ingredient implements IngredientInterface
             && enum_exists($this->requiredType)
             && (new ReflectionEnum($this->requiredType))->isBacked()
         ) {
-            $this->normalizeCallback = ($this->requiredType)::from(...);
+            $this->normalizeCallback = function (mixed $value) {
+                if (!$value instanceof BackedEnum) {
+                    $value = ($this->requiredType)::from($value);
+                }
+
+                return $value;
+            };
         }
     }
 

@@ -68,7 +68,7 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
     public function getWorkPlanValid(): array
     {
         return [
-            'ing_name' => 'val1'
+            'ing_name' => BackedEnumExample::VAL1,
         ];
     }
 
@@ -133,6 +133,7 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
             )
         );
     }
+
     public function testPrepareWithInvalidPlanTheIngredientIsNotPresentButNotBandatory()
     {
         $chef = $this->createMock(ChefInterface::class);
