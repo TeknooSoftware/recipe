@@ -21,9 +21,6 @@ parameters:
         -
             message: '#success\(\) expects TNextSuccessArgType\|null, TResultType given#'
             path: src/Promise
-        -
-            message: '#ReflectionEnum constructor#'
-            path: src/Ingredient/Ingredient.php
 services:
     -
         class: Teknoo\States\PHPStan\MethodsClassExtension
