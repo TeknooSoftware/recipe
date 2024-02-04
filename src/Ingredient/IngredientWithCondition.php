@@ -56,7 +56,7 @@ class IngredientWithCondition extends Ingredient
     public function __construct(
         callable $conditionCallback,
         string $requiredType,
-        string $name,
+        ?string $name,
         ?string $normalizedName = null,
         ?callable $normalizeCallback = null,
         bool $mandatory = true,

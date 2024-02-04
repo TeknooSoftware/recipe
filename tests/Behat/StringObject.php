@@ -59,9 +59,6 @@ class StringObject
         $chef->continue([], 'final');
     }
 
-    /**
-     * @inheritDoc
-     */
     public function __toString()
     {
         return (string) $this->value;

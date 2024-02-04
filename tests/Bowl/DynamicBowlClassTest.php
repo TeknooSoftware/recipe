@@ -71,9 +71,6 @@ class DynamicBowlClassTest extends AbstractBowlTests
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getValidWorkPlan(): array
     {
         return \array_merge(
@@ -82,9 +79,6 @@ class DynamicBowlClassTest extends AbstractBowlTests
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getNotValidWorkPlan(): array
     {
         return \array_merge(
@@ -93,9 +87,6 @@ class DynamicBowlClassTest extends AbstractBowlTests
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function buildBowl(): BowlInterface
     {
         return new DynamicBowl(

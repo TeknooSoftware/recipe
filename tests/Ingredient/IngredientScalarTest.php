@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Ingredient;
 
+use LogicException;
+use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 
@@ -38,14 +40,11 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  */
 class IngredientScalarTest extends AbstractIngredientTests
 {
-    /**
-     * @inheritDoc
-     */
     public function buildIngredient(
-        $requiredType = 'string',
-        $name = 'IngName',
         bool $mandatory = true,
         mixed $default = null,
+        $requiredType = 'string',
+        $name = 'IngName',
     ): IngredientInterface {
         return new Ingredient(
             requiredType: $requiredType,
@@ -55,9 +54,17 @@ class IngredientScalarTest extends AbstractIngredientTests
         );
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function buildIngredientWithoutName(
+        bool $mandatory = true,
+        mixed $default = null,
+    ): IngredientInterface {
+        return $this->buildIngredient(
+            mandatory: $mandatory,
+            default: $default,
+            name: null,
+        );
+    }
+
     public function getWorkPlanValid(): array
     {
         return [
@@ -65,9 +72,13 @@ class IngredientScalarTest extends AbstractIngredientTests
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function getWorkPlanKeyUnderAnotherName(): array
+    {
+        return [
+            'IngName2' => 'fooBar'
+        ];
+    }
+
     public function getWorkPlanInvalidMissing(): array
     {
         return [
@@ -75,10 +86,6 @@ class IngredientScalarTest extends AbstractIngredientTests
         ];
     }
 
-
-    /**
-     * @inheritDoc
-     */
     public function getWorkPlanInvalidNotInstanceOf(): array
     {
         return [
@@ -86,18 +93,32 @@ class IngredientScalarTest extends AbstractIngredientTests
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getWorkPlanInjected(): array
+   public function getWorkPlanInjected(): array
     {
         return [
             'IngName' => 'fooBar'
         ];
     }
 
+    public function getWorkPlanInjectedWithoutName(): array
+    {
+        return $this->getWorkPlanInjected();
+    }
+
     public function getDefaultValue(): mixed
     {
         return 'fooBar';
+    }
+
+    public function testPrepareWithValidPlanWithoutNameUseType()
+    {
+        $this->expectException(LogicException::class);
+        $this->buildIngredientWithoutName();
+    }
+
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsNullAndValueIsPresentUnderAnotherName()
+    {
+        $this->expectException(LogicException::class);
+        $this->buildIngredientWithoutName();
     }
 }

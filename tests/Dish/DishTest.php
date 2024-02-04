@@ -60,9 +60,6 @@ class DishTest extends AbstractDishTests
         return $this->promise;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function buildDish(): DishInterface
     {
         return new DishClass(

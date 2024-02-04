@@ -79,9 +79,6 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
         return ['bar' => 'foo'];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function buildBowl(): BowlInterface
     {
         return new DynamicBowl(

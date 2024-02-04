@@ -63,25 +63,16 @@ class DynamicBowlInvokableTest extends AbstractBowlTests
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getValidWorkPlan(): array
     {
         return \array_merge(parent::getValidWorkPlan(), ['callableToExec' => $this->getCallable()]);
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getNotValidWorkPlan(): array
     {
         return \array_merge(parent::getNotValidWorkPlan(), ['callableToExec' => $this->getCallable()]);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function buildBowl(): BowlInterface
     {
         return new DynamicBowl(

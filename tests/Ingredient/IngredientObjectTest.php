@@ -39,14 +39,11 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  */
 class IngredientObjectTest extends AbstractIngredientTests
 {
-    /**
-     * @inheritDoc
-     */
     public function buildIngredient(
-        $requiredType = stdClass::class,
-        $name = 'IngName',
         bool $mandatory = true,
         mixed $default = null,
+        $requiredType = stdClass::class,
+        $name = 'IngName',
     ): IngredientInterface {
         return new Ingredient(
             requiredType: $requiredType,
@@ -56,9 +53,17 @@ class IngredientObjectTest extends AbstractIngredientTests
         );
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function buildIngredientWithoutName(
+        bool $mandatory = true,
+        mixed $default = null,
+    ): IngredientInterface {
+        return $this->buildIngredient(
+            mandatory: $mandatory,
+            default: $default,
+            name: null,
+        );
+    }
+
     public function getWorkPlanValid(): array
     {
         return [
@@ -66,9 +71,13 @@ class IngredientObjectTest extends AbstractIngredientTests
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function getWorkPlanKeyUnderAnotherName(): array
+    {
+        return [
+            'IngName2' => new stdClass()
+        ];
+    }
+
     public function getWorkPlanInvalidMissing(): array
     {
         return [
@@ -77,9 +86,6 @@ class IngredientObjectTest extends AbstractIngredientTests
     }
 
 
-    /**
-     * @inheritDoc
-     */
     public function getWorkPlanInvalidNotInstanceOf(): array
     {
         return [
@@ -87,13 +93,17 @@ class IngredientObjectTest extends AbstractIngredientTests
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getWorkPlanInjected(): array
     {
         return [
             'IngName' => new stdClass()
+        ];
+    }
+
+    public function getWorkPlanInjectedWithoutName(): array
+    {
+        return [
+            stdClass::class => new stdClass()
         ];
     }
 

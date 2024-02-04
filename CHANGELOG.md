@@ -1,5 +1,16 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.6.0] - 2024-02-04
+### Stable Release
+- For Recipe's Ingredient requiring an object instance or an enum value, the name is not mandatory
+  - The name will be automatically the required class name (or enum name)
+  - The ingredient validation will search an instance in the workplan if the required name is not found
+    - If the name is found, aka if a value in the workplan is defined in the workplan with the required type, this value
+      will be selected directly.
+    - If the name is defined with the required type, this behavior is disable, the ingredient must have the required 
+      name in the workplan (old behavior).
+- Fix deprecated in test with PHP8.3
+
 ## [4.5.2] - 2023-11-29
 ### Stable Release
 - Update dev lib requirements

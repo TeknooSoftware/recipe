@@ -82,9 +82,6 @@ class FiberBowlClosureTest extends AbstractBowlTests
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function buildBowl(): BowlInterface
     {
         return new FiberBowl(

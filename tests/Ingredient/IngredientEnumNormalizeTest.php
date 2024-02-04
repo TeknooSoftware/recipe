@@ -41,16 +41,13 @@ use Teknoo\Tests\Recipe\Support\EnumExample;
  */
 class IngredientEnumNormalizeTest extends AbstractIngredientTests
 {
-    /**
-     * @inheritDoc
-     */
     public function buildIngredient(
+        bool $mandatory = true,
+        mixed $default = null,
         $requiredType = BackedEnumExample::class,
         $name = 'ing_name',
         $normalize = 'IngName',
         callable $callback = null,
-        bool $mandatory = true,
-        mixed $default = null,
     ): IngredientInterface {
         return new Ingredient(
             requiredType: $requiredType,
@@ -62,9 +59,17 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
         );
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function buildIngredientWithoutName(
+        bool $mandatory = true,
+        mixed $default = null,
+    ): IngredientInterface {
+        return $this->buildIngredient(
+            mandatory: $mandatory,
+            default: $default,
+            name: null,
+        );
+    }
+
     public function getWorkPlanValid(): array
     {
         return [
@@ -72,9 +77,13 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function getWorkPlanKeyUnderAnotherName(): array
+    {
+        return [
+            'ing_name_2' => BackedEnumExample::VAL1,
+        ];
+    }
+
     public function getWorkPlanInvalidMissing(): array
     {
         return [
@@ -82,10 +91,6 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
         ];
     }
 
-
-    /**
-     * @inheritDoc
-     */
     public function getWorkPlanInvalidNotInstanceOf(): array
     {
         return [
@@ -93,10 +98,14 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getWorkPlanInjected(): array
+    {
+        return [
+            'IngName' => BackedEnumExample::VAL1
+        ];
+    }
+
+    public function getWorkPlanInjectedWithoutName(): array
     {
         return [
             'IngName' => BackedEnumExample::VAL1
@@ -134,7 +143,7 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
         );
     }
 
-    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentButNotBandatory()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentButNotMandatory()
     {
         $chef = $this->createMock(ChefInterface::class);
 

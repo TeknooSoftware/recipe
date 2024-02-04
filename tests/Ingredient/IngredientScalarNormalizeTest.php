@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Ingredient;
 
+use LogicException;
+use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 
@@ -38,16 +40,13 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  */
 class IngredientScalarNormalizeTest extends AbstractIngredientTests
 {
-    /**
-     * @inheritDoc
-     */
     public function buildIngredient(
+        bool $mandatory = true,
+        mixed $default = null,
         $requiredType = 'numeric',
         $name = 'ing_name',
         $normalize = 'IngName',
         $callback = 'intval',
-        bool $mandatory = true,
-        mixed $default = null,
     ): IngredientInterface {
         return new Ingredient(
             requiredType: $requiredType,
@@ -59,9 +58,17 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTests
         );
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function buildIngredientWithoutName(
+        bool $mandatory = true,
+        mixed $default = null,
+    ): IngredientInterface {
+        return $this->buildIngredient(
+            mandatory: $mandatory,
+            default: $default,
+            name: null,
+        );
+    }
+
     public function getWorkPlanValid(): array
     {
         return [
@@ -69,9 +76,13 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTests
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function getWorkPlanKeyUnderAnotherName(): array
+    {
+        return [
+            'ing_name_2' => '123'
+        ];
+    }
+
     public function getWorkPlanInvalidMissing(): array
     {
         return [
@@ -79,10 +90,6 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTests
         ];
     }
 
-
-    /**
-     * @inheritDoc
-     */
     public function getWorkPlanInvalidNotInstanceOf(): array
     {
         return [
@@ -90,9 +97,6 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTests
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getWorkPlanInjected(): array
     {
         return [
@@ -100,8 +104,25 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTests
         ];
     }
 
+    public function getWorkPlanInjectedWithoutName(): array
+    {
+        return $this->getWorkPlanInjected();
+    }
+
     public function getDefaultValue(): mixed
     {
         return 123;
+    }
+
+    public function testPrepareWithValidPlanWithoutNameUseType()
+    {
+        $this->expectException(LogicException::class);
+        $this->buildIngredientWithoutName();
+    }
+
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsNullAndValueIsPresentUnderAnotherName()
+    {
+        $this->expectException(LogicException::class);
+        $this->buildIngredientWithoutName();
     }
 }

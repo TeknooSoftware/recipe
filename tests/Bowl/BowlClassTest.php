@@ -81,9 +81,6 @@ class BowlClassTest extends AbstractBowlTests
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function buildBowl(): BowlInterface
     {
         return new Bowl(
@@ -117,8 +114,9 @@ class BowlClassTest extends AbstractBowlTests
             ->willReturn($refType);
 
         $parameter->setValue(
+            $bowl,
             [
-                __FILE__ . ':98' => [$refParam]
+                __FILE__ . ':95' => [$refParam]
             ]
         );
 

@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\Recipe\Ingredient;
 
 use BackedEnum;
+use DomainException;
+use LogicException;
 use ReflectionEnum;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
@@ -33,6 +35,7 @@ use Throwable;
 
 use function class_exists;
 use function enum_exists;
+use function interface_exists;
 use function is_a;
 use function is_callable;
 use function is_object;
@@ -59,17 +62,35 @@ class Ingredient implements IngredientInterface
      */
     private $normalizeCallback;
 
+    private readonly bool $mandatory;
+
     public function __construct(
         private readonly string $requiredType,
-        private readonly string $name,
+        private readonly ?string $name = null,
         private readonly ?string $normalizedName = null,
         ?callable $normalizeCallback = null,
-        private readonly bool $mandatory = true,
+        bool $mandatory = true,
         private readonly mixed $default = null,
     ) {
         $this->uniqueConstructorCheck();
 
+        if (
+            null === $this->name
+            && 'object' !== $this->requiredType
+            && is_callable('is_' . $this->requiredType)
+        ) {
+            throw new LogicException(
+                'Error, an ingredient requirement without name is allowed only for object and enum',
+            );
+        }
+
         $this->normalizeCallback = $normalizeCallback;
+
+        if (null !== $this->default) {
+            $mandatory = false;
+        }
+
+        $this->mandatory = $mandatory;
 
         if (
             null === $this->normalizeCallback
@@ -89,7 +110,7 @@ class Ingredient implements IngredientInterface
     private function getNormalizedName(): string
     {
         if (empty($this->normalizedName)) {
-            return $this->name;
+            return (string) ($this->name ?? $this->requiredType);
         }
 
         return $this->normalizedName;
@@ -137,30 +158,68 @@ class Ingredient implements IngredientInterface
     /**
      * @param array<string, mixed> $workPlan
      */
+    private function getValueFromWorkPlan(
+        string $valueName,
+        array &$workPlan,
+        ChefInterface $chef,
+    ): mixed {
+        $found = isset($workPlan[$valueName]);
+        $value = $workPlan[$valueName] ?? null;
+
+        if (
+            !$found
+            && null === $this->name
+            && (
+                class_exists($this->requiredType)
+                || interface_exists($this->requiredType)
+                || enum_exists($this->requiredType)
+            )
+        ) {
+            foreach ($workPlan as &$item) {
+                if (is_object($item) && is_a($item, $this->requiredType)) {
+                    $found = true;
+                    $value = $item;
+                }
+            }
+        }
+
+        if (
+            false === $found
+            && true === $this->mandatory
+        ) {
+            throw new DomainException("Missing the ingredient {$valueName}");
+        }
+
+        if (!$found && !empty($this->default)) {
+            $value = $this->default;
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param array<string, mixed> $workPlan
+     */
     public function prepare(
         array &$workPlan,
         ChefInterface $chef,
         ?IngredientBagInterface $bag = null,
     ): IngredientInterface {
-        if (
-            !isset($workPlan[$this->name])
-            && true === $this->mandatory
-        ) {
-            $chef->missing($this, "Missing the ingredient {$this->name}");
+        $valueName = $this->name ?? $this->requiredType;
+
+        try {
+            $value = $this->getValueFromWorkPlan(valueName: $valueName, workPlan: $workPlan, chef: $chef);
+        } catch (DomainException $exception) {
+            $chef->missing($this, $exception->getMessage());
 
             return $this;
         }
 
-        $value = $this->default;
-        if (isset($workPlan[$this->name])) {
-            $value = $workPlan[$this->name];
-        }
-
-        if (!$this->testScalarValue($value, $chef)) {
+        if (!$this->testScalarValue(value: $value, chef: $chef)) {
             return $this;
         }
 
-        if (!$this->testObjectValue($value, $chef)) {
+        if (!$this->testObjectValue(value: $value, chef: $chef)) {
             return $this;
         }
 
@@ -168,13 +227,13 @@ class Ingredient implements IngredientInterface
         try {
             $normalizedValue = $this->normalize($value);
         } catch (Throwable $error) {
-            $chef->missing($this, "The ingredient {$this->name} can not be normalized : {$error->getMessage()}");
+            $chef->missing($this, "The ingredient {$valueName} can not be normalized : {$error->getMessage()}");
 
             return $this;
         }
 
         if ($bag instanceof IngredientBagInterface) {
-            $bag->set($normalizedName, $normalizedValue);
+            $bag->set(name: $normalizedName, value: $normalizedValue);
 
             return $this;
         }

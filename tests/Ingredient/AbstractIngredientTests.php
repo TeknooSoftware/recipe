@@ -39,18 +39,24 @@ use Teknoo\Recipe\RecipeInterface;
  */
 abstract class AbstractIngredientTests extends TestCase
 {
-    /**
-     * @return IngredientInterface
-     */
     abstract public function buildIngredient(bool $mandatory = true, mixed $default = null): IngredientInterface;
 
+    abstract public function buildIngredientWithoutName(
+        bool $mandatory = true,
+        mixed $default = null,
+    ): IngredientInterface;
+
     abstract public function getWorkPlanValid(): array;
+
+    abstract public function getWorkPlanKeyUnderAnotherName(): array;
 
     abstract public function getWorkPlanInvalidMissing(): array;
 
     abstract public function getWorkPlanInvalidNotInstanceOf(): array;
 
     abstract public function getWorkPlanInjected(): array;
+
+    abstract public function getWorkPlanInjectedWithoutName(): array;
 
     abstract public function getDefaultValue(): mixed;
 
@@ -90,6 +96,28 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
+    public function testPrepareWithValidPlanWithoutNameUseType()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+
+        $chef->expects(self::never())
+            ->method('missing');
+
+        $chef->expects(self::once())
+            ->method('updateWorkPlan')
+            ->with($this->getWorkPlanInjectedWithoutName())
+            ->willReturnSelf();
+
+        $a = $this->getWorkPlanValid();
+        self::assertInstanceOf(
+            IngredientInterface::class,
+            $this->buildIngredientWithoutName()->prepare(
+                $a,
+                $chef
+            )
+        );
+    }
+
     public function testPrepareWithValidPlanWithBag()
     {
         $chef = $this->createMock(ChefInterface::class);
@@ -119,7 +147,7 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
-    public function testPrepareWithInvalidPlanTheIngredientIsNotPresent()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsSetAndValueMissing()
     {
         $chef = $this->createMock(ChefInterface::class);
 
@@ -140,7 +168,50 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
-    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentButNotBandatory()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsSetAndValueIsPresentUnderAnotherName()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+
+        $chef->expects(self::once())
+            ->method('missing');
+
+        $chef->expects(self::never())
+            ->method('updateWorkPlan')
+            ->willReturnSelf();
+
+        $a = $this->getWorkPlanKeyUnderAnotherName();
+        self::assertInstanceOf(
+            IngredientInterface::class,
+            $this->buildIngredient()->prepare(
+                $a,
+                $chef
+            )
+        );
+    }
+
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsNullAndValueIsPresentUnderAnotherName()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+
+        $chef->expects(self::never())
+            ->method('missing');
+
+        $chef->expects(self::once())
+            ->method('updateWorkPlan')
+            ->with($this->getWorkPlanInjectedWithoutName())
+            ->willReturnSelf();
+
+        $a = $this->getWorkPlanKeyUnderAnotherName();
+        self::assertInstanceOf(
+            IngredientInterface::class,
+            $this->buildIngredientWithoutName()->prepare(
+                $a,
+                $chef
+            )
+        );
+    }
+
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentButNotMandatory()
     {
         $chef = $this->createMock(ChefInterface::class);
 
