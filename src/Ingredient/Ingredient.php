@@ -161,10 +161,10 @@ class Ingredient implements IngredientInterface
     private function getValueFromWorkPlan(
         string $valueName,
         array &$workPlan,
-        ChefInterface $chef,
+        mixed $defaultValue = null,
     ): mixed {
         $found = isset($workPlan[$valueName]);
-        $value = $workPlan[$valueName] ?? null;
+        $value = $workPlan[$valueName] ?? $defaultValue;
 
         if (
             !$found
@@ -208,7 +208,11 @@ class Ingredient implements IngredientInterface
         $valueName = $this->name ?? $this->requiredType;
 
         try {
-            $value = $this->getValueFromWorkPlan(valueName: $valueName, workPlan: $workPlan, chef: $chef);
+            $value = $this->getValueFromWorkPlan(
+                valueName: $valueName,
+                workPlan: $workPlan,
+                defaultValue: $this->default,
+            );
         } catch (DomainException $exception) {
             $chef->missing($this, $exception->getMessage());
 

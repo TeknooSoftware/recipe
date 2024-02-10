@@ -121,4 +121,38 @@ class IngredientScalarTest extends AbstractIngredientTests
         $this->expectException(LogicException::class);
         $this->buildIngredientWithoutName();
     }
+
+    public function testIngredientNonMandatoryWithDefaultValue()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+
+        $chef->expects(self::never())
+            ->method('missing');
+
+        $chef->expects(self::once())
+            ->method('updateWorkPlan')
+            ->with(
+                [
+                    'foo' => [],
+                ]
+            )
+            ->willReturnSelf();
+
+        $a = [];
+
+        $ingredient = new Ingredient(
+            requiredType: 'array',
+            name: 'foo',
+            mandatory: false,
+            default: [],
+        );
+
+        self::assertInstanceOf(
+            IngredientInterface::class,
+            $ingredient->prepare(
+                $a,
+                $chef
+            )
+        );
+    }
 }

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\Recipe\Ingredient;
 
 use stdClass;
+use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\Ingredient;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 
@@ -110,5 +111,39 @@ class IngredientObjectTest extends AbstractIngredientTests
     public function getDefaultValue(): mixed
     {
         return new stdClass();
+    }
+
+    public function testIngredientNonMandatoryWithDefaultValue()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+
+        $chef->expects(self::never())
+            ->method('missing');
+
+        $chef->expects(self::once())
+            ->method('updateWorkPlan')
+            ->with(
+                [
+                    'foo' => new stdClass(),
+                ]
+            )
+            ->willReturnSelf();
+
+        $a = [];
+
+        $ingredient = new Ingredient(
+            requiredType: stdClass::class,
+            name: 'foo',
+            mandatory: false,
+            default: new stdClass(),
+        );
+
+        self::assertInstanceOf(
+            IngredientInterface::class,
+            $ingredient->prepare(
+                $a,
+                $chef
+            )
+        );
     }
 }

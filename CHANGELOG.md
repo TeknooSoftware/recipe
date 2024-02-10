@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [4.6.1] - 2024-02-10
+### Stable Release
+- Fix issue with non-mandatory ingredient with a default value
+
 ## [4.6.0] - 2024-02-04
 ### Stable Release
 - For Recipe's Ingredient requiring an object instance or an enum value, the name is not mandatory
