@@ -10,6 +10,13 @@ Feature: Cookbook
     Then I train the chef with the cookbook
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
 
+  Scenario: Train a chef to cook a dish from a cookbook with a value in mapping
+    Given I have an empty recipe
+    And I have a cookbook to lowercase value in mapping
+    And I have an untrained chef
+    Then I train the chef with the cookbook
+    And It starts cooking with "AbCdE" as "part1"
+
   Scenario: Train a chef to cook a dish from a cookbook and custom the recipe
     Given I have an empty recipe
     And I have a cookbook for date management

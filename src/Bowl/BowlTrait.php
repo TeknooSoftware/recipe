@@ -37,12 +37,12 @@ use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionUnionType;
-use RuntimeException;
 use Teknoo\Recipe\Bowl\Exception\SelfParameterNotInstantiableException;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Teknoo\Recipe\Ingredient\TransformableInterface;
+use Teknoo\Recipe\Recipe\Value;
 
 use function class_exists;
 use function current;
@@ -412,6 +412,10 @@ trait BowlTrait
                     do {
                         $name = current($mapping);
                     } while (!isset($workPlan[$name]) && next($mapping));
+                } elseif ($mapping instanceof Value) {
+                    $values[] = $mapping->getValue();
+
+                    continue;
                 }
             }
 

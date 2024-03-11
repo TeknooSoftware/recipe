@@ -31,6 +31,7 @@ use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Bowl\FiberBowl;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
+use Teknoo\Recipe\Recipe\Value;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -69,7 +70,7 @@ class FiberBowlClosureTest extends AbstractBowlTests
 
             $chef->continue([
                 'bar' => $bar,
-                'bar2' => $bar,
+                'bar2' => $bar2,
                 'foo2' => $foo2,
                 'date' => $date->getTimestamp(),
                 '_methodName' => $_methodName,
@@ -87,6 +88,18 @@ class FiberBowlClosureTest extends AbstractBowlTests
         return new FiberBowl(
             $this->getCallable(),
             $this->getMapping(),
+            'bowlClass'
+        );
+    }
+
+    public function buildBowlWithMappingValue(): BowlInterface
+    {
+        return new FiberBowl(
+            $this->getCallable(),
+            [
+                'bar' => new Value('ValueFoo1'),
+                'bar2' => new Value('ValueFoo2'),
+            ],
             'bowlClass'
         );
     }

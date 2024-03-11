@@ -23,40 +23,23 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Tests\Recipe\Bowl;
-
-use PHPUnit\Framework\TestCase;
-use Teknoo\Recipe\Bowl\Bowl;
-use TypeError;
+namespace Teknoo\Recipe\Recipe;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- *
- * @covers \Teknoo\Recipe\Bowl\Bowl
- * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
-class BowlInexistantClassTest extends TestCase
+class Value
 {
-    protected function getCallableClassNotAvailable()
-    {
-        return ['NoExistantClass', 'methodToCall'];
+    public function __construct(
+        private readonly mixed $value,
+    ) {
     }
 
-
-    protected function getMapping()
+    public function getValue(): mixed
     {
-        return [];
-    }
-
-    public function testExceptionWhenClassOfCallableIsNotAvailable()
-    {
-        $this->expectException(TypeError::class);
-        $bowl = new Bowl(
-            $this->getCallableClassNotAvailable(),
-            $this->getMapping()
-        );
+        return $this->value;
     }
 }

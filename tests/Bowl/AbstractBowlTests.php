@@ -48,6 +48,11 @@ abstract class AbstractBowlTests extends TestCase
      */
     abstract public function buildBowl(): BowlInterface;
 
+    /**
+     * @return BowlInterface
+     */
+    abstract public function buildBowlWithMappingValue(): BowlInterface;
+
     public function testExceptionOnExecuteWithBadChef()
     {
         $this->expectException(TypeError::class);
@@ -93,6 +98,34 @@ abstract class AbstractBowlTests extends TestCase
         self::assertInstanceOf(
             BowlInterface::class,
             $this->buildBowl()->execute(
+                $chef,
+                $values,
+                $this->createMock(CookingSupervisorInterface::class),
+            )
+        );
+    }
+
+    public function testExecuteWithValue()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+        $chef->expects(self::once())
+            ->method('continue')
+            ->with([
+                'bar' => 'ValueFoo1',
+                'bar2' => 'ValueFoo2',
+                'foo2' => 'bar2',
+                'date' => (new DateTime('2018-01-01'))->getTimestamp(),
+                '_methodName' => 'bowlClass',
+            ])
+            ->willReturnSelf();
+
+        $chef->expects(self::never())
+            ->method('updateWorkPlan');
+
+        $values = $this->getValidWorkPlan();
+        self::assertInstanceOf(
+            BowlInterface::class,
+            $this->buildBowlWithMappingValue()->execute(
                 $chef,
                 $values,
                 $this->createMock(CookingSupervisorInterface::class),

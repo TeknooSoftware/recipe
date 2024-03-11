@@ -1,5 +1,24 @@
 # Teknoo Software - Recipe - Change Log
 
+## [5.0.0] - 2024-03-11
+### Stable Release
+- Add `Value` class to use in recipe's steps mapping. With a `Value` instance in the mapping definitions, a bowl 
+  instance will directly use the value encapsulated in the `Value` instance instead of the redirection to another
+  ingredient name.
+- `Promise::allowNext` is now by default set to true. **(BC Break)**
+- Add to `Promise`, an option `callOnFailOnException` (set by default) to call the fail action when an uncatched 
+  exception is catched by the Promise during the execution of `success` callback. **(BC Break)**
+- Inversion behaviors of `Promise::fetchResult` and `Promise::fetchResultIfCalled` (a mistake). **(BC Break)**
+- Add `Promise::setDefaultResult` to set a default result to return with `fetchResult` when the promise is not called,
+  without pass the default value to `fetchResult` as argument.
+- `Promise::fetchResult` and `Promise::setDefaultResult` accepts now a callable as default value. The callable will be
+  executed before returns the result of the callable instead of returns the callable. **(BC Break)**
+- Add `PromiseInterface::__invoke` to use promise in any callable function parameter :
+  - On `__invoke` call, the `onSuccess` callable will be called. 
+    - By default, on a error in this callable, the `onFailure` will be also called.
+    - The `__invoke` will return the value returned by `onSuccess` or `onFailure` or the default value passed 
+      to `setDefaultResult`, like with `fetchResult`.
+
 ## [4.6.1] - 2024-02-10
 ### Stable Release
 - Fix issue with non-mandatory ingredient with a default value

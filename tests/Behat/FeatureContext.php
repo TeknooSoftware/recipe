@@ -49,6 +49,7 @@ use function array_merge;
 use function explode;
 use function lcfirst;
 use function strpos;
+use function strtolower;
 use function trim;
 
 /**
@@ -845,13 +846,6 @@ class FeatureContext implements Context
                     1
                 );
 
-                $promise = new Promise(function ($value) {
-                    Assert::assertInstanceOf(DateTimeImmutable::class, $value);
-                    Assert::assertEquals(new DateTimeImmutable($this->expectedDate), $value);
-                }, function () {
-                    Assert::fail('The dish is not valid');
-                });
-
                 $recipe = $recipe->cook(
                     function (ChefInterface $chef, $result) {
                         $chef->finish($result);
@@ -861,13 +855,103 @@ class FeatureContext implements Context
                     10
                 );
 
+                $promise = new Promise(function ($value) {
+                    Assert::assertInstanceOf(DateTimeImmutable::class, $value);
+                    Assert::assertEquals(new DateTimeImmutable($this->expectedDate), $value);
+                }, function () {
+                    Assert::fail('The dish is not valid');
+                });
+
                 $recipe = $recipe->given(new DishClass(DateTimeImmutable::class, $promise));
 
                 $this->recipe = $recipe;
 
                 return $this;
             }
+        };
+    }
 
+    /**
+     * @Given I have a cookbook to lowercase value in mapping
+     */
+    public function iHaveACookbookToLowerCaseValueInMapping()
+    {
+        $this->cookbook = new class ($this) implements CookbookInterface {
+            private FeatureContext $context;
+
+            private ?BaseRecipeInterface $recipe;
+
+            public string $expectedDate = 'abcdef';
+
+            public function __construct(FeatureContext $context)
+            {
+                $this->context = $context;
+            }
+
+            public function train(ChefInterface $chef): BaseRecipeInterface
+            {
+                $chef->read($this->recipe);
+
+                return $this;
+            }
+
+            public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface
+            {
+                $this->recipe->prepare($workPlan, $chef);
+
+                return $this;
+            }
+
+            public function validate($value): BaseRecipeInterface
+            {
+                $this->recipe->validate($value);
+
+                return $this;
+            }
+
+            public function fill(RecipeInterface $recipe): CookbookInterface
+            {
+                $recipe = $recipe->require(new Ingredient('string', 'part1'));
+                $recipe = $recipe->cook(
+                    function (ChefInterface $chef, string $part1, string $part2): void  {
+                        $chef->updateWorkPlan(['string' => $part1 . $part2]);
+                    },
+                    'concatenate',
+                    [
+                        'part2' => new Recipe\Value('FgHIjKl'),
+                    ],
+                    1
+                );
+
+                $recipe = $recipe->cook(
+                    strtolower(...),
+                    'finish',
+                    [],
+                    2
+                );
+
+                $recipe = $recipe->cook(
+                    fn (string $string, ChefInterface $chef) => $chef->updateWorkPlan([
+                        StringObject::class => new StringObject($string),
+                    ]),
+                    'createObject',
+                    [],
+                    2
+                );
+
+                $promise = new Promise(function ($value) {
+                    Assert::assertInstanceOf(StringObject::class, $value);
+                    Assert::assertEquals(new StringObject($this->expectedDate), $value);
+                }, function () {
+                    Assert::fail('The dish is not valid');
+                });
+
+                $recipe = $recipe->given(new DishClass(StringObject::class, $promise));
+
+                $this->recipe = $recipe;
+
+                return $this;
+            }
         };
     }
 

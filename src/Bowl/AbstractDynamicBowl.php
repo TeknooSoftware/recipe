@@ -32,6 +32,7 @@ use Teknoo\Recipe\Bowl\Exception\MissingCallableIngredientException;
 use Teknoo\Recipe\Bowl\Exception\MissingIngredientException;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
+use Teknoo\Recipe\Recipe\Value;
 
 use function is_callable;
 use function sprintf;
@@ -59,7 +60,7 @@ abstract class AbstractDynamicBowl implements BowlInterface
 
     /**
      * DynamicBowl constructor.
-     * @param array<string, string|string[]> $mapping
+     * @param array<string, string|string[]|Value> $mapping
      */
     public function __construct(
         private readonly string $callableKeyName,

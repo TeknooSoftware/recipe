@@ -29,6 +29,7 @@ use Exception;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
+use Teknoo\Recipe\Recipe\Value;
 
 /**
  * Default implementation of BowlInterface. A container with a callable to perform a step in a recipe.
@@ -57,7 +58,7 @@ class Bowl implements BowlInterface
     private $callable;
 
     /**
-     * @param array<string, string|string[]> $mapping
+     * @param array<string, string|string[]|Value> $mapping
      */
     public function __construct(
         callable $callable,

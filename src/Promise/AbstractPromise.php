@@ -75,12 +75,20 @@ abstract class AbstractPromise implements PromiseInterface
      */
     private mixed $result = null;
 
+    /**
+     * @var TResultType|(callable(): TResultType)|null
+     */
+    private mixed $defaultResult = null;
+
     private bool $called = false;
+
+    private bool $isFailing = false;
 
     public function __construct(
         callable $onSuccess = null,
         callable $onFail = null,
-        private readonly bool $allowNext = false
+        private readonly bool $allowNext = true,
+        private readonly bool $callOnFailOnException = true,
     ) {
         $this->uniqueConstructorCheck();
 
@@ -118,6 +126,7 @@ abstract class AbstractPromise implements PromiseInterface
 
     /**
      * @param array<int, mixed> $args
+     * @throws Throwable
      */
     private function call(?callable $callable, array &$args): void
     {
@@ -127,26 +136,41 @@ abstract class AbstractPromise implements PromiseInterface
             return;
         }
 
-        if (!$this->allowNext) {
+        if ($this->allowNext) {
+            if ($this->nextPromise instanceof PromiseInterface) {
+                $args[] = $this->nextPromise;
+            } else {
+                //Create an empty closure to provide a void callable for callable requiring
+                // a next argument
+                $args[] = new static(null, null, true);
+            }
+        }
+
+        try {
             $this->result = $this->processToExecution($callable, $args);
-
-            return;
+        } catch (Throwable $error) {
+            if (
+                !$this->isFailing
+                && $this->callOnFailOnException
+                && is_callable($this->onFail)
+            ) {
+                $this->isFailing = true;
+                $this->fail($error);
+                $this->isFailing = false;
+            } else {
+                throw $error;
+            }
         }
-
-        if ($this->nextPromise instanceof PromiseInterface) {
-            $args[] = $this->nextPromise;
-        } else {
-            //Create an empty closure to provide a void callable for callable requiring
-            // a next argument
-            $args[] = new static(null, null, true);
-        }
-
-        $this->result = $this->processToExecution($callable, $args);
     }
 
-    public function success(mixed $result = null): PromiseInterface
+    public function __invoke(...$args): mixed
     {
-        $args = func_get_args();
+        return $this->success(...$args)
+            ->fetchResult();
+    }
+
+    public function success(...$args): PromiseInterface
+    {
         $this->call($this->onSuccess, $args);
 
         if ($this->nextPromise instanceof PromiseInterface && true === $this->autoCallNextPromise) {
@@ -172,25 +196,38 @@ abstract class AbstractPromise implements PromiseInterface
         return $this;
     }
 
-    public function fetchResult(): mixed
+    public function setDefaultResult(mixed $default): PromiseInterface
+    {
+        $this->defaultResult = $default;
+
+        return $this;
+    }
+
+    public function fetchResult(mixed $default = null): mixed
+    {
+        if ($this->called) {
+            return $this->fetchResultIfCalled();
+        }
+
+        $default ??= $this->defaultResult;
+
+        if (is_callable($default)) {
+            return $default();
+        }
+
+        return $default;
+    }
+
+    public function fetchResultIfCalled(): mixed
     {
         if (true !== $this->called) {
             throw new NotExecutedPromiseException("The promise was not be previously executed");
         }
 
         if ($this->nextPromise instanceof PromiseInterface) {
-            return $this->nextPromise->fetchResultIfCalled($this->result) ?? $this->result;
+            return $this->nextPromise->fetchResult($this->result) ?? $this->result;
         }
 
         return $this->result;
-    }
-
-    public function fetchResultIfCalled(mixed $default): mixed
-    {
-        if (true !== $this->called) {
-            return $default;
-        }
-
-        return $this->fetchResult();
     }
 }

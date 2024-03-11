@@ -25,9 +25,13 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use DateTime;
+use DateTimeInterface;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisorInterface;
+use Teknoo\Recipe\Recipe\Value;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -48,7 +52,7 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
                 string $bar,
                 $bar2,
                 $foo2,
-                \DateTimeInterface $date,
+                DateTimeInterface $date,
                 $_methodName
             ) {
                 $chef->continue([
@@ -78,6 +82,18 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
         );
     }
 
+    public function buildBowlWithMappingValue(): BowlInterface
+    {
+        return new Bowl(
+            $this->getCallable(),
+            [
+                'bar' => new Value('ValueFoo1'),
+                'bar2' => new Value('ValueFoo2'),
+            ],
+            'bowlClass'
+        );
+    }
+
     public function testExecute()
     {
         $chef = $this->createMock(ChefInterface::class);
@@ -87,7 +103,7 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
                 'bar' => 'foo',
                 'bar2' => 'foo',
                 'foo2' => 'bar2',
-                'date' => (new \DateTime('2018-01-02'))->getTimestamp(),
+                'date' => (new DateTime('2018-01-02'))->getTimestamp(),
                 '_methodName' => 'bowlClass',
             ])
             ->willReturnSelf();
@@ -101,6 +117,34 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
             $this->buildBowl()->execute(
                 $chef,
                 $values
+            )
+        );
+    }
+
+    public function testExecuteWithValue()
+    {
+        $chef = $this->createMock(ChefInterface::class);
+        $chef->expects(self::once())
+            ->method('continue')
+            ->with([
+                'bar' => 'ValueFoo1',
+                'bar2' => 'ValueFoo2',
+                'foo2' => 'bar2',
+                'date' => (new DateTime('2018-01-02'))->getTimestamp(),
+                '_methodName' => 'bowlClass',
+            ])
+            ->willReturnSelf();
+
+        $chef->expects(self::never())
+            ->method('updateWorkPlan');
+
+        $values = $this->getValidWorkPlan();
+        self::assertInstanceOf(
+            BowlInterface::class,
+            $this->buildBowlWithMappingValue()->execute(
+                $chef,
+                $values,
+                $this->createMock(CookingSupervisorInterface::class),
             )
         );
     }

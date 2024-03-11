@@ -62,11 +62,16 @@ class WrappedOneCalledPromise implements PromiseInterface
         return $clone;
     }
 
-    public function success(mixed $result = null): PromiseInterface
+    public function __invoke(...$args): mixed
+    {
+        return $this->success(...$args)->fetchResult();
+    }
+
+    public function success(...$args): PromiseInterface
     {
         if (!$this->called) {
             $this->called = true;
-            $this->promise->success(...(func_get_args()));
+            $this->promise->success(...$args);
         }
 
         return $this;
@@ -83,13 +88,20 @@ class WrappedOneCalledPromise implements PromiseInterface
         return $this;
     }
 
-    public function fetchResult(): mixed
+    public function setDefaultResult(mixed $default): PromiseInterface
     {
-        return $this->promise->fetchResult();
+        $this->promise->setDefaultResult($default);
+
+        return $this;
     }
 
-    public function fetchResultIfCalled(mixed $default): mixed
+    public function fetchResult(mixed $default = null): mixed
     {
-        return $this->promise->fetchResultIfCalled($default);
+        return $this->promise->fetchResult($default);
+    }
+
+    public function fetchResultIfCalled(): mixed
+    {
+        return $this->promise->fetchResultIfCalled();
     }
 }

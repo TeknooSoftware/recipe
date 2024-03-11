@@ -23,6 +23,8 @@
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use DateTime;
+use DateTimeImmutable;
 use ReflectionNamedType;
 use ReflectionClass;
 use ReflectionParameter;
@@ -30,6 +32,7 @@ use RuntimeException;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Recipe\Value;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -43,16 +46,16 @@ use Teknoo\Recipe\ChefInterface;
 class BowlClassTest extends AbstractBowlTests
 {
     /**
-     * @param \DateTime|\DateTimeImmutable $date
+     * @param DateTime|DateTimeImmutable $date
      */
     public static function methodToCall(
         ChefInterface $chef,
         string $bar,
         $bar2,
         $foo2,
-        \DateTime|\DateTimeImmutable $date,
+        DateTime|DateTimeImmutable $date,
         $_methodName,
-        self $self
+        self $self,
     ) {
         $chef->continue([
             'bar' => $bar,
@@ -90,6 +93,18 @@ class BowlClassTest extends AbstractBowlTests
         );
     }
 
+    public function buildBowlWithMappingValue(): BowlInterface
+    {
+        return new Bowl(
+            $this->getCallable(),
+            [
+                'bar' => new Value('ValueFoo1'),
+                'bar2' => new Value('ValueFoo2'),
+            ],
+            'bowlClass'
+        );
+    }
+
     public function testBadDeclaringClassForSelfParameter()
     {
         $method = static function (self $parameter) {};
@@ -116,7 +131,7 @@ class BowlClassTest extends AbstractBowlTests
         $parameter->setValue(
             $bowl,
             [
-                __FILE__ . ':95' => [$refParam]
+                __FILE__ . ':110' => [$refParam]
             ]
         );
 

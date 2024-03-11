@@ -29,6 +29,7 @@ use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
+use Teknoo\Recipe\Recipe\Value;
 
 /**
  * Interface to define a recipe. A recipe has several ordered steps (as callable). It can have several required
@@ -52,7 +53,7 @@ interface RecipeInterface extends ImmutableInterface, BaseRecipeInterface
     /**
      * To define actions to realize the recipe.
      *
-     * @param array<string, string> $with
+     * @param array<string, string|string[]|Value> $with
      */
     public function cook(
         callable | BowlInterface $action,

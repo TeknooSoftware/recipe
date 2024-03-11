@@ -25,9 +25,12 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use DateTime;
+use DateTimeImmutable;
 use Teknoo\Recipe\Bowl\DynamicBowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Recipe\Value;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -42,19 +45,20 @@ use Teknoo\Recipe\ChefInterface;
 class DynamicBowlClassTest extends AbstractBowlTests
 {
     /**
-     * @param \DateTime|\DateTimeImmutable $date
+     * @param DateTime|DateTimeImmutable $date
      */
     public static function methodToCall(
         ChefInterface $chef,
         string $bar,
+        $bar2,
         $foo2,
-        \DateTime|\DateTimeImmutable $date,
+        DateTime|DateTimeImmutable $date,
         $_methodName,
         self $self
     ) {
         $chef->continue([
             'bar' => $bar,
-            'bar2' => $bar,
+            'bar2' => $bar2,
             'foo2' => $foo2,
             'date' => $date->getTimestamp(),
             '_methodName' => $_methodName,
@@ -93,6 +97,19 @@ class DynamicBowlClassTest extends AbstractBowlTests
             'callableToExec',
             false,
             $this->getMapping(),
+            'bowlClass'
+        );
+    }
+
+    public function buildBowlWithMappingValue(): BowlInterface
+    {
+        return new DynamicBowl(
+            'callableToExec',
+            false,
+            [
+                'bar' => new Value('ValueFoo1'),
+                'bar2' => new Value('ValueFoo2'),
+            ],
             'bowlClass'
         );
     }

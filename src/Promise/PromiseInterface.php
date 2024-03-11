@@ -57,10 +57,19 @@ interface PromiseInterface extends ImmutableInterface
     /**
      * To call the callback defined when the actor has successfully it's operation.
      *
-     * @param TSuccessArgType|null $result
+     * @param TSuccessArgType ...$args
      * @return PromiseInterface<TSuccessArgType, TResultType>
      */
-    public function success(mixed $result = null): PromiseInterface;
+    public function success(...$args): PromiseInterface;
+
+    /**
+     * To use promise with methods or functions requiring a callable
+     * Will return value returned by the success callback, like with `fetchResult`
+     *
+     * @param TSuccessArgType ...$args
+     * @return TResultType|null
+     */
+    public function __invoke(...$args): mixed;
 
     /**
      * To call the callback defined when an error has been occurred.
@@ -69,23 +78,35 @@ interface PromiseInterface extends ImmutableInterface
     public function fail(Throwable $throwable): PromiseInterface;
 
     /**
+     * To set the default value to return when `fetchResult` without default value.
+     * The default value can be a callable, it will be called automatically.
+     *
+     * The default value is returned if the success callable is not called, if the success callable return a null value,
+     * the null value will be returned
+     *
+     * @param TResultType|(callable(): TResultType)|null $default
+     * @return PromiseInterface<TSuccessArgType, TResultType>
+     */
+    public function setDefaultResult(mixed $default): PromiseInterface;
+
+    /**
+     * To get the returned value by the callback on the promise (Can be null if the callback return nothing).
+     * (Not "east compliant", but useful to integrate east code with an non-east code).
+     * If the promise was not called, the method will return $default value.
+     *
+     * @internal
+     *
+     * @param callable|TResultType $default
+     * @return null|TResultType
+     */
+    public function fetchResult(mixed $default = null): mixed;
+
+    /**
      * To get the returned value by the callback on the promise (Can be null if the callback return nothing).
      * (Not east compliant, but useful to integrate east code with an non-east code).
      * If the promise was not called, the method will throw an exception.
      *
      * @return null|TResultType
      */
-    public function fetchResult(): mixed;
-
-    /**
-     * To get the returned value by the callback on the promise (Can be null if the callback return nothing).
-     * (Not east compliant, but useful to integrate east code with an non-east code).
-     * If the promise was not called, the method will return $default value.
-     *
-     * @internal
-     *
-     * @param TResultType $default
-     * @return null|TResultType
-     */
-    public function fetchResultIfCalled(mixed $default): mixed;
+    public function fetchResultIfCalled(): mixed;
 }

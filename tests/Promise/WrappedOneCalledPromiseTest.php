@@ -63,6 +63,20 @@ class WrappedOneCalledPromiseTest extends TestCase
         );
     }
 
+    public function testInvoke()
+    {
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $promise->expects(self::once())->method('success')->with(['foo', 'bar'])->willReturnSelf();
+        $promise->expects(self::once())->method('fetchResult')->willReturn('bar');
+
+        $wp = $this->buildPromise($promise);
+        self::assertEquals(
+            'bar',
+            $wp(['foo', 'bar']),
+        );
+    }
+
     public function testSuccess()
     {
         $promise = $this->createMock(PromiseInterface::class);
@@ -98,16 +112,29 @@ class WrappedOneCalledPromiseTest extends TestCase
         );
     }
 
+    public function testSetDefaultResult()
+    {
+        $promise = $this->createMock(PromiseInterface::class);
+        $promise->expects(self::once())->method('setDefaultResult')->with('foo')->willReturnSelf();
+
+        $wp = $this->buildPromise($promise);
+
+        self::assertInstanceOf(
+            WrappedOneCalledPromise::class,
+            $wp->setDefaultResult('foo'),
+        );
+    }
+
     public function testFetchResult()
     {
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects(self::any())->method('fetchResult')->willReturn('foo');
+        $promise->expects(self::any())->method('fetchResult')->with('bar')->willReturn('foo');
 
         $wp = $this->buildPromise($promise);
         self::assertEquals(
             'foo',
-            $wp->fetchResult(),
+            $wp->fetchResult('bar'),
         );
     }
 
@@ -115,12 +142,12 @@ class WrappedOneCalledPromiseTest extends TestCase
     {
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects(self::any())->method('fetchResultIfCalled')->with('bar')->willReturn('foo');
+        $promise->expects(self::any())->method('fetchResultIfCalled')->willReturn('foo');
 
         $wp = $this->buildPromise($promise);
         self::assertEquals(
             'foo',
-            $wp->fetchResultIfCalled('bar'),
+            $wp->fetchResultIfCalled(),
         );
     }
 }

@@ -25,10 +25,12 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Bowl\DynamicBowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Recipe\Value;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -45,7 +47,7 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
     protected function getCallableObject()
     {
         $object = new class () {
-            public function methodToCall(ChefInterface $chef, string $bar, $foo2, \DateTime $date)
+            public function methodToCall(ChefInterface $chef, string $bar, $foo2, DateTime $date)
             {
                 $chef->continue([
                     'bar' => $bar,
@@ -61,7 +63,7 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
     protected function getCallableInvokable(): callable
     {
         $object = new class () {
-            public function __invoke(ChefInterface $chef, $bar, $foo, \DateTime $date)
+            public function __invoke(ChefInterface $chef, $bar, $foo, DateTime $date)
             {
                 $chef->continue([
                     'bar' => $bar,
@@ -88,6 +90,18 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
         );
     }
 
+    public function buildBowlWithMappingValue(): BowlInterface
+    {
+        return new DynamicBowl(
+            'callableToExec',
+            false,
+            [
+                'bar' => new Value('ValueFoo1'),
+                'bar2' => new Value('ValueFoo2'),
+            ],
+            'bowlClass'
+        );
+    }
 
     public function testExecute()
     {
@@ -97,9 +111,9 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
             ->with(
                 $this->callback(
                     fn ($value) => match ($value) {
-                        ['bar' => 'foo', 'foo2' => 'bar2', 'date' => (new \DateTime('2018-01-01'))->getTimestamp()] => true,
-                        ['bar' => 'foo', 'foo2' => 'bar2', 'date' => (new \DateTime('2018-01-01'))->getTimestamp()] => true,
-                        ['bar' => 'foo', 'foo2' => 'foo', 'date' => (new \DateTime('2018-01-01'))->getTimestamp()] => true,
+                        ['bar' => 'foo', 'foo2' => 'bar2', 'date' => (new DateTime('2018-01-01'))->getTimestamp()] => true,
+                        ['bar' => 'foo', 'foo2' => 'bar2', 'date' => (new DateTime('2018-01-01'))->getTimestamp()] => true,
+                        ['bar' => 'foo', 'foo2' => 'foo', 'date' => (new DateTime('2018-01-01'))->getTimestamp()] => true,
                         default => false,
                     }
                 ),
@@ -112,7 +126,7 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
         $values = [
             'foo' => 'foo',
             'foo2' => 'bar2',
-            'now' => (new \DateTime('2018-01-01')),
+            'now' => (new DateTime('2018-01-01')),
             'callableToExec' => $this->getCallableObject()
         ];
 

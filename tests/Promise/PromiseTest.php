@@ -39,8 +39,13 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  */
 class PromiseTest extends AbstractPromiseTests
 {
-    public function buildPromise($onSuccess, $onFail, bool $allowNext = false): PromiseInterface
+    public function buildPromise(
+        $onSuccess,
+        $onFail,
+        bool $allowNext = true,
+        bool $callOnFailOnException = true,
+    ): PromiseInterface
     {
-        return new Promise($onSuccess, $onFail, $allowNext);
+        return new Promise($onSuccess, $onFail, $allowNext, $callOnFailOnException);
     }
 }

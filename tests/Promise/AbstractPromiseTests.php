@@ -25,9 +25,12 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Promise;
 
+use Exception;
+use RuntimeException;
 use Teknoo\Immutable\Exception\ImmutableException;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -37,29 +40,43 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class AbstractPromiseTests extends TestCase
 {
-    abstract public function buildPromise($onSuccess, $onFail, bool $allowNext = false): PromiseInterface;
+    abstract public function buildPromise(
+        $onSuccess,
+        $onFail,
+        bool $allowNext = true,
+        bool $callOnFailOnException = true,
+    ): PromiseInterface;
 
     public function testConstructorBadSuccessCallable()
     {
-        $this->expectException(\Throwable::class);
-        $this->buildPromise('fooBar', function () {
-        });
+        $this->expectException(Throwable::class);
+        $this->buildPromise(
+            'fooBar',
+            function () {
+            },
+        );
     }
 
     public function testConstructorBadFailCallable()
     {
-        $this->expectException(\Throwable::class);
-        $this->buildPromise(function () {
-        }, 'fooBar');
+        $this->expectException(Throwable::class);
+        $this->buildPromise(
+            function () {
+            },
+            'fooBar',
+        );
     }
 
     public function testConstructor()
     {
         self::assertInstanceOf(
             PromiseInterface::class,
-            $this->buildPromise(function () {
-            }, function () {
-            })
+            $this->buildPromise(
+                function () {
+                },
+                function () {
+                },
+            ),
         );
     }
 
@@ -78,21 +95,24 @@ abstract class AbstractPromiseTests extends TestCase
             function () {
             },
             function () {
-            }
+            },
         )->__construct(
             function () {
             },
             function () {
-            }
+            },
         );
     }
 
     public function testNextSetNotCallable()
     {
-        $this->expectException(\Throwable::class);
-        $this->buildPromise(function () {
-        }, function () {
-        })->next('fooBar');
+        $this->expectException(Throwable::class);
+        $this->buildPromise(
+            function () {
+            },
+            function () {
+            },
+        )->next('fooBar');
     }
 
     public function testNextSetNull()
@@ -102,7 +122,7 @@ abstract class AbstractPromiseTests extends TestCase
             },
             function () {
             },
-            true
+            true,
         );
         $nextPromise = $promise->next(null);
 
@@ -112,9 +132,13 @@ abstract class AbstractPromiseTests extends TestCase
 
     public function testNextSetCallable()
     {
-        $promise = $this->buildPromise(function () {
-        }, function () {
-        }, true);
+        $promise = $this->buildPromise(
+            function () {
+            },
+            function () {
+            },
+            true,
+        );
         $nextPromise = $promise->next($this->createMock(PromiseInterface::class));
 
         self::assertInstanceOf(PromiseInterface::class, $nextPromise);
@@ -131,7 +155,7 @@ abstract class AbstractPromiseTests extends TestCase
             false
         );
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $promise->next($this->createMock(PromiseInterface::class));
     }
 
@@ -208,7 +232,7 @@ abstract class AbstractPromiseTests extends TestCase
             function () {
                 self::fail('Error, fail callback must not be called');
             },
-            false
+            false,
         );
 
         self::assertInstanceOf(
@@ -235,7 +259,7 @@ abstract class AbstractPromiseTests extends TestCase
             function () {
                 self::fail('Error, fail callback must not be called');
             },
-            true
+            true,
         );
 
         $promiseWithCallback = $promiseWithCallback->next($promiseWithCallback);
@@ -257,13 +281,13 @@ abstract class AbstractPromiseTests extends TestCase
             },
             function ($result) use (&$called) {
                 $called = true;
-                self::assertEquals(new \Exception('fooBar'), $result);
-            }
+                self::assertEquals(new Exception('fooBar'), $result);
+            },
         );
 
         self::assertInstanceOf(
             PromiseInterface::class,
-            $promiseWithCallback->fail(new \Exception('fooBar'))
+            $promiseWithCallback->fail(new Exception('fooBar'))
         );
 
         self::assertTrue($called, 'Error the success callback must be called');
@@ -277,7 +301,7 @@ abstract class AbstractPromiseTests extends TestCase
 
         self::assertInstanceOf(
             PromiseInterface::class,
-            $promiseWithoutSuccessCallback->fail(new \Exception('fooBar'))
+            $promiseWithoutSuccessCallback->fail(new Exception('fooBar'))
         );
     }
 
@@ -290,19 +314,19 @@ abstract class AbstractPromiseTests extends TestCase
             },
             function ($result, $next) use (&$called) {
                 $called = true;
-                self::assertEquals(new \Exception('fooBar'), $result);
+                self::assertEquals(new Exception('fooBar'), $result);
                 self::assertInstanceOf(
                     PromiseInterface::class,
                     $next
                 );
                 $next->fail($result);
             },
-            true
+            true,
         );
 
         self::assertInstanceOf(
             PromiseInterface::class,
-            $promiseWithCallback->fail(new \Exception('fooBar'))
+            $promiseWithCallback->fail(new Exception('fooBar'))
         );
 
         self::assertTrue($called, 'Error the success callback must be called');
@@ -317,15 +341,15 @@ abstract class AbstractPromiseTests extends TestCase
             },
             function ($result, $next = null) use (&$called) {
                 $called = true;
-                self::assertEquals(new \Exception('fooBar'), $result);
+                self::assertEquals(new Exception('fooBar'), $result);
                 self::assertNull($next);
             },
-            false
+            false,
         );
 
         self::assertInstanceOf(
             PromiseInterface::class,
-            $promiseWithCallback->fail(new \Exception('fooBar'))
+            $promiseWithCallback->fail(new Exception('fooBar'))
         );
 
         self::assertTrue($called, 'Error the success callback must be called');
@@ -340,32 +364,63 @@ abstract class AbstractPromiseTests extends TestCase
             },
             function ($result, $next) use (&$called) {
                 $called++;
-                self::assertEquals(new \Exception('fooBar'), $result);
+                self::assertEquals(new Exception('fooBar'), $result);
                 self::assertInstanceOf(
                     PromiseInterface::class,
                     $next
                 );
                 $next->fail($result);
             },
-            true
+            true,
         );
 
         $promiseWithCallback = $promiseWithCallback->next($promiseWithCallback);
 
         self::assertInstanceOf(
             PromiseInterface::class,
-            $promiseWithCallback->fail(new \Exception('fooBar'))
+            $promiseWithCallback->fail(new Exception('fooBar'))
         );
 
         self::assertEquals(2, $called, 'Error the success callback must be called');
     }
 
+    public function testSetDefaultResult()
+    {
+        self::assertInstanceOf(
+            PromiseInterface::class,
+            $this->buildPromise(
+                function () {
+                },
+                function () {
+                }
+            )->setDefaultResult('foo')
+        );
+    }
+
     public function testFetchResultNotCalled()
     {
-        $this->expectException(\RuntimeException::class);
-        $this->buildPromise(function () {
-        }, function () {
-        })->fetchResult();
+        self::assertEquals(
+            'default',
+            $this->buildPromise(
+                function () {
+                },
+                function () {
+                },
+            )->fetchResult('default')
+        );
+    }
+
+    public function testFetchResultNotCalledWithCallableAsResult()
+    {
+        self::assertEquals(
+            'default',
+            $this->buildPromise(
+                function () {
+                },
+                function () {
+                },
+            )->fetchResult(fn () => 'default')
+        );
     }
 
     public function testFetchResultCalledWithNullFunction()
@@ -373,10 +428,10 @@ abstract class AbstractPromiseTests extends TestCase
         $promise = $this->buildPromise(null, null);
 
         $promise->success();
-        self::assertNull($promise->fetchResult());
+        self::assertNull($promise->fetchResult('default'));
 
-        $promise->fail(new \Exception('foo'));
-        self::assertNull($promise->fetchResult());
+        $promise->fail(new Exception('foo'));
+        self::assertNull($promise->fetchResult('default'));
     }
 
     public function testFetchResultCalled()
@@ -384,42 +439,10 @@ abstract class AbstractPromiseTests extends TestCase
         $promise = $this->buildPromise(fn () => 'foo', fn () => 'bar');
 
         $promise->success();
-        self::assertEquals('foo', $promise->fetchResult());
+        self::assertEquals('foo', $promise->fetchResult('default'));
 
-        $promise->fail(new \Exception('foo'));
-        self::assertEquals('bar', $promise->fetchResult());
-    }
-
-    public function testFetchResultIfCalledNotCalled()
-    {
-        self::assertEquals(
-            'default',
-            $this->buildPromise(function () {
-            }, function () {
-            })->fetchResultIfCalled('default')
-        );
-    }
-
-    public function testFetchResultIfCalledCalledWithNullFunction()
-    {
-        $promise = $this->buildPromise(null, null);
-
-        $promise->success();
-        self::assertNull($promise->fetchResultIfCalled('default'));
-
-        $promise->fail(new \Exception('foo'));
-        self::assertNull($promise->fetchResultIfCalled('default'));
-    }
-
-    public function testFetchResultIfCalledCalled()
-    {
-        $promise = $this->buildPromise(fn () => 'foo', fn () => 'bar');
-
-        $promise->success();
-        self::assertEquals('foo', $promise->fetchResultIfCalled('default'));
-
-        $promise->fail(new \Exception('foo'));
-        self::assertEquals('bar', $promise->fetchResultIfCalled('default'));
+        $promise->fail(new Exception('foo'));
+        self::assertEquals('bar', $promise->fetchResult('default'));
     }
 
     public function testFetchResultWithNestedPromise()
@@ -429,7 +452,7 @@ abstract class AbstractPromiseTests extends TestCase
             function (PromiseInterface $next) {
                 $next->success('foo');
             },
-            function (\Throwable $error, PromiseInterface $next) {
+            function (Throwable $error, PromiseInterface $next) {
                 $next->fail($error);
             },
             true
@@ -439,7 +462,7 @@ abstract class AbstractPromiseTests extends TestCase
         $promise->success();
         self::assertEquals('foo', $promise->fetchResult());
 
-        $promise->fail(new \Exception('foo'));
+        $promise->fail(new Exception('foo'));
         self::assertEquals('bar', $promise->fetchResult());
     }
 
@@ -449,16 +472,16 @@ abstract class AbstractPromiseTests extends TestCase
         $promise = $this->buildPromise(
             function (PromiseInterface $next) {
             },
-            function (\Throwable $error, PromiseInterface $next) {
+            function (Throwable $error, PromiseInterface $next) {
             },
-            true
+            true,
         );
 
         $promise = $promise->next($promiseNested);
         $promise->success();
         self::assertNull($promise->fetchResult());
 
-        $promise->fail(new \Exception('foo'));
+        $promise->fail(new Exception('foo'));
         self::assertNull($promise->fetchResult());
     }
 
@@ -468,40 +491,186 @@ abstract class AbstractPromiseTests extends TestCase
         $promise = $this->buildPromise(
             function (PromiseInterface $next) {
             },
-            function (\Throwable $error, PromiseInterface $next) {
+            function (Throwable $error, PromiseInterface $next) {
             },
-            true
+            true,
         );
 
         $promise = $promise->next($promiseNested, true);
         $promise->success();
         self::assertEquals('foo', $promise->fetchResult());
 
-        $promise->fail(new \Exception('foo'));
+        $promise->fail(new Exception('foo'));
         self::assertEquals('bar', $promise->fetchResult());
+    }
+
+    public function testFetchResultWithSetDefaultResultOnlyNotCalled()
+    {
+        self::assertEquals(
+            'default',
+            $this->buildPromise(
+                function () {
+                },
+                function () {
+                },
+            )->setDefaultResult('default')
+                ->fetchResult()
+        );
+    }
+
+    public function testFetchResultNotCalledWithSetDefaultWithCallableAsResult()
+    {
+        self::assertEquals(
+            'default',
+            $this->buildPromise(
+                function () {
+                },
+                function () {
+                },
+            )->setDefaultResult(fn () => 'default')
+                ->fetchResult()
+        );
+    }
+
+    public function testFetchResultWithSetDefaultResultCalledWithNullFunction()
+    {
+        $promise = $this->buildPromise(null, null);
+
+        $promise->success();
+        self::assertNull(
+            $promise->setDefaultResult('default')
+                ->fetchResult()
+        );
+
+        $promise->fail(new Exception('foo'));
+        self::assertNull(
+            $promise->setDefaultResult('default')
+                ->fetchResult()
+        );
+    }
+
+    public function testFetchResultWithSetDefaultResultCalled()
+    {
+        $promise = $this->buildPromise(fn () => 'foo', fn () => 'bar');
+
+        $promise->success();
+        self::assertEquals(
+            'foo',
+            $promise->setDefaultResult('default')
+                ->fetchResult()
+        );
+
+        $promise->fail(new Exception('foo'));
+        self::assertEquals(
+            'bar',
+            $promise->setDefaultResult('default')
+                ->fetchResult()
+        );
+    }
+
+    public function testFetchResultWithSetDefaultResultAndDefaultNotCalled()
+    {
+        self::assertEquals(
+            'default',
+            $this->buildPromise(
+                function () {
+                },
+                function () {
+                },
+            )->setDefaultResult('another')
+                ->fetchResult('default')
+        );
+    }
+
+    public function testFetchResultWithSetDefaultResultAndDefaultCalledWithNullFunction()
+    {
+        $promise = $this->buildPromise(null, null);
+
+        $promise->success();
+        self::assertNull(
+            $promise->setDefaultResult('another')
+                ->fetchResult('default')
+        );
+
+        $promise->fail(new Exception('foo'));
+        self::assertNull(
+            $promise->setDefaultResult('another')
+                ->fetchResult('default')
+        );
+    }
+
+    public function testFetchResultWithSetDefaultResultCalledAndDefault()
+    {
+        $promise = $this->buildPromise(fn () => 'foo', fn () => 'bar');
+
+        $promise->success();
+        self::assertEquals(
+            'foo',
+            $promise->setDefaultResult('another')
+                ->fetchResult('default')
+        );
+
+        $promise->fail(new Exception('foo'));
+        self::assertEquals(
+            'bar',
+            $promise->setDefaultResult('anotheer')
+                ->fetchResult('default')
+        );
+    }
+    
+    public function testFetchResultIfCalledNotCalled()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->buildPromise(
+            function () {
+            }, function () {
+            },
+        )->fetchResultIfCalled();
+    }
+
+    public function testFetchResultIfCalledCalledWithNullFunction()
+    {
+        $promise = $this->buildPromise(null, null);
+
+        $promise->success();
+        self::assertNull($promise->fetchResultIfCalled());
+
+        $promise->fail(new Exception('foo'));
+        self::assertNull($promise->fetchResultIfCalled());
+    }
+
+    public function testFetchResultIfCalledCalled()
+    {
+        $promise = $this->buildPromise(fn () => 'foo', fn () => 'bar');
+
+        $promise->success();
+        self::assertEquals('foo', $promise->fetchResultIfCalled());
+
+        $promise->fail(new Exception('foo'));
+        self::assertEquals('bar', $promise->fetchResultIfCalled());
     }
 
     public function testWithSeveralNextWithoutAutoCall()
     {
         $pm1 = $this->buildPromise(
             fn (int $value): int => $value * 2,
-            fn (\Throwable $error) => 0,
-            true
+            fn (Throwable $error) => 0,
+            true,
         );
 
         $pm1 = $pm1->next(
             $this->buildPromise(
                 fn (int $value): int => $value * 3,
-                fn (\Throwable $error) => 1,
-                true
+                fn (Throwable $error) => 1,
+                true,
             )
         );
 
         $pm1 = $pm1->next(
             $this->buildPromise(
                 fn (int $value): int => $value - 2,
-                fn (\Throwable $error) => 1,
-                true
+                fn (Throwable $error) => 1,
+                true,
             )
         );
 
@@ -515,15 +684,15 @@ abstract class AbstractPromiseTests extends TestCase
     {
         $pm1 = $this->buildPromise(
             fn (int $value): int => $value * 2,
-            fn (\Throwable $error) => 0,
-            true
+            fn (Throwable $error) => 0,
+            true,
         );
 
         $pm1 = $pm1->next(
             promise: $this->buildPromise(
                 fn (int $value): int => $value * 3,
-                fn (\Throwable $error) => 1,
-                true
+                fn (Throwable $error) => 1,
+                true,
             ),
             autoCall: true,
         );
@@ -531,7 +700,7 @@ abstract class AbstractPromiseTests extends TestCase
         $pm1 = $pm1->next(
             promise: $this->buildPromise(
                 fn (int $value): int => $value - 2,
-                fn (\Throwable $error) => 1
+                fn (Throwable $error) => 1
             ),
             autoCall: true,
         );
@@ -540,5 +709,45 @@ abstract class AbstractPromiseTests extends TestCase
             16,
             $pm1->success(3)->fetchResult(),
         );
+    }
+
+    public function testInvoke()
+    {
+        $promise = $this->buildPromise(
+            fn ($i, $j) => $i + $j,
+            fn (Throwable $error) => $error->getCode()
+        );
+
+        self::assertEquals(
+            5,
+            $promise(2, 3),
+        );
+    }
+
+    public function testInvokeWithFailCatchable()
+    {
+        $promise = $this->buildPromise(
+            onSuccess: fn ($i, $j) => throw new Exception(message: 'foo', code: 204),
+            onFail: fn (Throwable $error) => $error->getCode(),
+            callOnFailOnException: true
+        );
+
+        self::assertEquals(
+            204,
+            $promise(2, 3),
+        );
+    }
+
+    public function testInvokeWithDoubleFailCatchable()
+    {
+        $promise = $this->buildPromise(
+            onSuccess: fn ($i, $j) => throw new Exception(message: 'foo', code: 204),
+            onFail: fn (Throwable $error) => throw new RuntimeException(message: 'foo', code: 205),
+            callOnFailOnException: true
+        );
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionCode(205);
+        $promise(2, 3);
     }
 }

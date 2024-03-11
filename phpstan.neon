@@ -19,7 +19,7 @@ parameters:
             message: '#is declared as covariant#'
             path: src/Promise
         -
-            message: '#success\(\) expects TNextSuccessArgType\|null, TResultType given#'
+            message: '#success\(\) expects TNextSuccessArgType, TResultType given#'
             path: src/Promise
 services:
     -

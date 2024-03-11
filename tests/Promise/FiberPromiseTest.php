@@ -39,8 +39,13 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  */
 class FiberPromiseTest extends AbstractPromiseTests
 {
-    public function buildPromise($onSuccess, $onFail, bool $allowNext = false): PromiseInterface
+    public function buildPromise(
+        $onSuccess,
+        $onFail,
+        bool $allowNext = true,
+        bool $callOnFailOnException = true,
+    ): PromiseInterface
     {
-        return new FiberPromise($onSuccess, $onFail, $allowNext);
+        return new FiberPromise($onSuccess, $onFail, $allowNext, $callOnFailOnException);
     }
 }

@@ -25,9 +25,13 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use DateTime;
+use Teknoo\Recipe\Bowl\DynamicBowl;
 use Teknoo\Recipe\Bowl\DynamicFiberBowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Recipe\Value;
+use function array_merge;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -43,10 +47,10 @@ class DynamicFiberBowlClosureTest extends AbstractBowlTests
 {
     protected function getCallable()
     {
-        return function (ChefInterface $chef, string $bar, $foo2, \DateTime $date, $_methodName) {
+        return function (ChefInterface $chef, string $bar, $bar2, $foo2, DateTime $date, $_methodName) {
             $chef->continue([
                 'bar' => $bar,
-                'bar2' => $bar,
+                'bar2' => $bar2,
                 'foo2' => $foo2,
                 'date' => $date->getTimestamp(),
                 '_methodName' => $_methodName,
@@ -61,12 +65,12 @@ class DynamicFiberBowlClosureTest extends AbstractBowlTests
 
     protected function getValidWorkPlan(): array
     {
-        return \array_merge(parent::getValidWorkPlan(), ['callableToExec' => $this->getCallable()]);
+        return array_merge(parent::getValidWorkPlan(), ['callableToExec' => $this->getCallable()]);
     }
 
     protected function getNotValidWorkPlan(): array
     {
-        return \array_merge(parent::getNotValidWorkPlan(), ['callableToExec' => $this->getCallable()]);
+        return array_merge(parent::getNotValidWorkPlan(), ['callableToExec' => $this->getCallable()]);
     }
 
     public function buildBowl(): BowlInterface
@@ -75,6 +79,19 @@ class DynamicFiberBowlClosureTest extends AbstractBowlTests
             'callableToExec',
             false,
             $this->getMapping(),
+            'bowlClass'
+        );
+    }
+
+    public function buildBowlWithMappingValue(): BowlInterface
+    {
+        return new DynamicBowl(
+            'callableToExec',
+            false,
+            [
+                'bar' => new Value('ValueFoo1'),
+                'bar2' => new Value('ValueFoo2'),
+            ],
             'bowlClass'
         );
     }

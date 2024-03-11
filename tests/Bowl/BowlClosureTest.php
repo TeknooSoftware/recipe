@@ -25,9 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use DateTime;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Recipe\Value;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -42,10 +44,10 @@ class BowlClosureTest extends AbstractBowlTests
 {
     protected function getCallable()
     {
-        return function (ChefInterface $chef, string $bar, $bar2, $foo2, \DateTime $date, $_methodName) {
+        return function (ChefInterface $chef, string $bar, $bar2, $foo2, DateTime $date, $_methodName) {
             $chef->continue([
                 'bar' => $bar,
-                'bar2' => $bar,
+                'bar2' => $bar2,
                 'foo2' => $foo2,
                 'date' => $date->getTimestamp(),
                 '_methodName' => $_methodName,
@@ -67,13 +69,25 @@ class BowlClosureTest extends AbstractBowlTests
         );
     }
 
+    public function buildBowlWithMappingValue(): BowlInterface
+    {
+        return new Bowl(
+            $this->getCallable(),
+            [
+                'bar' => new Value('ValueFoo1'),
+                'bar2' => new Value('ValueFoo2'),
+            ],
+            'bowlClass'
+        );
+    }
+
     public function testExecuteWithOptional()
     {
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects(self::once())
             ->method('continue')
             ->with([
-                'date' => (new \DateTime('2018-01-01'))->getTimestamp(),
+                'date' => (new DateTime('2018-01-01'))->getTimestamp(),
                 'opt1' => 123,
                 'opt2' => null,
                 'opt3' => 'foo',
@@ -83,7 +97,7 @@ class BowlClosureTest extends AbstractBowlTests
         $chef->expects(self::never())
             ->method('updateWorkPlan');
 
-        $closure = function (ChefInterface $chef, \DateTime $date, $opt1 = 123, $opt2 = null, $opt3 = null) {
+        $closure = function (ChefInterface $chef, DateTime $date, $opt1 = 123, $opt2 = null, $opt3 = null) {
             $chef->continue([
                 'date' => $date->getTimestamp(),
                 'opt1' => $opt1,
@@ -99,7 +113,7 @@ class BowlClosureTest extends AbstractBowlTests
         );
 
         $values = [
-            'now' => (new \DateTime('2018-01-01')),
+            'now' => (new DateTime('2018-01-01')),
             'opt3' => 'foo',
         ];
 

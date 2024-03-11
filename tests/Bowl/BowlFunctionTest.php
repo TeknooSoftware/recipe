@@ -28,6 +28,7 @@ namespace Teknoo\Tests\Recipe\Bowl;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\Recipe\Value;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -49,7 +50,7 @@ class BowlFunctionTest extends AbstractBowlTests
 function $functionName (Teknoo\Recipe\ChefInterface \$chef, string \$bar, \$bar2, \$foo2, \\DateTime \$date, \$_methodName) {
     \$chef->continue([
         'bar' => \$bar,
-        'bar2' => \$bar,
+        'bar2' => \$bar2,
         'foo2' => \$foo2,
         'date' => \$date->getTimestamp(),
         '_methodName' => \$_methodName,
@@ -73,6 +74,18 @@ EOF;
         return new Bowl(
             $this->getCallable(),
             $this->getMapping(),
+            'bowlClass'
+        );
+    }
+
+    public function buildBowlWithMappingValue(): BowlInterface
+    {
+        return new Bowl(
+            $this->getCallable(),
+            [
+                'bar' => new Value('ValueFoo1'),
+                'bar2' => new Value('ValueFoo2'),
+            ],
             'bowlClass'
         );
     }

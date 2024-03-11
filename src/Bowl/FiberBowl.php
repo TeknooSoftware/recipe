@@ -30,6 +30,7 @@ use Fiber;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
+use Teknoo\Recipe\Recipe\Value;
 
 /**
  * Fiber implementation of BowlInterface. A container with a callable to perform a step in a recipe.
@@ -59,7 +60,7 @@ class FiberBowl implements BowlInterface
     private $callable;
 
     /**
-     * @param array<string, string|string[]> $mapping
+     * @param array<string, string|string[]|Value> $mapping
      */
     public function __construct(
         callable $callable,
