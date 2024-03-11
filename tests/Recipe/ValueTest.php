@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Tests\Recipe\Promise;
+namespace Teknoo\Tests\Recipe\Recipe;
 
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Recipe\Value;
