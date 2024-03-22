@@ -1,5 +1,10 @@
 # Teknoo Software - Recipe - Change Log
 
+## [5.0.1] - 2024-03-22
+### Stable Release
+- Fix support of last PHPStan 1.10.64
+- Use State 6.2
+
 ## [5.0.0] - 2024-03-11
 ### Stable Release
 - Add `Value` class to use in recipe's steps mapping. With a `Value` instance in the mapping definitions, a bowl 

@@ -76,7 +76,7 @@ interface ChefInterface
     /**
      * To remove from the work plan some ingredients.
      *
-     * @param array<int, string> $ingredients
+     * @param string $ingredients
      */
     public function cleanWorkPlan(...$ingredients): ChefInterface;
 

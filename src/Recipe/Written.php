@@ -48,8 +48,9 @@ class Written implements StateInterface
 {
     use StateTrait;
 
-    /*
+    /**
      * To check if all ingredients are available and valid on the workplan
+     * @param array<string, mixed> $workPlan
      */
     private function prepareCooking(): callable
     {

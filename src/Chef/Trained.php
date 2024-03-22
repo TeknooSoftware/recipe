@@ -52,8 +52,9 @@ class Trained implements StateInterface
 {
     use StateTrait;
 
-    /*
+    /**
      * To update/prepare ingredients available on the workplan for the cooking
+     * @param array<string, mixed> $with
      */
     private function updateMyWorkPlan(): callable
     {
@@ -86,8 +87,9 @@ class Trained implements StateInterface
         };
     }
 
-    /*
+    /**
      * To remove some ingredients from the workplan
+     * @param array<int|string, string> $ingredients
      */
     private function removeFromMyWorkPlan(): callable
     {
@@ -130,8 +132,9 @@ class Trained implements StateInterface
         };
     }
 
-    /*
+    /**
      * To execute a cooking and switch to cookine state.
+     * @param array<string, mixed> $workPlan
      */
     private function runRecipe(): callable
     {

@@ -51,17 +51,6 @@ use Throwable;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- *
- * @method ChefInterface readRecipe(RecipeInterface $recipe)
- * @method ChefInterface followStepsRecipe(array $steps, array $onError)
- * @method ChefInterface updateMyWorkPlan(array $with)
- * @method ChefInterface mergeInMyWorkPlan(string $name, MergeableInterface $value)
- * @method ChefInterface removeFromMyWorkPlan(array $ingredients)
- * @method ChefInterface runRecipe(array $workPlan)
- * @method ChefInterface begin(RecipeInterface $recipe, ?CookingSupervisorInterface $supervisor)
- * @method ChefInterface missingIngredient(IngredientInterface $ingredient, string $message)
- * @method ChefInterface continueRecipe(array $with = [], string $nextStep = null)
- * @method ChefInterface finishRecipe($result)
  */
 class Chef implements AutomatedInterface, ChefInterface
 {

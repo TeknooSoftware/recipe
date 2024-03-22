@@ -23,25 +23,23 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Tests\Recipe\Recipe;
-
-use PHPUnit\Framework\TestCase;
-use Teknoo\Recipe\Recipe\Value;
+namespace Teknoo\Recipe;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- * @covers \Teknoo\Recipe\Recipe\Value
  */
-class ValueTest extends TestCase
+class Value
 {
-    public function testGetValue()
+    public function __construct(
+        private readonly mixed $value,
+    ) {
+    }
+
+    public function getValue(): mixed
     {
-        self::assertEquals(
-            'foo',
-            (new Value('foo'))->getValue(),
-        );
+        return $this->value;
     }
 }

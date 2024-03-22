@@ -27,10 +27,10 @@ namespace Teknoo\Tests\Recipe\Bowl;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
-use Teknoo\Recipe\Bowl\DynamicBowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
+use Teknoo\Recipe\Bowl\DynamicBowl;
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\Recipe\Value;
+use Teknoo\Recipe\Value;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)

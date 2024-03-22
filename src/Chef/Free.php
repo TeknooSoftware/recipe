@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Recipe\Chef;
 
 use Teknoo\Recipe\BaseRecipeInterface;
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\States\State\StateInterface;
@@ -68,8 +69,11 @@ class Free implements StateInterface
         };
     }
 
-    /*
+    /**
      * To learn steps in the recipe, in the good order
+     *
+     * @param array<BowlInterface> $steps
+     * @param array<BowlInterface> $onError
      */
     private function followStepsRecipe(): callable
     {

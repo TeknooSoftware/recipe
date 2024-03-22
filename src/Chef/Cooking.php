@@ -116,8 +116,9 @@ class Cooking implements StateInterface
         };
     }
 
-    /*
+    /**
      * Called by a step to continue the execution of the recipe but before, update ingredients available on the workplan
+     * @param array<string, mixed> $with
      */
     private function continueRecipe(): callable
     {
@@ -141,8 +142,9 @@ class Cooking implements StateInterface
         };
     }
 
-    /*
+    /**
      * Called by a step to stop the execution of the recipe and check if the dish is the result excepted.
+     * @param mixed $result
      */
     private function finishRecipe(): callable
     {

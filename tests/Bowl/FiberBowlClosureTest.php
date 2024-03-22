@@ -31,7 +31,7 @@ use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Bowl\FiberBowl;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
-use Teknoo\Recipe\Recipe\Value;
+use Teknoo\Recipe\Value;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)

@@ -28,12 +28,13 @@ namespace Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
-use Teknoo\Recipe\Bowl\RecipeBowl;
 use Teknoo\Recipe\Bowl\FiberRecipeBowl;
+use Teknoo\Recipe\Bowl\RecipeBowl;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface;
+use Teknoo\Recipe\Value;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
 
@@ -71,9 +72,11 @@ class Draft implements StateInterface
         };
     }
 
-    /*
+    /**
      * To push a step in the recipe, a new recipe object will be returned. If the step is a callable, it will be wrapped
-     * into a Bowl object, else, the BowlInterface instance will be directly used
+     * into a Bowl object, else, the BowlInterface instance will be directly used.
+     *
+     * @param array<string, string|string[]|Value> $with
      */
     private function addStep(): callable
     {

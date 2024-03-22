@@ -29,7 +29,6 @@ use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
-use Teknoo\Recipe\Recipe\Value;
 
 /**
  * Interface to define a recipe. A recipe has several ordered steps (as callable). It can have several required

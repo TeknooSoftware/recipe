@@ -32,7 +32,7 @@ use Teknoo\Recipe\Bowl\Exception\MissingCallableIngredientException;
 use Teknoo\Recipe\Bowl\Exception\MissingIngredientException;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
-use Teknoo\Recipe\Recipe\Value;
+use Teknoo\Recipe\Value;
 
 use function is_callable;
 use function sprintf;

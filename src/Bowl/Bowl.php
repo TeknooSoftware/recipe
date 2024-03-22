@@ -29,7 +29,7 @@ use Exception;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
-use Teknoo\Recipe\Recipe\Value;
+use Teknoo\Recipe\Value;
 
 /**
  * Default implementation of BowlInterface. A container with a callable to perform a step in a recipe.

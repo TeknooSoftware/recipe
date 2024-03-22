@@ -26,11 +26,11 @@ declare(strict_types=1);
 namespace Teknoo\Tests\Recipe\Bowl;
 
 use DateTime;
+use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Bowl\DynamicBowl;
 use Teknoo\Recipe\Bowl\DynamicFiberBowl;
-use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\Recipe\Value;
+use Teknoo\Recipe\Value;
 use function array_merge;
 
 /**

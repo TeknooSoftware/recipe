@@ -34,22 +34,20 @@ use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
+use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\Dish\DishClass;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Teknoo\Recipe\Ingredient\Ingredient;
+use Teknoo\Recipe\Promise\Promise;
 use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface;
-use Teknoo\Recipe\CookbookInterface;
-use Teknoo\Recipe\Promise\Promise;
 use Teknoo\Tests\Recipe\Transformable;
 use Throwable;
-
 use function array_merge;
 use function explode;
 use function lcfirst;
 use function strpos;
-use function strtolower;
 use function trim;
 
 /**
@@ -918,7 +916,7 @@ class FeatureContext implements Context
                     },
                     'concatenate',
                     [
-                        'part2' => new Recipe\Value('FgHIjKl'),
+                        'part2' => new \Teknoo\Recipe\Value('FgHIjKl'),
                     ],
                     1
                 );
