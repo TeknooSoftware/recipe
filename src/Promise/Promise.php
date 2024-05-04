@@ -43,7 +43,7 @@ namespace Teknoo\Recipe\Promise;
  */
 class Promise extends AbstractPromise
 {
-    protected function processToExecution(callable $callable, array &$args): mixed
+    protected function processToExecution(callable &$callable, array &$args): mixed
     {
         return $callable(...$args);
     }

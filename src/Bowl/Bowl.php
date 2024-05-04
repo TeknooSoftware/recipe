@@ -78,10 +78,8 @@ class Bowl implements BowlInterface
         array &$workPlan,
         ?CookingSupervisorInterface $cookingSupervisor = null,
     ): BowlInterface {
-        $values = $this->extractParameters($this->callable, $chef, $workPlan, null, $cookingSupervisor);
-
-        $callable = $this->callable;
-        $callable(...$values);
+        $callable = &$this->callable;
+        $callable(...$this->extractParameters($this->callable, $chef, $workPlan, null, $cookingSupervisor));
 
         return $this;
     }

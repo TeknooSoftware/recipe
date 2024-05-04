@@ -111,7 +111,7 @@ abstract class AbstractDynamicBowl implements BowlInterface
      * @throws RuntimeException if a required argument can not be mapped.
      */
     abstract protected function processToExecution(
-        callable $callable,
+        callable &$callable,
         ChefInterface $chef,
         array &$workPlan,
         ?CookingSupervisorInterface $cookingSupervisor,

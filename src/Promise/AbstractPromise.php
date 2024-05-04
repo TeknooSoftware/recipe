@@ -122,13 +122,13 @@ abstract class AbstractPromise implements PromiseInterface
     /**
      * @param array<int, mixed> $args
      */
-    abstract protected function processToExecution(callable $callable, array &$args): mixed;
+    abstract protected function processToExecution(callable &$callable, array &$args): mixed;
 
     /**
      * @param array<int, mixed> $args
      * @throws Throwable
      */
-    private function call(?callable $callable, array &$args): void
+    private function call(?callable &$callable, array &$args): void
     {
         $this->called = true;
 

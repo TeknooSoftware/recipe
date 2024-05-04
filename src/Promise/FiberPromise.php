@@ -46,7 +46,7 @@ use Fiber;
  */
 class FiberPromise extends AbstractPromise
 {
-    protected function processToExecution(callable $callable, array &$args): mixed
+    protected function processToExecution(callable &$callable, array &$args): mixed
     {
         $fiber = new Fiber($callable);
         $fiber->start(...$args);

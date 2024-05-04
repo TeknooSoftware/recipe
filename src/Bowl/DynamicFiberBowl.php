@@ -42,18 +42,17 @@ use Teknoo\Recipe\CookingSupervisorInterface;
 class DynamicFiberBowl extends AbstractDynamicBowl
 {
     protected function processToExecution(
-        callable $callable,
+        callable &$callable,
         ChefInterface $chef,
         array &$workPlan,
         ?CookingSupervisorInterface $cookingSupervisor,
     ): void {
         $fiber = new Fiber($callable);
-        $values = $this->extractParameters($callable, $chef, $workPlan, $fiber, $cookingSupervisor);
 
         if (null !== $cookingSupervisor) {
             $cookingSupervisor->supervise($fiber);
         }
 
-        $fiber->start(...$values);
+        $fiber->start(...$this->extractParameters($callable, $chef, $workPlan, $fiber, $cookingSupervisor));
     }
 }

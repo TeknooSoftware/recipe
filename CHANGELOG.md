@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [5.0.2] - 2024-05-04
+### Stable Release
+- Some fix to limit cpu and memory usages.
+
 ## [5.0.1] - 2024-03-22
 ### Stable Release
 - Fix support of last PHPStan 1.10.64

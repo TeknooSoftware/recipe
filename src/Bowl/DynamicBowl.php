@@ -41,13 +41,11 @@ use Teknoo\Recipe\CookingSupervisorInterface;
 class DynamicBowl extends AbstractDynamicBowl
 {
     protected function processToExecution(
-        callable $callable,
+        callable &$callable,
         ChefInterface $chef,
         array &$workPlan,
         ?CookingSupervisorInterface $cookingSupervisor,
     ): void {
-        $values = $this->extractParameters($callable, $chef, $workPlan, null, $cookingSupervisor);
-
-        $callable(...$values);
+        $callable(...$this->extractParameters($callable, $chef, $workPlan, null, $cookingSupervisor));
     }
 }

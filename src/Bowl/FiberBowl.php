@@ -81,13 +81,12 @@ class FiberBowl implements BowlInterface
         ?CookingSupervisorInterface $cookingSupervisor = null,
     ): BowlInterface {
         $fiber = new Fiber($this->callable);
-        $values = $this->extractParameters($this->callable, $chef, $workPlan, $fiber, $cookingSupervisor);
 
         if (null !== $cookingSupervisor) {
             $cookingSupervisor->supervise($fiber);
         }
 
-        $fiber->start(...$values);
+        $fiber->start(...$this->extractParameters($this->callable, $chef, $workPlan, $fiber, $cookingSupervisor));
 
         return $this;
     }

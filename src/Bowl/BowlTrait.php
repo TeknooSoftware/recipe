@@ -177,21 +177,27 @@ trait BowlTrait
      * @return array<string, ReflectionParameter>|ReflectionParameter[]
      * @throws ReflectionException
      */
-    private function listParameters(callable $callable): array
+    private function &listParameters(callable $callable): array
     {
         $reflection = self::getReflection($callable);
         $oid = $reflection->getFileName() . ':' . $reflection->getStartLine();
 
-        $getter = static function () use ($oid, $reflection): array {
+        $getter = static function &() use ($oid, $reflection): array {
             $parameters = [];
             foreach ($reflection->getParameters() as $parameter) {
                 $parameters[$parameter->getName()] = $parameter;
             }
 
-            return self::$reflectionsParameters[$oid] = $parameters;
+            self::$reflectionsParameters[$oid] = $parameters;
+
+            return self::$reflectionsParameters[$oid];
         };
 
-        return self::$reflectionsParameters[$oid] ?? $getter();
+        if (isset(self::$reflectionsParameters[$oid])) {
+            return self::$reflectionsParameters[$oid];
+        }
+
+        return $getter();
     }
 
     /**
@@ -378,7 +384,7 @@ trait BowlTrait
      * @throws Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function extractParameters(
+    protected function &extractParameters(
         callable $callable,
         ChefInterface $chef,
         array &$workPlan,
