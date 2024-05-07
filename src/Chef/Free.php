@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
+use SensitiveParameter;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
@@ -77,7 +78,7 @@ class Free implements StateInterface
      */
     private function followStepsRecipe(): callable
     {
-        return function (array $steps, array $onError): ChefInterface {
+        return function (#[SensitiveParameter] array $steps, array $onError): ChefInterface {
             /**
              * @var Chef $this
              */

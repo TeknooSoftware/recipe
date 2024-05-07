@@ -168,7 +168,7 @@ class Chef implements AutomatedInterface, ChefInterface
         return $this->missingIngredient($ingredient, $message);
     }
 
-    public function updateWorkPlan(array $with): ChefInterface
+    public function updateWorkPlan(#[SensitiveParameter] array $with): ChefInterface
     {
         return $this->updateMyWorkPlan($with);
     }
@@ -178,12 +178,12 @@ class Chef implements AutomatedInterface, ChefInterface
         return $this->mergeInMyWorkPlan($name, $value);
     }
 
-    public function cleanWorkPlan(...$ingredients): ChefInterface
+    public function cleanWorkPlan(#[SensitiveParameter] ...$ingredients): ChefInterface
     {
         return $this->removeFromMyWorkPlan($ingredients);
     }
 
-    public function followSteps(array $steps, BowlInterface | array $onError = []): ChefInterface
+    public function followSteps(#[SensitiveParameter] array $steps, BowlInterface | array $onError = []): ChefInterface
     {
         if ($onError instanceof BowlInterface) {
             //Avoid BC Break
@@ -193,7 +193,7 @@ class Chef implements AutomatedInterface, ChefInterface
         return $this->followStepsRecipe($steps, $onError);
     }
 
-    public function continue(array $with = [], string $nextStep = null): ChefInterface
+    public function continue(#[SensitiveParameter] array $with = [], string $nextStep = null): ChefInterface
     {
         return $this->continueRecipe($with, $nextStep);
     }
@@ -220,7 +220,7 @@ class Chef implements AutomatedInterface, ChefInterface
         return $this->errorInRecipe($error);
     }
 
-    public function process(array $workPlan): ChefInterface
+    public function process(#[SensitiveParameter] array $workPlan): ChefInterface
     {
         return $this->runRecipe($workPlan);
     }

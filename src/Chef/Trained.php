@@ -59,7 +59,7 @@ class Trained implements StateInterface
      */
     private function updateMyWorkPlan(): callable
     {
-        return function (array $with): ChefInterface {
+        return function (#[SensitiveParameter] array $with): ChefInterface {
             $this->workPlan = $with + $this->workPlan;
 
             return $this;
@@ -94,7 +94,7 @@ class Trained implements StateInterface
      */
     private function removeFromMyWorkPlan(): callable
     {
-        return function (array $ingredients): ChefInterface {
+        return function (#[SensitiveParameter] array $ingredients): ChefInterface {
             $this->workPlan = array_diff_key($this->workPlan, array_flip($ingredients));
 
             return $this;
@@ -139,7 +139,7 @@ class Trained implements StateInterface
      */
     private function runRecipe(): callable
     {
-        return function (array $workPlan): ChefInterface {
+        return function (#[SensitiveParameter] array $workPlan): ChefInterface {
             //If this method is called, $this->recipe is a valid RecipeInterface instance
             $this->workPlan = $workPlan + $this->workPlan;
             $this->cooking = true;

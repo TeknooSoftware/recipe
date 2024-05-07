@@ -65,7 +65,7 @@ interface ChefInterface
      *
      * @param array<string, mixed> $with
      */
-    public function updateWorkPlan(array $with): ChefInterface;
+    public function updateWorkPlan(#[SensitiveParameter] array $with): ChefInterface;
 
     /**
      * To merge an ingredient in the workplan with another ingredient of the same class
@@ -79,7 +79,7 @@ interface ChefInterface
      *
      * @param string $ingredients
      */
-    public function cleanWorkPlan(...$ingredients): ChefInterface;
+    public function cleanWorkPlan(#[SensitiveParameter] ...$ingredients): ChefInterface;
 
     /**
      * To learn steps to able to cook the recipe.
@@ -95,7 +95,7 @@ interface ChefInterface
      *
      * @param array<string, mixed> $with
      */
-    public function continue(array $with = [], string $nextStep = null): ChefInterface;
+    public function continue(#[SensitiveParameter] array $with = [], string $nextStep = null): ChefInterface;
 
     /*
      * To interrupt cooking, without execute dish validation
@@ -123,5 +123,5 @@ interface ChefInterface
     /**
      * @param array<string, mixed> $workPlan
      */
-    public function process(array $workPlan): ChefInterface;
+    public function process(#[SensitiveParameter] array $workPlan): ChefInterface;
 }

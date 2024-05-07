@@ -123,7 +123,7 @@ class Cooking implements StateInterface
      */
     private function continueRecipe(): callable
     {
-        return function (array $with = [], string $nextStep = null): ChefInterface {
+        return function (#[SensitiveParameter] array $with = [], string $nextStep = null): ChefInterface {
             /**
              * @var Chef $this
              */
@@ -149,7 +149,7 @@ class Cooking implements StateInterface
      */
     private function finishRecipe(): callable
     {
-        return function ($result): ChefInterface {
+        return function (#[SensitiveParameter] $result): ChefInterface {
             $this->interruptCooking();
 
             /**
