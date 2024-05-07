@@ -1,5 +1,10 @@
 # Teknoo Software - Recipe - Change Log
 
+## [5.1.0] - 2024-05-07
+### Stable Release
+- Drop support of PHP 8.1
+- Add sensitive parameter attribute on methods catching throwable to prevent leak.
+
 ## [5.0.2] - 2024-05-04
 ### Stable Release
 - Some fix to limit cpu and memory usages.

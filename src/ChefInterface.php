@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Recipe;
 
 use RuntimeException;
+use SensitiveParameter;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Ingredient\MergeableInterface;
@@ -114,7 +115,7 @@ interface ChefInterface
     /*
      * To stop / finish cooking the recipe and check the result.
      */
-    public function error(Throwable $error): ChefInterface;
+    public function error(#[SensitiveParameter] Throwable $error): ChefInterface;
 
     /*
      * To start cooking a recipe with an initial work plan.

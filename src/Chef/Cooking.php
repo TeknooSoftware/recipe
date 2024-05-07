@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
+use SensitiveParameter;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
@@ -166,7 +167,7 @@ class Cooking implements StateInterface
      */
     private function errorInRecipe(): callable
     {
-        return function (Throwable $error): ChefInterface {
+        return function (#[SensitiveParameter] Throwable $error): ChefInterface {
             $this->callErrors($error);
 
             return $this;

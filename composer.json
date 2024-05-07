@@ -37,9 +37,9 @@
         }
     },
     "require":{
-        "php": "^8.1",
+        "php": "^8.2",
         "teknoo/immutable": "^3.0.17",
-        "teknoo/states": "^6.2.0"
+        "teknoo/states": "^6.3.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

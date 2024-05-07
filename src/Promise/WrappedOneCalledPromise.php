@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Promise;
 
+use SensitiveParameter;
 use Teknoo\Immutable\ImmutableTrait;
 use Throwable;
 
@@ -77,7 +78,7 @@ class WrappedOneCalledPromise implements PromiseInterface
         return $this;
     }
 
-    public function fail(Throwable $throwable): PromiseInterface
+    public function fail(#[SensitiveParameter] Throwable $throwable): PromiseInterface
     {
         if (!$this->failed) {
             $this->called = true;

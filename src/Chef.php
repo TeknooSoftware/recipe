@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe;
 
+use SensitiveParameter;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef\Cooking;
 use Teknoo\Recipe\Chef\Free;
@@ -214,7 +215,7 @@ class Chef implements AutomatedInterface, ChefInterface
         return $this->finishRecipe($result);
     }
 
-    public function error(Throwable $error): ChefInterface
+    public function error(#[SensitiveParameter] Throwable $error): ChefInterface
     {
         return $this->errorInRecipe($error);
     }

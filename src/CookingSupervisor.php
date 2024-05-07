@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Recipe;
 
 use Fiber;
+use SensitiveParameter;
 use Teknoo\Recipe\CookingSupervisor\Action;
 use Teknoo\Recipe\CookingSupervisor\Exception\SupervisorInRunningFiberException;
 use Teknoo\Recipe\CookingSupervisor\FiberIterator;
@@ -186,7 +187,7 @@ class CookingSupervisor implements CookingSupervisorInterface
     /**
      * @throws Throwable
      */
-    public function throw(Throwable $value = null): CookingSupervisorInterface
+    public function throw(#[SensitiveParameter] Throwable $value = null): CookingSupervisorInterface
     {
         if (null !== ($item = $this->getNextItem(false))) {
             $this->callOnItem($item, Action::Throw, $value);

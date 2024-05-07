@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
+use SensitiveParameter;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\Chef\Exception\NotMergeableException;
 use Teknoo\Recipe\ChefInterface;
@@ -161,7 +162,7 @@ class Trained implements StateInterface
      */
     private function callErrors(): callable
     {
-        return function (Throwable $error): void {
+        return function (#[SensitiveParameter] Throwable $error): void {
             $this->workPlan['exception'] = $error;
 
             if (empty($this->onError)) {

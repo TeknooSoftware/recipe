@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Promise;
 
+use SensitiveParameter;
 use Teknoo\Immutable\ImmutableInterface;
 use Throwable;
 
@@ -75,7 +76,7 @@ interface PromiseInterface extends ImmutableInterface
      * To call the callback defined when an error has been occurred.
      * @return PromiseInterface<TSuccessArgType, TResultType>
      */
-    public function fail(Throwable $throwable): PromiseInterface;
+    public function fail(#[SensitiveParameter] Throwable $throwable): PromiseInterface;
 
     /**
      * To set the default value to return when `fetchResult` without default value.
