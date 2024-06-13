@@ -80,7 +80,7 @@ abstract class AbstractBowlTests extends TestCase
     public function testExecute()
     {
         $chef = $this->createMock(ChefInterface::class);
-        $chef->expects(self::once())
+        $chef->expects($this->once())
             ->method('continue')
             ->with([
                 'bar' => 'foo',
@@ -91,7 +91,7 @@ abstract class AbstractBowlTests extends TestCase
             ])
             ->willReturnSelf();
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan');
 
         $values = $this->getValidWorkPlan();
@@ -108,7 +108,7 @@ abstract class AbstractBowlTests extends TestCase
     public function testExecuteWithValue()
     {
         $chef = $this->createMock(ChefInterface::class);
-        $chef->expects(self::once())
+        $chef->expects($this->once())
             ->method('continue')
             ->with([
                 'bar' => 'ValueFoo1',
@@ -119,7 +119,7 @@ abstract class AbstractBowlTests extends TestCase
             ])
             ->willReturnSelf();
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan');
 
         $values = $this->getValidWorkPlan();
@@ -144,10 +144,10 @@ abstract class AbstractBowlTests extends TestCase
     {
         $this->expectException(BadMethodCallException::class);
         $chef = $this->createMock(ChefInterface::class);
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('continue');
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan');
 
         $values = $this->getNotValidWorkPlan();

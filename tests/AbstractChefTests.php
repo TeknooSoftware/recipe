@@ -56,7 +56,7 @@ abstract class AbstractChefTests extends TestCase
     public function testReadWithRecipe()
     {
         $recipe = $this->createMock(RecipeInterface::class);
-        $recipe->expects(self::once())
+        $recipe->expects($this->once())
             ->method('train')
             ->willReturnSelf();
 
@@ -69,7 +69,7 @@ abstract class AbstractChefTests extends TestCase
     public function testReadWithCookbook()
     {
         $recipe = $this->createMock(CookbookInterface::class);
-        $recipe->expects(self::once())
+        $recipe->expects($this->once())
             ->method('train')
             ->willReturnSelf();
 
@@ -82,7 +82,7 @@ abstract class AbstractChefTests extends TestCase
     public function testReadWithBaseRecipe()
     {
         $recipe = $this->createMock(BaseRecipeInterface::class);
-        $recipe->expects(self::once())
+        $recipe->expects($this->once())
             ->method('train')
             ->willReturnSelf();
 
@@ -108,12 +108,12 @@ abstract class AbstractChefTests extends TestCase
     public function testReserveAndBeginAvailableOnCookingWithRecipe()
     {
         $mainRecipe = $this->createMock(RecipeInterface::class);
-        $mainRecipe->expects(self::once())
+        $mainRecipe->expects($this->once())
             ->method('train')
             ->willReturnSelf();
 
         $subRecipe = $this->createMock(RecipeInterface::class);
-        $subRecipe->expects(self::once())
+        $subRecipe->expects($this->once())
             ->method('train')
             ->willReturnCallback(function (ChefInterface $chef) use ($subRecipe) {
                 $chef->followSteps(['substep' => $this->createMock(BowlInterface::class)]);
@@ -128,7 +128,7 @@ abstract class AbstractChefTests extends TestCase
         );
 
         $step = $this->createMock(BowlInterface::class);
-        $step->expects(self::once())
+        $step->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function (ChefInterface $chef) use ($step, $subRecipe) {
                 self::assertInstanceOf(
@@ -158,12 +158,12 @@ abstract class AbstractChefTests extends TestCase
     public function testReserveAndBeginAvailableOnCookingWithBaseRecipe()
     {
         $mainRecipe = $this->createMock(RecipeInterface::class);
-        $mainRecipe->expects(self::once())
+        $mainRecipe->expects($this->once())
             ->method('train')
             ->willReturnSelf();
 
         $subRecipe = $this->createMock(BaseRecipeInterface::class);
-        $subRecipe->expects(self::once())
+        $subRecipe->expects($this->once())
             ->method('train')
             ->willReturnCallback(function (ChefInterface $chef) use ($subRecipe) {
                 $chef->followSteps(['substep' => $this->createMock(BowlInterface::class)]);
@@ -178,7 +178,7 @@ abstract class AbstractChefTests extends TestCase
         );
 
         $step = $this->createMock(BowlInterface::class);
-        $step->expects(self::once())
+        $step->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function (ChefInterface $chef) use ($step, $subRecipe) {
                 self::assertInstanceOf(
@@ -208,12 +208,12 @@ abstract class AbstractChefTests extends TestCase
     public function testReserveAndBeginAvailableOnCookingWithCookbook()
     {
         $mainRecipe = $this->createMock(RecipeInterface::class);
-        $mainRecipe->expects(self::once())
+        $mainRecipe->expects($this->once())
             ->method('train')
             ->willReturnSelf();
 
         $subRecipe = $this->createMock(CookbookInterface::class);
-        $subRecipe->expects(self::once())
+        $subRecipe->expects($this->once())
             ->method('train')
             ->willReturnCallback(function (ChefInterface $chef) use ($subRecipe) {
                 $chef->followSteps(['substep' => $this->createMock(BowlInterface::class)]);
@@ -228,7 +228,7 @@ abstract class AbstractChefTests extends TestCase
         );
 
         $step = $this->createMock(BowlInterface::class);
-        $step->expects(self::once())
+        $step->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function (ChefInterface $chef) use ($step, $subRecipe) {
                 self::assertInstanceOf(
@@ -298,7 +298,7 @@ abstract class AbstractChefTests extends TestCase
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
-        $bowl->expects(self::once())
+        $bowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl) {
                 $called = true;
@@ -545,7 +545,7 @@ abstract class AbstractChefTests extends TestCase
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
-        $bowl->expects(self::once())
+        $bowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl) {
                 $called = true;
@@ -561,7 +561,7 @@ abstract class AbstractChefTests extends TestCase
             });
 
         $bowl2 = $this->createMock(BowlInterface::class);
-        $bowl2->expects(self::once())
+        $bowl2->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl2) {
                 self::assertEquals(['foo' => 'bar2'], $workPlan);
@@ -586,14 +586,14 @@ abstract class AbstractChefTests extends TestCase
         $chef->read($this->createMock(RecipeInterface::class));
 
         $bowl = $this->createMock(BowlInterface::class);
-        $bowl->expects(self::once())
+        $bowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function (): never {
                 throw new RuntimeException('fooBar');
             });
 
         $bowl2 = $this->createMock(BowlInterface::class);
-        $bowl2->expects(self::never())
+        $bowl2->expects($this->never())
             ->method('execute');
 
         $chef->followSteps([$bowl, $bowl2]);
@@ -611,14 +611,14 @@ abstract class AbstractChefTests extends TestCase
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
-        $bowl->expects(self::once())
+        $bowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function () use (&$called): never {
                 throw new RuntimeException('fooBar');
             });
 
         $errorBowl = $this->createMock(BowlInterface::class);
-        $errorBowl->expects(self::once())
+        $errorBowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function ($chef, &$workPlan) use (&$called, $errorBowl) {
                 self::assertInstanceOf(RuntimeException::class, $workPlan['exception']);
@@ -628,7 +628,7 @@ abstract class AbstractChefTests extends TestCase
             });
 
         $bowl2 = $this->createMock(BowlInterface::class);
-        $bowl2->expects(self::never())
+        $bowl2->expects($this->never())
             ->method('execute');
 
         $chef->followSteps([$bowl, $bowl2], $errorBowl);
@@ -648,14 +648,14 @@ abstract class AbstractChefTests extends TestCase
 
         $called = false;
         $bowl1 = $this->createMock(BowlInterface::class);
-        $bowl1->expects(self::once())
+        $bowl1->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function () use (&$called): never {
                 throw new RuntimeException('fooBar');
             });
 
         $errorBowl1 = $this->createMock(BowlInterface::class);
-        $errorBowl1->expects(self::once())
+        $errorBowl1->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function ($chef, &$workPlan) use (&$called, $errorBowl1) {
                 self::assertInstanceOf(RuntimeException::class, $workPlan['exception']);
@@ -665,7 +665,7 @@ abstract class AbstractChefTests extends TestCase
             });
 
         $errorBowl2 = $this->createMock(BowlInterface::class);
-        $errorBowl2->expects(self::once())
+        $errorBowl2->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function ($chef, &$workPlan) use (&$called, $errorBowl2) {
                 self::assertInstanceOf(RuntimeException::class, $workPlan['exception']);
@@ -675,7 +675,7 @@ abstract class AbstractChefTests extends TestCase
             });
 
         $bowl2 = $this->createMock(BowlInterface::class);
-        $bowl2->expects(self::never())
+        $bowl2->expects($this->never())
             ->method('execute');
 
         $chef->followSteps([$bowl1, $bowl2], [$errorBowl1, $errorBowl2]);
@@ -695,7 +695,7 @@ abstract class AbstractChefTests extends TestCase
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
-        $bowl->expects(self::once())
+        $bowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl) {
                 $called = true;
@@ -712,11 +712,11 @@ abstract class AbstractChefTests extends TestCase
             });
 
         $bowl2 = $this->createMock(BowlInterface::class);
-        $bowl2->expects(self::never())
+        $bowl2->expects($this->never())
             ->method('execute');
 
         $bowl3 = $this->createMock(BowlInterface::class);
-        $bowl3->expects(self::once())
+        $bowl3->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl3) {
                 self::assertEquals(['foo' => 'bar2'], $workPlan);
@@ -741,7 +741,7 @@ abstract class AbstractChefTests extends TestCase
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
-        $bowl->expects(self::once())
+        $bowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl) {
                 $called = true;
@@ -772,7 +772,7 @@ abstract class AbstractChefTests extends TestCase
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
-        $bowl->expects(self::once())
+        $bowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl) {
                 $called = true;
@@ -811,7 +811,7 @@ abstract class AbstractChefTests extends TestCase
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
-        $bowl->expects(self::once())
+        $bowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl) {
                 $called = true;
@@ -843,7 +843,7 @@ abstract class AbstractChefTests extends TestCase
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
-        $bowl->expects(self::once())
+        $bowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl) {
                 $called = true;
@@ -858,7 +858,7 @@ abstract class AbstractChefTests extends TestCase
             });
 
         $errorBowl = $this->createMock(BowlInterface::class);
-        $errorBowl->expects(self::once())
+        $errorBowl->expects($this->once())
             ->method('execute')
             ->willReturnSelf();
 
@@ -907,11 +907,11 @@ abstract class AbstractChefTests extends TestCase
         $ingredient = $this->createMock(IngredientInterface::class);
 
         $recipe = $this->createMock(RecipeInterface::class);
-        $recipe->expects(self::once())
+        $recipe->expects($this->once())
             ->method('train')
             ->willReturnSelf();
 
-        $recipe->expects(self::once())
+        $recipe->expects($this->once())
             ->method('prepare')
             ->willReturnCallback(function ($workPlan, ChefInterface $chef) use ($recipe, $ingredient) {
                 self::assertInstanceOf(

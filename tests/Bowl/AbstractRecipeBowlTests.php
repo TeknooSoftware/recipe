@@ -101,20 +101,20 @@ abstract class AbstractRecipeBowlTests extends TestCase
 
         $workplan = ['foo' => 'bar'];
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan');
 
-        $subchef->expects(self::exactly(2))
+        $subchef->expects($this->exactly(2))
             ->method('updateWorkPlan')
             ->with($workplan)
             ->willReturnSelf();
 
-        $chef->expects(self::exactly(2))
+        $chef->expects($this->exactly(2))
             ->method('reserveAndBegin')
             ->with($recipe)
             ->willReturn($subchef);
 
-        $subchef->expects(self::exactly(2))
+        $subchef->expects($this->exactly(2))
             ->method('process')
             ->willReturnSelf();
 
@@ -134,7 +134,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
     {
         $recipe = $this->createMock(RecipeInterface::class);
         $counter = $this->createMock(BowlInterface::class);
-        $counter->expects(self::exactly(3))
+        $counter->expects($this->exactly(3))
             ->method('execute')
             ->willReturnCallback(function (ChefInterface $chef, $workplan) use ($counter) {
                 if ($workplan['counter'] >= 3) {
@@ -150,20 +150,20 @@ abstract class AbstractRecipeBowlTests extends TestCase
 
         $workplan = ['foo' => 'bar'];
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan');
 
-        $subchef->expects(self::exactly(3))
+        $subchef->expects($this->exactly(3))
             ->method('updateWorkPlan')
             ->with($workplan)
             ->willReturnSelf();
 
-        $chef->expects(self::exactly(3))
+        $chef->expects($this->exactly(3))
             ->method('reserveAndBegin')
             ->with($recipe)
             ->willReturn($subchef);
 
-        $subchef->expects(self::exactly(3))
+        $subchef->expects($this->exactly(3))
             ->method('process')
             ->willReturnSelf();
 
@@ -194,20 +194,20 @@ abstract class AbstractRecipeBowlTests extends TestCase
 
         $workplan = ['foo' => 'bar'];
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan');
 
-        $subchef->expects(self::exactly(2))
+        $subchef->expects($this->exactly(2))
             ->method('updateWorkPlan')
             ->with($workplan)
             ->willReturnSelf();
 
-        $chef->expects(self::exactly(2))
+        $chef->expects($this->exactly(2))
             ->method('reserveAndBegin')
             ->with($recipe)
             ->willReturn($subchef);
 
-        $subchef->expects(self::exactly(2))
+        $subchef->expects($this->exactly(2))
             ->method('process')
             ->willReturnSelf();
 
@@ -227,7 +227,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
     {
         $recipe = $this->createMock(BaseRecipeInterface::class);
         $counter = $this->createMock(BowlInterface::class);
-        $counter->expects(self::exactly(3))
+        $counter->expects($this->exactly(3))
             ->method('execute')
             ->willReturnCallback(function (ChefInterface $chef, $workplan) use ($counter) {
                 if ($workplan['counter'] >= 3) {
@@ -243,20 +243,20 @@ abstract class AbstractRecipeBowlTests extends TestCase
 
         $workplan = ['foo' => 'bar'];
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan');
 
-        $subchef->expects(self::exactly(3))
+        $subchef->expects($this->exactly(3))
             ->method('updateWorkPlan')
             ->with($workplan)
             ->willReturnSelf();
 
-        $chef->expects(self::exactly(3))
+        $chef->expects($this->exactly(3))
             ->method('reserveAndBegin')
             ->with($recipe)
             ->willReturn($subchef);
 
-        $subchef->expects(self::exactly(3))
+        $subchef->expects($this->exactly(3))
             ->method('process')
             ->willReturnSelf();
 

@@ -50,7 +50,7 @@ class RecipeTest extends AbstractRecipeTests
     public function testTrainNotEmpty()
     {
         $chef = $this->createMock(ChefInterface::class);
-        $chef->expects(self::once())
+        $chef->expects($this->once())
             ->method('followSteps')
             ->with([
                 'stepB' => new Bowl('microtime', [], 'stepB'),

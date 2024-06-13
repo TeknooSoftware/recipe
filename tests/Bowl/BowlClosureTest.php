@@ -84,7 +84,7 @@ class BowlClosureTest extends AbstractBowlTests
     public function testExecuteWithOptional()
     {
         $chef = $this->createMock(ChefInterface::class);
-        $chef->expects(self::once())
+        $chef->expects($this->once())
             ->method('continue')
             ->with([
                 'date' => (new DateTime('2018-01-01'))->getTimestamp(),
@@ -94,7 +94,7 @@ class BowlClosureTest extends AbstractBowlTests
             ])
             ->willReturnSelf();
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan');
 
         $closure = function (ChefInterface $chef, DateTime $date, $opt1 = 123, $opt2 = null, $opt3 = null) {

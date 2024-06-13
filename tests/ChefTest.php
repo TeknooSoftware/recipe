@@ -51,7 +51,7 @@ class ChefTest extends AbstractChefTests
     public function testReadInConstructor()
     {
         $recipe = $this->createMock(RecipeInterface::class);
-        $recipe->expects(self::once())
+        $recipe->expects($this->once())
             ->method('train')
             ->willReturnSelf();
 
@@ -65,7 +65,7 @@ class ChefTest extends AbstractChefTests
     {
         $topChef = $this->createMock(Chef::class);
         $topChefCalled = [];
-        $topChef->expects(self::any())
+        $topChef->expects($this->any())
             ->method('__call')
             ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled) {
                 $topChefCalled[$name] = true;
@@ -78,7 +78,7 @@ class ChefTest extends AbstractChefTests
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
-        $bowl->expects(self::once())
+        $bowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl) {
                 $called = true;
@@ -93,7 +93,7 @@ class ChefTest extends AbstractChefTests
             });
 
         $errorBowl = $this->createMock(BowlInterface::class);
-        $errorBowl->expects(self::once())
+        $errorBowl->expects($this->once())
             ->method('execute')
             ->willReturnSelf();
 
@@ -113,7 +113,7 @@ class ChefTest extends AbstractChefTests
     {
         $topChef = $this->createMock(Chef::class);
         $topChefCalled = [];
-        $topChef->expects(self::any())
+        $topChef->expects($this->any())
             ->method('__call')
             ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled) {
                 $topChefCalled[$name] = true;
@@ -126,7 +126,7 @@ class ChefTest extends AbstractChefTests
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
-        $bowl->expects(self::once())
+        $bowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl) {
                 $called = true;
@@ -142,7 +142,7 @@ class ChefTest extends AbstractChefTests
             });
 
         $errorBowl = $this->createMock(BowlInterface::class);
-        $errorBowl->expects(self::once())
+        $errorBowl->expects($this->once())
             ->method('execute')
             ->willReturnSelf();
 

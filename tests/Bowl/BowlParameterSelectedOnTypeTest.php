@@ -97,7 +97,7 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
     public function testExecute()
     {
         $chef = $this->createMock(ChefInterface::class);
-        $chef->expects(self::once())
+        $chef->expects($this->once())
             ->method('continue')
             ->with([
                 'bar' => 'foo',
@@ -108,7 +108,7 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
             ])
             ->willReturnSelf();
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan');
 
         $values = $this->getValidWorkPlan();
@@ -124,7 +124,7 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
     public function testExecuteWithValue()
     {
         $chef = $this->createMock(ChefInterface::class);
-        $chef->expects(self::once())
+        $chef->expects($this->once())
             ->method('continue')
             ->with([
                 'bar' => 'ValueFoo1',
@@ -135,7 +135,7 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
             ])
             ->willReturnSelf();
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan');
 
         $values = $this->getValidWorkPlan();

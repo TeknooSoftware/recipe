@@ -327,7 +327,7 @@ abstract class AbstractRecipeTests extends TestCase
     public function testDish()
     {
         $dish = $this->createMock(DishInterface::class);
-        $dish->expects(self::once())
+        $dish->expects($this->once())
             ->method('isExcepted')
             ->with('fooBar')
             ->willReturnSelf();
@@ -364,7 +364,7 @@ abstract class AbstractRecipeTests extends TestCase
     public function testTrainEmpty()
     {
         $chef = $this->createMock(ChefInterface::class);
-        $chef->expects(self::once())
+        $chef->expects($this->once())
             ->method('followSteps')
             ->with([])
             ->willReturnSelf();
@@ -397,7 +397,7 @@ abstract class AbstractRecipeTests extends TestCase
         $ingredient = $this->createMock(IngredientInterface::class);
         $workPlan = ['foo' => 'bar'];
 
-        $ingredient->expects(self::once())
+        $ingredient->expects($this->once())
             ->method('prepare')
             ->with($workPlan, $chef)
             ->willReturnSelf();

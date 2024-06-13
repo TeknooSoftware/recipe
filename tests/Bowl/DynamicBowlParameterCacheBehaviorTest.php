@@ -106,7 +106,7 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
     public function testExecute()
     {
         $chef = $this->createMock(ChefInterface::class);
-        $chef->expects(self::exactly(3))
+        $chef->expects($this->exactly(3))
             ->method('continue')
             ->with(
                 $this->callback(
@@ -120,7 +120,7 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
             )
             ->willReturnSelf();
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan');
 
         $values = [

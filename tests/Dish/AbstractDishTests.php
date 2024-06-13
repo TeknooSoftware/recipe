@@ -50,13 +50,13 @@ abstract class AbstractDishTests extends TestCase
     public function testIsExceptedWithAGoodResult()
     {
         $this->getPromise()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('success')
             ->with($this->getExceptedValue())
             ->willReturnSelf();
 
         $this->getPromise()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('fail');
 
         self::assertInstanceOf(
@@ -70,11 +70,11 @@ abstract class AbstractDishTests extends TestCase
     public function testIsExceptedWithABadResult()
     {
         $this->getPromise()
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('success');
 
         $this->getPromise()
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fail')
             ->willReturnSelf();
 

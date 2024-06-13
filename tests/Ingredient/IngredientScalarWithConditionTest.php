@@ -150,10 +150,10 @@ class IngredientScalarWithConditionTest extends AbstractIngredientTests
     {
         $chef = $this->createMock(ChefInterface::class);
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('missing');
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan');
 
         $a = $this->getWorkPlanValidAndByPass();
@@ -171,15 +171,15 @@ class IngredientScalarWithConditionTest extends AbstractIngredientTests
         $chef = $this->createMock(ChefInterface::class);
         $bag = $this->createMock(IngredientBagInterface::class);
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('missing');
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan')
             ->with($this->getWorkPlanInjected())
             ->willReturnSelf();
 
-        $bag->expects(self::never())
+        $bag->expects($this->never())
             ->method('updateWorkPlan')
             ->with($this->getWorkPlanInjected())
             ->willReturnSelf();
@@ -199,10 +199,10 @@ class IngredientScalarWithConditionTest extends AbstractIngredientTests
     {
         $chef = $this->createMock(ChefInterface::class);
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('missing');
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan')
             ->willReturnSelf();
 
@@ -220,10 +220,10 @@ class IngredientScalarWithConditionTest extends AbstractIngredientTests
     {
         $chef = $this->createMock(ChefInterface::class);
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('missing');
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('updateWorkPlan')
             ->willReturnSelf();
 

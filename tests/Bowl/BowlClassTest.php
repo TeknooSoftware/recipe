@@ -119,12 +119,12 @@ class BowlClassTest extends AbstractBowlTests
         $parameter->setAccessible(true);
 
         $refType = $this->createMock(ReflectionNamedType::class);
-        $refType->expects(self::any())
+        $refType->expects($this->any())
             ->method('getName')
             ->willReturn('self');
 
         $refParam = $this->createMock(ReflectionParameter::class);
-        $refParam->expects(self::any())
+        $refParam->expects($this->any())
             ->method('getType')
             ->willReturn($refType);
 

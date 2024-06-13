@@ -126,10 +126,10 @@ class IngredientScalarTest extends AbstractIngredientTests
     {
         $chef = $this->createMock(ChefInterface::class);
 
-        $chef->expects(self::never())
+        $chef->expects($this->never())
             ->method('missing');
 
-        $chef->expects(self::once())
+        $chef->expects($this->once())
             ->method('updateWorkPlan')
             ->with(
                 [
