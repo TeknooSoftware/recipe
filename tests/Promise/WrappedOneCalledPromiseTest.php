@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Promise;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\Recipe\Promise\WrappedOneCalledPromise;
@@ -35,8 +36,8 @@ use Teknoo\Recipe\Promise\WrappedOneCalledPromise;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\Recipe\Promise\WrappedOneCalledPromise
  */
+#[CoversClass(WrappedOneCalledPromise::class)]
 class WrappedOneCalledPromiseTest extends TestCase
 {
     public function buildPromise(PromiseInterface $promise): PromiseInterface

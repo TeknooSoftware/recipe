@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Ingredient;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\IngredientBag;
@@ -36,8 +37,8 @@ use Teknoo\Recipe\Ingredient\IngredientBagInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\Recipe\Ingredient\IngredientBag
  */
+#[CoversClass(IngredientBag::class)]
 class IngredientBagTest extends TestCase
 {
     public function buildBag(): IngredientBag

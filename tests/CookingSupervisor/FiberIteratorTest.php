@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\Recipe\CookingSupervisor;
 
 use Fiber;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Teknoo\Recipe\CookingSupervisor\FiberIterator;
@@ -38,8 +39,8 @@ use TypeError;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\Recipe\CookingSupervisor\FiberIterator
  */
+#[CoversClass(FiberIterator::class)]
 class FiberIteratorTest extends TestCase
 {
     public function buildIterator(array $list): FiberIterator

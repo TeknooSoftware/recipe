@@ -27,10 +27,12 @@ namespace Teknoo\Tests\Recipe;
 
 use Exception;
 use Fiber;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Teknoo\Recipe\CookingSupervisor;
+use Teknoo\Recipe\CookingSupervisor\Action;
 use Teknoo\Recipe\CookingSupervisor\FiberIterator;
 use Teknoo\Recipe\CookingSupervisorInterface;
 use Throwable;
@@ -42,9 +44,9 @@ use TypeError;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\Recipe\CookingSupervisor
- * @covers \Teknoo\Recipe\CookingSupervisor\Action
  */
+#[CoversClass(CookingSupervisor::class)]
+#[CoversClass(Action::class)]
 class CookingSupervisorTest extends TestCase
 {
     private ?FiberIterator $items = null;

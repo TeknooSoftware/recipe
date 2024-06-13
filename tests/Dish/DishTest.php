@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Dish;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use Teknoo\Recipe\Dish\AbstractDishClass;
 use Teknoo\Recipe\Dish\DishClass;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Promise\PromiseInterface;
@@ -36,9 +38,9 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\Recipe\Dish\AbstractDishClass
- * @covers \Teknoo\Recipe\Dish\DishClass
  */
+#[CoversClass(AbstractDishClass::class)]
+#[CoversClass(DishClass::class)]
 class DishTest extends AbstractDishTests
 {
     /**

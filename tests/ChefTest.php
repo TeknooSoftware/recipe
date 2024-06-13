@@ -25,8 +25,12 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
+use Teknoo\Recipe\Chef\Cooking;
+use Teknoo\Recipe\Chef\Free;
+use Teknoo\Recipe\Chef\Trained;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\RecipeInterface;
 
@@ -36,11 +40,11 @@ use Teknoo\Recipe\RecipeInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\Recipe\Chef
- * @covers \Teknoo\Recipe\Chef\Cooking
- * @covers \Teknoo\Recipe\Chef\Free
- * @covers \Teknoo\Recipe\Chef\Trained
  */
+#[CoversClass(Chef::class)]
+#[CoversClass(Trained::class)]
+#[CoversClass(Free::class)]
+#[CoversClass(Cooking::class)]
 class ChefTest extends AbstractChefTests
 {
     public function buildChef(?ChefInterface $topChef = null): ChefInterface

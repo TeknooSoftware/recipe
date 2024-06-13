@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Teknoo\Recipe\Bowl\AbstractRecipeBowl;
 use Teknoo\Recipe\Bowl\RecipeBowl;
 use Teknoo\Recipe\RecipeInterface;
@@ -34,10 +35,9 @@ use Teknoo\Recipe\RecipeInterface;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- *
- * @covers \Teknoo\Recipe\Bowl\AbstractRecipeBowl
- * @covers \Teknoo\Recipe\Bowl\RecipeBowl
  */
+#[CoversClass(RecipeBowl::class)]
+#[CoversClass(AbstractRecipeBowl::class)]
 class RecipeBowlTest extends AbstractRecipeBowlTests
 {
     /**

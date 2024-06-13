@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Ingredient\Attributes;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Teknoo\Tests\Recipe\Transformable;
@@ -35,8 +36,8 @@ use Teknoo\Tests\Recipe\Transformable;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\Recipe\Ingredient\Attributes\Transform
  */
+#[CoversClass(Transform::class)]
 class TransformTest extends TestCase
 {
     public function testEmptyClass()

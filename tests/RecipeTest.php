@@ -25,9 +25,12 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Recipe;
+use Teknoo\Recipe\Recipe\Draft;
+use Teknoo\Recipe\Recipe\Written;
 use Teknoo\Recipe\RecipeInterface;
 
 /**
@@ -36,10 +39,10 @@ use Teknoo\Recipe\RecipeInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\Recipe\Recipe
- * @covers \Teknoo\Recipe\Recipe\Draft
- * @covers \Teknoo\Recipe\Recipe\Written
  */
+#[CoversClass(Recipe::class)]
+#[CoversClass(Draft::class)]
+#[CoversClass(Written::class)]
 class RecipeTest extends AbstractRecipeTests
 {
     public function buildRecipe(): RecipeInterface

@@ -27,7 +27,10 @@ namespace Teknoo\Tests\Recipe\Bowl;
 
 use DateTime;
 use Fiber;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use Teknoo\Recipe\Bowl\BowlInterface;
+use Teknoo\Recipe\Bowl\BowlTrait;
 use Teknoo\Recipe\Bowl\FiberBowl;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
@@ -38,10 +41,9 @@ use Teknoo\Recipe\Value;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- *
- * @covers \Teknoo\Recipe\Bowl\FiberBowl
- * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
+#[CoversClass(FiberBowl::class)]
+#[CoversTrait(BowlTrait::class)]
 class FiberBowlClosureTest extends AbstractBowlTests
 {
     protected function getCallable()

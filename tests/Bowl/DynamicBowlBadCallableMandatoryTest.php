@@ -25,7 +25,11 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
+use Teknoo\Recipe\Bowl\AbstractDynamicBowl;
+use Teknoo\Recipe\Bowl\BowlTrait;
 use Teknoo\Recipe\Bowl\DynamicBowl;
 use Teknoo\Recipe\ChefInterface;
 
@@ -34,11 +38,10 @@ use Teknoo\Recipe\ChefInterface;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- *
- * @covers \Teknoo\Recipe\Bowl\AbstractDynamicBowl
- * @covers \Teknoo\Recipe\Bowl\DynamicBowl
- * @covers \Teknoo\Recipe\Bowl\BowlTrait
  */
+#[CoversClass(AbstractDynamicBowl::class)]
+#[CoversClass(DynamicBowl::class)]
+#[CoversTrait(BowlTrait::class)]
 class DynamicBowlBadCallableMandatoryTest extends TestCase
 {
     /**

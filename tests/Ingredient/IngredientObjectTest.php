@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Ingredient;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\Ingredient;
@@ -36,8 +37,8 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\Recipe\Ingredient\Ingredient
  */
+#[CoversClass(Ingredient::class)]
 class IngredientObjectTest extends AbstractIngredientTests
 {
     public function buildIngredient(

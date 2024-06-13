@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Promise;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use Teknoo\Recipe\Promise\AbstractPromise;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\Recipe\Promise\PromiseInterface;
 
@@ -34,9 +36,9 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @covers \Teknoo\Recipe\Promise\AbstractPromise
- * @covers \Teknoo\Recipe\Promise\Promise
  */
+#[CoversClass(AbstractPromise::class)]
+#[CoversClass(Promise::class)]
 class PromiseTest extends AbstractPromiseTests
 {
     public function buildPromise(
