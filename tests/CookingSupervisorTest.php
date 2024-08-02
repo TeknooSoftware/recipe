@@ -356,7 +356,7 @@ class CookingSupervisorTest extends TestCase
             ->willReturnOnConsecutiveCalls(true, true, false, true, false)
             ->willReturn(true);
         $this->getFiberIterator()->expects($this->any())->method('current')
-            ->willReturnOnConsecutiveCalls($s1, $s2);
+            ->willReturnOnConsecutiveCalls($s1, $s2, null, null, null);
 
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
@@ -410,7 +410,7 @@ class CookingSupervisorTest extends TestCase
         $this->getFiberIterator()
             ->expects($this->any())
             ->method('current')
-            ->willReturnOnConsecutiveCalls($f1, $f2, $f2);
+            ->willReturnOnConsecutiveCalls($f1, $f2, $f2, null, null);
 
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
@@ -454,7 +454,7 @@ class CookingSupervisorTest extends TestCase
         $this->getFiberIterator()->expects($this->any())->method('valid')
             ->willReturnOnConsecutiveCalls(true, true, false, true, false);
         $this->getFiberIterator()->expects($this->any())->method('current')
-            ->willReturnOnConsecutiveCalls($s1, $s2);
+            ->willReturnOnConsecutiveCalls($s1, $s2, null, null, null);
 
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
