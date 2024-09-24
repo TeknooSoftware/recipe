@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [5.1.1] - 2024-09-24
+### Stable Release
+- Remove deprecations about PHP 8.4
+
 ## [5.1.0] - 2024-05-07
 ### Stable Release
 - Drop support of PHP 8.1

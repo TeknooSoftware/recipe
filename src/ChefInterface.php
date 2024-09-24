@@ -95,7 +95,7 @@ interface ChefInterface
      *
      * @param array<string, mixed> $with
      */
-    public function continue(#[SensitiveParameter] array $with = [], string $nextStep = null): ChefInterface;
+    public function continue(#[SensitiveParameter] array $with = [], ?string $nextStep = null): ChefInterface;
 
     /*
      * To interrupt cooking, without execute dish validation

@@ -86,8 +86,8 @@ abstract class AbstractPromise implements PromiseInterface
     private bool $isFailing = false;
 
     public function __construct(
-        callable $onSuccess = null,
-        callable $onFail = null,
+        ?callable $onSuccess = null,
+        ?callable $onFail = null,
         private readonly bool $allowNext = true,
         private readonly bool $callOnFailOnException = true,
     ) {

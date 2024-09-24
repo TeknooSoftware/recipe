@@ -82,7 +82,7 @@ interface CookingSupervisorInterface
      * To resume a specific task in the list, from its name, with an exception.
      * If the task is not suspended, this method do nothing
      */
-    public function throw(#[SensitiveParameter] Throwable $value = null): CookingSupervisorInterface;
+    public function throw(#[SensitiveParameter] ?Throwable $value = null): CookingSupervisorInterface;
 
     /*
      * Rewind the cursor on the top the list

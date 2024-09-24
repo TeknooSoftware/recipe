@@ -99,7 +99,7 @@ class Cooking implements StateInterface
      */
     private function getNextStep(): callable
     {
-        return function (string $nextStep = null): ?BowlInterface {
+        return function (?string $nextStep = null): ?BowlInterface {
             if (!empty($nextStep) && isset($this->stepsNames[$nextStep])) {
                 $this->position = $this->stepsNames[$nextStep];
             }
@@ -123,7 +123,7 @@ class Cooking implements StateInterface
      */
     private function continueRecipe(): callable
     {
-        return function (#[SensitiveParameter] array $with = [], string $nextStep = null): ChefInterface {
+        return function (#[SensitiveParameter] array $with = [], ?string $nextStep = null): ChefInterface {
             /**
              * @var Chef $this
              */

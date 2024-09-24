@@ -84,7 +84,7 @@ class Draft implements StateInterface
             callable | BowlInterface $action,
             string $name,
             array $with = [],
-            int $position = null
+            ?int $position = null
         ): RecipeInterface {
             /**
              * @var Recipe $this
@@ -138,7 +138,7 @@ class Draft implements StateInterface
             BaseRecipeInterface $recipe,
             string $name,
             int | callable $repeat = 1,
-            int $position = null,
+            ?int $position = null,
             bool $inFiber = false,
         ): RecipeInterface {
             /**

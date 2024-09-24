@@ -187,7 +187,7 @@ class CookingSupervisor implements CookingSupervisorInterface
     /**
      * @throws Throwable
      */
-    public function throw(#[SensitiveParameter] Throwable $value = null): CookingSupervisorInterface
+    public function throw(#[SensitiveParameter] ?Throwable $value = null): CookingSupervisorInterface
     {
         if (null !== ($item = $this->getNextItem(false))) {
             $this->callOnItem($item, Action::Throw, $value);

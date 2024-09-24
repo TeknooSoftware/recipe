@@ -144,7 +144,7 @@ class Recipe implements AutomatedInterface, RecipeInterface
         callable | BowlInterface $action,
         string $name,
         array $with = [],
-        int $position = null
+        ?int $position = null
     ): RecipeInterface {
         return $this->addStep($action, $name, $with, $position);
     }
@@ -158,7 +158,7 @@ class Recipe implements AutomatedInterface, RecipeInterface
         BaseRecipeInterface $recipe,
         string $name,
         int | callable $repeat = 1,
-        int $position = null,
+        ?int $position = null,
         bool $inFiber = false,
     ): RecipeInterface {
         return $this->addSubRecipe($recipe, $name, $repeat, $position, $inFiber);

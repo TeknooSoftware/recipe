@@ -122,7 +122,7 @@ class Chef implements AutomatedInterface, ChefInterface
     }
 
     final public function __construct(
-        BaseRecipeInterface $recipe = null,
+        ?BaseRecipeInterface $recipe = null,
         private readonly ?self $topChef = null,
         private CookingSupervisorInterface $cookingSupervisor = new CookingSupervisor(),
     ) {
@@ -193,7 +193,7 @@ class Chef implements AutomatedInterface, ChefInterface
         return $this->followStepsRecipe($steps, $onError);
     }
 
-    public function continue(#[SensitiveParameter] array $with = [], string $nextStep = null): ChefInterface
+    public function continue(#[SensitiveParameter] array $with = [], ?string $nextStep = null): ChefInterface
     {
         return $this->continueRecipe($with, $nextStep);
     }
