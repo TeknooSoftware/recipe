@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Cookbook;
 
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
@@ -37,7 +36,6 @@ use Teknoo\Recipe\RecipeInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-#[CoversTrait(BaseCookbookTrait::class)]
 class CoobookTraitTest extends TestCase
 {
     use BaseCookbookTestTrait;

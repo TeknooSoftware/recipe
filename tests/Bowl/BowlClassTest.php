@@ -26,7 +26,6 @@ namespace Teknoo\Tests\Recipe\Bowl;
 use DateTime;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionParameter;
@@ -44,7 +43,6 @@ use Teknoo\Recipe\Value;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Bowl::class)]
-#[CoversTrait(BowlTrait::class)]
 class BowlClassTest extends AbstractBowlTests
 {
     /**
@@ -133,7 +131,7 @@ class BowlClassTest extends AbstractBowlTests
         $parameter->setValue(
             $bowl,
             [
-                __FILE__ . ':112' => [$refParam]
+                __FILE__ . ':110' => [$refParam]
             ]
         );
 

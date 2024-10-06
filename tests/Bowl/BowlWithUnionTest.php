@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Teknoo\Tests\Recipe\Bowl;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Bowl\BowlTrait;
@@ -39,7 +38,6 @@ use Teknoo\Recipe\Value;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Bowl::class)]
-#[CoversTrait(BowlTrait::class)]
 class BowlWithUnionTest extends AbstractBowlTests
 {
     protected function getCallable()

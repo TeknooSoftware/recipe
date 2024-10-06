@@ -27,13 +27,13 @@ namespace Teknoo\Tests\Recipe\Bowl;
 
 use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use Teknoo\Recipe\Bowl\AbstractDynamicBowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Bowl\BowlTrait;
 use Teknoo\Recipe\Bowl\DynamicBowl;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Value;
+
 use function array_merge;
 
 /**
@@ -44,7 +44,6 @@ use function array_merge;
  */
 #[CoversClass(AbstractDynamicBowl::class)]
 #[CoversClass(DynamicBowl::class)]
-#[CoversTrait(BowlTrait::class)]
 class DynamicBowlObjectTest extends AbstractBowlTests
 {
     protected function getCallable()

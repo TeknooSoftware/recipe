@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Teknoo\Tests\Recipe\Bowl;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlTrait;
@@ -39,7 +38,6 @@ use TypeError;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Bowl::class)]
-#[CoversTrait(BowlTrait::class)]
 class BowlInexistantClassTest extends TestCase
 {
     protected function getCallableClassNotAvailable()

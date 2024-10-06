@@ -27,7 +27,6 @@ namespace Teknoo\Tests\Recipe\Bowl;
 
 use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Bowl\AbstractDynamicBowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
@@ -44,7 +43,6 @@ use Teknoo\Recipe\Value;
  */
 #[CoversClass(AbstractDynamicBowl::class)]
 #[CoversClass(DynamicBowl::class)]
-#[CoversTrait(BowlTrait::class)]
 class DynamicBowlParameterCacheBehaviorTest extends TestCase
 {
     protected function getCallableObject()

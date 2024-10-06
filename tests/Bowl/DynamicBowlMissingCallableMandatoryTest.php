@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Teknoo\Tests\Recipe\Bowl;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Bowl\AbstractDynamicBowl;
 use Teknoo\Recipe\Bowl\BowlTrait;
@@ -41,7 +40,6 @@ use Teknoo\Recipe\ChefInterface;
  */
 #[CoversClass(AbstractDynamicBowl::class)]
 #[CoversClass(DynamicBowl::class)]
-#[CoversTrait(BowlTrait::class)]
 class DynamicBowlMissingCallableMandatoryTest extends TestCase
 {
     /**

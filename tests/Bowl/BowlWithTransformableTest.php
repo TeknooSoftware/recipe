@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Teknoo\Tests\Recipe\Bowl;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
@@ -44,7 +43,6 @@ use function explode;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Bowl::class)]
-#[CoversTrait(BowlTrait::class)]
 class BowlWithTransformableTest extends TestCase
 {
     private bool $called = false;
