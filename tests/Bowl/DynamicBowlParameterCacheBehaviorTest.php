@@ -43,12 +43,12 @@ use Teknoo\Recipe\Value;
  */
 #[CoversClass(AbstractDynamicBowl::class)]
 #[CoversClass(DynamicBowl::class)]
-class DynamicBowlParameterCacheBehaviorTest extends TestCase
+final class DynamicBowlParameterCacheBehaviorTest extends TestCase
 {
-    protected function getCallableObject()
+    protected function getCallableObject(): callable
     {
         $object = new class () {
-            public function methodToCall(ChefInterface $chef, string $bar, $foo2, DateTime $date)
+            public function methodToCall(ChefInterface $chef, string $bar, $foo2, DateTime $date): void
             {
                 $chef->continue([
                     'bar' => $bar,
@@ -58,13 +58,12 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
             }
         };
 
-        return [$object, 'methodToCall'];
+        return $object->methodToCall(...);
     }
-
     protected function getCallableInvokable(): callable
     {
         $object = new class () {
-            public function __invoke(ChefInterface $chef, $bar, $foo, DateTime $date)
+            public function __invoke(ChefInterface $chef, $bar, $foo, DateTime $date): void
             {
                 $chef->continue([
                     'bar' => $bar,
@@ -76,12 +75,10 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
 
         return $object;
     }
-
-    protected function getMapping()
+    protected function getMapping(): array
     {
         return ['bar' => 'foo'];
     }
-
     public function buildBowl(): BowlInterface
     {
         return new DynamicBowl(
@@ -90,7 +87,6 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
             $this->getMapping()
         );
     }
-
     public function buildBowlWithMappingValue(): BowlInterface
     {
         return new DynamicBowl(
@@ -103,15 +99,14 @@ class DynamicBowlParameterCacheBehaviorTest extends TestCase
             'bowlClass'
         );
     }
-
-    public function testExecute()
+    public function testExecute(): void
     {
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects($this->exactly(3))
             ->method('continue')
             ->with(
                 $this->callback(
-                    fn ($value) => match ($value) {
+                    fn ($value): bool => match ($value) {
                         ['bar' => 'foo', 'foo2' => 'bar2', 'date' => (new DateTime('2018-01-01'))->getTimestamp()] => true,
                         ['bar' => 'foo', 'foo2' => 'bar2', 'date' => (new DateTime('2018-01-01'))->getTimestamp()] => true,
                         ['bar' => 'foo', 'foo2' => 'foo', 'date' => (new DateTime('2018-01-01'))->getTimestamp()] => true,

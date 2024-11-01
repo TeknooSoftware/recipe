@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Chef;
 
+use Teknoo\Recipe\Chef\Exception\MissingIngredientException;
 use SensitiveParameter;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\BowlInterface;
@@ -205,7 +206,7 @@ class Cooking implements StateInterface
                 return;
             }
 
-            throw new Chef\Exception\MissingIngredientException(
+            throw new MissingIngredientException(
                 'Error, missing some ingredients : '
                 . implode(', ', array_keys($this->missingIngredients))
             );

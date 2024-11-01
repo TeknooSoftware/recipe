@@ -43,14 +43,13 @@ use Teknoo\Recipe\RecipeInterface;
 #[CoversClass(Recipe::class)]
 #[CoversClass(Draft::class)]
 #[CoversClass(Written::class)]
-class RecipeTest extends AbstractRecipeTests
+final class RecipeTest extends AbstractRecipeTests
 {
     public function buildRecipe(): RecipeInterface
     {
         return new Recipe();
     }
-
-    public function testTrainNotEmpty()
+    public function testTrainNotEmpty(): void
     {
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects($this->once())

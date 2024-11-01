@@ -35,29 +35,26 @@ use Teknoo\Recipe\Ingredient\MergeableInterface;
  */
 class IntBag implements MergeableInterface
 {
-    /**
-     * @var int
-     */
-    private $value;
+    private int $value;
 
     public function __construct($value)
     {
         $this->value = (int) $value;
     }
 
-    public static function addValue(IntBag $bag, IntBag $toAdd)
+    public static function addValue(IntBag $bag, IntBag $toAdd): void
     {
         $bag->value += $toAdd->value;
     }
 
-    public static function initializeTo10(IntBag $bag)
+    public static function initializeTo10(IntBag $bag): void
     {
         $bag->value = 10;
     }
 
-    public static function increaseValue(IntBag $bag)
+    public static function increaseValue(IntBag $bag): void
     {
-        $bag->value++;
+        ++$bag->value;
     }
 
     public function merge(MergeableInterface $mergeable): MergeableInterface

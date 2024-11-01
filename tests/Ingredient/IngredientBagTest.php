@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Ingredient;
 
+use TypeError;
+use stdClass;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\ChefInterface;
@@ -39,36 +41,32 @@ use Teknoo\Recipe\Ingredient\IngredientBagInterface;
  *
  */
 #[CoversClass(IngredientBag::class)]
-class IngredientBagTest extends TestCase
+final class IngredientBagTest extends TestCase
 {
     public function buildBag(): IngredientBag
     {
         return new IngredientBag();
     }
-
-    public function testSetBadName()
+    public function testSetBadName(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
-        $this->buildBag()->set(new \stdClass(), 'foo');
+        $this->buildBag()->set(new stdClass(), 'foo');
     }
-
-    public function testSet()
+    public function testSet(): void
     {
         self::assertInstanceOf(
             IngredientBagInterface::class,
-            $this->buildBag()->set('foo', new \stdClass())
+            $this->buildBag()->set('foo', new stdClass())
         );
     }
-
-    public function testUpdateWorkPlanBadChef()
+    public function testUpdateWorkPlanBadChef(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
-        $this->buildBag()->updateWorkPlan(new \stdClass());
+        $this->buildBag()->updateWorkPlan(new stdClass());
     }
-
-    public function testUpdateWorkPlan()
+    public function testUpdateWorkPlan(): void
     {
         self::assertInstanceOf(
             IngredientBagInterface::class,

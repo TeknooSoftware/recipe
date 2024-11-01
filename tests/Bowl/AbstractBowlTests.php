@@ -53,14 +53,14 @@ abstract class AbstractBowlTests extends TestCase
      */
     abstract public function buildBowlWithMappingValue(): BowlInterface;
 
-    public function testExceptionOnExecuteWithBadChef()
+    public function testExceptionOnExecuteWithBadChef(): void
     {
         $this->expectException(TypeError::class);
         $values = ['foo' => 'bar'];
         $this->buildBowl()->execute(new stdClass(), $values);
     }
 
-    public function testExceptionOnExecuteWithBadWorkPlan()
+    public function testExceptionOnExecuteWithBadWorkPlan(): void
     {
         $this->expectException(TypeError::class);
         $values = new stdClass();
@@ -77,7 +77,7 @@ abstract class AbstractBowlTests extends TestCase
         ];
     }
 
-    public function testExecute()
+    public function testExecute(): void
     {
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects($this->once())
@@ -105,7 +105,7 @@ abstract class AbstractBowlTests extends TestCase
         );
     }
 
-    public function testExecuteWithValue()
+    public function testExecuteWithValue(): void
     {
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects($this->once())
@@ -140,7 +140,7 @@ abstract class AbstractBowlTests extends TestCase
         ];
     }
 
-    public function testExceptionWhenExecuteAndMissingAndIngredientInWorkPlan()
+    public function testExceptionWhenExecuteAndMissingAndIngredientInWorkPlan(): void
     {
         $this->expectException(BadMethodCallException::class);
         $chef = $this->createMock(ChefInterface::class);

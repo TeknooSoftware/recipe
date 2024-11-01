@@ -36,9 +36,9 @@ use Teknoo\Recipe\Value;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Value::class)]
-class ValueTest extends TestCase
+final class ValueTest extends TestCase
 {
-    public function testGetValue()
+    public function testGetValue(): void
     {
         self::assertEquals(
             'foo',

@@ -40,11 +40,11 @@ use Teknoo\Recipe\Value;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Bowl::class)]
-class BowlClosureTest extends AbstractBowlTests
+final class BowlClosureTest extends AbstractBowlTests
 {
     protected function getCallable()
     {
-        return function (ChefInterface $chef, string $bar, $bar2, $foo2, DateTime $date, $_methodName) {
+        return function (ChefInterface $chef, string $bar, $bar2, $foo2, DateTime $date, $_methodName): void {
             $chef->continue([
                 'bar' => $bar,
                 'bar2' => $bar2,
@@ -54,12 +54,10 @@ class BowlClosureTest extends AbstractBowlTests
             ]);
         };
     }
-
-    protected function getMapping()
+    protected function getMapping(): array
     {
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
-
     public function buildBowl(): BowlInterface
     {
         return new Bowl(
@@ -68,7 +66,6 @@ class BowlClosureTest extends AbstractBowlTests
             'bowlClass'
         );
     }
-
     public function buildBowlWithMappingValue(): BowlInterface
     {
         return new Bowl(
@@ -80,8 +77,7 @@ class BowlClosureTest extends AbstractBowlTests
             'bowlClass'
         );
     }
-
-    public function testExecuteWithOptional()
+    public function testExecuteWithOptional(): void
     {
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects($this->once())
@@ -97,7 +93,7 @@ class BowlClosureTest extends AbstractBowlTests
         $chef->expects($this->never())
             ->method('updateWorkPlan');
 
-        $closure = function (ChefInterface $chef, DateTime $date, $opt1 = 123, $opt2 = null, $opt3 = null) {
+        $closure = function (ChefInterface $chef, DateTime $date, $opt1 = 123, $opt2 = null, $opt3 = null): void {
             $chef->continue([
                 'date' => $date->getTimestamp(),
                 'opt1' => $opt1,

@@ -42,7 +42,7 @@ use Teknoo\Recipe\Value;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(FiberBowl::class)]
-class FiberBowlClosureTest extends AbstractBowlTests
+final class FiberBowlClosureTest extends AbstractBowlTests
 {
     protected function getCallable()
     {
@@ -57,7 +57,7 @@ class FiberBowlClosureTest extends AbstractBowlTests
             $_methodName,
             Fiber $fiber,
             CookingSupervisorInterface $cookingSupervisor,
-        ) use ($that) {
+        ) use ($that): void {
             $that->assertInstanceOf(
                 Fiber::class,
                 $fiber
@@ -77,12 +77,10 @@ class FiberBowlClosureTest extends AbstractBowlTests
             ]);
         };
     }
-
-    protected function getMapping()
+    protected function getMapping(): array
     {
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
-
     public function buildBowl(): BowlInterface
     {
         return new FiberBowl(
@@ -91,7 +89,6 @@ class FiberBowlClosureTest extends AbstractBowlTests
             'bowlClass'
         );
     }
-
     public function buildBowlWithMappingValue(): BowlInterface
     {
         return new FiberBowl(
@@ -103,8 +100,7 @@ class FiberBowlClosureTest extends AbstractBowlTests
             'bowlClass'
         );
     }
-
-    public function testExecuteWithOptional()
+    public function testExecuteWithOptional(): void
     {
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects($this->once())
@@ -120,7 +116,7 @@ class FiberBowlClosureTest extends AbstractBowlTests
         $chef->expects($this->never())
             ->method('updateWorkPlan');
 
-        $closure = function (ChefInterface $chef, DateTime $date, $opt1 = 123, $opt2 = null, $opt3 = null) {
+        $closure = function (ChefInterface $chef, DateTime $date, $opt1 = 123, $opt2 = null, $opt3 = null): void {
             $chef->continue([
                 'date' => $date->getTimestamp(),
                 'opt1' => $opt1,

@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\Recipe;
 
 /**
- * Base interface common to Cookbook and Recipe to define all methods needed to execute and validate a recipe.
- * Recipe contains methods to define / write a dynamic recipes, Cookbook to execute and customize static recipes
+ * Base interface common to Plan and Recipe to define all methods needed to execute and validate a recipe.
+ * Recipe contains methods to define / write a dynamic recipes, Plan to execute and customize static recipes
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)

@@ -39,7 +39,7 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  *
  */
 #[CoversClass(Ingredient::class)]
-class IngredientScalarTest extends AbstractIngredientTests
+final class IngredientScalarTest extends AbstractIngredientTests
 {
     public function buildIngredient(
         bool $mandatory = true,
@@ -54,7 +54,6 @@ class IngredientScalarTest extends AbstractIngredientTests
             default: $default,
         );
     }
-
     public function buildIngredientWithoutName(
         bool $mandatory = true,
         mixed $default = null,
@@ -65,65 +64,55 @@ class IngredientScalarTest extends AbstractIngredientTests
             name: null,
         );
     }
-
     public function getWorkPlanValid(): array
     {
         return [
             'IngName' => 'fooBar'
         ];
     }
-
     public function getWorkPlanKeyUnderAnotherName(): array
     {
         return [
             'IngName2' => 'fooBar'
         ];
     }
-
     public function getWorkPlanInvalidMissing(): array
     {
         return [
             'foo' => 'fooBar'
         ];
     }
-
     public function getWorkPlanInvalidNotInstanceOf(): array
     {
         return [
             'IngName' => 123
         ];
     }
-
-   public function getWorkPlanInjected(): array
-    {
-        return [
-            'IngName' => 'fooBar'
-        ];
-    }
-
+    public function getWorkPlanInjected(): array
+     {
+         return [
+             'IngName' => 'fooBar'
+         ];
+     }
     public function getWorkPlanInjectedWithoutName(): array
     {
         return $this->getWorkPlanInjected();
     }
-
     public function getDefaultValue(): mixed
     {
         return 'fooBar';
     }
-
-    public function testPrepareWithValidPlanWithoutNameUseType()
+    public function testPrepareWithValidPlanWithoutNameUseType(): void
     {
         $this->expectException(LogicException::class);
         $this->buildIngredientWithoutName();
     }
-
-    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsNullAndValueIsPresentUnderAnotherName()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsNullAndValueIsPresentUnderAnotherName(): void
     {
         $this->expectException(LogicException::class);
         $this->buildIngredientWithoutName();
     }
-
-    public function testIngredientNonMandatoryWithDefaultValue()
+    public function testIngredientNonMandatoryWithDefaultValue(): void
     {
         $chef = $this->createMock(ChefInterface::class);
 

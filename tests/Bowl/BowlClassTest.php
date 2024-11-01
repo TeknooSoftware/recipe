@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Recipe.
  *
@@ -20,7 +22,6 @@
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-
 namespace Teknoo\Tests\Recipe\Bowl;
 
 use DateTime;
@@ -43,7 +44,7 @@ use Teknoo\Recipe\Value;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Bowl::class)]
-class BowlClassTest extends AbstractBowlTests
+final class BowlClassTest extends AbstractBowlTests
 {
     /**
      * @param DateTime|DateTimeImmutable $date
@@ -56,7 +57,7 @@ class BowlClassTest extends AbstractBowlTests
         DateTime|DateTimeImmutable $date,
         $_methodName,
         self $self,
-    ) {
+    ): void {
         $chef->continue([
             'bar' => $bar,
             'bar2' => $bar2,
@@ -66,12 +67,11 @@ class BowlClassTest extends AbstractBowlTests
         ]);
     }
 
-    protected function getCallable()
+    protected function getCallable(): callable
     {
         return [static::class, 'methodToCall'];
     }
-
-    protected function getMapping()
+    protected function getMapping(): array
     {
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
@@ -105,9 +105,9 @@ class BowlClassTest extends AbstractBowlTests
         );
     }
 
-    public function testBadDeclaringClassForSelfParameter()
+    public function testBadDeclaringClassForSelfParameter(): void
     {
-        $method = static function (self $parameter) {};
+        $method = static function (self $parameter): void {};
         $bowl = new Bowl(
             $method,
             $this->getMapping(),

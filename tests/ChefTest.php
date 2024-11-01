@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Chef;
@@ -45,14 +47,13 @@ use Teknoo\Recipe\RecipeInterface;
 #[CoversClass(Trained::class)]
 #[CoversClass(Free::class)]
 #[CoversClass(Cooking::class)]
-class ChefTest extends AbstractChefTests
+final class ChefTest extends AbstractChefTests
 {
     public function buildChef(?ChefInterface $topChef = null): ChefInterface
     {
         return new Chef(null, $topChef);
     }
-
-    public function testReadInConstructor()
+    public function testReadInConstructor(): void
     {
         $recipe = $this->createMock(RecipeInterface::class);
         $recipe->expects($this->once())
@@ -64,14 +65,13 @@ class ChefTest extends AbstractChefTests
             new Chef($recipe)
         );
     }
-
-    public function testErrorWithCatcherWithTopChef()
+    public function testErrorWithCatcherWithTopChef(): void
     {
         $topChef = $this->createMock(Chef::class);
         $topChefCalled = [];
         $topChef->expects($this->any())
             ->method('__call')
-            ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled) {
+            ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled): MockObject {
                 $topChefCalled[$name] = true;
 
                 return $topChef;
@@ -84,12 +84,12 @@ class ChefTest extends AbstractChefTests
         $bowl = $this->createMock(BowlInterface::class);
         $bowl->expects($this->once())
             ->method('execute')
-            ->willReturnCallback(function () use ($chef, &$called, $bowl) {
+            ->willReturnCallback(function () use ($chef, &$called, $bowl): MockObject {
                 $called = true;
                 self::assertInstanceOf(
                     ChefInterface::class,
                     $chef->error(
-                        new \Exception('foo')
+                        new Exception('foo')
                     )
                 );
 
@@ -112,14 +112,13 @@ class ChefTest extends AbstractChefTests
 
         self::assertArrayHasKey('callErrors', $topChefCalled);
     }
-
-    public function testErrorWithCatcherWithTopChefButErrorReportingIsStopped()
+    public function testErrorWithCatcherWithTopChefButErrorReportingIsStopped(): void
     {
         $topChef = $this->createMock(Chef::class);
         $topChefCalled = [];
         $topChef->expects($this->any())
             ->method('__call')
-            ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled) {
+            ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled): MockObject {
                 $topChefCalled[$name] = true;
 
                 return $topChef;
@@ -132,13 +131,13 @@ class ChefTest extends AbstractChefTests
         $bowl = $this->createMock(BowlInterface::class);
         $bowl->expects($this->once())
             ->method('execute')
-            ->willReturnCallback(function () use ($chef, &$called, $bowl) {
+            ->willReturnCallback(function () use ($chef, &$called, $bowl): MockObject {
                 $called = true;
                 $chef->stopErrorReporting();
                 self::assertInstanceOf(
                     ChefInterface::class,
                     $chef->error(
-                        new \Exception('foo')
+                        new Exception('foo')
                     )
                 );
 

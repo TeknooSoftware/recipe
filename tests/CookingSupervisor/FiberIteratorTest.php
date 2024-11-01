@@ -41,7 +41,7 @@ use TypeError;
  *
  */
 #[CoversClass(FiberIterator::class)]
-class FiberIteratorTest extends TestCase
+final class FiberIteratorTest extends TestCase
 {
     public function buildIterator(array $list): FiberIterator
     {
@@ -53,16 +53,14 @@ class FiberIteratorTest extends TestCase
 
         return $iterator;
     }
-
-    public function testAddBadItem()
+    public function testAddBadItem(): void
     {
         $this->expectException(TypeError::class);
         $this->buildIterator([])->add(
             new stdClass(),
         );
     }
-
-    public function testAdd()
+    public function testAdd(): void
     {
         self::assertInstanceOf(
             FiberIterator::class,
@@ -71,49 +69,45 @@ class FiberIteratorTest extends TestCase
             )
         );
     }
-
-    public function testRemoveBadItem()
+    public function testRemoveBadItem(): void
     {
         $this->expectException(TypeError::class);
         $this->buildIterator([])->remove(
             new stdClass(),
         );
     }
-
-    public function testRemove()
+    public function testRemove(): void
     {
         $this->buildIterator([])->remove(
-            new Fiber(function () {})
+            new Fiber(function (): void {})
         );
 
-        $f1 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
         $this->buildIterator([$f1])->remove(
             $f1
         );
 
-        $f1 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
 
         self::assertInstanceOf(
             FiberIterator::class,
             $this->buildIterator([$f1])->remove(
-                new Fiber(function () {})
+                new Fiber(function (): void {})
             )
         );
     }
-
-    public function testCurrentEmptyList()
+    public function testCurrentEmptyList(): void
     {
         self::assertEmpty(
             $this->buildIterator([])->current()
         );
     }
-
-    public function testCurrentStartOfList()
+    public function testCurrentStartOfList(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -128,13 +122,12 @@ class FiberIteratorTest extends TestCase
             $iterator->current()
         );
     }
-
-    public function testCurrentEndOfList()
+    public function testCurrentEndOfList(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -155,13 +148,12 @@ class FiberIteratorTest extends TestCase
             $iterator->current()
         );
     }
-
-    public function testCurrent()
+    public function testCurrent(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -179,20 +171,18 @@ class FiberIteratorTest extends TestCase
             $iterator->current()
         );
     }
-
-    public function testNextEmptyList()
+    public function testNextEmptyList(): void
     {
         $iterator = $this->buildIterator([]);
         $iterator->next();
         self::assertFalse($iterator->valid());
     }
-
-    public function testNextStartOfList()
+    public function testNextStartOfList(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -209,13 +199,12 @@ class FiberIteratorTest extends TestCase
             $result
         );
     }
-
-    public function testNextEndOfList()
+    public function testNextEndOfList(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -237,13 +226,12 @@ class FiberIteratorTest extends TestCase
             $iterator->current()
         );
     }
-
-    public function testNextWithRemovedElement()
+    public function testNextWithRemovedElement(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -263,13 +251,12 @@ class FiberIteratorTest extends TestCase
             $iterator->current()
         );
     }
-
-    public function testKey()
+    public function testKey(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -304,20 +291,18 @@ class FiberIteratorTest extends TestCase
             $iterator->key()
         );
     }
-
-    public function testValidEmptyList()
+    public function testValidEmptyList(): void
     {
         self::assertFalse(
             $this->buildIterator([])->valid()
         );
     }
-
-    public function testValidStartOfList()
+    public function testValidStartOfList(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -331,14 +316,13 @@ class FiberIteratorTest extends TestCase
             $iterator->valid()
         );
     }
-
-    public function testValidEndOfList()
+    public function testValidEndOfList(): void
     {
 
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -360,13 +344,12 @@ class FiberIteratorTest extends TestCase
             $iterator->valid()
         );
     }
-
-    public function testValid()
+    public function testValid(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -383,13 +366,12 @@ class FiberIteratorTest extends TestCase
             $iterator->valid()
         );
     }
-
-    public function testCount()
+    public function testCount(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -404,8 +386,7 @@ class FiberIteratorTest extends TestCase
             $iterator->count()
         );
     }
-
-    public function testRewindEmpty()
+    public function testRewindEmpty(): void
     {
         $iterator = $this->buildIterator([]);
         $iterator->rewind();
@@ -413,13 +394,12 @@ class FiberIteratorTest extends TestCase
             $iterator->current()
         );
     }
-
-    public function testRewind()
+    public function testRewind(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -438,13 +418,12 @@ class FiberIteratorTest extends TestCase
             $iterator->current()
         );
     }
-
-    public function testRewindWithEmptyStack()
+    public function testRewindWithEmptyStack(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
-        $f4 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
+        $f4 = new Fiber(function (): void {});
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s2 = $this->createMock(CookingSupervisorInterface::class);
 
@@ -467,12 +446,11 @@ class FiberIteratorTest extends TestCase
             $iterator->current()
         );
     }
-
-    public function testClone()
+    public function testClone(): void
     {
-        $f1 = new Fiber(function () {});
-        $f2 = new Fiber(function () {});
-        $f3 = new Fiber(function () {});
+        $f1 = new Fiber(function (): void {});
+        $f2 = new Fiber(function (): void {});
+        $f3 = new Fiber(function (): void {});
 
         $iterator = $this->buildIterator(
             [

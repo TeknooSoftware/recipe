@@ -39,7 +39,7 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  */
 #[CoversClass(AbstractPromise::class)]
 #[CoversClass(Promise::class)]
-class PromiseTest extends AbstractPromiseTests
+final class PromiseTest extends AbstractPromiseTests
 {
     public function buildPromise(
         $onSuccess,

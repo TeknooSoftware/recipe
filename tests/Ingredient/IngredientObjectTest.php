@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Ingredient;
 
+use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
 use Teknoo\Recipe\ChefInterface;
@@ -39,7 +40,7 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  *
  */
 #[CoversClass(Ingredient::class)]
-class IngredientObjectTest extends AbstractIngredientTests
+final class IngredientObjectTest extends AbstractIngredientTests
 {
     public function buildIngredient(
         bool $mandatory = true,
@@ -54,7 +55,6 @@ class IngredientObjectTest extends AbstractIngredientTests
             default: $default,
         );
     }
-
     public function buildIngredientWithoutName(
         bool $mandatory = true,
         mixed $default = null,
@@ -65,56 +65,47 @@ class IngredientObjectTest extends AbstractIngredientTests
             name: null,
         );
     }
-
     public function getWorkPlanValid(): array
     {
         return [
             'IngName' => new stdClass()
         ];
     }
-
     public function getWorkPlanKeyUnderAnotherName(): array
     {
         return [
             'IngName2' => new stdClass()
         ];
     }
-
     public function getWorkPlanInvalidMissing(): array
     {
         return [
             'foo' => 'bar'
         ];
     }
-
-
     public function getWorkPlanInvalidNotInstanceOf(): array
     {
         return [
-            'IngName' => new \DateTime()
+            'IngName' => new DateTime()
         ];
     }
-
     public function getWorkPlanInjected(): array
     {
         return [
             'IngName' => new stdClass()
         ];
     }
-
     public function getWorkPlanInjectedWithoutName(): array
     {
         return [
             stdClass::class => new stdClass()
         ];
     }
-
     public function getDefaultValue(): mixed
     {
         return new stdClass();
     }
-
-    public function testIngredientNonMandatoryWithDefaultValue()
+    public function testIngredientNonMandatoryWithDefaultValue(): void
     {
         $chef = $this->createMock(ChefInterface::class);
 

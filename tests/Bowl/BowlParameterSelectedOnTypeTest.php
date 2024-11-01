@@ -42,9 +42,9 @@ use Teknoo\Recipe\Value;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Bowl::class)]
-class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
+final class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
 {
-    protected function getCallable()
+    protected function getCallable(): callable
     {
         $object = new class () {
             public function methodToCall(
@@ -54,7 +54,7 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
                 $foo2,
                 DateTimeInterface $date,
                 $_methodName
-            ) {
+            ): void {
                 $chef->continue([
                     'bar' => $bar,
                     'bar2' => $bar2,
@@ -65,14 +65,12 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
             }
         };
 
-        return [$object, 'methodToCall'];
+        return $object->methodToCall(...);
     }
-
-    protected function getMapping()
+    protected function getMapping(): array
     {
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
-
     public function buildBowl(): BowlInterface
     {
         return new Bowl(
@@ -81,7 +79,6 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
             'bowlClass'
         );
     }
-
     public function buildBowlWithMappingValue(): BowlInterface
     {
         return new Bowl(
@@ -93,8 +90,7 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
             'bowlClass'
         );
     }
-
-    public function testExecute()
+    public function testExecute(): void
     {
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects($this->once())
@@ -120,8 +116,7 @@ class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
             )
         );
     }
-
-    public function testExecuteWithValue()
+    public function testExecuteWithValue(): void
     {
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects($this->once())

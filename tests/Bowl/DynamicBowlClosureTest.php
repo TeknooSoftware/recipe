@@ -44,11 +44,11 @@ use function array_merge;
  */
 #[CoversClass(AbstractDynamicBowl::class)]
 #[CoversClass(DynamicBowl::class)]
-class DynamicBowlClosureTest extends AbstractBowlTests
+final class DynamicBowlClosureTest extends AbstractBowlTests
 {
     protected function getCallable()
     {
-        return function (ChefInterface $chef, string $bar, $bar2, $foo2, DateTime $date, $_methodName) {
+        return function (ChefInterface $chef, string $bar, $bar2, $foo2, DateTime $date, $_methodName): void {
             $chef->continue([
                 'bar' => $bar,
                 'bar2' => $bar2,
@@ -58,22 +58,18 @@ class DynamicBowlClosureTest extends AbstractBowlTests
             ]);
         };
     }
-
-    protected function getMapping()
+    protected function getMapping(): array
     {
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
-
     protected function getValidWorkPlan(): array
     {
         return array_merge(parent::getValidWorkPlan(), ['callableToExec' => $this->getCallable()]);
     }
-
     protected function getNotValidWorkPlan(): array
     {
         return array_merge(parent::getNotValidWorkPlan(), ['callableToExec' => $this->getCallable()]);
     }
-
     public function buildBowl(): BowlInterface
     {
         return new DynamicBowl(
@@ -83,7 +79,6 @@ class DynamicBowlClosureTest extends AbstractBowlTests
             'bowlClass'
         );
     }
-
     public function buildBowlWithMappingValue(): BowlInterface
     {
         return new DynamicBowl(

@@ -40,12 +40,12 @@ use Teknoo\Recipe\Value;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Bowl::class)]
-class BowlInvokableTest extends AbstractBowlTests
+final class BowlInvokableTest extends AbstractBowlTests
 {
     protected function getCallable(): callable
     {
         $object = new class () {
-            public function __invoke(ChefInterface $chef, string $bar, $bar2, $foo2, DateTime $date, $_methodName)
+            public function __invoke(ChefInterface $chef, string $bar, $bar2, $foo2, DateTime $date, $_methodName): void
             {
                 $chef->continue([
                     'bar' => $bar,
@@ -58,12 +58,10 @@ class BowlInvokableTest extends AbstractBowlTests
         };
         return $object;
     }
-
-    protected function getMapping()
+    protected function getMapping(): array
     {
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
-
     public function buildBowl(): BowlInterface
     {
         return new Bowl(
@@ -72,7 +70,6 @@ class BowlInvokableTest extends AbstractBowlTests
             'bowlClass'
         );
     }
-
     public function buildBowlWithMappingValue(): BowlInterface
     {
         return new Bowl(
