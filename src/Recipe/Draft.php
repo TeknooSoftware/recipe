@@ -156,7 +156,7 @@ class Draft implements StateInterface
                 $callable = new FiberRecipeBowl($recipe, $repeat);
             }
 
-            if (empty($position)) {
+            if (null === $position) {
                 $that->steps[] = [[$name => $callable]];
             } else {
                 $that->steps[$position][] = [$name => $callable];
