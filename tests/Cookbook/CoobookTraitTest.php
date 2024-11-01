@@ -25,6 +25,10 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Cookbook;
 
+use DateTimeInterface;
+use DateTime;
+use DateTimeZone;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
@@ -36,7 +40,7 @@ use Teknoo\Recipe\RecipeInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class CoobookTraitTest extends TestCase
+final class CoobookTraitTest extends TestCase
 {
     use BaseCookbookTestTrait;
 
@@ -53,12 +57,12 @@ class CoobookTraitTest extends TestCase
             protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
             {
                 $recipe = $recipe->require(
-                    new Ingredient(\DateTimeInterface::class, 'date')
+                    new Ingredient(DateTimeInterface::class, 'date')
                 );
 
                 $recipe = $recipe->cook(
-                    function (\DateTime $date, ChefInterface $chef): void {
-                        $date = $date->setTimezone(new \DateTimeZone('UTC'));
+                    function (DateTime $date, ChefInterface $chef): void {
+                        $date = $date->setTimezone(new DateTimeZone('UTC'));
 
                         $chef->continue(['date' => $date]);
                     },
@@ -66,8 +70,8 @@ class CoobookTraitTest extends TestCase
                 );
 
                 return $recipe->cook(
-                    function (\DateTime $date, ChefInterface $chef): void {
-                        $immutable = \DateTimeImmutable::createFromMutable($date);
+                    function (DateTime $date, ChefInterface $chef): void {
+                        $immutable = DateTimeImmutable::createFromMutable($date);
 
                         $chef->finish($immutable);
                     },

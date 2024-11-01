@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Ingredient\Attributes;
 
+use RuntimeException;
+use TypeError;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
@@ -38,17 +40,16 @@ use Teknoo\Tests\Recipe\Transformable;
  *
  */
 #[CoversClass(Transform::class)]
-class TransformTest extends TestCase
+final class TransformTest extends TestCase
 {
-    public function testEmptyClass()
+    public function testEmptyClass(): void
     {
         self::assertInstanceOf(
             Transform::class,
             new Transform()
         );
     }
-
-    public function testValidClass()
+    public function testValidClass(): void
     {
         self::assertInstanceOf(
             Transform::class,
@@ -60,16 +61,14 @@ class TransformTest extends TestCase
             $transform->getClassName()
         );
     }
-
-    public function testInvalidClass()
+    public function testInvalidClass(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         new Transform('fooBar');
     }
-
-    public function testValidTransformer()
+    public function testValidTransformer(): void
     {
-        $callable = function () {};
+        $callable = function (): void {};
         self::assertInstanceOf(
             Transform::class,
             $transform = new Transform(
@@ -83,10 +82,9 @@ class TransformTest extends TestCase
             $transform->getTransformer()
         );
     }
-
-    public function testInvalidTransformer()
+    public function testInvalidTransformer(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
         new Transform(null, 'fooBar');
     }
 }

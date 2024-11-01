@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Promise;
 
+use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Promise\PromiseInterface;
@@ -38,14 +39,13 @@ use Teknoo\Recipe\Promise\WrappedOneCalledPromise;
  *
  */
 #[CoversClass(WrappedOneCalledPromise::class)]
-class WrappedOneCalledPromiseTest extends TestCase
+final class WrappedOneCalledPromiseTest extends TestCase
 {
     public function buildPromise(PromiseInterface $promise): PromiseInterface
     {
         return new WrappedOneCalledPromise($promise);
     }
-
-    public function testNext()
+    public function testNext(): void
     {
         $promise1 = $this->createMock(PromiseInterface::class);
         $promise2 = $this->createMock(PromiseInterface::class);
@@ -63,8 +63,7 @@ class WrappedOneCalledPromiseTest extends TestCase
             $wp2,
         );
     }
-
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
 
@@ -77,8 +76,7 @@ class WrappedOneCalledPromiseTest extends TestCase
             $wp(['foo', 'bar']),
         );
     }
-
-    public function testSuccess()
+    public function testSuccess(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
 
@@ -94,11 +92,10 @@ class WrappedOneCalledPromiseTest extends TestCase
             $wp->success('foo', 'bar'),
         );
     }
-
-    public function testFail()
+    public function testFail(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
-        $excp = new \Exception();
+        $excp = new Exception();
 
         $promise->expects($this->once())->method('fail')->with($excp)->willReturnSelf();
 
@@ -112,8 +109,7 @@ class WrappedOneCalledPromiseTest extends TestCase
             $wp->fail($excp),
         );
     }
-
-    public function testSetDefaultResult()
+    public function testSetDefaultResult(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
         $promise->expects($this->once())->method('setDefaultResult')->with('foo')->willReturnSelf();
@@ -125,8 +121,7 @@ class WrappedOneCalledPromiseTest extends TestCase
             $wp->setDefaultResult('foo'),
         );
     }
-
-    public function testFetchResult()
+    public function testFetchResult(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
 
@@ -138,8 +133,7 @@ class WrappedOneCalledPromiseTest extends TestCase
             $wp->fetchResult('bar'),
         );
     }
-
-    public function testFetchResultIfCalled()
+    public function testFetchResultIfCalled(): void
     {
         $promise = $this->createMock(PromiseInterface::class);
 

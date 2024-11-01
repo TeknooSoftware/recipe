@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
@@ -39,9 +40,9 @@ use Teknoo\Recipe\Value;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Bowl::class)]
-class BowlFunctionTest extends AbstractBowlTests
+final class BowlFunctionTest extends AbstractBowlTests
 {
-    protected function getCallable()
+    protected function getCallable(): string
     {
         $functionName = 'functionToEvalBowl';
 
@@ -63,12 +64,10 @@ EOF;
 
         return $functionName;
     }
-
-    protected function getMapping()
+    protected function getMapping(): array
     {
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
-
     public function buildBowl(): BowlInterface
     {
         return new Bowl(
@@ -77,7 +76,6 @@ EOF;
             'bowlClass'
         );
     }
-
     public function buildBowlWithMappingValue(): BowlInterface
     {
         return new Bowl(
@@ -89,14 +87,13 @@ EOF;
             'bowlClass'
         );
     }
-
-    public function testExecuteWithOptional()
+    public function testExecuteWithOptional(): void
     {
         $chef = $this->createMock(ChefInterface::class);
         $chef->expects($this->once())
             ->method('continue')
             ->with([
-                'date' => (new \DateTime('2018-01-01'))->getTimestamp(),
+                'date' => (new DateTime('2018-01-01'))->getTimestamp(),
                 'opt1' => 123,
                 'opt2' => null,
                 'opt3' => 'foo',
@@ -106,7 +103,7 @@ EOF;
         $chef->expects($this->never())
             ->method('updateWorkPlan');
 
-        $closure = function (ChefInterface $chef, \DateTime $date, $opt1 = 123, $opt2 = null, $opt3 = null) {
+        $closure = function (ChefInterface $chef, DateTime $date, $opt1 = 123, $opt2 = null, $opt3 = null): void {
             $chef->continue([
                 'date' => $date->getTimestamp(),
                 'opt1' => $opt1,
@@ -122,7 +119,7 @@ EOF;
         );
 
         $values = [
-            'now' => (new \DateTime('2018-01-01')),
+            'now' => (new DateTime('2018-01-01')),
             'opt3' => 'foo',
         ];
 

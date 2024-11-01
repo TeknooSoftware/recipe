@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Ingredient;
 
+use TypeError;
+use stdClass;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\Ingredient\IngredientBagInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
@@ -60,21 +62,21 @@ abstract class AbstractIngredientTests extends TestCase
 
     abstract public function getDefaultValue(): mixed;
 
-    public function testExceptionOnPrepareWhenWorkPlanIsNotAnArray()
+    public function testExceptionOnPrepareWhenWorkPlanIsNotAnArray(): void
     {
-        $this->expectException(\TypeError::class);
-        $s = new \stdClass();
+        $this->expectException(TypeError::class);
+        $s = new stdClass();
         $this->buildIngredient()->prepare($s, $this->createMock(RecipeInterface::class));
     }
 
-    public function testExceptionOnPrepareWhenWorkPlanIsNotPromise()
+    public function testExceptionOnPrepareWhenWorkPlanIsNotPromise(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
         $a = [];
-        $this->buildIngredient()->prepare($a, new \stdClass());
+        $this->buildIngredient()->prepare($a, new stdClass());
     }
 
-    public function testPrepareWithValidPlan()
+    public function testPrepareWithValidPlan(): void
     {
         $chef = $this->createMock(ChefInterface::class);
 
@@ -96,7 +98,7 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
-    public function testPrepareWithValidPlanWithoutNameUseType()
+    public function testPrepareWithValidPlanWithoutNameUseType(): void
     {
         $chef = $this->createMock(ChefInterface::class);
 
@@ -118,7 +120,7 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
-    public function testPrepareWithValidPlanWithBag()
+    public function testPrepareWithValidPlanWithBag(): void
     {
         $chef = $this->createMock(ChefInterface::class);
         $bag = $this->createMock(IngredientBagInterface::class);
@@ -147,7 +149,7 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
-    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsSetAndValueMissing()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsSetAndValueMissing(): void
     {
         $chef = $this->createMock(ChefInterface::class);
 
@@ -168,7 +170,7 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
-    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsSetAndValueIsPresentUnderAnotherName()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsSetAndValueIsPresentUnderAnotherName(): void
     {
         $chef = $this->createMock(ChefInterface::class);
 
@@ -189,7 +191,7 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
-    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsNullAndValueIsPresentUnderAnotherName()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsNullAndValueIsPresentUnderAnotherName(): void
     {
         $chef = $this->createMock(ChefInterface::class);
 
@@ -211,7 +213,7 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
-    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentButNotMandatory()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentButNotMandatory(): void
     {
         $chef = $this->createMock(ChefInterface::class);
 
@@ -236,7 +238,7 @@ abstract class AbstractIngredientTests extends TestCase
         );
     }
 
-    public function testPrepareWithInvalidPlanTheIngredientIsNotOfTheRequiredClass()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotOfTheRequiredClass(): void
     {
         $chef = $this->createMock(ChefInterface::class);
 

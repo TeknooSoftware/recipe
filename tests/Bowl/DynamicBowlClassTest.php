@@ -43,7 +43,7 @@ use Teknoo\Recipe\Value;
  */
 #[CoversClass(AbstractDynamicBowl::class)]
 #[CoversClass(DynamicBowl::class)]
-class DynamicBowlClassTest extends AbstractBowlTests
+final class DynamicBowlClassTest extends AbstractBowlTests
 {
     /**
      * @param DateTime|DateTimeImmutable $date
@@ -56,7 +56,7 @@ class DynamicBowlClassTest extends AbstractBowlTests
         DateTime|DateTimeImmutable $date,
         $_methodName,
         self $self
-    ) {
+    ): void {
         $chef->continue([
             'bar' => $bar,
             'bar2' => $bar2,
@@ -65,17 +65,14 @@ class DynamicBowlClassTest extends AbstractBowlTests
             '_methodName' => $_methodName,
         ]);
     }
-
-    protected function getCallable()
+    protected function getCallable(): callable
     {
         return [static::class, 'methodToCall'];
     }
-
-    protected function getMapping()
+    protected function getMapping(): array
     {
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
-
     protected function getValidWorkPlan(): array
     {
         return \array_merge(
@@ -83,7 +80,6 @@ class DynamicBowlClassTest extends AbstractBowlTests
             ['callableToExec' => $this->getCallable(), self::class => $this]
         );
     }
-
     protected function getNotValidWorkPlan(): array
     {
         return \array_merge(
@@ -91,7 +87,6 @@ class DynamicBowlClassTest extends AbstractBowlTests
             ['callableToExec' => $this->getCallable(), self::class => $this]
         );
     }
-
     public function buildBowl(): BowlInterface
     {
         return new DynamicBowl(
@@ -101,7 +96,6 @@ class DynamicBowlClassTest extends AbstractBowlTests
             'bowlClass'
         );
     }
-
     public function buildBowlWithMappingValue(): BowlInterface
     {
         return new DynamicBowl(

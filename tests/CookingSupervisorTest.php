@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe;
 
+use RuntimeException;
 use Exception;
 use Fiber;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -47,41 +48,36 @@ use TypeError;
  */
 #[CoversClass(CookingSupervisor::class)]
 #[CoversClass(Action::class)]
-class CookingSupervisorTest extends TestCase
+final class CookingSupervisorTest extends TestCase
 {
     private ?FiberIterator $items = null;
-
     public function getFiberIterator(): MockObject&FiberIterator
     {
-        if (null === $this->items) {
+        if (!$this->items instanceof FiberIterator) {
             $this->items = $this->createMock(FiberIterator::class);
         }
 
         return $this->items;
     }
-
     public function buildSupervisor(?CookingSupervisorInterface $supervisor = null): CookingSupervisorInterface
     {
         return new CookingSupervisor($supervisor, $this->getFiberIterator());
     }
-
-    public function testClone()
+    public function testClone(): void
     {
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
             clone $this->buildSupervisor()
         );
     }
-
-    public function testSetParentSupervisorBadArgumentSupervisor()
+    public function testSetParentSupervisorBadArgumentSupervisor(): void
     {
         $this->expectException(TypeError::class);
         $this->buildSupervisor()->setParentSupervisor(
             new stdClass(),
         );
     }
-
-    public function testSetParentSupervisor()
+    public function testSetParentSupervisor(): void
     {
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
@@ -90,47 +86,42 @@ class CookingSupervisorTest extends TestCase
             )
         );
     }
-
-    public function testSuperviseBadArgumentFiber()
+    public function testSuperviseBadArgumentFiber(): void
     {
         $this->expectException(TypeError::class);
         $this->buildSupervisor()->supervise(
             new stdClass(),
         );
     }
-
-    public function testSupervise()
+    public function testSupervise(): void
     {
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->supervise(
-                new Fiber(function () {}),
+                new Fiber(function (): void {}),
             )
         );
     }
-
-    public function testSuperviseRunningFiber()
+    public function testSuperviseRunningFiber(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $supervisor = $this->buildSupervisor();
 
-        $fiber = new Fiber(function ($fiber) use ($supervisor) {
+        $fiber = new Fiber(function ($fiber) use ($supervisor): void {
             $supervisor->supervise($fiber);
         });
 
         $fiber->start($fiber);
     }
-
-    public function testManageBadArgumentSupervisor()
+    public function testManageBadArgumentSupervisor(): void
     {
         $this->expectException(TypeError::class);
         $this->buildSupervisor()->manage(
             new stdClass(),
         );
     }
-
-    public function testManage()
+    public function testManage(): void
     {
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
@@ -139,16 +130,14 @@ class CookingSupervisorTest extends TestCase
             )
         );
     }
-
-    public function testFreeBadArgumentSupervisor()
+    public function testFreeBadArgumentSupervisor(): void
     {
         $this->expectException(TypeError::class);
         $this->buildSupervisor()->manage(
             new stdClass(),
         );
     }
-
-    public function testFree()
+    public function testFree(): void
     {
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
@@ -157,28 +146,25 @@ class CookingSupervisorTest extends TestCase
             )
         );
     }
-
-    public function testRewindLoop()
+    public function testRewindLoop(): void
     {
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->rewindLoop()
         );
     }
-
-    public function testSwitchEmpty()
+    public function testSwitchEmpty(): void
     {
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->switch()
         );
     }
-
-    public function testSwitch()
+    public function testSwitch(): void
     {
         $a = null;
         $f = new Fiber(
-            function () use (&$a) {
+            function () use (&$a): void {
                 $a = Fiber::suspend();
             }
         );
@@ -194,12 +180,11 @@ class CookingSupervisorTest extends TestCase
         );
         self::assertEquals('foo', $a);
     }
-
-    public function testSwitchWithNotStartedFiber()
+    public function testSwitchWithNotStartedFiber(): void
     {
         $a = null;
         $f = new Fiber(
-            function () use (&$a) {
+            function () use (&$a): void {
                 $a = Fiber::suspend();
             }
         );
@@ -214,11 +199,10 @@ class CookingSupervisorTest extends TestCase
         );
         self::assertNull($a);
     }
-
-    public function testSwitchWithTerminatedFiber()
+    public function testSwitchWithTerminatedFiber(): void
     {
         $f = new Fiber(
-            function () {
+            function (): void {
             }
         );
         $f->start();
@@ -233,8 +217,7 @@ class CookingSupervisorTest extends TestCase
             $this->buildSupervisor()->switch('foo')
         );
     }
-
-    public function testSwitchWithSupervisor()
+    public function testSwitchWithSupervisor(): void
     {
         $s = $this->createMock(CookingSupervisorInterface::class);
         $s->expects($this->once())->method('loop');
@@ -248,20 +231,18 @@ class CookingSupervisorTest extends TestCase
             $this->buildSupervisor()->switch('foo')
         );
     }
-
-    public function testThrowEmpty()
+    public function testThrowEmpty(): void
     {
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->throw(new Exception(''))
         );
     }
-
-    public function testThrow()
+    public function testThrow(): void
     {
         $a = null;
         $f = new Fiber(
-            function () use (&$a) {
+            function () use (&$a): void {
                 try {
                     Fiber::suspend();
                 } catch (Throwable $error) {
@@ -281,8 +262,7 @@ class CookingSupervisorTest extends TestCase
         );
         self::assertEquals('foo', $a);
     }
-
-    public function testThrowWithSupervisor()
+    public function testThrowWithSupervisor(): void
     {
         $s = $this->createMock(CookingSupervisorInterface::class);
         $s->expects($this->once())->method('throw');
@@ -296,20 +276,18 @@ class CookingSupervisorTest extends TestCase
             $this->buildSupervisor()->throw(new Exception('foo'))
         );
     }
-
-    public function testLoopEmpty()
+    public function testLoopEmpty(): void
     {
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->loop()
         );
     }
-
-    public function testLoop()
+    public function testLoop(): void
     {
         $a = null;
         $f1 = new Fiber(
-            function () use (&$a) {
+            function () use (&$a): void {
                 Fiber::suspend();
                 $a = 'foo';
             }
@@ -318,7 +296,7 @@ class CookingSupervisorTest extends TestCase
 
         $b = null;
         $f2 = new Fiber(
-            function () use (&$b) {
+            function () use (&$b): void {
                 Fiber::suspend();
                 $b = 'bar';
                 Fiber::suspend();
@@ -342,8 +320,7 @@ class CookingSupervisorTest extends TestCase
         self::assertEquals('foo', $a);
         self::assertEquals('bar', $b);
     }
-
-    public function testLoopWithSupervisor()
+    public function testLoopWithSupervisor(): void
     {
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s1->expects($this->once())->method('loop');
@@ -363,20 +340,18 @@ class CookingSupervisorTest extends TestCase
             $this->buildSupervisor()->loop()
         );
     }
-
-    public function testFinishEmpty()
+    public function testFinishEmpty(): void
     {
         self::assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->finish()
         );
     }
-
-    public function testFinish()
+    public function testFinish(): void
     {
         $a = null;
         $f1 = new Fiber(
-            function () use (&$a) {
+            function () use (&$a): void {
                 Fiber::suspend();
                 $a = 'foo';
             }
@@ -385,7 +360,7 @@ class CookingSupervisorTest extends TestCase
 
         $b = null;
         $f2 = new Fiber(
-            function () use (&$b) {
+            function () use (&$b): void {
                 Fiber::suspend();
                 $b = 'bar';
                 Fiber::suspend();
@@ -398,7 +373,7 @@ class CookingSupervisorTest extends TestCase
         $this->getFiberIterator()->expects($this->exactly(2))->method('remove')
             ->with(
                 $this->callback(
-                    fn ($value) => match ($value) {
+                    fn ($value): bool => match ($value) {
                         $f1 => true,
                         $f2 => true,
                         default => false,
@@ -419,14 +394,13 @@ class CookingSupervisorTest extends TestCase
         self::assertEquals('foo', $a);
         self::assertEquals('barbar', $b);
     }
-
-    public function testFinishWithSupervisor()
+    public function testFinishWithSupervisor(): void
     {
         $supervisor = $this->buildSupervisor();
 
         $s1 = $this->createMock(CookingSupervisorInterface::class);
         $s1->expects($this->once())->method('finish')->willReturnCallback(
-            function () use ($supervisor, $s1) {
+            function () use ($supervisor, $s1): MockObject {
                 $supervisor->free($s1);
                 return $s1;
             }
@@ -434,7 +408,7 @@ class CookingSupervisorTest extends TestCase
 
         $s2 = $this->createMock(CookingSupervisorInterface::class);
         $s2->expects($this->once())->method('finish')->willReturnCallback(
-            function () use ($supervisor, $s2) {
+            function () use ($supervisor, $s2): MockObject {
                 $supervisor->free($s2);
                 return $s2;
             }
@@ -444,7 +418,7 @@ class CookingSupervisorTest extends TestCase
         $this->getFiberIterator()->expects($this->exactly(2))->method('remove')
             ->with(
                 $this->callback(
-                    fn ($value) => match ($value) {
+                    fn ($value): bool => match ($value) {
                         $s1 => true,
                         $s2 => true,
                         default => false,
@@ -461,8 +435,7 @@ class CookingSupervisorTest extends TestCase
             $supervisor->finish()
         );
     }
-
-    public function testFinishInSupervised()
+    public function testFinishInSupervised(): void
     {
         $manager = $this->createMock(CookingSupervisorInterface::class);
 
@@ -479,11 +452,10 @@ class CookingSupervisorTest extends TestCase
             $supervisor->finish()
         );
     }
-
-    public function testIntegration()
+    public function testIntegration(): void
     {
         $a = null;
-        $f1 = new Fiber(function () use (&$a) {
+        $f1 = new Fiber(function () use (&$a): void {
             $a = Fiber::suspend();
             $s = 1;
         });
@@ -491,7 +463,7 @@ class CookingSupervisorTest extends TestCase
 
         $b = null;
         $f2 = new Fiber(
-            function () use (&$b) {
+            function () use (&$b): void {
                 $b = Fiber::suspend();
                 $s = 1;
                 $b .= Fiber::suspend();
@@ -505,7 +477,7 @@ class CookingSupervisorTest extends TestCase
         $f2->start();
 
         $c = null;
-        $f3 = new Fiber(function () use (&$c) {
+        $f3 = new Fiber(function () use (&$c): void {
             $c = Fiber::suspend();
             $s = 1;
             $c .= Fiber::suspend();
@@ -516,14 +488,14 @@ class CookingSupervisorTest extends TestCase
         $f3->start();
 
         $d = null;
-        $f4 = new Fiber(function () use (&$d) {
+        $f4 = new Fiber(function () use (&$d): void {
             $d = Fiber::suspend();
             $s = 1;
         });
         $f4->start();
 
         $e = null;
-        $f5 = new Fiber(function () use (&$e) {
+        $f5 = new Fiber(function () use (&$e): void {
             $e = Fiber::suspend();
             $s = 1;
         });

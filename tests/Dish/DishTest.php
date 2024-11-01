@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Dish;
 
+use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use Teknoo\Recipe\Dish\AbstractDishClass;
@@ -41,18 +42,16 @@ use Teknoo\Recipe\Promise\PromiseInterface;
  */
 #[CoversClass(AbstractDishClass::class)]
 #[CoversClass(DishClass::class)]
-class DishTest extends AbstractDishTests
+final class DishTest extends AbstractDishTests
 {
     /**
      * @var PromiseInterface
      */
-    private $promise;
-
-    protected function getExceptedValue()
+    private ?MockObject $promise = null;
+    protected function getExceptedValue(): DateTime
     {
-        return new \DateTime('2018-01-01');
+        return new DateTime('2018-01-01');
     }
-
     protected function getPromise(): MockObject&PromiseInterface
     {
         if (!$this->promise instanceof PromiseInterface) {
@@ -61,11 +60,10 @@ class DishTest extends AbstractDishTests
 
         return $this->promise;
     }
-
     public function buildDish(): DishInterface
     {
         return new DishClass(
-            \DateTime::class,
+            DateTime::class,
             $this->getPromise()
         );
     }

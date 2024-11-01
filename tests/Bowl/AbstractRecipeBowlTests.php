@@ -25,6 +25,9 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use TypeError;
+use stdClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\AbstractRecipeBowl;
@@ -49,28 +52,28 @@ abstract class AbstractRecipeBowlTests extends TestCase
      */
     abstract public function buildBowl($recipe, $repeat): AbstractRecipeBowl;
 
-    public function testExceptionOnBadRecipe()
+    public function testExceptionOnBadRecipe(): void
     {
-        $this->expectException(\TypeError::class);
-        $this->buildBowl(new \stdClass());
+        $this->expectException(TypeError::class);
+        $this->buildBowl(new stdClass());
     }
 
-    public function testExceptionOnExecuteWithBadChef()
+    public function testExceptionOnExecuteWithBadChef(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
         $values = ['foo' => 'bar'];
         $this->buildBowl($this->createMock(RecipeInterface::class), 1)
             ->execute(
-                new \stdClass(),
+                new stdClass(),
                 $values,
                 $this->createMock(CookingSupervisorInterface::class),
             );
     }
 
-    public function testExceptionOnExecuteWithBadWorkPlan()
+    public function testExceptionOnExecuteWithBadWorkPlan(): void
     {
-        $this->expectException(\TypeError::class);
-        $values = new \stdClass();
+        $this->expectException(TypeError::class);
+        $values = new stdClass();
         $this->buildBowl($this->createMock(RecipeInterface::class), 1)
             ->execute(
                 $this->createMock(ChefInterface::class),
@@ -79,19 +82,19 @@ abstract class AbstractRecipeBowlTests extends TestCase
             );
     }
 
-    public function testExceptionOnExecuteWithBadSupervisor()
+    public function testExceptionOnExecuteWithBadSupervisor(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
         $values = [];
         $this->buildBowl($this->createMock(RecipeInterface::class), 1)
             ->execute(
                 $this->createMock(ChefInterface::class),
                 $values,
-                new \stdClass()
+                new stdClass()
             );
     }
 
-    public function testExecuteWithBasicCounterWithRecipe()
+    public function testExecuteWithBasicCounterWithRecipe(): void
     {
         $recipe = $this->createMock(RecipeInterface::class);
         $counter = 2;
@@ -130,13 +133,13 @@ abstract class AbstractRecipeBowlTests extends TestCase
         );
     }
 
-    public function testExecuteWithBasicCallableCounterWithRecipe()
+    public function testExecuteWithBasicCallableCounterWithRecipe(): void
     {
         $recipe = $this->createMock(RecipeInterface::class);
         $counter = $this->createMock(BowlInterface::class);
         $counter->expects($this->exactly(3))
             ->method('execute')
-            ->willReturnCallback(function (ChefInterface $chef, $workplan) use ($counter) {
+            ->willReturnCallback(function (ChefInterface $chef, array $workplan) use ($counter): MockObject {
                 if ($workplan['counter'] >= 3) {
                     $workplan['bowl']->stopLooping();
                 }
@@ -184,7 +187,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
         );
     }
 
-    public function testExecuteWithBasicCounterWithBaseRecipe()
+    public function testExecuteWithBasicCounterWithBaseRecipe(): void
     {
         $recipe = $this->createMock(BaseRecipeInterface::class);
         $counter = 2;
@@ -223,13 +226,13 @@ abstract class AbstractRecipeBowlTests extends TestCase
         );
     }
 
-    public function testExecuteWithBasicCallableCounterWithBaseRecipe()
+    public function testExecuteWithBasicCallableCounterWithBaseRecipe(): void
     {
         $recipe = $this->createMock(BaseRecipeInterface::class);
         $counter = $this->createMock(BowlInterface::class);
         $counter->expects($this->exactly(3))
             ->method('execute')
-            ->willReturnCallback(function (ChefInterface $chef, $workplan) use ($counter) {
+            ->willReturnCallback(function (ChefInterface $chef, array $workplan) use ($counter): MockObject {
                 if ($workplan['counter'] >= 3) {
                     $workplan['bowl']->stopLooping();
                 }

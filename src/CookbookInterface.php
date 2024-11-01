@@ -27,7 +27,7 @@ namespace Teknoo\Recipe;
 
 /**
  * Interface to define a Cookbook : a factory to write recipe.
- * To be execute by a Chef, a cookbook needs a recipe, who can me prepopulated.
+ * To be execute by a Chef, a cookbook needs a recipe, who can be prepopulated.
  *
  * A Cookbook can be muttable
  *
@@ -35,11 +35,9 @@ namespace Teknoo\Recipe;
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
+ *
+ * @deprecated Use `Teknoo\Recipe\PlanInterface` instead
  */
-interface CookbookInterface extends BaseRecipeInterface
+interface CookbookInterface extends PlanInterface
 {
-    /*
-     * To transform a recipe (can be prefilled with additional step), business rule
-     */
-    public function fill(RecipeInterface $recipe): CookbookInterface;
 }

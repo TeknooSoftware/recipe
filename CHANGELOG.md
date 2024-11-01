@@ -1,5 +1,16 @@
 # Teknoo Software - Recipe - Change Log
 
+## [6.0.0] - 2024-11-01
+### Stable Release
+- To be more understandable, renaming `Coobook` to `Plan`.
+  - `CookbookInterface` and `BaseCookbookTrait` are deprecated and will be removed in a next major release.
+- Create native editable plan, with `EditablePlanInterface` and `EditablePlanTrait` to allow developers to edit 
+  some plans without implementing a complex system of additional steps to inject in the constructor, like with 
+  Teknoo East PaaS.
+  - Developers can only add more steps to an editable plan or more errors handlers.
+  - These editable plans can be updated easily with a definition of container of services with a decorated service.
+  - Add `Step` value object to pass the callable action with the mapping to an editable plan.
+
 ## [5.1.2] - 2024-10-06
 ### Stable Release
 - Update dev lib requirements

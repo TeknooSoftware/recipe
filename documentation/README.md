@@ -30,8 +30,8 @@ from an ingredient of the work plan.
 
 A step can be repeated several times, either by defining a fixed integer, or via a callback.
 
-A `Cookbook` is an alternative to `Recipe` to hardcoded some step and allow developer to "type" easily a `Recipe` in a 
-container. `Recipe` and `Cookbook` implements `BaseRecipeInterface`.
+A `Plan` is an alternative to `Recipe` to hardcoded some step and allow developer to "type" easily a `Recipe` in a 
+container. `Recipe` and `Plan` implements `BaseRecipeInterface`.
 
 The `Chef` is the executor, it is a mutable stated class. States are :
 * `Free`. The initial state, when the `Chef` is not trained

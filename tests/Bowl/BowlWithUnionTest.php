@@ -38,7 +38,7 @@ use Teknoo\Recipe\Value;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Bowl::class)]
-class BowlWithUnionTest extends AbstractBowlTests
+final class BowlWithUnionTest extends AbstractBowlTests
 {
     protected function getCallable()
     {
@@ -63,12 +63,10 @@ EOF;
 
         return eval($code);
     }
-
-    protected function getMapping()
+    protected function getMapping(): array
     {
         return ['bar' => 'foo', 'bar2' => ['bar', 'foo']];
     }
-
     public function buildBowl(): BowlInterface
     {
         return new Bowl(
@@ -77,7 +75,6 @@ EOF;
             'bowlClass'
         );
     }
-
     public function buildBowlWithMappingValue(): BowlInterface
     {
         return new Bowl(

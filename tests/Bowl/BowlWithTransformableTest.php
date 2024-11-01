@@ -43,11 +43,10 @@ use function explode;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Bowl::class)]
-class BowlWithTransformableTest extends TestCase
+final class BowlWithTransformableTest extends TestCase
 {
     private bool $called = false;
-
-    public function noTransform(string $param1, Transformable $param2)
+    public function noTransform(string $param1, Transformable $param2): void
     {
         self::assertEquals(
             'foo',
@@ -63,8 +62,7 @@ class BowlWithTransformableTest extends TestCase
 
         $this->called = true;
     }
-
-    public function transformNoHinting(string $param1, #[Transform] mixed $param2)
+    public function transformNoHinting(string $param1, #[Transform] mixed $param2): void
     {
         self::assertEquals(
             'foo',
@@ -80,8 +78,7 @@ class BowlWithTransformableTest extends TestCase
 
         $this->called = true;
     }
-
-    public function transformHinting(string $param1, #[Transform] array $param2)
+    public function transformHinting(string $param1, #[Transform] array $param2): void
     {
         self::assertEquals(
             'foo',
@@ -97,8 +94,7 @@ class BowlWithTransformableTest extends TestCase
 
         $this->called = true;
     }
-
-    public function transformHintingWithClass(string $param1, #[Transform(Transformable::class)] array $anotherName)
+    public function transformHintingWithClass(string $param1, #[Transform(Transformable::class)] array $anotherName): void
     {
         self::assertEquals(
             'foo',
@@ -114,21 +110,18 @@ class BowlWithTransformableTest extends TestCase
 
         $this->called = true;
     }
-
     public static function transformerToArray(string $value): array
     {
         return explode('-', $value);
     }
-
     public static function transformerToArray2(string $value): Transformable
     {
         return new Transformable(explode('-', $value));
     }
-
     public function transformWithTransformer(
         string $param1,
         #[Transform(null, [self::class, 'transformerToArray2'])] array $param2
-    ) {
+    ): void {
         self::assertEquals(
             'foo',
             $param1
@@ -143,11 +136,10 @@ class BowlWithTransformableTest extends TestCase
 
         $this->called = true;
     }
-
     public function transformHintingWithClassAndTransformer(
         string $param1,
         #[Transform(Transformable::class, [self::class, 'transformerToArray'])] array $anotherName
-    ) {
+    ): void {
         self::assertEquals(
             'foo',
             $param1
@@ -162,8 +154,7 @@ class BowlWithTransformableTest extends TestCase
 
         $this->called = true;
     }
-
-    public function testWithoutAttributeTransform()
+    public function testWithoutAttributeTransform(): void
     {
         $workplan = [
             'param1' => 'foo',
@@ -182,8 +173,7 @@ class BowlWithTransformableTest extends TestCase
 
         self::assertTrue($this->called);
     }
-
-    public function testWithAttributeTransformWithoutTypeHinting()
+    public function testWithAttributeTransformWithoutTypeHinting(): void
     {
         $workplan = [
             'param1' => 'foo',
@@ -202,8 +192,7 @@ class BowlWithTransformableTest extends TestCase
 
         self::assertTrue($this->called);
     }
-
-    public function testWithAttributeTransformWithTypeHinting()
+    public function testWithAttributeTransformWithTypeHinting(): void
     {
         $workplan = [
             'param1' => 'foo',
@@ -222,8 +211,7 @@ class BowlWithTransformableTest extends TestCase
 
         self::assertTrue($this->called);
     }
-
-    public function testWithAttributeTransformWithTypeHintingWithClass()
+    public function testWithAttributeTransformWithTypeHintingWithClass(): void
     {
         $workplan = [
             'param1' => 'foo',
@@ -242,8 +230,7 @@ class BowlWithTransformableTest extends TestCase
 
         self::assertTrue($this->called);
     }
-
-    public function testWithAttributeTransformWithTransformer()
+    public function testWithAttributeTransformWithTransformer(): void
     {
         $workplan = [
             'param1' => 'foo',
@@ -262,8 +249,7 @@ class BowlWithTransformableTest extends TestCase
 
         self::assertTrue($this->called);
     }
-
-    public function testWithAttributeTransformWithTypeHintingWithClassAndWithTransformer()
+    public function testWithAttributeTransformWithTypeHintingWithClassAndWithTransformer(): void
     {
         $workplan = [
             'param1' => 'foo',

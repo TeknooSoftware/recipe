@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Bowl;
 
+use RuntimeException;
+use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Teknoo\Recipe\Bowl\AbstractDynamicBowl;
@@ -40,14 +42,14 @@ use Teknoo\Recipe\ChefInterface;
  */
 #[CoversClass(AbstractDynamicBowl::class)]
 #[CoversClass(DynamicBowl::class)]
-class DynamicBowlMissingCallableMandatoryTest extends TestCase
+final class DynamicBowlMissingCallableMandatoryTest extends TestCase
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function testFailSilentlyIfNoCallbackAvailableInWorkPlan()
+    public function testFailSilentlyIfNoCallbackAvailableInWorkPlan(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $bowl = new DynamicBowl(
             'callableToExec',
             true,

@@ -39,7 +39,7 @@ use Teknoo\Recipe\Ingredient\IngredientInterface;
  *
  */
 #[CoversClass(Ingredient::class)]
-class IngredientScalarNormalizeTest extends AbstractIngredientTests
+final class IngredientScalarNormalizeTest extends AbstractIngredientTests
 {
     public function buildIngredient(
         bool $mandatory = true,
@@ -58,7 +58,6 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTests
             default: $default,
         );
     }
-
     public function buildIngredientWithoutName(
         bool $mandatory = true,
         mixed $default = null,
@@ -69,59 +68,50 @@ class IngredientScalarNormalizeTest extends AbstractIngredientTests
             name: null,
         );
     }
-
     public function getWorkPlanValid(): array
     {
         return [
             'ing_name' => '123'
         ];
     }
-
     public function getWorkPlanKeyUnderAnotherName(): array
     {
         return [
             'ing_name_2' => '123'
         ];
     }
-
     public function getWorkPlanInvalidMissing(): array
     {
         return [
             'foo' => 'fooBar'
         ];
     }
-
     public function getWorkPlanInvalidNotInstanceOf(): array
     {
         return [
             'ing_name' => 'fooBar'
         ];
     }
-
     public function getWorkPlanInjected(): array
     {
         return [
             'IngName' => 123
         ];
     }
-
     public function getWorkPlanInjectedWithoutName(): array
     {
         return $this->getWorkPlanInjected();
     }
-
     public function getDefaultValue(): mixed
     {
         return 123;
     }
-
-    public function testPrepareWithValidPlanWithoutNameUseType()
+    public function testPrepareWithValidPlanWithoutNameUseType(): void
     {
         $this->expectException(LogicException::class);
         $this->buildIngredientWithoutName();
     }
-
-    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsNullAndValueIsPresentUnderAnotherName()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentNameIsNullAndValueIsPresentUnderAnotherName(): void
     {
         $this->expectException(LogicException::class);
         $this->buildIngredientWithoutName();

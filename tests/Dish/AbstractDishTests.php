@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Dish;
 
+use stdClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use Teknoo\Recipe\Dish\DishInterface;
 use PHPUnit\Framework\TestCase;
@@ -47,7 +48,7 @@ abstract class AbstractDishTests extends TestCase
 
     abstract protected function getExceptedValue();
 
-    public function testIsExceptedWithAGoodResult()
+    public function testIsExceptedWithAGoodResult(): void
     {
         $this->getPromise()
             ->expects($this->once())
@@ -67,7 +68,7 @@ abstract class AbstractDishTests extends TestCase
         );
     }
 
-    public function testIsExceptedWithABadResult()
+    public function testIsExceptedWithABadResult(): void
     {
         $this->getPromise()
             ->expects($this->never())
@@ -81,7 +82,7 @@ abstract class AbstractDishTests extends TestCase
         self::assertInstanceOf(
             DishInterface::class,
             $this->buildDish()->isExcepted(
-                new \stdClass()
+                new stdClass()
             )
         );
     }

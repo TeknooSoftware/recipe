@@ -40,9 +40,9 @@ use Teknoo\Recipe\ChefInterface;
  */
 #[CoversClass(AbstractDynamicBowl::class)]
 #[CoversClass(DynamicBowl::class)]
-class DynamicBowlMissingCallableNotMandatoryTest extends TestCase
+final class DynamicBowlMissingCallableNotMandatoryTest extends TestCase
 {
-    public function testFailSilentlyIfNoOptionalCallbackAvailableInWorkPlan()
+    public function testFailSilentlyIfNoOptionalCallbackAvailableInWorkPlan(): void
     {
         $bowl = new DynamicBowl(
             'callableToExec',

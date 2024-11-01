@@ -38,20 +38,17 @@ use TypeError;
  * @author      Richard Déloge <richard@teknoo.software>
  */
 #[CoversClass(Bowl::class)]
-class BowlInexistantClassTest extends TestCase
+final class BowlInexistantClassTest extends TestCase
 {
-    protected function getCallableClassNotAvailable()
+    protected function getCallableClassNotAvailable(): array
     {
         return ['NoExistantClass', 'methodToCall'];
     }
-
-
-    protected function getMapping()
+    protected function getMapping(): array
     {
         return [];
     }
-
-    public function testExceptionWhenClassOfCallableIsNotAvailable()
+    public function testExceptionWhenClassOfCallableIsNotAvailable(): void
     {
         $this->expectException(TypeError::class);
         $bowl = new Bowl(

@@ -38,7 +38,7 @@ use Teknoo\Recipe\RecipeInterface;
  */
 #[CoversClass(RecipeBowl::class)]
 #[CoversClass(AbstractRecipeBowl::class)]
-class RecipeBowlTest extends AbstractRecipeBowlTests
+final class RecipeBowlTest extends AbstractRecipeBowlTests
 {
     /**
      * @param RecipeInterface $recipe

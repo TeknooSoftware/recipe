@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Cookbook;
 
+use TypeError;
+use stdClass;
 use Teknoo\Recipe\ChefInterface;
 use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\RecipeInterface;
@@ -39,14 +41,14 @@ trait BaseCookbookTestTrait
 {
     abstract public function buildCookbook(): CookbookInterface;
 
-    public function testTrainWithBadChef()
+    public function testTrainWithBadChef(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
-        $this->buildCookbook()->train(new \stdClass());
+        $this->buildCookbook()->train(new stdClass());
     }
 
-    public function testTrain()
+    public function testTrain(): void
     {
         $cookbook = $this->buildCookbook();
 
@@ -61,21 +63,21 @@ trait BaseCookbookTestTrait
         );
     }
 
-    public function testPrepareWithBadWorkplan()
+    public function testPrepareWithBadWorkplan(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
-        $this->buildCookbook()->train(new \stdClass(), $this->createMock(ChefInterface::class));
+        $this->buildCookbook()->train(new stdClass(), $this->createMock(ChefInterface::class));
     }
 
-    public function testPrepareWithBadChef()
+    public function testPrepareWithBadChef(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
         $this->buildCookbook()->train([], $this->createMock(ChefInterface::class));
     }
 
-    public function testPrepare()
+    public function testPrepare(): void
     {
         $cookbook = $this->buildCookbook();
         $chef = $this->createMock(ChefInterface::class);
@@ -87,7 +89,7 @@ trait BaseCookbookTestTrait
         );
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         self::assertInstanceOf(
             CookbookInterface::class,
@@ -95,14 +97,14 @@ trait BaseCookbookTestTrait
         );
     }
 
-    public function testFillWithBadRecipe()
+    public function testFillWithBadRecipe(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
-        $this->buildCookbook()->fill(new \stdClass());
+        $this->buildCookbook()->fill(new stdClass());
     }
 
-    public function testFillWithRecipe()
+    public function testFillWithRecipe(): void
     {
         self::assertInstanceOf(
             CookbookInterface::class,
@@ -110,20 +112,20 @@ trait BaseCookbookTestTrait
         );
     }
 
-    public function testAddToWorkplanWithBadName()
+    public function testAddToWorkplanWithBadName(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
-        $this->buildCookbook()->addToWorkplan(new \stdClass(), 'foo');
+        $this->buildCookbook()->addToWorkplan(new stdClass(), 'foo');
     }
 
-    public function testAddToWorkplanWithRecipe()
+    public function testAddToWorkplanWithRecipe(): void
     {
         self::assertInstanceOf(
             CookbookInterface::class,
             $this->buildCookbook()->addToWorkplan(
                 'foo',
-                new \stdClass()
+                new stdClass()
             )
         );
     }

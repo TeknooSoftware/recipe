@@ -40,7 +40,7 @@ use Teknoo\Tests\Recipe\Support\EnumExample;
  *
  */
 #[CoversClass(Ingredient::class)]
-class IngredientEnumNormalizeTest extends AbstractIngredientTests
+final class IngredientEnumNormalizeTest extends AbstractIngredientTests
 {
     public function buildIngredient(
         bool $mandatory = true,
@@ -59,7 +59,6 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
             default: $default,
         );
     }
-
     public function buildIngredientWithoutName(
         bool $mandatory = true,
         mixed $default = null,
@@ -70,55 +69,47 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
             name: null,
         );
     }
-
     public function getWorkPlanValid(): array
     {
         return [
             'ing_name' => BackedEnumExample::VAL1,
         ];
     }
-
     public function getWorkPlanKeyUnderAnotherName(): array
     {
         return [
             'ing_name_2' => BackedEnumExample::VAL1,
         ];
     }
-
     public function getWorkPlanInvalidMissing(): array
     {
         return [
             'foo' => 'fooBar'
         ];
     }
-
     public function getWorkPlanInvalidNotInstanceOf(): array
     {
         return [
             'ing_name' => 'fooBar'
         ];
     }
-
     public function getWorkPlanInjected(): array
     {
         return [
             'IngName' => BackedEnumExample::VAL1
         ];
     }
-
     public function getWorkPlanInjectedWithoutName(): array
     {
         return [
             'IngName' => BackedEnumExample::VAL1
         ];
     }
-
     public function getDefaultValue(): mixed
     {
         return 'val1';
     }
-
-    public function testPrepareWithInvalidPlanTheIngredientIsNotANonBackedEnum()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotANonBackedEnum(): void
     {
         $chef = $this->createMock(ChefInterface::class);
 
@@ -143,8 +134,7 @@ class IngredientEnumNormalizeTest extends AbstractIngredientTests
             )
         );
     }
-
-    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentButNotMandatory()
+    public function testPrepareWithInvalidPlanTheIngredientIsNotPresentButNotMandatory(): void
     {
         $chef = $this->createMock(ChefInterface::class);
 

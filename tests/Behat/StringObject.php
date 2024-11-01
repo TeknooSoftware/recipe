@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Behat;
 
+use Stringable;
 use Teknoo\Recipe\ChefInterface;
 
 /**
@@ -33,33 +34,27 @@ use Teknoo\Recipe\ChefInterface;
  * @license     http://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class StringObject
+class StringObject implements Stringable
 {
-    /**
-     * @var string
-     */
-    private $value = '';
-
     /**
      * StringObject constructor.
      * @param string $value
      */
-    public function __construct(string $value)
+    public function __construct(private string $value)
     {
-        $this->value = $value;
     }
 
-    public static function addTest(self $string)
+    public static function addTest(self $string): void
     {
         $string->value .= ' bar';
     }
 
-    public static function gotTo(ChefInterface $chef)
+    public static function gotTo(ChefInterface $chef): void
     {
         $chef->continue([], 'final');
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->value;
     }
