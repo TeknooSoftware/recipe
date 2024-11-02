@@ -126,7 +126,7 @@ trait EditablePlanTrait
 
     private function doPopulatingOfRecipe(RecipeInterface $recipe): RecipeInterface
     {
-        $recipe = $this->populateRecipe($recipe);
+        $recipe = $this->doPopulatinOfRecipeTrait($recipe);
 
         $recipe = $this->registerAdditionalSteps($recipe);
 
