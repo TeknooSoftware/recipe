@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [6.0.1] - 2024-11-25
+### Stable Release
+- Fix deprecation into test with PHP 8.4
+
 ## [6.0.0] - 2024-11-01
 ### Stable Release
 - To be more understandable, renaming `Coobook` to `Plan`.

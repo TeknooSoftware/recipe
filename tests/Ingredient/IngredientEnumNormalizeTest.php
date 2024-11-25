@@ -48,7 +48,7 @@ final class IngredientEnumNormalizeTest extends AbstractIngredientTests
         $requiredType = BackedEnumExample::class,
         $name = 'ing_name',
         $normalize = 'IngName',
-        callable $callback = null,
+        ?callable $callback = null,
     ): IngredientInterface {
         return new Ingredient(
             requiredType: $requiredType,
