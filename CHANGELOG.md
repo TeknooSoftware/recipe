@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [6.0.2] - 2025-01-08
+### Stable Release
+- Update Behat Context with Attributes
+
 ## [6.0.1] - 2024-11-25
 ### Stable Release
 - Fix deprecation into test with PHP 8.4

@@ -25,6 +25,9 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Behat;
 
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use ReflectionObject;
 use RuntimeException;
 use Behat\Behat\Context\Context;
@@ -202,17 +205,13 @@ class FeatureContext implements Context
         return $method;
     }
 
-    /**
-     * @Given I have an empty recipe
-     */
+    #[Given('I have an empty recipe')]
     public function iHaveAnEmptyRecipe(): void
     {
         $this->pushRecipe(new Recipe());
     }
 
-    /**
-     * @When I define a :className to start my recipe
-     */
+    #[When('I define a :className to start my recipe')]
     public function iDefineAToStartMyRecipe(string $className): void
     {
         $this->pushRecipe(
@@ -220,9 +219,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @When I define a :className and :secondVar variable to start my recipe
-     */
+    #[When('I define a :className and :secondVar variable to start my recipe')]
     public function iDefineAAndVariableToStartMyRecipe(string $className, string $secondVar): void
     {
         $this->secondVar = $secondVar;
@@ -235,18 +232,14 @@ class FeatureContext implements Context
     }
 
 
-    /**
-     * @When I define the step :stepName to do :methodName my recipe
-     */
+    #[When('I define the step :stepName to do :methodName my recipe')]
     public function iDefineTheStepToDoMyRecipe(string $stepName, string $methodName): void
     {
         $this->pushRecipe($this->lastRecipe->cook($this->parseMethod($methodName), $stepName));
     }
 
 
-    /**
-     * @When I define the step in fiber :stepName to do :methodName my recipe
-     */
+    #[When('I define the step in fiber :stepName to do :methodName my recipe')]
     public function iDefineTheStepInFiberToDoMyRecipe(string $stepName, string $methodName): void
     {
         $this->pushRecipe(
@@ -261,9 +254,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @When I define the excepted dish :className to my recipe
-     */
+    #[When('I define the excepted dish :className to my recipe')] 
     public function iDefineTheExceptedDishToMyRecipe(string $className): void
     {
         $promise = new Promise(
@@ -287,9 +278,7 @@ class FeatureContext implements Context
         $this->pushRecipe($this->lastRecipe->given(new DishClass($className, $promise)));
     }
 
-    /**
-     * @Then I should have a new recipe.
-     */
+    #[Then('I should have a new recipe.')]
     public function iShouldHaveANewRecipe(): void
     {
         Assert::assertNotEmpty($this->recipes);
@@ -303,25 +292,19 @@ class FeatureContext implements Context
         }
     }
 
-    /**
-     * @Given I have an untrained chef
-     */
+    #[Given('I have an untrained chef')]
     public function iHaveAnUntrainedChef(): void
     {
         $this->chef = new Chef();
     }
 
-    /**
-     * @Then I train the chef with the recipe
-     */
+    #[Then('I train the chef with the recipe')]
     public function iTrainTheChefWithTheRecipe(): void
     {
         $this->chef->read($this->lastRecipe);
     }
 
-    /**
-     * @Then It starts cooking with :value as :name
-     */
+    #[Then('It starts cooking with :value as :name')]
     public function itStartsCookingWithAs($value, $name): void
     {
         $value = match ($name) {
@@ -345,9 +328,7 @@ class FeatureContext implements Context
         }
     }
 
-    /**
-     * @Then It starts cooking with :value as :name and obtain an error
-     */
+    #[Then('It starts cooking with :value as :name and obtain an error')]
     public function itStartsCookingWithAsAndObtainAnError($value, $name): void
     {
         try {
@@ -363,9 +344,7 @@ class FeatureContext implements Context
         Assert::fail('An error must be thrown');
     }
 
-    /**
-     * @Then It starts cooking and obtain an error
-     */
+    #[Then('It starts cooking and obtain an error')]
     public function itStartsCookingAndObtainAnError(): void
     {
         try {
@@ -379,9 +358,7 @@ class FeatureContext implements Context
         Assert::fail('An error must be thrown');
     }
 
-    /**
-     * @Then It starts cooking and obtain an catched error with message :content
-     */
+    #[Then('It starts cooking and obtain an catched error with message :content')]
     public function itStartsCookingAndObtainAnCatchedErrorWithMessage($content): void
     {
         $this->chef->process($this->workPlan);
@@ -389,9 +366,7 @@ class FeatureContext implements Context
         static::$message = '';
     }
 
-    /**
-     * @Then It starts cooking with :value as :name and obtain an catched error with message :content
-     */
+    #[Then('It starts cooking with :value as :name and obtain an catched error with message :content')] 
     public function itStartsCookingWithAsAndObtainAnCatchedErrorWithMessage($value, $name, $content): void
     {
         if (null !== $this->secondVar) {
@@ -404,9 +379,7 @@ class FeatureContext implements Context
         static::$message = '';
     }
 
-    /**
-     * @When I must obtain an DateTime at :content
-     */
+    #[When('I must obtain an DateTime at :content')] 
     public function iMustObtainAnDatetimeAt($content): void
     {
         $this->callbackPromiseSuccess = function ($value) use ($content): void {
@@ -415,9 +388,7 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @Then I must obtain an Immutable DateTime at :content
-     */
+    #[Then('I must obtain an Immutable DateTime at :content')]
     public function iMustObtainAnImmutableDatetimeAt($content): void
     {
         $this->callbackPromiseSuccess = function ($value) use ($content): void {
@@ -426,9 +397,7 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @Then I must obtain an Mutable DateTime at :content
-     */
+    #[Then('I must obtain an Mutable DateTime at :content')]
     public function iMustObtainAnMutableDatetimeAt($content): void
     {
         $this->callbackPromiseSuccess = function ($value) use ($content): void {
@@ -437,9 +406,7 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @Then I must obtain an Transform object
-     */
+    #[Then('I must obtain an Transform object')]
     public function iMustObtainAnTransformObject(): void
     {
         $this->callbackPromiseSuccess = function ($value): void {
@@ -447,9 +414,7 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @Then I must obtain an String with at :name
-     */
+    #[Then('I must obtain an String with at :name')]
     public function iMustObtainAnStringWithAt($name): void
     {
         $this->callbackPromiseSuccess = function ($value) use ($name): void {
@@ -458,17 +423,13 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @Given I create a subrecipe :name
-     */
+    #[Given('I create a subrecipe :name')]
     public function iCreateASubrecipe(string $name): void
     {
         $this->setSubRecipe($name, new Recipe());
     }
 
-    /**
-     * @Given I create a subrecipe from cookbook :name
-     */
+    #[Given('I create a subrecipe from cookbook :name')]
     public function iCreateASubCookbook(string $name): void
     {
         $class = new class (new Recipe()) implements CookbookInterface {
@@ -501,9 +462,7 @@ class FeatureContext implements Context
         $this->setSubRecipe($name, $class);
     }
 
-    /**
-     * @Given I create a subrecipe from plann :name
-     */
+    #[Given('I create a subrecipe from plann :name')]
     public function iCreateASubPlan(string $name): void
     {
         $class = new class (new Recipe()) implements PlanInterface {
@@ -536,9 +495,7 @@ class FeatureContext implements Context
         $this->setSubRecipe($name, $class);
     }
 
-    /**
-     * @Given With the step :name to do :method
-     */
+    #[Given('With the step :name to do :method')]
     public function withTheStepToDo($name, $method): void
     {
         if ($this->subRecipes[$this->lastSubRecipeName] instanceof PlanInterface) {
@@ -558,9 +515,8 @@ class FeatureContext implements Context
             $recipe
         );
     }
-    /**
-     * @Given With the step in fiber :name to do :method
-     */
+
+    #[Given('With the step in fiber :name to do :method')]
     public function withTheStepInFiberToDo($name, $method): void
     {
         $bowl = new FiberBowl(
@@ -587,9 +543,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @Given And define the default variable :name in the step :step with :value as :class
-     */
+    #[Given('And define the default variable :name in the step :step with :value as :class')]
     public function andDefineTheDefaultVariableInTheStepWithAs($name, $step, $value, $class): void
     {
         if ($this->subRecipes[$this->lastSubRecipeName] instanceof PlanInterface) {
@@ -600,9 +554,7 @@ class FeatureContext implements Context
         }
     }
 
-    /**
-     * @When I define the behavior on error to do :name my recipe
-     */
+    #[When('I define the behavior on error to do :name my recipe')]
     public function iDefineTheBehaviorOnErrorToDoMyRecipe($name): void
     {
         $this->pushRecipe(
@@ -610,9 +562,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @When I define the behavior on error to do :name in my sub recipe
-     */
+    #[When('I define the behavior on error to do :name in my sub recipe')]
     public function iDefineTheBehaviorOnErrorToDoInMySubRecipe($name): void
     {
         $this->setSubRecipe(
@@ -621,9 +571,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @When I include the recipe :name to :method in my recipe to call :count times
-     */
+    #[When('I include the recipe :name to :method in my recipe to call :count times')]
     public function iIncludeTheRecipeToInMyRecipeToCallTimes($name, $method, $count): void
     {
         $this->pushRecipe(
@@ -631,9 +579,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @When I include the recipe :name to :method in my recipe in fiber to call :count times
-     */
+    #[When('I include the recipe :name to :method in my recipe in fiber to call :count times')]
     public function iIncludeTheRecipeToInMyRecipeInFiberToCallTimes($name, $method, $count): void
     {
         $this->pushRecipe(
@@ -646,9 +592,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @When I include the recipe :name to :method in my subrecipe in fiber to call :count times
-     */
+    #[When('I include the recipe :name to :method in my subrecipe in fiber to call :count times')]
     public function iIncludeTheRecipeToInMySubRecipeInFiberToCallTimes($name, $method, $count): void
     {
         $recipe = $this->subRecipes[$this->lastSubRecipeName]->execute(
@@ -664,9 +608,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @When I must obtain an IntBag with value :content
-     */
+    #[When('I must obtain an IntBag with value :content')]
     public function iMustObtainAnIntbagWithValue(int $content): void
     {
         $this->callbackPromiseSuccess = function ($value) use ($content): void {
@@ -675,9 +617,7 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @When I must obtain an error message :content
-     */
+    #[When('I must obtain an error message :content')]
     public function iMustObtainAnErrorMessage($content): void
     {
         $this->callbackPromiseSuccess = function () use ($content): void {
@@ -686,9 +626,7 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @When I define the dynamic step :name my recipe
-     */
+    #[When('I define the dynamic step :name my recipe')]
     public function iDefineTheDynamicStepMyRecipe($name): void
     {
         $this->pushRecipe(
@@ -699,9 +637,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @When I define the dynamic fiber step :name my recipe
-     */
+    #[When('I define the dynamic fiber step :name my recipe')]
     public function iDefineTheDynamicFiberStepMyRecipe($name): void
     {
         $this->pushRecipe(
@@ -712,9 +648,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @When I define the mandatory dynamic step :name my recipe
-     */
+    #[When('I define the mandatory dynamic step :name my recipe')]
     public function iDefineTheMandatoryDynamicStepMyRecipe($name): void
     {
         $this->pushRecipe(
@@ -725,9 +659,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @When I define the mandatory dynamic fiber step :name my recipe
-     */
+    #[When('I define the mandatory dynamic fiber step :name my recipe')]
     public function iDefineTheMandatoryDynamicFiberStepMyRecipe($name): void
     {
         $this->pushRecipe(
@@ -738,9 +670,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @When I set the dynamic callable :name to :method my recipe
-     */
+    #[When('I set the dynamic callable :name to :method my recipe')]
     public function iSetTheDynamicCallableToMyRecipe($name, $method): void
     {
         $this->workPlan[$name] = $this->parseMethod($method);
@@ -833,10 +763,7 @@ class FeatureContext implements Context
         static::$message .= $exception->getMessage();
     }
 
-    /**
-     * @Given I have a cookbook for date management to get :expectedDate
-     * @Given I have a cookbook for date management
-     */
+    #[Given('I have a cookbook for date management to get :expectedDate')] #[Given('I have a cookbook for date management')]
     public function iHaveACookbookForDateManagement(?string $expectedDate = ''): void
     {
         $this->plan = new class ($this, $expectedDate) implements CookbookInterface {
@@ -909,10 +836,7 @@ class FeatureContext implements Context
         static::$message .= 'sub : ' . $exception->getMessage();
     }
 
-    /**
-     * @Given I have a plan for date management to get :expectedDate
-     * @Given I have a plan for date management
-     */
+    #[Given('I have a plan for date management to get :expectedDate')] #[Given('I have a plan for date management')]
     public function iHaveAPlanForDateManagement(?string $expectedDate = ''): void
     {
         $this->plan = new class ($this, $expectedDate) implements PlanInterface {
@@ -981,10 +905,7 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @Given I have an editable plan for date management to get :expectedDate
-     * @Given I have an editable plan for date management
-     */
+    #[Given('I have an editable plan for date management to get :expectedDate')] #[Given('I have an editable plan for date management')]
     public function iHaveAEditablePlanForDateManagement(?string $expectedDate = ''): void
     {
         $this->notDefaultPlan = false;
@@ -1047,9 +968,7 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @Given I have more steps to edit the date in the plan
-     */
+    #[Given('I have more steps to edit the date in the plan')]
     public function iHaveMoreStepsToEditTheDateInThePlan(): void
     {
         Assert::assertInstanceOf(EditablePlanInterface::class, $this->plan);
@@ -1071,9 +990,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @Given I have more steps to edit the value in the plan
-     */
+    #[Given('I have more steps to edit the value in the plan')]
     public function iHaveMoreStepsToEditTheValueInThePlan(): void
     {
         Assert::assertInstanceOf(EditablePlanInterface::class, $this->plan);
@@ -1086,9 +1003,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @Given I have a cookbook to lowercase value in mapping to get :expectedResult
-     */
+    #[Given('I have a cookbook to lowercase value in mapping to get :expectedResult')]
     public function iHaveACookbookToLowerCaseValueInMapping(string $expectedResult): void
     {
         $this->plan = new class ($expectedResult) implements CookbookInterface {
@@ -1166,9 +1081,7 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @Given I have a plan to lowercase value in mapping to get :expectedResult
-     */
+    #[Given('I have a plan to lowercase value in mapping to get :expectedResult')]
     public function iHaveAPlanToLowerCaseValueInMapping(string $expectedResult): void
     {
         $this->plan = new class ($expectedResult) implements PlanInterface {
@@ -1246,9 +1159,7 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @Given I have an editable plan to lowercase value in mapping to get :expectedResult
-     */
+    #[Given('I have an editable plan to lowercase value in mapping to get :expectedResult')]
     public function iHaveAEditablePlanToLowerCaseValueInMapping($expectedResult): void
     {
         $this->plan = new class ($expectedResult) implements EditablePlanInterface {
@@ -1301,10 +1212,7 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @Given I have a cookbook with the base trait for date management to get :expectedDate
-     * @Given I have a cookbook with the base trait for date management
-     */
+    #[Given('I have a cookbook with the base trait for date management to get :expectedDate')] #[Given('I have a cookbook with the base trait for date management')]
     public function iHaveACookbookWithTheBaseTraitForDateManagement(?string $expectedDate = ''): void
     {
         $this->notDefaultPlan = false;
@@ -1366,11 +1274,9 @@ class FeatureContext implements Context
             }
         };
     }
-    
-    /**
-     * @Given I have a plan with the base trait for date management to get :expectedDate
-     * @Given I have a plan with the base trait for date management
-     */
+
+    #[Given('I have a plan with the base trait for date management to get :expectedDate')]
+    #[Given('I have a plan with the base trait for date management')]
     public function iHaveAPlanWithTheBaseTraitForDateManagement(?string $expectedDate = ''): void
     {
         $this->notDefaultPlan = false;
@@ -1433,10 +1339,7 @@ class FeatureContext implements Context
         };
     }
 
-    /**
-     * @Then I train the chef with the cookbook
-     * @Then I train the chef with the plan
-     */
+    #[Then('I train the chef with the cookbook')] #[Then('I train the chef with the plan')]
     public function iTrainTheChefWithThePlan(): void
     {
         if (!$this->lastRecipe instanceof RecipeInterface) {
@@ -1447,9 +1350,7 @@ class FeatureContext implements Context
         $this->chef->read($this->plan);
     }
 
-    /**
-     * @Given I add a step to the recipe to increment the date to get :expectedDate
-     */
+    #[Given('I add a step to the recipe to increment the date to get :expectedDate')]
     public function iAddAStepToTheRecipeToIncrementTheDate(string $expectedDate): void
     {
         $this->pushRecipe(new Recipe());
@@ -1471,9 +1372,7 @@ class FeatureContext implements Context
         $this->plan->expectedDate = $expectedDate;
     }
 
-    /**
-     * @Given I add a cookbook instance to the default workplan
-     */
+    #[Given('I add a cookbook instance to the default workplan')]
     public function iAddACookbookInstanceToTheDefaultWorkplan(): void
     {
         $this->notDefaultPlan = true;
@@ -1503,9 +1402,7 @@ class FeatureContext implements Context
         );
     }
 
-    /**
-     * @Given I add a plan instance to the default workplan
-     */
+    #[Given('I add a plan instance to the default workplan')]
     public function iAddAPlanInstanceToTheDefaultWorkplan(): void
     {
         $this->notDefaultPlan = true;
