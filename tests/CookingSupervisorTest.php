@@ -47,7 +47,6 @@ use TypeError;
  *
  */
 #[CoversClass(CookingSupervisor::class)]
-#[CoversClass(Action::class)]
 final class CookingSupervisorTest extends TestCase
 {
     private ?FiberIterator $items = null;
