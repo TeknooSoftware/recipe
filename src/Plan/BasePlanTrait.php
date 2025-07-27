@@ -85,7 +85,7 @@ trait BasePlanTrait
 
     public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface
     {
-        $plan = [CookbookInterface::class => $this, PlanInterface::class => $this];
+        $plan = [PlanInterface::class => $this];
         $final = $workPlan + $this->defaultWorkplan + $plan;
 
         $this->getRecipe()->prepare($final, $chef);
@@ -93,7 +93,7 @@ trait BasePlanTrait
         return $this;
     }
 
-    public function validate($value): BaseRecipeInterface
+    public function validate(mixed $value): BaseRecipeInterface
     {
         $this->getRecipe()->validate($value);
 
@@ -108,7 +108,7 @@ trait BasePlanTrait
         return $this;
     }
 
-    public function addToWorkplan(string $key, $value): self
+    public function addToWorkplan(string $key, mixed $value): self
     {
         $this->defaultWorkplan[$key] = $value;
 

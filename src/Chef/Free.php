@@ -59,9 +59,6 @@ class Free implements StateInterface
     private function readRecipe(): callable
     {
         return function (BaseRecipeInterface $recipe): ChefInterface {
-            /**
-             * @var Chef $this
-             */
             $this->recipe = $recipe->train($this);
 
             $this->updateStates();
@@ -78,10 +75,10 @@ class Free implements StateInterface
      */
     private function followStepsRecipe(): callable
     {
+        /**
+         * @param array<int, string> steps
+         */
         return function (#[SensitiveParameter] array $steps, array $onError): ChefInterface {
-            /**
-             * @var Chef $this
-             */
             $this->steps = array_values($steps);
             $this->stepsNames = array_flip(array_keys($steps));
 

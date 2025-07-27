@@ -1,5 +1,14 @@
 # Teknoo Software - Recipe - Change Log
 
+## [7.0.0] - 2025-07-27
+### Stable Release
+- Drop support of PHP 8.3
+- Requires PHP 8.4
+- Update to Teknoo States 7
+- Update to PHPStan 2
+- Remove deprecated feature `Cookbook`, use `Plan` instead
+- Fix some bugs
+
 ## [6.0.3] - 2025-02-07
 ### Stable Release
 - Update dev lib requirements

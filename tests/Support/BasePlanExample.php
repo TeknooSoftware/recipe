@@ -23,21 +23,24 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Recipe;
+namespace Teknoo\Tests\Recipe\Support;
+
+use Teknoo\Recipe\Plan\BasePlanTrait;
+use Teknoo\Recipe\PlanInterface;
+use Teknoo\Recipe\RecipeInterface;
 
 /**
- * Interface to define a Cookbook : a factory to write recipe.
- * To be execute by a Chef, a cookbook needs a recipe, who can be prepopulated.
- *
- * A Cookbook can be muttable
- *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     https://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- *
- * @deprecated Use `Teknoo\Recipe\PlanInterface` instead
  */
-interface CookbookInterface extends PlanInterface
+class BasePlanExample implements PlanInterface
 {
+    use BasePlanTrait;
+
+    protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
+    {
+        return $recipe;
+    }
 }

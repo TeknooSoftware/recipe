@@ -34,6 +34,8 @@ use Teknoo\Recipe\Chef\Cooking;
 use Teknoo\Recipe\Chef\Free;
 use Teknoo\Recipe\Chef\Trained;
 use Teknoo\Recipe\ChefInterface;
+use Teknoo\Recipe\CookingSupervisor;
+use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\RecipeInterface;
 
 /**
@@ -49,9 +51,18 @@ use Teknoo\Recipe\RecipeInterface;
 #[CoversClass(Cooking::class)]
 final class ChefTest extends AbstractChefTests
 {
-    public function buildChef(?ChefInterface $topChef = null): ChefInterface
+    public function buildChef(?CookingSupervisorInterface $cookingSupervisor = null, ?ChefInterface $topChef = null): ChefInterface
     {
-        return new Chef(null, $topChef);
+        if ($cookingSupervisor) {
+            return new Chef(
+                topChef: $topChef,
+                cookingSupervisor: $cookingSupervisor
+            );
+        }
+
+        return new Chef(
+            topChef: $topChef,
+        );
     }
     public function testReadInConstructor(): void
     {
@@ -77,7 +88,7 @@ final class ChefTest extends AbstractChefTests
                 return $topChef;
             });
 
-        $chef = $this->buildChef($topChef);
+        $chef = $this->buildChef(topChef: $topChef);
         $chef->read($this->createMock(RecipeInterface::class));
 
         $called = false;
@@ -124,7 +135,7 @@ final class ChefTest extends AbstractChefTests
                 return $topChef;
             });
 
-        $chef = $this->buildChef($topChef);
+        $chef = $this->buildChef(topChef: $topChef);
         $chef->read($this->createMock(RecipeInterface::class));
 
         $called = false;

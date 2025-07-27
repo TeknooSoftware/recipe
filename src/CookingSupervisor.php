@@ -146,7 +146,10 @@ class CookingSupervisor implements CookingSupervisorInterface
                 $methodName = Action::Loop;
             }
 
-            $item->{(string) $methodName->value}($value);
+            match ($methodName) {
+                Action::Throw => $item->throw($value instanceof Throwable ? $value : null),
+                default => $item->{(string) $methodName->value}($value),
+            };
 
             return;
         }

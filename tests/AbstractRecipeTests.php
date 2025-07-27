@@ -29,7 +29,7 @@ use TypeError;
 use stdClass;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\CookbookInterface;
+use Teknoo\Recipe\PlanInterface;
 use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\RecipeInterface;
@@ -240,11 +240,11 @@ abstract class AbstractRecipeTests extends TestCase
         );
     }
 
-    public function testExecuteWithCookbook(): void
+    public function testExecuteWithPlan(): void
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->execute(
-            $this->createMock(CookbookInterface::class),
+            $this->createMock(PlanInterface::class),
             'foo'
         );
 

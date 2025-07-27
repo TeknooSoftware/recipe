@@ -62,9 +62,6 @@ class Draft implements StateInterface
     private function addIngredient(): callable
     {
         return function (IngredientInterface $ingredient): RecipeInterface {
-            /**
-             * @var Recipe $this
-             */
             $that = $this->cloneMe();
             $that->requiredIngredients[] = $ingredient;
 
@@ -86,9 +83,6 @@ class Draft implements StateInterface
             array $with = [],
             ?int $position = null
         ): RecipeInterface {
-            /**
-             * @var Recipe $this
-             */
             $that = $this->cloneMe();
 
             $callable = $action;
@@ -112,9 +106,6 @@ class Draft implements StateInterface
     private function setOnError(): callable
     {
         return function (callable | BowlInterface $callable): RecipeInterface {
-            /**
-             * @var Recipe $this
-             */
             $that = $this->cloneMe();
 
             if (!$callable instanceof BowlInterface) {
@@ -141,9 +132,6 @@ class Draft implements StateInterface
             ?int $position = null,
             bool $inFiber = false,
         ): RecipeInterface {
-            /**
-             * @var Recipe $this
-             */
             $that = $this->cloneMe();
 
             if (is_callable($repeat)) {
@@ -172,9 +160,6 @@ class Draft implements StateInterface
     private function setExceptedDish(): callable
     {
         return function (DishInterface $dish): RecipeInterface {
-            /**
-             * @var Recipe $this
-             */
             $that = $this->cloneMe();
             $that->exceptedDish = $dish;
 

@@ -125,9 +125,6 @@ class Cooking implements StateInterface
     private function continueRecipe(): callable
     {
         return function (#[SensitiveParameter] array $with = [], ?string $nextStep = null): ChefInterface {
-            /**
-             * @var Chef $this
-             */
             $this->updateMyWorkPlan($with);
 
             while (true === $this->cooking && ($callable = $this->getNextStep($nextStep)) instanceof BowlInterface) {
@@ -153,9 +150,6 @@ class Cooking implements StateInterface
         return function (#[SensitiveParameter] $result): ChefInterface {
             $this->interruptCooking();
 
-            /**
-             * @var Chef $this
-             */
             //This method is called only if $this->recipe is a valid RecipeInterface instance
             $this->recipe->validate($result);
 
@@ -182,9 +176,6 @@ class Cooking implements StateInterface
     private function prepare(): callable
     {
         return function (): void {
-            /**
-             * @var Chef $this
-             */
             $this->recipe->prepare($this->workPlan, $this);
 
             $this->checkMissingIngredients();
@@ -199,9 +190,6 @@ class Cooking implements StateInterface
     private function checkMissingIngredients(): callable
     {
         return function (): void {
-            /**
-             * @var Chef $this
-             */
             if (empty($this->missingIngredients)) {
                 return;
             }

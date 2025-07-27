@@ -16,6 +16,9 @@ parameters:
             message: '#Strict comparison using === between false and Fiber#'
             path: src/CookingSupervisor/FiberIterator.php
         -
+            message: '#Teknoo\\Recipe\\Chef::\$stepsNames#'
+            path: src/Chef.php
+        -
             message: '#is declared as covariant#'
             path: src/Promise
         -
