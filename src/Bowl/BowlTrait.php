@@ -154,9 +154,16 @@ trait BowlTrait
      */
     private static function getReflection(callable $callable): ReflectionFunctionAbstract
     {
-        if (is_array($callable)) {
+        if (
+            is_array($callable)
+            && (
+                is_object($callable[0])
+                || (is_string($callable[0]) && class_exists($callable[0], true))
+            )
+            && is_string($callable[1])
+        ) {
             //The callable is checked by PHP in the constructor by the type hitting
-            return self::getReflectionMethod($callable[0], $callable[1]);
+            return self::getReflectionMethod($callable[0], (string) $callable[1]);
         }
 
         if ($callable instanceof Closure) {
@@ -294,8 +301,8 @@ trait BowlTrait
     }
 
     /**
-     * @param array<string, mixed> $values
-     * @param Fiber<mixed, mixed, mixed, mixed> $fiber
+     * @param array<int|string, mixed> $values
+     * @param Fiber<mixed, mixed, void, mixed>|null $fiber
      */
     protected function findReservedParameterInstance(
         ReflectionParameter $parameter,
@@ -324,7 +331,7 @@ trait BowlTrait
 
     /**
      * @param array<string, mixed> $workPlan
-     * @param array<string, mixed> $values
+     * @param array<int|string, mixed> $values
      */
     public function findParameterValueFromWorkplan(
         ReflectionParameter $parameter,
@@ -377,12 +384,11 @@ trait BowlTrait
      * To map each callable's arguments to ingredients available into the workplan.
      *
      * @param array<string, mixed> $workPlan
-     * @param Fiber<mixed, mixed, mixed, mixed> $fiber
+     * @param Fiber<mixed, mixed, void, mixed>|null $fiber
      *
      * @return array<mixed>
      *
      * @throws Exception
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function &extractParameters(
         callable $callable,

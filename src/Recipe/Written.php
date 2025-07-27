@@ -55,9 +55,6 @@ class Written implements StateInterface
     private function prepareCooking(): callable
     {
         return function (array $workPlan, ChefInterface $chef): RecipeInterface {
-            /**
-             * @var Recipe $this
-             */
             $bag = new IngredientBag();
             foreach ($this->requiredIngredients as $ingredient) {
                 $ingredient->prepare($workPlan, $chef, $bag);
@@ -75,9 +72,6 @@ class Written implements StateInterface
     private function validateDish(): callable
     {
         return function (mixed $value): RecipeInterface {
-            /**
-             * @var Recipe $this
-             */
             if ($this->exceptedDish instanceof DishInterface) {
                 $this->exceptedDish->isExcepted($value);
             }

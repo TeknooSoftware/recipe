@@ -23,22 +23,25 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Recipe\Cookbook;
+namespace Teknoo\Tests\Recipe\Support;
 
-use Teknoo\Recipe\Plan\BasePlanTrait;
+use Teknoo\Recipe\EditablePlanInterface;
+use Teknoo\Recipe\Plan\EditablePlanTrait;
+use Teknoo\Recipe\PlanInterface;
+use Teknoo\Recipe\RecipeInterface;
 
 /**
- * Base trait to implement quickly a cookbook and manage a shared recipe without implement all methods defined in
- * the CookbookInterface
- *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     https://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
- *
- * @deprecated Use `Teknoo\Recipe\Plan\BasePlanTrait` instead
  */
-trait BaseCookbookTrait
+class EditablePlanExample implements PlanInterface, EditablePlanInterface
 {
-    use BasePlanTrait;
+    use EditablePlanTrait;
+
+    protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
+    {
+        return $recipe;
+    }
 }

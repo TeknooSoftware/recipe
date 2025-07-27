@@ -44,7 +44,7 @@ use function reset;
  * @license     https://teknoo.software/license/mit         MIT License
  * @author      Richard Déloge <richard@teknoo.software>
  *
- * @implements Iterator<Fiber<mixed, mixed, void, mixed>|CookingSupervisorInterface>>
+ * @implements Iterator<Fiber<mixed, mixed, void, mixed>|CookingSupervisorInterface>
  */
 class FiberIterator implements Iterator, Countable
 {

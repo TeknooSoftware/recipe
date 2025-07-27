@@ -42,8 +42,6 @@ use Teknoo\Recipe\Bowl\DynamicFiberBowl;
 use Teknoo\Recipe\Bowl\FiberBowl;
 use Teknoo\Recipe\Chef;
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\Cookbook\BaseCookbookTrait;
-use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\Dish\DishClass;
 use Teknoo\Recipe\EditablePlanInterface;
@@ -429,40 +427,7 @@ class FeatureContext implements Context
         $this->setSubRecipe($name, new Recipe());
     }
 
-    #[Given('I create a subrecipe from cookbook :name')]
-    public function iCreateASubCookbook(string $name): void
-    {
-        $class = new class (new Recipe()) implements CookbookInterface {
-            use BaseCookbookTrait;
-
-            private array $steps = [];
-
-            public function __construct(RecipeInterface $recipe)
-            {
-                $this->fill($recipe);
-            }
-
-            public function add($name, callable $callback): self
-            {
-                $this->steps[$name] = $callback;
-
-                return $this;
-            }
-
-            protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
-            {
-                foreach ($this->steps as $name => $action) {
-                    $recipe = $recipe->cook($action, $name);
-                }
-
-                return $recipe;
-            }
-        };
-
-        $this->setSubRecipe($name, $class);
-    }
-
-    #[Given('I create a subrecipe from plann :name')]
+    #[Given('I create a subrecipe from plan :name')]
     public function iCreateASubPlan(string $name): void
     {
         $class = new class (new Recipe()) implements PlanInterface {
@@ -763,74 +728,6 @@ class FeatureContext implements Context
         static::$message .= $exception->getMessage();
     }
 
-    #[Given('I have a cookbook for date management to get :expectedDate')] #[Given('I have a cookbook for date management')]
-    public function iHaveACookbookForDateManagement(?string $expectedDate = ''): void
-    {
-        $this->plan = new class ($this, $expectedDate) implements CookbookInterface {
-            private ?BaseRecipeInterface $recipe = null;
-
-            public function __construct(
-                private readonly FeatureContext $context,
-                public string $expectedDate = '2017-07-01 10:00:00',
-            ) {
-            }
-
-            public function train(ChefInterface $chef): BaseRecipeInterface
-            {
-                $chef->read($this->recipe);
-
-                return $this;
-            }
-
-            public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface
-            {
-                $this->recipe->prepare($workPlan, $chef);
-
-                return $this;
-            }
-
-            public function validate($value): BaseRecipeInterface
-            {
-                $this->recipe->validate($value);
-
-                return $this;
-            }
-
-            public function fill(RecipeInterface $recipe): CookbookInterface
-            {
-                $recipe = $recipe->require(new Ingredient(DateTime::class, DateTime::Class));
-                $recipe = $recipe->cook(
-                    $this->context->parseMethod('DateTimeImmutable::createFromMutable'),
-                    'createImmutable',
-                    [],
-                    1
-                );
-
-                $recipe = $recipe->cook(
-                    function (ChefInterface $chef, $result): void {
-                        $chef->finish($result);
-                    },
-                    'finish',
-                    ['result' => [DateTimeImmutable::Class, DateTime::Class]],
-                    10
-                );
-
-                $promise = new Promise(function ($value): void {
-                    Assert::assertInstanceOf(DateTimeImmutable::class, $value);
-                    Assert::assertEquals(new DateTimeImmutable($this->expectedDate), $value);
-                }, function (): never {
-                    Assert::fail('The dish is not valid');
-                });
-
-                $recipe = $recipe->given(new DishClass(DateTimeImmutable::class, $promise));
-
-                $this->recipe = $recipe;
-
-                return $this;
-            }
-        };
-    }
-
     public static function onErrorInSub(Throwable $exception, ChefInterface $chef): void
     {
         static::$message .= 'sub : ' . $exception->getMessage();
@@ -1003,84 +900,6 @@ class FeatureContext implements Context
         );
     }
 
-    #[Given('I have a cookbook to lowercase value in mapping to get :expectedResult')]
-    public function iHaveACookbookToLowerCaseValueInMapping(string $expectedResult): void
-    {
-        $this->plan = new class ($expectedResult) implements CookbookInterface {
-            private ?BaseRecipeInterface $recipe = null;
-
-            public function __construct(
-                public string $expectedResult = 'abcdef'
-            ) {
-            }
-
-            public function train(ChefInterface $chef): BaseRecipeInterface
-            {
-                $chef->read($this->recipe);
-
-                return $this;
-            }
-
-            public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface
-            {
-                $this->recipe->prepare($workPlan, $chef);
-
-                return $this;
-            }
-
-            public function validate($value): BaseRecipeInterface
-            {
-                $this->recipe->validate($value);
-
-                return $this;
-            }
-
-            public function fill(RecipeInterface $recipe): CookbookInterface
-            {
-                $recipe = $recipe->require(new Ingredient('string', 'part1'));
-                $recipe = $recipe->cook(
-                    function (ChefInterface $chef, string $part1, string $part2): void  {
-                        $chef->updateWorkPlan(['string' => $part1 . $part2]);
-                    },
-                    'concatenate',
-                    [
-                        'part2' => new Value('FgHIjKl'),
-                    ],
-                    1
-                );
-
-                $recipe = $recipe->cook(
-                    fn (ChefInterface $chef, string $string): ChefInterface => $chef->updateWorkPlan(
-                        ['string' => strtolower($string)]
-                    ),
-                    'finish',
-                    [],
-                    2
-                );
-
-                $recipe = $recipe->cook(
-                    fn (string $string, ChefInterface $chef): ChefInterface => $chef->finish(new StringObject($string)),
-                    'createObject',
-                    [],
-                    2
-                );
-
-                $promise = new Promise(function ($value): void {
-                    Assert::assertInstanceOf(StringObject::class, $value);
-                    Assert::assertEquals(new StringObject($this->expectedResult), $value);
-                }, function (): never {
-                    Assert::fail('The dish is not valid');
-                });
-
-                $recipe = $recipe->given(new DishClass(StringObject::class, $promise));
-
-                $this->recipe = $recipe;
-
-                return $this;
-            }
-        };
-    }
-
     #[Given('I have a plan to lowercase value in mapping to get :expectedResult')]
     public function iHaveAPlanToLowerCaseValueInMapping(string $expectedResult): void
     {
@@ -1212,69 +1031,6 @@ class FeatureContext implements Context
         };
     }
 
-    #[Given('I have a cookbook with the base trait for date management to get :expectedDate')] #[Given('I have a cookbook with the base trait for date management')]
-    public function iHaveACookbookWithTheBaseTraitForDateManagement(?string $expectedDate = ''): void
-    {
-        $this->notDefaultPlan = false;
-        $this->plan = new class ($this, $expectedDate) implements CookbookInterface {
-            use BaseCookbookTrait;
-
-            public function __construct(
-                private FeatureContext $context,
-                public string $expectedDate = '2017-07-01 10:00:00',
-            ) {
-            }
-
-            protected function populateRecipe(RecipeInterface $recipe): RecipeInterface
-            {
-                $recipe = $recipe->require(new Ingredient(DateTime::class, DateTime::Class));
-                $recipe = $recipe->cook(
-                    $this->context->parseMethod('DateTimeImmutable::createFromMutable'),
-                    'createImmutable',
-                    [],
-                    1
-                );
-
-                $promise = new Promise(function ($value): void {
-                    Assert::assertInstanceOf(DateTimeImmutable::class, $value);
-                    Assert::assertEquals(new DateTimeImmutable($this->expectedDate), $value);
-                }, function (): never {
-                    Assert::fail('The dish is not valid');
-                });
-
-                $that = $this;
-                $notDefaultPlan = $this->context->notDefaultPlan;
-                $recipe = $recipe->cook(
-                    function (CookbookInterface $cookbook) use ($that, $notDefaultPlan): void {
-                        if (true === $notDefaultPlan) {
-                            Assert::assertNotSame($that, $cookbook);
-                        } else {
-                            Assert::assertSame($that, $cookbook);
-                        }
-                    },
-                    'cookbook aware',
-                    [],
-                    5
-                );
-
-                $recipe = $recipe->cook(
-                    function (ChefInterface $chef, $result): void {
-                        $chef->finish($result);
-                    },
-                    'finish',
-                    ['result' => [DateTimeImmutable::Class, DateTime::Class]],
-                    10
-                );
-
-                $recipe = $recipe->given(new DishClass(DateTimeImmutable::class, $promise));
-
-                $this->recipe = $recipe;
-
-                return $recipe;
-            }
-        };
-    }
-
     #[Given('I have a plan with the base trait for date management to get :expectedDate')]
     #[Given('I have a plan with the base trait for date management')]
     public function iHaveAPlanWithTheBaseTraitForDateManagement(?string $expectedDate = ''): void
@@ -1309,14 +1065,14 @@ class FeatureContext implements Context
                 $that = $this;
                 $notDefaultPlan = $this->context->notDefaultPlan;
                 $recipe = $recipe->cook(
-                    function (PlanInterface $cookbook) use ($that, $notDefaultPlan): void {
+                    function (PlanInterface $plan) use ($that, $notDefaultPlan): void {
                         if (true === $notDefaultPlan) {
-                            Assert::assertNotSame($that, $cookbook);
+                            Assert::assertNotSame($that, $plan);
                         } else {
-                            Assert::assertSame($that, $cookbook);
+                            Assert::assertSame($that, $plan);
                         }
                     },
-                    'cookbook aware',
+                    'plan aware',
                     [],
                     5
                 );
@@ -1339,7 +1095,7 @@ class FeatureContext implements Context
         };
     }
 
-    #[Then('I train the chef with the cookbook')] #[Then('I train the chef with the plan')]
+    #[Then('I train the chef with the plan')]
     public function iTrainTheChefWithThePlan(): void
     {
         if (!$this->lastRecipe instanceof RecipeInterface) {
@@ -1370,36 +1126,6 @@ class FeatureContext implements Context
         );
 
         $this->plan->expectedDate = $expectedDate;
-    }
-
-    #[Given('I add a cookbook instance to the default workplan')]
-    public function iAddACookbookInstanceToTheDefaultWorkplan(): void
-    {
-        $this->notDefaultPlan = true;
-        $this->plan->addToWorkplan(
-            CookbookInterface::class,
-            new class () implements CookbookInterface {
-                public function train(ChefInterface $chef): BaseRecipeInterface
-                {
-                    return $this;
-                }
-
-                public function prepare(array &$workPlan, ChefInterface $chef): BaseRecipeInterface
-                {
-                    return $this;
-                }
-
-                public function validate(mixed $value): BaseRecipeInterface
-                {
-                    return $this;
-                }
-
-                public function fill(RecipeInterface $recipe): CookbookInterface
-                {
-                    return $this;
-                }
-            }
-        );
     }
 
     #[Given('I add a plan instance to the default workplan')]

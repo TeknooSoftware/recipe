@@ -32,6 +32,8 @@ use Teknoo\Recipe\EditablePlanInterface;
 use Teknoo\Recipe\RecipeInterface;
 use Traversable;
 
+use function is_numeric;
+
 /**
  * Trait to create natively an editable plan, allow developers to extends easily a plan without implement this
  * behavior in theirs plans classes. A plan can be directly extended in a container service definition.
@@ -86,9 +88,6 @@ trait EditablePlanTrait
         }
     }
 
-    /**
-     * @param iterable<int, callable> $steps
-     */
     private function registerAdditionalSteps(RecipeInterface $recipe): RecipeInterface
     {
         $counter = 0;
@@ -106,15 +105,12 @@ trait EditablePlanTrait
                 $class = $step[0]::class;
             }
 
-            $recipe = $recipe->cook($step, $class, $with, (int) $position);
+            $recipe = $recipe->cook($step, $class, $with, !is_numeric($position) ? $counter : (int) $position);
         }
 
         return $recipe;
     }
 
-    /**
-     * @param iterable<callable> $handlers
-     */
     private function registerAdditionalErrorHandler(RecipeInterface $recipe): RecipeInterface
     {
         foreach ($this->additionalErrorHandlers as $handler) {

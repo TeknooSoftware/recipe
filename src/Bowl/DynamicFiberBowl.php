@@ -47,6 +47,7 @@ class DynamicFiberBowl extends AbstractDynamicBowl
         array &$workPlan,
         ?CookingSupervisorInterface $cookingSupervisor,
     ): void {
+        /** @var Fiber<mixed, mixed, void, mixed> $fiber */
         $fiber = new Fiber($callable);
 
         if (null !== $cookingSupervisor) {

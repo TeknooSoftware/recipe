@@ -46,6 +46,7 @@ class FiberRecipeBowl extends AbstractRecipeBowl
         ChefInterface $subchef,
         ?CookingSupervisorInterface $cookingSupervisor,
     ): void {
+        /** @var Fiber<mixed, mixed, void, mixed> $fiber */
         $fiber = new Fiber($subchef->process(...));
 
         if (null !== $cookingSupervisor) {

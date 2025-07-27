@@ -80,6 +80,7 @@ class FiberBowl implements BowlInterface
         array &$workPlan,
         ?CookingSupervisorInterface $cookingSupervisor = null,
     ): BowlInterface {
+        /** @var Fiber<mixed, mixed, void, mixed> $fiber */
         $fiber = new Fiber($this->callable);
 
         if (null !== $cookingSupervisor) {

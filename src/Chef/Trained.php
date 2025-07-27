@@ -123,9 +123,6 @@ class Trained implements StateInterface
     private function clean(): callable
     {
         return function (): void {
-            /**
-             * @var Chef $this
-             */
             $this->workPlan = [];
             $this->cooking = false;
 

@@ -21,9 +21,9 @@ Feature: Recipe with embedded recipes
     When I include the recipe "increasingValue" to "increaseValue" in my recipe to call "3" times
     Then I should have a new recipe.
 
-  Scenario: Add a subrecipe from a cookbook to a recipe
+  Scenario: Add a subrecipe from a plan to a recipe
     Given I have an empty recipe
-    And I create a subrecipe from cookbook "increasingValue"
+    And I create a subrecipe from plan "increasingValue"
     And With the step "increaseValue" to do "Teknoo\Tests\Recipe\Behat\IntBag::increaseValue"
     When I include the recipe "increasingValue" to "increaseValue" in my recipe to call "3" times
     Then I should have a new recipe.
@@ -64,9 +64,9 @@ Feature: Recipe with embedded recipes
     And I must obtain an IntBag with value "10"
     Then I should have a new recipe.
 
-  Scenario: Create a complex recipe with sub recipes from a cookbook
+  Scenario: Create a complex recipe with sub recipes from a plan
     Given I have an empty recipe
-    And I create a subrecipe from cookbook "increasingValue"
+    And I create a subrecipe from plan "increasingValue"
     And With the step "increaseValue" to do "Teknoo\Tests\Recipe\Behat\IntBag::increaseValue"
     And With the step "addValue" to do "Teknoo\Tests\Recipe\Behat\IntBag::addValue"
     And And define the default variable "toAdd" in the step "increasingValue" with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
@@ -90,10 +90,10 @@ Feature: Recipe with embedded recipes
     Then I train the chef with the recipe
     And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
 
-  Scenario: Train a chef to cook a dish with sub recipes from a cookbook
+  Scenario: Train a chef to cook a dish with sub recipes from a plan
     Given I have an empty recipe
     And I have an untrained chef
-    And I create a subrecipe from cookbook "increasingValue"
+    And I create a subrecipe from plan "increasingValue"
     And With the step "increaseValue" to do "Teknoo\Tests\Recipe\Behat\IntBag::increaseValue"
     And With the step "addValue" to do "Teknoo\Tests\Recipe\Behat\IntBag::addValue"
     And And define the default variable "toAdd" in the step "increasingValue" with "2" as "Teknoo\Tests\Recipe\Behat\IntBag"
@@ -105,10 +105,10 @@ Feature: Recipe with embedded recipes
     Then I train the chef with the recipe
     And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
 
-  Scenario: Train a chef to cook a dish with sub recipes containing an error from a cookbook
+  Scenario: Train a chef to cook a dish with sub recipes containing an error from a plan
     Given I have an empty recipe
     And I have an untrained chef
-    And I create a subrecipe from cookbook "increasingValue"
+    And I create a subrecipe from plan "increasingValue"
     And With the step "increaseValue" to do "Teknoo\Tests\Recipe\Behat\IntBag::increaseValue"
     And With the step "throwError" to do "FeatureContext::createException"
     And And define the default variable "toAdd" in the step "increasingValue" with "2" as "Teknoo\Tests\Recipe\Behat\IntBag"
@@ -120,10 +120,10 @@ Feature: Recipe with embedded recipes
     Then I train the chef with the recipe
     And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag" and obtain an error
 
-  Scenario: Train a chef to cook a dish  with error handler and with sub recipes containing an error from a cookbook
+  Scenario: Train a chef to cook a dish  with error handler and with sub recipes containing an error from a plan
     Given I have an empty recipe
     And I have an untrained chef
-    And I create a subrecipe from cookbook "increasingValue"
+    And I create a subrecipe from plan "increasingValue"
     And With the step "increaseValue" to do "Teknoo\Tests\Recipe\Behat\IntBag::increaseValue"
     And With the step "throwError" to do "FeatureContext::createException"
     And And define the default variable "toAdd" in the step "increasingValue" with "2" as "Teknoo\Tests\Recipe\Behat\IntBag"
@@ -134,7 +134,7 @@ Feature: Recipe with embedded recipes
     Then I train the chef with the recipe
     And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag" and obtain an catched error with message "There had an error"
 
-  Scenario: Train a chef to cook a dish with sub recipes containing an error from a cookbook with error handler only on subrecipe
+  Scenario: Train a chef to cook a dish with sub recipes containing an error from a plan with error handler only on subrecipe
     Given I have an empty recipe
     And I have an untrained chef
     And I create a subrecipe "increasingValue"
@@ -148,7 +148,7 @@ Feature: Recipe with embedded recipes
     Then I train the chef with the recipe
     And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag" and obtain an error
 
-  Scenario: Train a chef to cook a dish with sub recipes containing an error from a cookbook with error handler only on subrecipe but error reporting is disabled
+  Scenario: Train a chef to cook a dish with sub recipes containing an error from a plan with error handler only on subrecipe but error reporting is disabled
     Given I have an empty recipe
     And I have an untrained chef
     And I create a subrecipe "increasingValue"
@@ -162,7 +162,7 @@ Feature: Recipe with embedded recipes
     Then I train the chef with the recipe
     And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag" and obtain an catched error with message "There had an error"
 
-  Scenario: Train a chef to cook a dish with sub recipes containing an error from a cookbook with different error handler
+  Scenario: Train a chef to cook a dish with sub recipes containing an error from a plan with different error handler
     Given I have an empty recipe
     And I have an untrained chef
     And I create a subrecipe "increasingValue"

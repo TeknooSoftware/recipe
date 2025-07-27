@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe;
 
+use Teknoo\Recipe\PlanInterface;
 use TypeError;
 use stdClass;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,7 +37,6 @@ use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\ChefInterface;
 use PHPUnit\Framework\TestCase;
-use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Ingredient\MergeableInterface;
@@ -50,7 +50,7 @@ use Teknoo\Recipe\RecipeInterface;
  */
 abstract class AbstractChefTests extends TestCase
 {
-    abstract public function buildChef(): ChefInterface;
+    abstract public function buildChef(?CookingSupervisorInterface $cookingSupervisor = null): ChefInterface;
 
     public function testExceptionOnReadWithBadRecipe(): void
     {
@@ -71,9 +71,9 @@ abstract class AbstractChefTests extends TestCase
         );
     }
 
-    public function testReadWithCookbook(): void
+    public function testReadWithPlan(): void
     {
-        $recipe = $this->createMock(CookbookInterface::class);
+        $recipe = $this->createMock(PlanInterface::class);
         $recipe->expects($this->once())
             ->method('train')
             ->willReturnSelf();
@@ -210,14 +210,14 @@ abstract class AbstractChefTests extends TestCase
         );
     }
 
-    public function testReserveAndBeginAvailableOnCookingWithCookbook(): void
+    public function testReserveAndBeginAvailableOnCookingWithPlan(): void
     {
         $mainRecipe = $this->createMock(RecipeInterface::class);
         $mainRecipe->expects($this->once())
             ->method('train')
             ->willReturnSelf();
 
-        $subRecipe = $this->createMock(CookbookInterface::class);
+        $subRecipe = $this->createMock(PlanInterface::class);
         $subRecipe->expects($this->once())
             ->method('train')
             ->willReturnCallback(function (ChefInterface $chef) use ($subRecipe): MockObject {
@@ -267,10 +267,10 @@ abstract class AbstractChefTests extends TestCase
         $this->buildChef()->reserveAndBegin($recipe);
     }
 
-    public function testReserveAndBeginOnNonTrainedChefWithCookbook(): void
+    public function testReserveAndBeginOnNonTrainedChefWithPlan(): void
     {
         $this->expectException(Throwable::class);
-        $recipe = $this->createMock(CookbookInterface::class);
+        $recipe = $this->createMock(PlanInterface::class);
         $this->buildChef()->reserveAndBegin($recipe);
     }
 
@@ -931,5 +931,18 @@ abstract class AbstractChefTests extends TestCase
         $chef->followSteps([$this->createMock(BowlInterface::class)]);
 
         $chef->process(['foo' => 'bar']);
+    }
+
+    public function testClone()
+    {
+        $chef = $this->buildChef();
+        $chef2 = clone $chef;
+
+        $this->assertNotSame($chef, $chef2);
+
+        $chefSupervised = $this->buildChef($this->createMock(CookingSupervisorInterface::class));
+        $chefSupervised2 = clone $chefSupervised;
+
+        $this->assertNotSame($chef, $chef2);
     }
 }

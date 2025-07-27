@@ -140,9 +140,7 @@ class Chef implements AutomatedInterface, ChefInterface
      */
     public function __clone()
     {
-        if ($this->cookingSupervisor instanceof CookingSupervisorInterface) {
-            $this->cookingSupervisor = clone $this->cookingSupervisor;
-        }
+        $this->cookingSupervisor = clone $this->cookingSupervisor;
     }
 
     public function read(BaseRecipeInterface $recipe): ChefInterface
