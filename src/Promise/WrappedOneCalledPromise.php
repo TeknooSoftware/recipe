@@ -56,7 +56,7 @@ class WrappedOneCalledPromise implements PromiseInterface
     ) {
     }
 
-    public function next(?PromiseInterface $promise = null, bool $autoCall = false): PromiseInterface
+    public function next(?PromiseInterface $promise = null, bool $autoCall = true): PromiseInterface
     {
         $clone = clone $this;
         $clone->promise = $this->promise->next($promise, $autoCall);

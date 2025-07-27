@@ -8,6 +8,7 @@
 - Update to PHPStan 2
 - Remove deprecated feature `Cookbook`, use `Plan` instead
 - Fix some bugs
+- Promise, autocall to next is enabled by default
 
 ## [6.0.3] - 2025-02-07
 ### Stable Release

@@ -59,7 +59,7 @@ abstract class AbstractPromise implements PromiseInterface
      */
     private ?PromiseInterface $nextPromise = null;
 
-    private bool $autoCallNextPromise = false;
+    private bool $autoCallNextPromise = true;
 
     /**
      * @var callable|null
@@ -100,7 +100,7 @@ abstract class AbstractPromise implements PromiseInterface
     /**
      * @param PromiseInterface<TNextSuccessArgType, TResultType>|null $promise
      */
-    public function next(?PromiseInterface $promise = null, bool $autoCall = false): PromiseInterface
+    public function next(?PromiseInterface $promise = null, bool $autoCall = true): PromiseInterface
     {
         if (false === $this->allowNext) {
             throw new NotGrantedPromiseException('Error, following promise is not allowed here');
