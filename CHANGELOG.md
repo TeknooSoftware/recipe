@@ -9,6 +9,7 @@
 - Remove deprecated feature `Cookbook`, use `Plan` instead
 - Fix some bugs
 - Promise, autocall to next is enabled by default
+- Switch license from MIT to 3-Clause BSD
 
 ## [6.0.3] - 2025-02-07
 ### Stable Release

@@ -77,4 +77,4 @@ sharing knowledge and skills.
 
 License
 -------
-Recipe is licensed under the MIT License - see the licenses folder for details.
+Recipe is licensed under the 3-Clause BSD License - see the licenses folder for details.

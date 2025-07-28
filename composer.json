@@ -4,7 +4,7 @@
     "description": "Inspired by cooking, allows the creation of dynamics workflows, called here recipe, following the #east programming and using middleware, configurable via DI or any configuration, if a set of conditions (ingredients) are available.",
     "keywords": ["east", "middleware", "workflow", "recipe", "dynamic", "algorithm"],
     "homepage": "https://teknoo.software/libraries/recipe",
-    "license": ["MIT"],
+    "license": ["BSD-3-Clause"],
     "authors": [
         {
             "name": "Richard Déloge",
