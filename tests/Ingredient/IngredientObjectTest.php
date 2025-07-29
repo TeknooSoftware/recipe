@@ -130,7 +130,7 @@ final class IngredientObjectTest extends AbstractIngredientTests
             default: new stdClass(),
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $ingredient->prepare(
                 $a,

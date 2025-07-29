@@ -65,7 +65,7 @@ abstract class AbstractChefTests extends TestCase
             ->method('train')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $this->buildChef()->read($recipe)
         );
@@ -78,7 +78,7 @@ abstract class AbstractChefTests extends TestCase
             ->method('train')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $this->buildChef()->read($recipe)
         );
@@ -91,7 +91,7 @@ abstract class AbstractChefTests extends TestCase
             ->method('train')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $this->buildChef()->read($recipe)
         );
@@ -127,7 +127,7 @@ abstract class AbstractChefTests extends TestCase
             });
 
         $chef = $this->buildChef();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->read($mainRecipe)
         );
@@ -136,12 +136,12 @@ abstract class AbstractChefTests extends TestCase
         $step->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function (ChefInterface $chef) use ($step, $subRecipe): MockObject {
-                self::assertInstanceOf(
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $subchef = $chef->reserveAndBegin($subRecipe)
                 );
 
-                self::assertNotSame(
+                $this->assertNotSame(
                     $chef,
                     $subchef
                 );
@@ -149,12 +149,12 @@ abstract class AbstractChefTests extends TestCase
                 return $step;
             });
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->followSteps(['step' => $step])
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
@@ -177,7 +177,7 @@ abstract class AbstractChefTests extends TestCase
             });
 
         $chef = $this->buildChef();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->read($mainRecipe)
         );
@@ -186,12 +186,12 @@ abstract class AbstractChefTests extends TestCase
         $step->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function (ChefInterface $chef) use ($step, $subRecipe): MockObject {
-                self::assertInstanceOf(
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $subchef = $chef->reserveAndBegin($subRecipe, $this->createMock(CookingSupervisorInterface::class))
                 );
 
-                self::assertNotSame(
+                $this->assertNotSame(
                     $chef,
                     $subchef
                 );
@@ -199,12 +199,12 @@ abstract class AbstractChefTests extends TestCase
                 return $step;
             });
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->followSteps(['step' => $step])
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
@@ -227,7 +227,7 @@ abstract class AbstractChefTests extends TestCase
             });
 
         $chef = $this->buildChef();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->read($mainRecipe)
         );
@@ -236,12 +236,12 @@ abstract class AbstractChefTests extends TestCase
         $step->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function (ChefInterface $chef) use ($step, $subRecipe): MockObject {
-                self::assertInstanceOf(
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $subchef = $chef->reserveAndBegin($subRecipe, $this->createMock(CookingSupervisorInterface::class))
                 );
 
-                self::assertNotSame(
+                $this->assertNotSame(
                     $chef,
                     $subchef
                 );
@@ -249,12 +249,12 @@ abstract class AbstractChefTests extends TestCase
                 return $step;
             });
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->followSteps(['step' => $step])
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
@@ -307,7 +307,7 @@ abstract class AbstractChefTests extends TestCase
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl): MockObject {
                 $called = true;
-                self::assertInstanceOf(
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $chef->missing(
                         $this->createMock(IngredientInterface::class),
@@ -320,12 +320,12 @@ abstract class AbstractChefTests extends TestCase
 
         $chef->followSteps([$bowl]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
 
-        self::assertTrue($called);
+        $this->assertTrue($called);
     }
 
     public function testExceptionOnUpdateWorkPlanWithBadArray(): void
@@ -340,7 +340,7 @@ abstract class AbstractChefTests extends TestCase
         $chef->read($this->createMock(RecipeInterface::class));
         $chef->followSteps([$this->createMock(BowlInterface::class)]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->updateWorkPlan(
                 ['foo' => 'bar']
@@ -366,8 +366,8 @@ abstract class AbstractChefTests extends TestCase
         $chef->read($this->createMock(RecipeInterface::class));
         $chef->followSteps([
             new Bowl(
-                static function ($foo): void {
-                    self::assertEquals(9, $foo->value);
+                function ($foo): void {
+                    $this->assertEquals(9, $foo->value);
                 },
                 [],
             )
@@ -396,7 +396,7 @@ abstract class AbstractChefTests extends TestCase
         $c2->value = 3;
         $c3->value = 5;
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->merge(
                 'foo',
@@ -404,7 +404,7 @@ abstract class AbstractChefTests extends TestCase
             )
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->merge(
                 'foo',
@@ -412,7 +412,7 @@ abstract class AbstractChefTests extends TestCase
             )
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->merge(
                 'foo',
@@ -422,7 +422,7 @@ abstract class AbstractChefTests extends TestCase
 
         $chef->process([]);
 
-        self::assertEquals(9, $c1->value);
+        $this->assertEquals(9, $c1->value);
     }
 
     public function testMergeWithNonMergeable(): void
@@ -431,7 +431,7 @@ abstract class AbstractChefTests extends TestCase
         $chef->read($this->createMock(RecipeInterface::class));
         $chef->followSteps([$this->createMock(BowlInterface::class)]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->updateWorkPlan(
                 ['foo' => new stdClass()]
@@ -451,14 +451,14 @@ abstract class AbstractChefTests extends TestCase
         $chef->read($this->createMock(RecipeInterface::class));
         $chef->followSteps([$this->createMock(BowlInterface::class)]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->updateWorkPlan(
                 ['foo' => $this->createMock(MergeableInterface::class)]
             )
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->updateWorkPlan(
                 ['foo' => new stdClass()]
@@ -484,7 +484,7 @@ abstract class AbstractChefTests extends TestCase
         $chef->read($this->createMock(RecipeInterface::class));
         $chef->followSteps([$this->createMock(BowlInterface::class)]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->cleanWorkPlan(
                 'foo',
@@ -501,7 +501,7 @@ abstract class AbstractChefTests extends TestCase
 
     public function testFollowSteps(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $this->buildChef()->followSteps(
                 ['foo' => 'bar']
@@ -511,7 +511,7 @@ abstract class AbstractChefTests extends TestCase
 
     public function testFollowStepsWithErrorAsArray(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $this->buildChef()->followSteps(
                 ['foo' => 'bar'],
@@ -522,7 +522,7 @@ abstract class AbstractChefTests extends TestCase
 
     public function testFollowStepsWithErrorAsBowl(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $this->buildChef()->followSteps(
                 ['foo' => 'bar'],
@@ -554,8 +554,8 @@ abstract class AbstractChefTests extends TestCase
             ->method('execute')
             ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl): MockObject {
                 $called = true;
-                self::assertEquals(['foo' => 'bar'], $workPlan);
-                self::assertInstanceOf(
+                $this->assertEquals(['foo' => 'bar'], $workPlan);
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $chef->continue(
                         ['foo' => 'bar2']
@@ -569,19 +569,19 @@ abstract class AbstractChefTests extends TestCase
         $bowl2->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl2): MockObject {
-                self::assertEquals(['foo' => 'bar2'], $workPlan);
+                $this->assertEquals(['foo' => 'bar2'], $workPlan);
 
                 return $bowl2;
             });
 
         $chef->followSteps([$bowl, $bowl2]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
 
-        self::assertTrue($called);
+        $this->assertTrue($called);
     }
 
     public function testExceptionWithoutExceptionBowlDefined(): void
@@ -603,7 +603,7 @@ abstract class AbstractChefTests extends TestCase
 
         $chef->followSteps([$bowl, $bowl2]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
@@ -626,7 +626,7 @@ abstract class AbstractChefTests extends TestCase
         $errorBowl->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function ($chef, array &$workPlan) use (&$called, $errorBowl): MockObject {
-                self::assertInstanceOf(RuntimeException::class, $workPlan['exception']);
+                $this->assertInstanceOf(RuntimeException::class, $workPlan['exception']);
                 $called = true;
 
                 return $errorBowl;
@@ -638,12 +638,12 @@ abstract class AbstractChefTests extends TestCase
 
         $chef->followSteps([$bowl, $bowl2], $errorBowl);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
 
-        self::assertTrue($called);
+        $this->assertTrue($called);
     }
 
     public function testExceptionWithSeveralExceptionBowlDefined(): void
@@ -663,7 +663,7 @@ abstract class AbstractChefTests extends TestCase
         $errorBowl1->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function ($chef, array &$workPlan) use (&$called, $errorBowl1): MockObject {
-                self::assertInstanceOf(RuntimeException::class, $workPlan['exception']);
+                $this->assertInstanceOf(RuntimeException::class, $workPlan['exception']);
                 $called = true;
 
                 return $errorBowl1;
@@ -673,7 +673,7 @@ abstract class AbstractChefTests extends TestCase
         $errorBowl2->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function ($chef, array &$workPlan) use (&$called, $errorBowl2): MockObject {
-                self::assertInstanceOf(RuntimeException::class, $workPlan['exception']);
+                $this->assertInstanceOf(RuntimeException::class, $workPlan['exception']);
                 $called = true;
 
                 return $errorBowl2;
@@ -685,12 +685,12 @@ abstract class AbstractChefTests extends TestCase
 
         $chef->followSteps([$bowl1, $bowl2], [$errorBowl1, $errorBowl2]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
 
-        self::assertTrue($called);
+        $this->assertTrue($called);
     }
 
     public function testContinueNextStep(): void
@@ -704,8 +704,8 @@ abstract class AbstractChefTests extends TestCase
             ->method('execute')
             ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl): MockObject {
                 $called = true;
-                self::assertEquals(['foo' => 'bar'], $workPlan);
-                self::assertInstanceOf(
+                $this->assertEquals(['foo' => 'bar'], $workPlan);
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $chef->continue(
                         ['foo' => 'bar2'],
@@ -724,19 +724,19 @@ abstract class AbstractChefTests extends TestCase
         $bowl3->expects($this->once())
             ->method('execute')
             ->willReturnCallback(function ($chefPassed, $workPlan) use ($chef, &$called, $bowl3): MockObject {
-                self::assertEquals(['foo' => 'bar2'], $workPlan);
+                $this->assertEquals(['foo' => 'bar2'], $workPlan);
 
                 return $bowl3;
             });
 
         $chef->followSteps(['bowl' => $bowl, 'bowl2' => $bowl2, 'bowl3' => $bowl3]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
 
-        self::assertTrue($called);
+        $this->assertTrue($called);
     }
 
     public function testFinish(): void
@@ -750,7 +750,7 @@ abstract class AbstractChefTests extends TestCase
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl): MockObject {
                 $called = true;
-                self::assertInstanceOf(
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $chef->finish(
                         ['foo' => 'bar']
@@ -762,12 +762,12 @@ abstract class AbstractChefTests extends TestCase
 
         $chef->followSteps([$bowl]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
 
-        self::assertTrue($called);
+        $this->assertTrue($called);
     }
 
     public function testInterruptCooking(): void
@@ -781,7 +781,7 @@ abstract class AbstractChefTests extends TestCase
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl): MockObject {
                 $called = true;
-                self::assertInstanceOf(
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $chef->interruptCooking()
                 );
@@ -791,18 +791,18 @@ abstract class AbstractChefTests extends TestCase
 
         $chef->followSteps([$bowl]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
 
-        self::assertTrue($called);
+        $this->assertTrue($called);
     }
 
     public function testStopErrorReporting(): void
     {
         $chef = $this->buildChef();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->stopErrorReporting()
         );
@@ -820,7 +820,7 @@ abstract class AbstractChefTests extends TestCase
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl): MockObject {
                 $called = true;
-                self::assertInstanceOf(
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $chef->error(
                         new Exception('foo')
@@ -833,12 +833,12 @@ abstract class AbstractChefTests extends TestCase
         $chef->followSteps([$bowl]);
 
         $this->expectException(Exception::class);
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
 
-        self::assertTrue($called);
+        $this->assertTrue($called);
     }
 
     public function testErrorWithCatcher(): void
@@ -852,7 +852,7 @@ abstract class AbstractChefTests extends TestCase
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl): MockObject {
                 $called = true;
-                self::assertInstanceOf(
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $chef->error(
                         new Exception('foo')
@@ -869,12 +869,12 @@ abstract class AbstractChefTests extends TestCase
 
         $chef->followSteps([$bowl], [$errorBowl]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
 
-        self::assertTrue($called);
+        $this->assertTrue($called);
     }
 
     public function testErrorWithBadThrowable(): void
@@ -897,7 +897,7 @@ abstract class AbstractChefTests extends TestCase
         $chef->read($this->createMock(RecipeInterface::class));
         $chef->followSteps([$this->createMock(BowlInterface::class)]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(
                 ['foo' => 'bar']
@@ -919,7 +919,7 @@ abstract class AbstractChefTests extends TestCase
         $recipe->expects($this->once())
             ->method('prepare')
             ->willReturnCallback(function ($workPlan, ChefInterface $chef) use ($recipe, $ingredient): MockObject {
-                self::assertInstanceOf(
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $chef->missing($ingredient, 'Error')
                 );

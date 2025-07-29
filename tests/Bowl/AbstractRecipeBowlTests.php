@@ -123,7 +123,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
 
         $bowl = $this->buildBowl($recipe, $counter);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractRecipeBowl::class,
             $bowl->execute(
                 $chef,
@@ -144,7 +144,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
                     $workplan['bowl']->stopLooping();
                 }
 
-                self::assertEquals('bar', $workplan['foo']);
+                $this->assertEquals('bar', $workplan['foo']);
                 return $counter;
             });
 
@@ -172,7 +172,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
 
         $bowl = $this->buildBowl($recipe, $counter);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractRecipeBowl::class,
             $bowl->execute(
                 $chef,
@@ -181,7 +181,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
             )
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             ['foo' => 'bar'],
             $workplan
         );
@@ -216,7 +216,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
 
         $bowl = $this->buildBowl($recipe, $counter);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractRecipeBowl::class,
             $bowl->execute(
                 $chef,
@@ -237,7 +237,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
                     $workplan['bowl']->stopLooping();
                 }
 
-                self::assertEquals('bar', $workplan['foo']);
+                $this->assertEquals('bar', $workplan['foo']);
                 return $counter;
             });
 
@@ -265,7 +265,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
 
         $bowl = $this->buildBowl($recipe, $counter);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             AbstractRecipeBowl::class,
             $bowl->execute(
                 $chef,
@@ -274,7 +274,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
             )
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             ['foo' => 'bar'],
             $workplan
         );

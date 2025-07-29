@@ -60,7 +60,7 @@ trait EditablePlanTestTrait
 
     public function testAddWithBowl(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EditablePlanInterface::class,
             $this->buildPlan()->add($this->createMock(BowlInterface::class), 1),
         );
@@ -68,7 +68,7 @@ trait EditablePlanTestTrait
 
     public function testAddWithStep(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EditablePlanInterface::class,
             $this->buildPlan()->add($this->createMock(Step::class), 1),
         );
@@ -76,7 +76,7 @@ trait EditablePlanTestTrait
 
     public function testAddWithCallable(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EditablePlanInterface::class,
             $this->buildPlan()->add(fn (): true => true, 1),
         );
@@ -90,7 +90,7 @@ trait EditablePlanTestTrait
 
     public function testAddErrorHandler(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             EditablePlanInterface::class,
             $this->buildPlan()->addErrorHandler(fn (): true => true),
         );
@@ -100,12 +100,12 @@ trait EditablePlanTestTrait
     {
         $plan = $this->buildPlan();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PlanInterface::class,
             $plan->train($this->createMock(ChefInterface::class))
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PlanInterface::class,
             $plan->train($this->createMock(ChefInterface::class))
         );
@@ -117,7 +117,7 @@ trait EditablePlanTestTrait
         $chef = $this->createMock(ChefInterface::class);
 
         $workplan = [];
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PlanInterface::class,
             $plan->prepare($workplan, $chef)
         );

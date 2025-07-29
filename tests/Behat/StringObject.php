@@ -38,7 +38,6 @@ class StringObject implements Stringable
 {
     /**
      * StringObject constructor.
-     * @param string $value
      */
     public function __construct(private string $value)
     {
@@ -56,6 +55,6 @@ class StringObject implements Stringable
 
     public function __toString(): string
     {
-        return (string) $this->value;
+        return $this->value;
     }
 }

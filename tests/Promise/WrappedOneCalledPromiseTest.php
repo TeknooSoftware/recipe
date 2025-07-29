@@ -50,15 +50,15 @@ final class WrappedOneCalledPromiseTest extends TestCase
         $promise1 = $this->createMock(PromiseInterface::class);
         $promise2 = $this->createMock(PromiseInterface::class);
 
-        $promise1->expects($this->any())->method('next')->willReturn($promise2);
+        $promise1->method('next')->willReturn($promise2);
 
         $wp = $this->buildPromise($promise1);
         $wp2 = $wp->next(
             $this->createMock(PromiseInterface::class)
         );
 
-        self::assertNotSame($wp, $wp2);
-        self::assertInstanceOf(
+        $this->assertNotSame($wp, $wp2);
+        $this->assertInstanceOf(
             WrappedOneCalledPromise::class,
             $wp2,
         );
@@ -71,7 +71,7 @@ final class WrappedOneCalledPromiseTest extends TestCase
         $promise->expects($this->once())->method('fetchResult')->willReturn('bar');
 
         $wp = $this->buildPromise($promise);
-        self::assertEquals(
+        $this->assertEquals(
             'bar',
             $wp(['foo', 'bar']),
         );
@@ -83,11 +83,11 @@ final class WrappedOneCalledPromiseTest extends TestCase
         $promise->expects($this->once())->method('success')->with('foo', 'bar')->willReturnSelf();
 
         $wp = $this->buildPromise($promise);
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             WrappedOneCalledPromise::class,
             $wp->success('foo', 'bar'),
         );
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             WrappedOneCalledPromise::class,
             $wp->success('foo', 'bar'),
         );
@@ -100,11 +100,11 @@ final class WrappedOneCalledPromiseTest extends TestCase
         $promise->expects($this->once())->method('fail')->with($excp)->willReturnSelf();
 
         $wp = $this->buildPromise($promise);
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             WrappedOneCalledPromise::class,
             $wp->fail($excp),
         );
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             WrappedOneCalledPromise::class,
             $wp->fail($excp),
         );
@@ -116,7 +116,7 @@ final class WrappedOneCalledPromiseTest extends TestCase
 
         $wp = $this->buildPromise($promise);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             WrappedOneCalledPromise::class,
             $wp->setDefaultResult('foo'),
         );
@@ -125,10 +125,10 @@ final class WrappedOneCalledPromiseTest extends TestCase
     {
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects($this->any())->method('fetchResult')->with('bar')->willReturn('foo');
+        $promise->method('fetchResult')->with('bar')->willReturn('foo');
 
         $wp = $this->buildPromise($promise);
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             $wp->fetchResult('bar'),
         );
@@ -137,10 +137,10 @@ final class WrappedOneCalledPromiseTest extends TestCase
     {
         $promise = $this->createMock(PromiseInterface::class);
 
-        $promise->expects($this->any())->method('fetchResultIfCalled')->willReturn('foo');
+        $promise->method('fetchResultIfCalled')->willReturn('foo');
 
         $wp = $this->buildPromise($promise);
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             $wp->fetchResultIfCalled(),
         );

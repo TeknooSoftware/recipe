@@ -60,7 +60,7 @@ abstract class AbstractDishTests extends TestCase
             ->expects($this->never())
             ->method('fail');
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             DishInterface::class,
             $this->buildDish()->isExcepted(
                 $this->getExceptedValue()
@@ -79,7 +79,7 @@ abstract class AbstractDishTests extends TestCase
             ->method('fail')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             DishInterface::class,
             $this->buildDish()->isExcepted(
                 new stdClass()

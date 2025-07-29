@@ -108,7 +108,7 @@ final class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
             ->method('updateWorkPlan');
 
         $values = $this->getValidWorkPlan();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             $this->buildBowl()->execute(
                 $chef,
@@ -134,7 +134,7 @@ final class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
             ->method('updateWorkPlan');
 
         $values = $this->getValidWorkPlan();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             $this->buildBowlWithMappingValue()->execute(
                 $chef,

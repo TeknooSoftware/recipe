@@ -52,12 +52,12 @@ trait BasePlanTestTrait
     {
         $plan = $this->buildPlan();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PlanInterface::class,
             $plan->train($this->createMock(ChefInterface::class))
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PlanInterface::class,
             $plan->train($this->createMock(ChefInterface::class))
         );
@@ -83,7 +83,7 @@ trait BasePlanTestTrait
         $chef = $this->createMock(ChefInterface::class);
 
         $workplan = [];
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PlanInterface::class,
             $plan->prepare($workplan, $chef)
         );
@@ -91,7 +91,7 @@ trait BasePlanTestTrait
 
     public function testValidate(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PlanInterface::class,
             $this->buildPlan()->validate('foo')
         );
@@ -106,7 +106,7 @@ trait BasePlanTestTrait
 
     public function testFillWithRecipe(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PlanInterface::class,
             $this->buildPlan()->fill($this->createMock(RecipeInterface::class))
         );
@@ -121,7 +121,7 @@ trait BasePlanTestTrait
 
     public function testAddToWorkplanWithRecipe(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             PlanInterface::class,
             $this->buildPlan()->addToWorkplan(
                 'foo',

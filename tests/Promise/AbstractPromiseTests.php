@@ -70,7 +70,7 @@ abstract class AbstractPromiseTests extends TestCase
 
     public function testConstructor(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $this->buildPromise(
                 onSuccess: function (): void {
@@ -83,7 +83,7 @@ abstract class AbstractPromiseTests extends TestCase
 
     public function testConstructorAtNull(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $this->buildPromise(onSuccess: null, onFail: null)
         );
@@ -127,8 +127,8 @@ abstract class AbstractPromiseTests extends TestCase
         );
         $nextPromise = $promise->next(null);
 
-        self::assertInstanceOf(expected: PromiseInterface::class, actual: $nextPromise);
-        self::assertNotSame(expected: $promise, actual: $nextPromise);
+        $this->assertInstanceOf(expected: PromiseInterface::class, actual: $nextPromise);
+        $this->assertNotSame(expected: $promise, actual: $nextPromise);
     }
 
     public function testNextSetCallable(): void
@@ -142,8 +142,8 @@ abstract class AbstractPromiseTests extends TestCase
         );
         $nextPromise = $promise->next($this->createMock(PromiseInterface::class));
 
-        self::assertInstanceOf(expected: PromiseInterface::class, actual: $nextPromise);
-        self::assertNotSame(expected: $promise, actual: $nextPromise);
+        $this->assertInstanceOf(expected: PromiseInterface::class, actual: $nextPromise);
+        $this->assertNotSame(expected: $promise, actual: $nextPromise);
     }
 
     public function testNextSetCallableNotAllowed(): void
@@ -166,7 +166,7 @@ abstract class AbstractPromiseTests extends TestCase
         $promiseWithCallback = $this->buildPromise(
             onSuccess: function ($result) use (&$called): void {
                 $called = true;
-                self::assertEquals(expected: 'foo', actual: $result);
+                $this->assertEquals(expected: 'foo', actual: $result);
             },
             onFail: function (): void {
                 self::fail('Error, fail callback must not be called');
@@ -174,12 +174,12 @@ abstract class AbstractPromiseTests extends TestCase
             allowNext: true
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $promiseWithCallback->success('foo')
         );
 
-        self::assertTrue(condition: $called, message: 'Error the success callback must be called');
+        $this->assertTrue(condition: $called, message: 'Error the success callback must be called');
 
         $promiseWithoutSuccessCallback = $this->buildPromise(
             onSuccess: null,
@@ -188,7 +188,7 @@ abstract class AbstractPromiseTests extends TestCase
             }
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $promiseWithoutSuccessCallback->success('foo')
         );
@@ -200,8 +200,8 @@ abstract class AbstractPromiseTests extends TestCase
         $promiseWithCallback = $this->buildPromise(
             onSuccess: function ($result, $next) use (&$called): void {
                 $called = true;
-                self::assertEquals(expected: 'foo', actual: $result);
-                self::assertInstanceOf(
+                $this->assertEquals(expected: 'foo', actual: $result);
+                $this->assertInstanceOf(
                     expected: PromiseInterface::class,
                     actual: $next
                 );
@@ -213,12 +213,12 @@ abstract class AbstractPromiseTests extends TestCase
             allowNext: true
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $promiseWithCallback->success('foo')
         );
 
-        self::assertTrue(condition: $called, message: 'Error the success callback must be called');
+        $this->assertTrue(condition: $called, message: 'Error the success callback must be called');
     }
 
     public function testSuccessWithNextNotAllowed(): void
@@ -227,8 +227,8 @@ abstract class AbstractPromiseTests extends TestCase
         $promiseWithCallback = $this->buildPromise(
             onSuccess: function ($result, $next = null) use (&$called): void {
                 $called = true;
-                self::assertEquals(expected: 'foo', actual: $result);
-                self::assertNull($next);
+                $this->assertEquals(expected: 'foo', actual: $result);
+                $this->assertNull($next);
             },
             onFail: function (): void {
                 self::fail('Error, fail callback must not be called');
@@ -236,12 +236,12 @@ abstract class AbstractPromiseTests extends TestCase
             allowNext: false,
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $promiseWithCallback->success('foo')
         );
 
-        self::assertTrue(condition: $called, message: 'Error the success callback must be called');
+        $this->assertTrue(condition: $called, message: 'Error the success callback must be called');
     }
 
     public function testSuccessWithNexDefined(): void
@@ -250,8 +250,8 @@ abstract class AbstractPromiseTests extends TestCase
         $promiseWithCallback = $this->buildPromise(
             onSuccess: function ($result, $next) use (&$called): void {
                 ++$called;
-                self::assertEquals(expected: 'foo', actual: $result);
-                self::assertInstanceOf(
+                $this->assertEquals(expected: 'foo', actual: $result);
+                $this->assertInstanceOf(
                     expected: PromiseInterface::class,
                     actual: $next
                 );
@@ -265,12 +265,12 @@ abstract class AbstractPromiseTests extends TestCase
 
         $promiseWithCallback = $promiseWithCallback->next($promiseWithCallback);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $promiseWithCallback->success('foo')
         );
 
-        self::assertEquals(expected: 2, actual: $called, message: 'Error the success callback must be called');
+        $this->assertEquals(expected: 2, actual: $called, message: 'Error the success callback must be called');
     }
 
     public function testFail(): void
@@ -282,16 +282,16 @@ abstract class AbstractPromiseTests extends TestCase
             },
             onFail: function ($result) use (&$called): void {
                 $called = true;
-                self::assertEquals(expected: new Exception('fooBar'), actual: $result);
+                $this->assertEquals(expected: new Exception('fooBar'), actual: $result);
             },
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $promiseWithCallback->fail(new Exception('fooBar'))
         );
 
-        self::assertTrue(condition: $called, message: 'Error the success callback must be called');
+        $this->assertTrue(condition: $called, message: 'Error the success callback must be called');
 
         $promiseWithoutSuccessCallback = $this->buildPromise(
             onSuccess: function (): void {
@@ -300,7 +300,7 @@ abstract class AbstractPromiseTests extends TestCase
             onFail: null
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $promiseWithoutSuccessCallback->fail(new Exception('fooBar'))
         );
@@ -315,8 +315,8 @@ abstract class AbstractPromiseTests extends TestCase
             },
             onFail: function ($result, $next) use (&$called): void {
                 $called = true;
-                self::assertEquals(expected: new Exception('fooBar'), actual: $result);
-                self::assertInstanceOf(
+                $this->assertEquals(expected: new Exception('fooBar'), actual: $result);
+                $this->assertInstanceOf(
                     expected: PromiseInterface::class,
                     actual: $next
                 );
@@ -325,12 +325,12 @@ abstract class AbstractPromiseTests extends TestCase
             allowNext: true,
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $promiseWithCallback->fail(new Exception('fooBar'))
         );
 
-        self::assertTrue(condition: $called, message: 'Error the success callback must be called');
+        $this->assertTrue(condition: $called, message: 'Error the success callback must be called');
     }
 
     public function testFailWithNextNotAllowed(): void
@@ -342,18 +342,18 @@ abstract class AbstractPromiseTests extends TestCase
             },
             onFail: function ($result, $next = null) use (&$called): void {
                 $called = true;
-                self::assertEquals(expected: new Exception('fooBar'), actual: $result);
-                self::assertNull($next);
+                $this->assertEquals(expected: new Exception('fooBar'), actual: $result);
+                $this->assertNull($next);
             },
             allowNext: false,
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $promiseWithCallback->fail(new Exception('fooBar'))
         );
 
-        self::assertTrue(condition: $called, message: 'Error the success callback must be called');
+        $this->assertTrue(condition: $called, message: 'Error the success callback must be called');
     }
 
     public function testFailWithNextDefined(): void
@@ -365,8 +365,8 @@ abstract class AbstractPromiseTests extends TestCase
             },
             onFail: function ($result, $next) use (&$called): void {
                 ++$called;
-                self::assertEquals(expected: new Exception('fooBar'), actual: $result);
-                self::assertInstanceOf(
+                $this->assertEquals(expected: new Exception('fooBar'), actual: $result);
+                $this->assertInstanceOf(
                     expected: PromiseInterface::class,
                     actual: $next
                 );
@@ -377,17 +377,17 @@ abstract class AbstractPromiseTests extends TestCase
 
         $promiseWithCallback = $promiseWithCallback->next($promiseWithCallback);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $promiseWithCallback->fail(new Exception('fooBar'))
         );
 
-        self::assertEquals(expected: 2, actual: $called, message: 'Error the success callback must be called');
+        $this->assertEquals(expected: 2, actual: $called, message: 'Error the success callback must be called');
     }
 
     public function testSetDefaultResult(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             expected: PromiseInterface::class,
             actual: $this->buildPromise(
                 onSuccess: function (): void {
@@ -400,7 +400,7 @@ abstract class AbstractPromiseTests extends TestCase
 
     public function testFetchResultNotCalled(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             expected: 'default',
             actual: $this->buildPromise(
                 onSuccess: function (): void {
@@ -413,7 +413,7 @@ abstract class AbstractPromiseTests extends TestCase
 
     public function testFetchResultNotCalledWithCallableAsResult(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             expected: 'default',
             actual: $this->buildPromise(
                 onSuccess: function (): void {
@@ -429,10 +429,10 @@ abstract class AbstractPromiseTests extends TestCase
         $promise = $this->buildPromise(onSuccess: null, onFail: null);
 
         $promise->success();
-        self::assertNull($promise->fetchResult('default'));
+        $this->assertNull($promise->fetchResult('default'));
 
         $promise->fail(new Exception('foo'));
-        self::assertNull($promise->fetchResult('default'));
+        $this->assertNull($promise->fetchResult('default'));
     }
 
     public function testFetchResultCalled(): void
@@ -440,10 +440,10 @@ abstract class AbstractPromiseTests extends TestCase
         $promise = $this->buildPromise(onSuccess: fn (): string => 'foo', onFail: fn (): string => 'bar');
 
         $promise->success();
-        self::assertEquals(expected: 'foo', actual: $promise->fetchResult('default'));
+        $this->assertEquals(expected: 'foo', actual: $promise->fetchResult('default'));
 
         $promise->fail(new Exception('foo'));
-        self::assertEquals(expected: 'bar', actual: $promise->fetchResult('default'));
+        $this->assertEquals(expected: 'bar', actual: $promise->fetchResult('default'));
     }
 
     public function testFetchResultWithNestedPromise(): void
@@ -461,10 +461,10 @@ abstract class AbstractPromiseTests extends TestCase
 
         $promise = $promise->next($promiseNested);
         $promise->success();
-        self::assertEquals(expected: 'foo', actual: $promise->fetchResult());
+        $this->assertEquals(expected: 'foo', actual: $promise->fetchResult());
 
         $promise->fail(new Exception('foo'));
-        self::assertEquals(expected: 'bar', actual: $promise->fetchResult());
+        $this->assertEquals(expected: 'bar', actual: $promise->fetchResult());
     }
 
     public function testFetchResultWithNonCalledNestedPromise(): void
@@ -480,10 +480,10 @@ abstract class AbstractPromiseTests extends TestCase
 
         $promise = $promise->next(promise: $promiseNested, autoCall: false);
         $promise->success();
-        self::assertNull($promise->fetchResult());
+        $this->assertNull($promise->fetchResult());
 
         $promise->fail(new Exception('foo'));
-        self::assertNull($promise->fetchResult());
+        $this->assertNull($promise->fetchResult());
     }
 
     public function testFetchResultWithNonCalledNestedPromiseWithAutoCall(): void
@@ -499,15 +499,15 @@ abstract class AbstractPromiseTests extends TestCase
 
         $promise = $promise->next(promise: $promiseNested, autoCall: true);
         $promise->success();
-        self::assertEquals(expected: 'foo', actual: $promise->fetchResult());
+        $this->assertEquals(expected: 'foo', actual: $promise->fetchResult());
 
         $promise->fail(new Exception('foo'));
-        self::assertEquals(expected: 'bar', actual: $promise->fetchResult());
+        $this->assertEquals(expected: 'bar', actual: $promise->fetchResult());
     }
 
     public function testFetchResultWithSetDefaultResultOnlyNotCalled(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             expected: 'default',
             actual: $this->buildPromise(
                 onSuccess: function (): void {
@@ -521,7 +521,7 @@ abstract class AbstractPromiseTests extends TestCase
 
     public function testFetchResultNotCalledWithSetDefaultWithCallableAsResult(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             expected: 'default',
             actual: $this->buildPromise(
                 onSuccess: function (): void {
@@ -538,13 +538,13 @@ abstract class AbstractPromiseTests extends TestCase
         $promise = $this->buildPromise(onSuccess: null, onFail: null);
 
         $promise->success();
-        self::assertNull(
+        $this->assertNull(
             $promise->setDefaultResult('default')
                 ->fetchResult()
         );
 
         $promise->fail(new Exception('foo'));
-        self::assertNull(
+        $this->assertNull(
             $promise->setDefaultResult('default')
                 ->fetchResult()
         );
@@ -555,14 +555,14 @@ abstract class AbstractPromiseTests extends TestCase
         $promise = $this->buildPromise(onSuccess: fn (): string => 'foo', onFail: fn (): string => 'bar');
 
         $promise->success();
-        self::assertEquals(
+        $this->assertEquals(
             expected: 'foo',
             actual: $promise->setDefaultResult('default')
                 ->fetchResult()
         );
 
         $promise->fail(new Exception('foo'));
-        self::assertEquals(
+        $this->assertEquals(
             expected: 'bar',
             actual: $promise->setDefaultResult('default')
                 ->fetchResult()
@@ -571,7 +571,7 @@ abstract class AbstractPromiseTests extends TestCase
 
     public function testFetchResultWithSetDefaultResultAndDefaultNotCalled(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             expected: 'default',
             actual: $this->buildPromise(
                 onSuccess: function (): void {
@@ -588,13 +588,13 @@ abstract class AbstractPromiseTests extends TestCase
         $promise = $this->buildPromise(onSuccess: null, onFail: null);
 
         $promise->success();
-        self::assertNull(
+        $this->assertNull(
             $promise->setDefaultResult('another')
                 ->fetchResult('default')
         );
 
         $promise->fail(new Exception('foo'));
-        self::assertNull(
+        $this->assertNull(
             $promise->setDefaultResult('another')
                 ->fetchResult('default')
         );
@@ -605,14 +605,14 @@ abstract class AbstractPromiseTests extends TestCase
         $promise = $this->buildPromise(onSuccess: fn (): string => 'foo', onFail: fn (): string => 'bar');
 
         $promise->success();
-        self::assertEquals(
+        $this->assertEquals(
             expected: 'foo',
             actual: $promise->setDefaultResult('another')
                 ->fetchResult('default')
         );
 
         $promise->fail(new Exception('foo'));
-        self::assertEquals(
+        $this->assertEquals(
             expected: 'bar',
             actual: $promise->setDefaultResult('anotheer')
                 ->fetchResult('default')
@@ -635,10 +635,10 @@ abstract class AbstractPromiseTests extends TestCase
         $promise = $this->buildPromise(onSuccess: null, onFail: null);
 
         $promise->success();
-        self::assertNull($promise->fetchResultIfCalled());
+        $this->assertNull($promise->fetchResultIfCalled());
 
         $promise->fail(new Exception('foo'));
-        self::assertNull($promise->fetchResultIfCalled());
+        $this->assertNull($promise->fetchResultIfCalled());
     }
 
     public function testFetchResultIfCalledCalled(): void
@@ -646,10 +646,10 @@ abstract class AbstractPromiseTests extends TestCase
         $promise = $this->buildPromise(onSuccess: fn (): string => 'foo', onFail: fn (): string => 'bar');
 
         $promise->success();
-        self::assertEquals(expected: 'foo', actual: $promise->fetchResultIfCalled());
+        $this->assertEquals(expected: 'foo', actual: $promise->fetchResultIfCalled());
 
         $promise->fail(new Exception('foo'));
-        self::assertEquals(expected: 'bar', actual: $promise->fetchResultIfCalled());
+        $this->assertEquals(expected: 'bar', actual: $promise->fetchResultIfCalled());
     }
 
     public function testWithSeveralNextWithoutAutoCall(): void
@@ -678,7 +678,7 @@ abstract class AbstractPromiseTests extends TestCase
             autoCall: false,
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             expected: 6,
             actual: $pm1->success(3)->fetchResult(),
         );
@@ -709,7 +709,7 @@ abstract class AbstractPromiseTests extends TestCase
             autoCall: true,
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             expected: 16,
             actual: $pm1->success(3)->fetchResult(),
         );
@@ -722,7 +722,7 @@ abstract class AbstractPromiseTests extends TestCase
             onFail: fn (Throwable $error): int|string => $error->getCode()
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             expected: 5,
             actual: $promise(2, 3),
         );
@@ -736,7 +736,7 @@ abstract class AbstractPromiseTests extends TestCase
             callOnFailOnException: true
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             expected: 204,
             actual: $promise(2, 3),
         );

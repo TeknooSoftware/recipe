@@ -124,8 +124,8 @@ class Recipe implements AutomatedInterface, RecipeInterface
     protected function listAssertions(): array
     {
         return [
-            (new Property(Draft::class))->with('compiled', new IsNull()),
-            (new Property(Written::class))->with('compiled', new IsNotNull()),
+            new Property(Draft::class)->with('compiled', new IsNull()),
+            new Property(Written::class)->with('compiled', new IsNotNull()),
         ];
     }
 

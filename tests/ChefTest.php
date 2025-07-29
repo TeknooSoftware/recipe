@@ -71,7 +71,7 @@ final class ChefTest extends AbstractChefTests
             ->method('train')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             new Chef($recipe)
         );
@@ -80,7 +80,7 @@ final class ChefTest extends AbstractChefTests
     {
         $topChef = $this->createMock(Chef::class);
         $topChefCalled = [];
-        $topChef->expects($this->any())
+        $topChef
             ->method('__call')
             ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled): MockObject {
                 $topChefCalled[$name] = true;
@@ -97,7 +97,7 @@ final class ChefTest extends AbstractChefTests
             ->method('execute')
             ->willReturnCallback(function () use ($chef, &$called, $bowl): MockObject {
                 $called = true;
-                self::assertInstanceOf(
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $chef->error(
                         new Exception('foo')
@@ -114,20 +114,20 @@ final class ChefTest extends AbstractChefTests
 
         $chef->followSteps([$bowl], [$errorBowl]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
 
-        self::assertTrue($called);
+        $this->assertTrue($called);
 
-        self::assertArrayHasKey('callErrors', $topChefCalled);
+        $this->assertArrayHasKey('callErrors', $topChefCalled);
     }
     public function testErrorWithCatcherWithTopChefButErrorReportingIsStopped(): void
     {
         $topChef = $this->createMock(Chef::class);
         $topChefCalled = [];
-        $topChef->expects($this->any())
+        $topChef
             ->method('__call')
             ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled): MockObject {
                 $topChefCalled[$name] = true;
@@ -145,7 +145,7 @@ final class ChefTest extends AbstractChefTests
             ->willReturnCallback(function () use ($chef, &$called, $bowl): MockObject {
                 $called = true;
                 $chef->stopErrorReporting();
-                self::assertInstanceOf(
+                $this->assertInstanceOf(
                     ChefInterface::class,
                     $chef->error(
                         new Exception('foo')
@@ -162,13 +162,13 @@ final class ChefTest extends AbstractChefTests
 
         $chef->followSteps([$bowl], [$errorBowl]);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             ChefInterface::class,
             $chef->process(['foo' => 'bar'])
         );
 
-        self::assertTrue($called);
+        $this->assertTrue($called);
 
-        self::assertArrayNotHasKey('callErrors', $topChefCalled);
+        $this->assertArrayNotHasKey('callErrors', $topChefCalled);
     }
 }

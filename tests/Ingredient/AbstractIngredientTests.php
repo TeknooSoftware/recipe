@@ -89,7 +89,7 @@ abstract class AbstractIngredientTests extends TestCase
             ->willReturnSelf();
 
         $a = $this->getWorkPlanValid();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
                 $a,
@@ -111,7 +111,7 @@ abstract class AbstractIngredientTests extends TestCase
             ->willReturnSelf();
 
         $a = $this->getWorkPlanValid();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredientWithoutName()->prepare(
                 $a,
@@ -139,7 +139,7 @@ abstract class AbstractIngredientTests extends TestCase
             ->willReturnSelf();
 
         $a = $this->getWorkPlanValid();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
                 $a,
@@ -161,7 +161,7 @@ abstract class AbstractIngredientTests extends TestCase
             ->willReturnSelf();
 
         $a = $this->getWorkPlanInvalidMissing();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
                 $a,
@@ -182,7 +182,7 @@ abstract class AbstractIngredientTests extends TestCase
             ->willReturnSelf();
 
         $a = $this->getWorkPlanKeyUnderAnotherName();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
                 $a,
@@ -204,7 +204,7 @@ abstract class AbstractIngredientTests extends TestCase
             ->willReturnSelf();
 
         $a = $this->getWorkPlanKeyUnderAnotherName();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredientWithoutName()->prepare(
                 $a,
@@ -226,7 +226,7 @@ abstract class AbstractIngredientTests extends TestCase
             ->willReturnSelf();
 
         $a = $this->getWorkPlanInvalidMissing();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient(
                 mandatory: false,
@@ -250,7 +250,7 @@ abstract class AbstractIngredientTests extends TestCase
             ->willReturnSelf();
 
         $a = $this->getWorkPlanInvalidNotInstanceOf();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
                 $a,

@@ -95,7 +95,7 @@ abstract class AbstractBowlTests extends TestCase
             ->method('updateWorkPlan');
 
         $values = $this->getValidWorkPlan();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             $this->buildBowl()->execute(
                 $chef,
@@ -123,7 +123,7 @@ abstract class AbstractBowlTests extends TestCase
             ->method('updateWorkPlan');
 
         $values = $this->getValidWorkPlan();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             $this->buildBowlWithMappingValue()->execute(
                 $chef,
@@ -151,7 +151,7 @@ abstract class AbstractBowlTests extends TestCase
             ->method('updateWorkPlan');
 
         $values = $this->getNotValidWorkPlan();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             $this->buildBowl()->execute(
                 $chef,

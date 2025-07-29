@@ -113,7 +113,7 @@ final class BowlClosureTest extends AbstractBowlTests
             'opt3' => 'foo',
         ];
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             $bowl->execute(
                 $chef,

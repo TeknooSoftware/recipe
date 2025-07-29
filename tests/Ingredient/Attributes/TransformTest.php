@@ -44,19 +44,19 @@ final class TransformTest extends TestCase
 {
     public function testEmptyClass(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Transform::class,
             new Transform()
         );
     }
     public function testValidClass(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Transform::class,
             $transform = new Transform(Transformable::class)
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             Transformable::class,
             $transform->getClassName()
         );
@@ -69,7 +69,7 @@ final class TransformTest extends TestCase
     public function testValidTransformer(): void
     {
         $callable = function (): void {};
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Transform::class,
             $transform = new Transform(
                 null,
@@ -77,7 +77,7 @@ final class TransformTest extends TestCase
             )
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             $callable,
             $transform->getTransformer()
         );

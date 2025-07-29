@@ -109,12 +109,12 @@ class Chef implements AutomatedInterface, ChefInterface
     protected function listAssertions(): array
     {
         return [
-            (new Property(Free::class))->with('recipe', new IsNull()),
-            (new Property(Free::class))->with('steps', new IsEqual([])),
-            (new Property(Trained::class))
+            new Property(Free::class)->with('recipe', new IsNull()),
+            new Property(Free::class)->with('steps', new IsEqual([])),
+            new Property(Trained::class)
                 ->with('recipe', new IsInstanceOf(BaseRecipeInterface::class))
                 ->with('steps', new IsNotEqual([])),
-            (new Property(Cooking::class))
+            new Property(Cooking::class)
                 ->with('recipe', new IsInstanceOf(BaseRecipeInterface::class))
                 ->with('steps', new IsNotEqual([]))
                 ->with('cooking', new IsEqual(true)),

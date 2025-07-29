@@ -68,7 +68,7 @@ final class RecipeTest extends AbstractRecipeTests
         $recipe = $recipe->cook('microtime', 'stepB', [], 1);
         $recipe = $recipe->cook('microtime', 'stepC', [], 2);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipe->train(
                 $chef

@@ -123,7 +123,7 @@ EOF;
             'opt3' => 'foo',
         ];
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             $bowl->execute(
                 $chef,

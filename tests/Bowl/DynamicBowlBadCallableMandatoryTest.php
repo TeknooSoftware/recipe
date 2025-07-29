@@ -57,7 +57,7 @@ final class DynamicBowlBadCallableMandatoryTest extends TestCase
         );
 
         $values = ['callableToExec' => 'foo'];
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             DynamicBowl::class,
             $bowl->execute(
                 $this->createMock(ChefInterface::class),

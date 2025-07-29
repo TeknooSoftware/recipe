@@ -48,14 +48,14 @@ final class BowlWithTransformableTest extends TestCase
     private bool $called = false;
     public function noTransform(string $param1, Transformable $param2): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             $param1
         );
 
-        self::assertInstanceOf(Transformable::class, $param2);
+        $this->assertInstanceOf(Transformable::class, $param2);
 
-        self::assertEquals(
+        $this->assertEquals(
             new Transformable(['foo' => 'bar']),
             $param2
         );
@@ -64,14 +64,14 @@ final class BowlWithTransformableTest extends TestCase
     }
     public function transformNoHinting(string $param1, #[Transform] mixed $param2): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             $param1
         );
 
-        self::assertIsArray($param2);
+        $this->assertIsArray($param2);
 
-        self::assertEquals(
+        $this->assertEquals(
             ['foo' => 'bar'],
             $param2
         );
@@ -80,14 +80,14 @@ final class BowlWithTransformableTest extends TestCase
     }
     public function transformHinting(string $param1, #[Transform] array $param2): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             $param1
         );
 
-        self::assertIsArray($param2);
+        $this->assertIsArray($param2);
 
-        self::assertEquals(
+        $this->assertEquals(
             ['foo' => 'bar'],
             $param2
         );
@@ -96,14 +96,14 @@ final class BowlWithTransformableTest extends TestCase
     }
     public function transformHintingWithClass(string $param1, #[Transform(Transformable::class)] array $anotherName): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             $param1
         );
 
-        self::assertIsArray($anotherName);
+        $this->assertIsArray($anotherName);
 
-        self::assertEquals(
+        $this->assertEquals(
             ['foo' => 'bar'],
             $anotherName
         );
@@ -122,14 +122,14 @@ final class BowlWithTransformableTest extends TestCase
         string $param1,
         #[Transform(null, [self::class, 'transformerToArray2'])] array $param2
     ): void {
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             $param1
         );
 
-        self::assertIsArray($param2);
+        $this->assertIsArray($param2);
 
-        self::assertEquals(
+        $this->assertEquals(
             ['foo', 'bar'],
             $param2
         );
@@ -140,14 +140,14 @@ final class BowlWithTransformableTest extends TestCase
         string $param1,
         #[Transform(Transformable::class, [self::class, 'transformerToArray'])] array $anotherName
     ): void {
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             $param1
         );
 
-        self::assertIsArray($anotherName);
+        $this->assertIsArray($anotherName);
 
-        self::assertEquals(
+        $this->assertEquals(
             ['foo', 'bar'],
             $anotherName
         );
@@ -163,7 +163,7 @@ final class BowlWithTransformableTest extends TestCase
 
         $this->called = false;
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             (new Bowl($this->noTransform(...), []))->execute(
                 $this->createMock(ChefInterface::class),
@@ -171,7 +171,7 @@ final class BowlWithTransformableTest extends TestCase
             )
         );
 
-        self::assertTrue($this->called);
+        $this->assertTrue($this->called);
     }
     public function testWithAttributeTransformWithoutTypeHinting(): void
     {
@@ -182,7 +182,7 @@ final class BowlWithTransformableTest extends TestCase
 
         $this->called = false;
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             (new Bowl($this->transformNoHinting(...), []))->execute(
                 $this->createMock(ChefInterface::class),
@@ -190,7 +190,7 @@ final class BowlWithTransformableTest extends TestCase
             )
         );
 
-        self::assertTrue($this->called);
+        $this->assertTrue($this->called);
     }
     public function testWithAttributeTransformWithTypeHinting(): void
     {
@@ -201,7 +201,7 @@ final class BowlWithTransformableTest extends TestCase
 
         $this->called = false;
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             (new Bowl($this->transformHinting(...), []))->execute(
                 $this->createMock(ChefInterface::class),
@@ -209,7 +209,7 @@ final class BowlWithTransformableTest extends TestCase
             )
         );
 
-        self::assertTrue($this->called);
+        $this->assertTrue($this->called);
     }
     public function testWithAttributeTransformWithTypeHintingWithClass(): void
     {
@@ -220,7 +220,7 @@ final class BowlWithTransformableTest extends TestCase
 
         $this->called = false;
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             (new Bowl($this->transformHintingWithClass(...), []))->execute(
                 $this->createMock(ChefInterface::class),
@@ -228,7 +228,7 @@ final class BowlWithTransformableTest extends TestCase
             )
         );
 
-        self::assertTrue($this->called);
+        $this->assertTrue($this->called);
     }
     public function testWithAttributeTransformWithTransformer(): void
     {
@@ -239,7 +239,7 @@ final class BowlWithTransformableTest extends TestCase
 
         $this->called = false;
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             (new Bowl($this->transformWithTransformer(...), []))->execute(
                 $this->createMock(ChefInterface::class),
@@ -247,7 +247,7 @@ final class BowlWithTransformableTest extends TestCase
             )
         );
 
-        self::assertTrue($this->called);
+        $this->assertTrue($this->called);
     }
     public function testWithAttributeTransformWithTypeHintingWithClassAndWithTransformer(): void
     {
@@ -258,7 +258,7 @@ final class BowlWithTransformableTest extends TestCase
 
         $this->called = false;
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             BowlInterface::class,
             (new Bowl($this->transformWithTransformer(...), []))->execute(
                 $this->createMock(ChefInterface::class),
@@ -266,6 +266,6 @@ final class BowlWithTransformableTest extends TestCase
             )
         );
 
-        self::assertTrue($this->called);
+        $this->assertTrue($this->called);
     }
 }

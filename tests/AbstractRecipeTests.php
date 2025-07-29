@@ -58,12 +58,12 @@ abstract class AbstractRecipeTests extends TestCase
             $this->createMock(IngredientInterface::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipeWithIngredient
         );
 
-        self::assertNotSame(
+        $this->assertNotSame(
             $recipe,
             $recipeWithIngredient
         );
@@ -105,12 +105,12 @@ abstract class AbstractRecipeTests extends TestCase
             'foo'
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipeWithStep
         );
 
-        self::assertNotSame(
+        $this->assertNotSame(
             $recipe,
             $recipeWithStep
         );
@@ -127,12 +127,12 @@ abstract class AbstractRecipeTests extends TestCase
             123
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipeWithStep
         );
 
-        self::assertNotSame(
+        $this->assertNotSame(
             $recipe,
             $recipeWithStep
         );
@@ -146,12 +146,12 @@ abstract class AbstractRecipeTests extends TestCase
             }
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipeWithError
         );
 
-        self::assertNotSame(
+        $this->assertNotSame(
             $recipe,
             $recipeWithError
         );
@@ -190,12 +190,12 @@ abstract class AbstractRecipeTests extends TestCase
             'foo'
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipeWithStep
         );
 
-        self::assertNotSame(
+        $this->assertNotSame(
             $recipe,
             $recipeWithStep
         );
@@ -210,12 +210,12 @@ abstract class AbstractRecipeTests extends TestCase
             inFiber: true
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipeWithStep
         );
 
-        self::assertNotSame(
+        $this->assertNotSame(
             $recipe,
             $recipeWithStep
         );
@@ -229,12 +229,12 @@ abstract class AbstractRecipeTests extends TestCase
             'foo'
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipeWithStep
         );
 
-        self::assertNotSame(
+        $this->assertNotSame(
             $recipe,
             $recipeWithStep
         );
@@ -248,12 +248,12 @@ abstract class AbstractRecipeTests extends TestCase
             'foo'
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipeWithStep
         );
 
-        self::assertNotSame(
+        $this->assertNotSame(
             $recipe,
             $recipeWithStep
         );
@@ -269,12 +269,12 @@ abstract class AbstractRecipeTests extends TestCase
             123
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipeWithStep
         );
 
-        self::assertNotSame(
+        $this->assertNotSame(
             $recipe,
             $recipeWithStep
         );
@@ -291,12 +291,12 @@ abstract class AbstractRecipeTests extends TestCase
             123
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipeWithStep
         );
 
-        self::assertNotSame(
+        $this->assertNotSame(
             $recipe,
             $recipeWithStep
         );
@@ -315,12 +315,12 @@ abstract class AbstractRecipeTests extends TestCase
             $this->createMock(DishInterface::class)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipeWithDish
         );
 
-        self::assertNotSame(
+        $this->assertNotSame(
             $recipe,
             $recipeWithDish
         );
@@ -334,7 +334,7 @@ abstract class AbstractRecipeTests extends TestCase
             ->with('fooBar')
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $this->buildRecipe()
                 ->given($dish)
@@ -347,7 +347,7 @@ abstract class AbstractRecipeTests extends TestCase
 
     public function testValidateDishWithoutDish(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $this->buildRecipe()
                 ->cook(function (): void {
@@ -371,7 +371,7 @@ abstract class AbstractRecipeTests extends TestCase
             ->with([])
             ->willReturnSelf();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $this->buildRecipe()->train(
                 $chef
@@ -406,23 +406,23 @@ abstract class AbstractRecipeTests extends TestCase
 
         $recipe = $this->buildRecipe();
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipe = $recipe->require($ingredient)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipe = $recipe->cook(function (): void {
             }, 'foo')
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipe = $recipe->train($chef)
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             RecipeInterface::class,
             $recipe = $recipe->prepare($workPlan, $chef)
         );

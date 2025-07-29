@@ -127,10 +127,10 @@ final class DynamicBowlParameterCacheBehaviorTest extends TestCase
         ];
 
         $bowl = $this->buildBowl();
-        self::assertInstanceOf(BowlInterface::class, $bowl->execute($chef, $values));
-        self::assertInstanceOf(BowlInterface::class, $bowl->execute($chef, $values));
+        $this->assertInstanceOf(BowlInterface::class, $bowl->execute($chef, $values));
+        $this->assertInstanceOf(BowlInterface::class, $bowl->execute($chef, $values));
 
         $values['callableToExec'] = $this->getCallableInvokable();
-        self::assertInstanceOf(BowlInterface::class, $bowl->execute($chef, $values));
+        $this->assertInstanceOf(BowlInterface::class, $bowl->execute($chef, $values));
     }
 }

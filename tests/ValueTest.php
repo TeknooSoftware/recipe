@@ -40,7 +40,7 @@ final class ValueTest extends TestCase
 {
     public function testGetValue(): void
     {
-        self::assertEquals(
+        $this->assertEquals(
             'foo',
             (new Value('foo'))->getValue(),
         );

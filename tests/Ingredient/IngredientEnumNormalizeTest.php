@@ -124,7 +124,7 @@ final class IngredientEnumNormalizeTest extends AbstractIngredientTests
             'ing_name' => 'val1'
         ];
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient(
                 requiredType: EnumExample::class,
@@ -147,7 +147,7 @@ final class IngredientEnumNormalizeTest extends AbstractIngredientTests
             ->willReturnSelf();
 
         $a = $this->getWorkPlanInvalidMissing();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient(
                 mandatory: false,

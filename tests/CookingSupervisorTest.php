@@ -64,7 +64,7 @@ final class CookingSupervisorTest extends TestCase
     }
     public function testClone(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             clone $this->buildSupervisor()
         );
@@ -78,7 +78,7 @@ final class CookingSupervisorTest extends TestCase
     }
     public function testSetParentSupervisor(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->setParentSupervisor(
                 $this->createMock(CookingSupervisorInterface::class),
@@ -94,7 +94,7 @@ final class CookingSupervisorTest extends TestCase
     }
     public function testSupervise(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->supervise(
                 new Fiber(function (): void {}),
@@ -122,7 +122,7 @@ final class CookingSupervisorTest extends TestCase
     }
     public function testManage(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->manage(
                 $this->createMock(CookingSupervisorInterface::class),
@@ -138,7 +138,7 @@ final class CookingSupervisorTest extends TestCase
     }
     public function testFree(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->free(
                 $this->createMock(CookingSupervisorInterface::class),
@@ -147,14 +147,14 @@ final class CookingSupervisorTest extends TestCase
     }
     public function testRewindLoop(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->rewindLoop()
         );
     }
     public function testSwitchEmpty(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->switch()
         );
@@ -169,15 +169,15 @@ final class CookingSupervisorTest extends TestCase
         );
         $f->start();
 
-        $this->getFiberIterator()->expects($this->any())->method('count')->willReturn(1);
-        $this->getFiberIterator()->expects($this->any())->method('valid')->willReturn(true);
-        $this->getFiberIterator()->expects($this->any())->method('current')->willReturn($f);
+        $this->getFiberIterator()->method('count')->willReturn(1);
+        $this->getFiberIterator()->method('valid')->willReturn(true);
+        $this->getFiberIterator()->method('current')->willReturn($f);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->switch('foo')
         );
-        self::assertEquals('foo', $a);
+        $this->assertEquals('foo', $a);
     }
     public function testSwitchWithNotStartedFiber(): void
     {
@@ -188,15 +188,15 @@ final class CookingSupervisorTest extends TestCase
             }
         );
 
-        $this->getFiberIterator()->expects($this->any())->method('count')->willReturn(1);
-        $this->getFiberIterator()->expects($this->any())->method('valid')->willReturn(true);
-        $this->getFiberIterator()->expects($this->any())->method('current')->willReturn($f);
+        $this->getFiberIterator()->method('count')->willReturn(1);
+        $this->getFiberIterator()->method('valid')->willReturn(true);
+        $this->getFiberIterator()->method('current')->willReturn($f);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->switch('foo')
         );
-        self::assertNull($a);
+        $this->assertNull($a);
     }
     public function testSwitchWithTerminatedFiber(): void
     {
@@ -206,12 +206,12 @@ final class CookingSupervisorTest extends TestCase
         );
         $f->start();
 
-        $this->getFiberIterator()->expects($this->any())->method('count')->willReturn(1);
-        $this->getFiberIterator()->expects($this->any())->method('valid')->willReturn(true);
-        $this->getFiberIterator()->expects($this->any())->method('current')->willReturn($f);
+        $this->getFiberIterator()->method('count')->willReturn(1);
+        $this->getFiberIterator()->method('valid')->willReturn(true);
+        $this->getFiberIterator()->method('current')->willReturn($f);
         $this->getFiberIterator()->expects($this->once())->method('remove')->with($f);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->switch('foo')
         );
@@ -221,18 +221,18 @@ final class CookingSupervisorTest extends TestCase
         $s = $this->createMock(CookingSupervisorInterface::class);
         $s->expects($this->once())->method('loop');
 
-        $this->getFiberIterator()->expects($this->any())->method('count')->willReturn(1);
-        $this->getFiberIterator()->expects($this->any())->method('valid')->willReturn(true);
-        $this->getFiberIterator()->expects($this->any())->method('current')->willReturn($s);
+        $this->getFiberIterator()->method('count')->willReturn(1);
+        $this->getFiberIterator()->method('valid')->willReturn(true);
+        $this->getFiberIterator()->method('current')->willReturn($s);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->switch('foo')
         );
     }
     public function testThrowEmpty(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->throw(new Exception(''))
         );
@@ -251,33 +251,33 @@ final class CookingSupervisorTest extends TestCase
         );
         $f->start();
 
-        $this->getFiberIterator()->expects($this->any())->method('count')->willReturn(1);
-        $this->getFiberIterator()->expects($this->any())->method('valid')->willReturn(true);
-        $this->getFiberIterator()->expects($this->any())->method('current')->willReturn($f);
+        $this->getFiberIterator()->method('count')->willReturn(1);
+        $this->getFiberIterator()->method('valid')->willReturn(true);
+        $this->getFiberIterator()->method('current')->willReturn($f);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->throw(new Exception('foo'))
         );
-        self::assertEquals('foo', $a);
+        $this->assertEquals('foo', $a);
     }
     public function testThrowWithSupervisor(): void
     {
         $s = $this->createMock(CookingSupervisorInterface::class);
         $s->expects($this->once())->method('throw');
 
-        $this->getFiberIterator()->expects($this->any())->method('count')->willReturn(1);
-        $this->getFiberIterator()->expects($this->any())->method('valid')->willReturn(true);
-        $this->getFiberIterator()->expects($this->any())->method('current')->willReturn($s);
+        $this->getFiberIterator()->method('count')->willReturn(1);
+        $this->getFiberIterator()->method('valid')->willReturn(true);
+        $this->getFiberIterator()->method('current')->willReturn($s);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->throw(new Exception('foo'))
         );
     }
     public function testLoopEmpty(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->loop()
         );
@@ -304,20 +304,20 @@ final class CookingSupervisorTest extends TestCase
         );
         $f2->start();
 
-        $this->getFiberIterator()->expects($this->any())->method('count')->willReturn(2);
-        $this->getFiberIterator()->expects($this->any())->method('valid')
+        $this->getFiberIterator()->method('count')->willReturn(2);
+        $this->getFiberIterator()->method('valid')
             ->willReturnOnConsecutiveCalls(true, true, false, true, false);
         $this->getFiberIterator()
-            ->expects($this->any())
+            
             ->method('current')
             ->willReturnOnConsecutiveCalls($f1, $f2);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->loop()
         );
-        self::assertEquals('foo', $a);
-        self::assertEquals('bar', $b);
+        $this->assertEquals('foo', $a);
+        $this->assertEquals('bar', $b);
     }
     public function testLoopWithSupervisor(): void
     {
@@ -327,21 +327,21 @@ final class CookingSupervisorTest extends TestCase
         $s2 = $this->createMock(CookingSupervisorInterface::class);
         $s2->expects($this->once())->method('loop');
 
-        $this->getFiberIterator()->expects($this->any())->method('count')->willReturn(2);
-        $this->getFiberIterator()->expects($this->any())->method('valid')
+        $this->getFiberIterator()->method('count')->willReturn(2);
+        $this->getFiberIterator()->method('valid')
             ->willReturnOnConsecutiveCalls(true, true, false, true, false)
             ->willReturn(true);
-        $this->getFiberIterator()->expects($this->any())->method('current')
+        $this->getFiberIterator()->method('current')
             ->willReturnOnConsecutiveCalls($s1, $s2, null, null, null);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->loop()
         );
     }
     public function testFinishEmpty(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->finish()
         );
@@ -368,7 +368,7 @@ final class CookingSupervisorTest extends TestCase
         );
         $f2->start();
 
-        $this->getFiberIterator()->expects($this->any())->method('count')->willReturn(2);
+        $this->getFiberIterator()->method('count')->willReturn(2);
         $this->getFiberIterator()->expects($this->exactly(2))->method('remove')
             ->with(
                 $this->callback(
@@ -379,19 +379,19 @@ final class CookingSupervisorTest extends TestCase
                     }
                 )
             );
-        $this->getFiberIterator()->expects($this->any())->method('valid')
+        $this->getFiberIterator()->method('valid')
             ->willReturnOnConsecutiveCalls(true, true, false, true, false);
         $this->getFiberIterator()
-            ->expects($this->any())
+            
             ->method('current')
             ->willReturnOnConsecutiveCalls($f1, $f2, $f2, null, null);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->finish()
         );
-        self::assertEquals('foo', $a);
-        self::assertEquals('barbar', $b);
+        $this->assertEquals('foo', $a);
+        $this->assertEquals('barbar', $b);
     }
     public function testFinishWithSupervisor(): void
     {
@@ -413,7 +413,7 @@ final class CookingSupervisorTest extends TestCase
             }
         );
 
-        $this->getFiberIterator()->expects($this->any())->method('count')->willReturn(2);
+        $this->getFiberIterator()->method('count')->willReturn(2);
         $this->getFiberIterator()->expects($this->exactly(2))->method('remove')
             ->with(
                 $this->callback(
@@ -424,12 +424,12 @@ final class CookingSupervisorTest extends TestCase
                     }
                 )
             );
-        $this->getFiberIterator()->expects($this->any())->method('valid')
+        $this->getFiberIterator()->method('valid')
             ->willReturnOnConsecutiveCalls(true, true, false, true, false);
-        $this->getFiberIterator()->expects($this->any())->method('current')
+        $this->getFiberIterator()->method('current')
             ->willReturnOnConsecutiveCalls($s1, $s2, null, null, null);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $supervisor->finish()
         );
@@ -442,11 +442,11 @@ final class CookingSupervisorTest extends TestCase
 
         $manager->expects($this->once())->method('free')->with($supervisor);
 
-        $this->getFiberIterator()->expects($this->any())->method('count')->willReturn(0);
-        $this->getFiberIterator()->expects($this->any())->method('valid')
+        $this->getFiberIterator()->method('count')->willReturn(0);
+        $this->getFiberIterator()->method('valid')
             ->willReturn(false);
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $supervisor->finish()
         );
@@ -514,50 +514,50 @@ final class CookingSupervisorTest extends TestCase
         $supervisor3->supervise($f4);
         $supervisor4->supervise($f5);
 
-        self::assertNull($a);
-        self::assertNull($b);
-        self::assertNull($c);
-        self::assertNull($d);
-        self::assertNull($e);
+        $this->assertNull($a);
+        $this->assertNull($b);
+        $this->assertNull($c);
+        $this->assertNull($d);
+        $this->assertNull($e);
 
         $supervisor1->switch('foo');
 
-        self::assertEquals('foo', $a);
-        self::assertNull($b);
-        self::assertNull($c);
-        self::assertNull($d);
-        self::assertNull($e);
+        $this->assertEquals('foo', $a);
+        $this->assertNull($b);
+        $this->assertNull($c);
+        $this->assertNull($d);
+        $this->assertNull($e);
 
         $supervisor1->switch('bar');
 
-        self::assertEquals('foo', $a);
-        self::assertEquals('bar', $b);
-        self::assertEquals('bar', $c);
-        self::assertNull($d);
-        self::assertEquals('bar', $e);
+        $this->assertEquals('foo', $a);
+        $this->assertEquals('bar', $b);
+        $this->assertEquals('bar', $c);
+        $this->assertNull($d);
+        $this->assertEquals('bar', $e);
 
         $supervisor1->loop('f00');
 
-        self::assertEquals('foo', $a);
-        self::assertEquals('bar', $b);
-        self::assertEquals('bar', $c);
-        self::assertEquals('f00', $d);
-        self::assertEquals('bar', $e);
+        $this->assertEquals('foo', $a);
+        $this->assertEquals('bar', $b);
+        $this->assertEquals('bar', $c);
+        $this->assertEquals('f00', $d);
+        $this->assertEquals('bar', $e);
 
         $supervisor1->loop('baar');
 
-        self::assertEquals('foo', $a);
-        self::assertEquals('barbaar', $b);
-        self::assertEquals('barbaar', $c);
-        self::assertEquals('f00', $d);
-        self::assertEquals('bar', $e);
+        $this->assertEquals('foo', $a);
+        $this->assertEquals('barbaar', $b);
+        $this->assertEquals('barbaar', $c);
+        $this->assertEquals('f00', $d);
+        $this->assertEquals('bar', $e);
 
         $supervisor1->finish('bye');
 
-        self::assertEquals('foo', $a);
-        self::assertEquals('barbaarbyebye', $b);
-        self::assertEquals('barbaarbye', $c);
-        self::assertEquals('f00', $d);
-        self::assertEquals('bar', $e);
+        $this->assertEquals('foo', $a);
+        $this->assertEquals('barbaarbyebye', $b);
+        $this->assertEquals('barbaarbye', $c);
+        $this->assertEquals('f00', $d);
+        $this->assertEquals('bar', $e);
     }
 }

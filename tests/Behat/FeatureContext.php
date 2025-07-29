@@ -143,9 +143,7 @@ class FeatureContext implements Context
                 $rp->setAccessible(false);
 
                 if (2 === $iterator->count()) {
-                    foreach ($iterator as $item) {
-                        Assert::assertInstanceOf(Fiber::class, $item);
-                    }
+                    Assert::assertContainsOnlyInstancesOf(Fiber::class, $iterator);
                 } else {
                     Assert::assertInstanceOf(Fiber::class, $iterator->current());
                     $iterator->next();
@@ -286,6 +284,7 @@ class FeatureContext implements Context
             if ($lastRecipe instanceof RecipeInterface) {
                 Assert::assertNotSame($lastRecipe, $recipe);
             }
+
             $lastRecipe = $recipe;
         }
     }

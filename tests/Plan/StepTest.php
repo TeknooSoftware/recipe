@@ -44,12 +44,12 @@ final class StepTest extends TestCase
             ['foo' => 'bar'],
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             Closure::class,
             $step->getStep(),
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             ['foo' => 'bar'],
             $step->getWith(),
         );

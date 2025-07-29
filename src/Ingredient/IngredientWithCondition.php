@@ -77,6 +77,7 @@ class IngredientWithCondition extends Ingredient
     /**
      * @param array<string, mixed> $workPlan
      */
+    #[\Override]
     public function prepare(
         array &$workPlan,
         ChefInterface $chef,

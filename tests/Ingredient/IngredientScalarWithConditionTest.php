@@ -55,7 +55,7 @@ final class IngredientScalarWithConditionTest extends AbstractIngredientTests
             ChefInterface $chef,
             ?IngredientBagInterface $bag = null,
         ): bool {
-            self::assertInstanceOf(ChefInterface::class, $chef);
+            $this->assertInstanceOf(ChefInterface::class, $chef);
             return empty($workplan['byPass']);
         };
 
@@ -147,7 +147,7 @@ final class IngredientScalarWithConditionTest extends AbstractIngredientTests
             ->method('updateWorkPlan');
 
         $a = $this->getWorkPlanValidAndByPass();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
                 $a,
@@ -174,7 +174,7 @@ final class IngredientScalarWithConditionTest extends AbstractIngredientTests
             ->willReturnSelf();
 
         $a = $this->getWorkPlanValidAndByPass();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
                 $a,
@@ -195,7 +195,7 @@ final class IngredientScalarWithConditionTest extends AbstractIngredientTests
             ->willReturnSelf();
 
         $a = $this->getWorkPlanInvalidMissingAndByPass();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
                 $a,
@@ -215,7 +215,7 @@ final class IngredientScalarWithConditionTest extends AbstractIngredientTests
             ->willReturnSelf();
 
         $a = $this->getWorkPlanInvalidNotInstanceOfAndByPass();
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $this->buildIngredient()->prepare(
                 $a,

@@ -137,7 +137,7 @@ final class IngredientScalarTest extends AbstractIngredientTests
             default: [],
         );
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientInterface::class,
             $ingredient->prepare(
                 $a,

@@ -55,7 +55,7 @@ final class IngredientBagTest extends TestCase
     }
     public function testSet(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientBagInterface::class,
             $this->buildBag()->set('foo', new stdClass())
         );
@@ -68,7 +68,7 @@ final class IngredientBagTest extends TestCase
     }
     public function testUpdateWorkPlan(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             IngredientBagInterface::class,
             $this->buildBag()->updateWorkPlan($this->createMock(ChefInterface::class))
         );

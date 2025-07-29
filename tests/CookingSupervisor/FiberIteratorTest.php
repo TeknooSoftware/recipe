@@ -62,7 +62,7 @@ final class FiberIteratorTest extends TestCase
     }
     public function testAdd(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FiberIterator::class,
             $this->buildIterator([])->add(
                 $this->createMock(CookingSupervisorInterface::class),
@@ -89,7 +89,7 @@ final class FiberIteratorTest extends TestCase
 
         $f1 = new Fiber(function (): void {});
 
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             FiberIterator::class,
             $this->buildIterator([$f1])->remove(
                 new Fiber(function (): void {})
@@ -98,7 +98,7 @@ final class FiberIteratorTest extends TestCase
     }
     public function testCurrentEmptyList(): void
     {
-        self::assertEmpty(
+        $this->assertEmpty(
             $this->buildIterator([])->current()
         );
     }
@@ -117,7 +117,7 @@ final class FiberIteratorTest extends TestCase
             ]
         );
 
-        self::assertSame(
+        $this->assertSame(
             $f1,
             $iterator->current()
         );
@@ -144,7 +144,7 @@ final class FiberIteratorTest extends TestCase
         $iterator->next();
         $iterator->next();
 
-        self::assertNull(
+        $this->assertNull(
             $iterator->current()
         );
     }
@@ -166,7 +166,7 @@ final class FiberIteratorTest extends TestCase
         $iterator->next();
         $iterator->next();
 
-        self::assertSame(
+        $this->assertSame(
             $s1,
             $iterator->current()
         );
@@ -175,7 +175,7 @@ final class FiberIteratorTest extends TestCase
     {
         $iterator = $this->buildIterator([]);
         $iterator->next();
-        self::assertFalse($iterator->valid());
+        $this->assertFalse($iterator->valid());
     }
     public function testNextStartOfList(): void
     {
@@ -194,7 +194,7 @@ final class FiberIteratorTest extends TestCase
 
         $iterator->next();
         $result = $iterator->current();
-        self::assertSame(
+        $this->assertSame(
             $f2,
             $result
         );
@@ -222,7 +222,7 @@ final class FiberIteratorTest extends TestCase
         $iterator->next();
         $iterator->next();
 
-        self::assertNull(
+        $this->assertNull(
             $iterator->current()
         );
     }
@@ -246,7 +246,7 @@ final class FiberIteratorTest extends TestCase
         $iterator->remove($f3);
         $iterator->next();
 
-        self::assertSame(
+        $this->assertSame(
             $f4,
             $iterator->current()
         );
@@ -267,13 +267,13 @@ final class FiberIteratorTest extends TestCase
         );
 
         $iterator->next();
-        self::assertEquals(
+        $this->assertEquals(
             1,
             $iterator->key()
         );
 
         $iterator->next();
-        self::assertEquals(
+        $this->assertEquals(
             2,
             $iterator->key()
         );
@@ -281,19 +281,19 @@ final class FiberIteratorTest extends TestCase
         $iterator->next();
         $iterator->next();
         $iterator->next();
-        self::assertEquals(
+        $this->assertEquals(
             5,
             $iterator->key()
         );
 
         $iterator->next();
-        self::assertNull(
+        $this->assertNull(
             $iterator->key()
         );
     }
     public function testValidEmptyList(): void
     {
-        self::assertFalse(
+        $this->assertFalse(
             $this->buildIterator([])->valid()
         );
     }
@@ -312,7 +312,7 @@ final class FiberIteratorTest extends TestCase
             ]
         );
 
-        self::assertTrue(
+        $this->assertTrue(
             $iterator->valid()
         );
     }
@@ -340,7 +340,7 @@ final class FiberIteratorTest extends TestCase
         $iterator->next();
         $iterator->next();
 
-        self::assertFalse(
+        $this->assertFalse(
             $iterator->valid()
         );
     }
@@ -362,7 +362,7 @@ final class FiberIteratorTest extends TestCase
         $iterator->next();
         $iterator->next();
 
-        self::assertTrue(
+        $this->assertTrue(
             $iterator->valid()
         );
     }
@@ -381,7 +381,7 @@ final class FiberIteratorTest extends TestCase
             ]
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             6,
             $iterator->count()
         );
@@ -390,7 +390,7 @@ final class FiberIteratorTest extends TestCase
     {
         $iterator = $this->buildIterator([]);
         $iterator->rewind();
-        self::assertNull(
+        $this->assertNull(
             $iterator->current()
         );
     }
@@ -413,7 +413,7 @@ final class FiberIteratorTest extends TestCase
         $iterator->next();
         $iterator->rewind();
 
-        self::assertSame(
+        $this->assertSame(
             $f1,
             $iterator->current()
         );
@@ -441,7 +441,7 @@ final class FiberIteratorTest extends TestCase
         $iterator->remove($s1);
         $iterator->rewind();
 
-        self::assertSame(
+        $this->assertSame(
             $f2,
             $iterator->current()
         );
@@ -458,12 +458,12 @@ final class FiberIteratorTest extends TestCase
             ]
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             3,
             $iterator->count()
         );
 
-        self::assertEquals(
+        $this->assertEquals(
             0,
             (clone $iterator)->count()
         );
