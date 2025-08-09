@@ -145,4 +145,17 @@ final class WrappedOneCalledPromiseTest extends TestCase
             $wp->fetchResultIfCalled(),
         );
     }
+
+    public function testReset(): void
+    {
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $promise->expects($this->once())->method('reset')->willReturnSelf();
+
+        $wp = $this->buildPromise($promise);
+        $this->assertInstanceOf(
+            WrappedOneCalledPromise::class,
+            $wp->reset(),
+        );
+    }
 }

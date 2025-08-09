@@ -27,6 +27,7 @@ namespace Teknoo\Recipe\Promise;
 
 use SensitiveParameter;
 use Teknoo\Immutable\ImmutableTrait;
+use Teknoo\Recipe\Promise\Exception\AlreadyCalledPromiseException;
 use Teknoo\Recipe\Promise\Exception\NotExecutedPromiseException;
 use Teknoo\Recipe\Promise\Exception\NotGrantedPromiseException;
 use Throwable;
@@ -55,7 +56,7 @@ abstract class AbstractPromise implements PromiseInterface
     use ImmutableTrait;
 
     /**
-     * @var PromiseInterface<TNextSuccessArgType, TResultType>|null
+     * @var PromiseInterface<TNextSuccessArgType|TResultType, TResultType>|null
      */
     private ?PromiseInterface $nextPromise = null;
 
@@ -72,7 +73,7 @@ abstract class AbstractPromise implements PromiseInterface
     private $onFail;
 
     /**
-     * @var TResultType
+     * @var ?TResultType
      */
     private mixed $result = null;
 
@@ -80,6 +81,8 @@ abstract class AbstractPromise implements PromiseInterface
      * @var TResultType|(callable(): TResultType)|null
      */
     private mixed $defaultResult = null;
+
+    private bool $calling = false;
 
     private bool $called = false;
 
@@ -131,9 +134,12 @@ abstract class AbstractPromise implements PromiseInterface
      */
     private function call(?callable &$callable, array &$args): void
     {
-        $this->called = true;
+        $this->calling = true;
 
         if (!is_callable($callable)) {
+            $this->called = true;
+            $this->calling = false;
+
             return;
         }
 
@@ -155,12 +161,13 @@ abstract class AbstractPromise implements PromiseInterface
                 && $this->callOnFailOnException
                 && is_callable($this->onFail)
             ) {
-                $this->isFailing = true;
                 $this->fail($error);
-                $this->isFailing = false;
             } else {
                 throw $error;
             }
+        } finally {
+            $this->called = true;
+            $this->calling = false;
         }
     }
 
@@ -172,9 +179,16 @@ abstract class AbstractPromise implements PromiseInterface
 
     public function success(...$args): PromiseInterface
     {
+        if ($this->called || $this->calling) {
+            throw new AlreadyCalledPromiseException();
+        }
+
         $this->call($this->onSuccess, $args);
 
-        if ($this->nextPromise instanceof PromiseInterface && true === $this->autoCallNextPromise) {
+        if (
+            $this->nextPromise instanceof PromiseInterface
+            && true === $this->autoCallNextPromise
+        ) {
             $this->nextPromise->success($this->result);
         }
 
@@ -183,8 +197,14 @@ abstract class AbstractPromise implements PromiseInterface
 
     public function fail(#[SensitiveParameter] Throwable $throwable): PromiseInterface
     {
+        if ($this->called) {
+            throw new AlreadyCalledPromiseException();
+        }
+
         $args = func_get_args();
+        $this->isFailing = true;
         $this->call($this->onFail, $args);
+        $this->isFailing = false;
 
         if (
             $this->nextPromise instanceof PromiseInterface
@@ -230,5 +250,15 @@ abstract class AbstractPromise implements PromiseInterface
         }
 
         return $this->result;
+    }
+
+    public function reset(): PromiseInterface
+    {
+        $this->called = false;
+        $this->calling = false;
+        $this->isFailing = false;
+        $this->result = null;
+
+        return $this;
     }
 }

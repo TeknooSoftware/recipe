@@ -23,31 +23,16 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Tests\Recipe\Promise;
+namespace Teknoo\Recipe\Promise\Exception;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use Teknoo\Recipe\Promise\AbstractPromise;
-use Teknoo\Recipe\Promise\Promise;
-use Teknoo\Recipe\Promise\PromiseInterface;
+use RuntimeException;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
- *
  */
-#[CoversClass(AbstractPromise::class)]
-#[CoversClass(Promise::class)]
-final class PromiseTest extends AbstractPromiseTests
+class AlreadyCalledPromiseException extends RuntimeException
 {
-    public function buildPromise(
-        ?callable $onSuccess,
-        ?callable $onFail,
-        bool $allowNext = true,
-        bool $callOnFailOnException = true,
-    ): PromiseInterface
-    {
-        return new Promise($onSuccess, $onFail, $allowNext, $callOnFailOnException);
-    }
 }

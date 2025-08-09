@@ -27,6 +27,7 @@ namespace Teknoo\Recipe\Promise;
 
 use SensitiveParameter;
 use Teknoo\Immutable\ImmutableInterface;
+use Teknoo\Recipe\Promise\Exception\AlreadyCalledPromiseException;
 use Throwable;
 
 /**
@@ -58,8 +59,9 @@ interface PromiseInterface extends ImmutableInterface
     /**
      * To call the callback defined when the actor has successfully it's operation.
      *
-     * @param TSuccessArgType ...$args
+     * @param ?TSuccessArgType ...$args
      * @return PromiseInterface<TSuccessArgType, TResultType>
+     * @throws AlreadyCalledPromiseException
      */
     public function success(...$args): PromiseInterface;
 
@@ -75,6 +77,7 @@ interface PromiseInterface extends ImmutableInterface
     /**
      * To call the callback defined when an error has been occurred.
      * @return PromiseInterface<TSuccessArgType, TResultType>
+     * @throws AlreadyCalledPromiseException
      */
     public function fail(#[SensitiveParameter] Throwable $throwable): PromiseInterface;
 
@@ -97,7 +100,7 @@ interface PromiseInterface extends ImmutableInterface
      *
      * @internal
      *
-     * @param callable|TResultType $default
+     * @param callable|TResultType|null $default
      * @return null|TResultType
      */
     public function fetchResult(mixed $default = null): mixed;
@@ -110,4 +113,10 @@ interface PromiseInterface extends ImmutableInterface
      * @return null|TResultType
      */
     public function fetchResultIfCalled(): mixed;
+
+    /**
+     * To reset the promise instance to allow to be resued
+     * @return PromiseInterface<TSuccessArgType, TResultType>
+     */
+    public function reset(): PromiseInterface;
 }

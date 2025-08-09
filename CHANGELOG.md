@@ -6,6 +6,11 @@
 - Requires PHP 8.4
 - Update to Teknoo States 7
 - Update to PHPStan 2
+- Change behavior on Promise:
+  - Promise' methods `fail` or `success` can not be called several times
+  - Promise's `fail` method can not be called after `success()`
+  - Promise's `success` method can not be called after `fail()`
+  - `reset()` method can be called to reset a called promise.
 - Remove deprecated feature `Cookbook`, use `Plan` instead
 - Fix some bugs
 - Promise, autocall to next is enabled by default
