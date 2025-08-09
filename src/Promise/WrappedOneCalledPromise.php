@@ -46,6 +46,8 @@ class WrappedOneCalledPromise implements PromiseInterface
 
     private bool $called = false;
 
+    private bool $calling = false;
+
     private bool $failed = false;
 
     /**
@@ -70,9 +72,11 @@ class WrappedOneCalledPromise implements PromiseInterface
 
     public function success(...$args): PromiseInterface
     {
-        if (!$this->called) {
-            $this->called = true;
+        if (!$this->calling && !$this->called) {
+            $this->calling = true;
             $this->promise->success(...$args);
+            $this->calling = false;
+            $this->called = true;
         }
 
         return $this;
@@ -80,7 +84,7 @@ class WrappedOneCalledPromise implements PromiseInterface
 
     public function fail(#[SensitiveParameter] Throwable $throwable): PromiseInterface
     {
-        if (!$this->failed) {
+        if (!$this->failed && !$this->called) {
             $this->called = true;
             $this->failed = true;
             $this->promise->fail($throwable);
@@ -104,5 +108,16 @@ class WrappedOneCalledPromise implements PromiseInterface
     public function fetchResultIfCalled(): mixed
     {
         return $this->promise->fetchResultIfCalled();
+    }
+
+    public function reset(): PromiseInterface
+    {
+        $this->called = false;
+        $this->calling = false;
+        $this->failed = false;
+
+        $this->promise->reset();
+
+        return $this;
     }
 }
