@@ -110,6 +110,20 @@ class WrappedOneCalledPromise implements PromiseInterface
         return $this->promise->fetchResultIfCalled();
     }
 
+    public function allowReuse(): PromiseInterface
+    {
+        $this->promise->allowReuse();
+
+        return $this;
+    }
+
+    public function prohibitReuse(): PromiseInterface
+    {
+        $this->promise->prohibitReuse();
+
+        return $this;
+    }
+
     public function reset(): PromiseInterface
     {
         $this->called = false;

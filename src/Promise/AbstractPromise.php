@@ -86,7 +86,11 @@ abstract class AbstractPromise implements PromiseInterface
 
     private bool $called = false;
 
+    private bool $allowReuse = false;
+
     private bool $isFailing = false;
+
+    private ?Throwable $throwedObject = null;
 
     public function __construct(
         ?callable $onSuccess = null,
@@ -163,6 +167,8 @@ abstract class AbstractPromise implements PromiseInterface
             ) {
                 $this->fail($error);
             } else {
+                $this->throwedObject = $error;
+
                 throw $error;
             }
         } finally {
@@ -179,7 +185,7 @@ abstract class AbstractPromise implements PromiseInterface
 
     public function success(...$args): PromiseInterface
     {
-        if ($this->called || $this->calling) {
+        if ((!$this->allowReuse && $this->called) || $this->calling) {
             throw new AlreadyCalledPromiseException();
         }
 
@@ -197,7 +203,11 @@ abstract class AbstractPromise implements PromiseInterface
 
     public function fail(#[SensitiveParameter] Throwable $throwable): PromiseInterface
     {
-        if ($this->called) {
+        if ($this->throwedObject === $throwable) {
+            throw $throwable;
+        }
+
+        if (!$this->allowReuse && $this->called) {
             throw new AlreadyCalledPromiseException();
         }
 
@@ -252,12 +262,35 @@ abstract class AbstractPromise implements PromiseInterface
         return $this->result;
     }
 
+    /**
+     * To disable exception when a promise is reused
+     * @return PromiseInterface<TSuccessArgType, TResultType>
+     */
+    public function allowReuse(): PromiseInterface
+    {
+        $this->allowReuse = true;
+
+        return $this;
+    }
+
+    /**
+     * To disable exception when a promise is reused
+     * @return PromiseInterface<TSuccessArgType, TResultType>
+     */
+    public function prohibitReuse(): PromiseInterface
+    {
+        $this->allowReuse = false;
+
+        return $this;
+    }
+
     public function reset(): PromiseInterface
     {
         $this->called = false;
         $this->calling = false;
         $this->isFailing = false;
         $this->result = null;
+        $this->throwedObject = null;
 
         return $this;
     }

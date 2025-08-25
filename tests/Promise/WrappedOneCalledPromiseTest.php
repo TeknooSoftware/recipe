@@ -158,4 +158,30 @@ final class WrappedOneCalledPromiseTest extends TestCase
             $wp->reset(),
         );
     }
+
+    public function testAllowReuse(): void
+    {
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $promise->expects($this->once())->method('allowReuse')->willReturnSelf();
+
+        $wp = $this->buildPromise($promise);
+        $this->assertInstanceOf(
+            WrappedOneCalledPromise::class,
+            $wp->allowReuse(),
+        );
+    }
+
+    public function testProhibitReuse(): void
+    {
+        $promise = $this->createMock(PromiseInterface::class);
+
+        $promise->expects($this->once())->method('prohibitReuse')->willReturnSelf();
+
+        $wp = $this->buildPromise($promise);
+        $this->assertInstanceOf(
+            WrappedOneCalledPromise::class,
+            $wp->prohibitReuse(),
+        );
+    }
 }

@@ -422,6 +422,56 @@ abstract class AbstractPromiseTests extends TestCase
         $promise->success();
     }
 
+    public function testExceptionWhenFailIsRecalledInTryCatchWithSameException(): void
+    {
+        $promise = $this->buildPromise(
+            onSuccess: fn (): bool => true,
+            onFail: fn (Throwable $a): never => throw new RuntimeException(message: 'foo', previous: $a),
+        );
+
+        $exception = new Exception('foo');
+        $e = null;
+        try {
+            try {
+                $promise->fail($exception);
+            } catch (Throwable $e) {
+                $promise->fail($e);
+            }
+        } catch (Throwable $error) {
+            $e = $error;
+        }
+
+        $this->assertSame($exception, $e->getPrevious());
+    }
+
+    public function testExceptionWhenSuccessIsCalledAfterFailAndProhibitReuse(): void
+    {
+        $promise = $this->buildPromise(
+            onSuccess: fn (): bool => true,
+            onFail: fn (): bool => false,
+        );
+
+        $this->assertInstanceOf(
+            PromiseInterface::class,
+            $promise->allowReuse(),
+        );
+
+        $this->assertInstanceOf(
+            PromiseInterface::class,
+            $promise->fail(new Exception('foo')),
+        );
+
+        $this->assertFalse($promise->fetchResult());
+
+        $this->assertInstanceOf(
+            PromiseInterface::class,
+            $promise->prohibitReuse(),
+        );
+
+        $this->expectException(AlreadyCalledPromiseException::class);
+        $promise->success();
+    }
+
     public function testNoExceptionWhenFailIsCalledAfterSuccessAndReset(): void
     {
         $promise = $this->buildPromise(
@@ -445,7 +495,30 @@ abstract class AbstractPromiseTests extends TestCase
         $this->assertFalse($promise->fetchResult());
     }
 
-    public function testExceptionWhenSuccessIsCalledAfterFailAndReset(): void
+    public function testNoExceptionWhenFailIsCalledAfterSuccessAndAllowReuse(): void
+    {
+        $promise = $this->buildPromise(
+            onSuccess: fn (): bool => true,
+            onFail: fn (): bool => false,
+        );
+
+        $this->assertInstanceOf(
+            PromiseInterface::class,
+            $promise->allowReuse(),
+        );
+
+        $this->assertInstanceOf(
+            PromiseInterface::class,
+            $promise->success(),
+        );
+
+        $this->assertTrue($promise->fetchResult());
+
+        $promise->fail(new Exception('foo'));
+        $this->assertFalse($promise->fetchResult());
+    }
+
+    public function testNoExceptionWhenSuccessIsCalledAfterFailAndReset(): void
     {
         $promise = $this->buildPromise(
             onSuccess: fn (): bool => true,
@@ -463,6 +536,29 @@ abstract class AbstractPromiseTests extends TestCase
             PromiseInterface::class,
             $promise->reset(),
         );
+
+        $promise->success();
+        $this->assertTrue($promise->fetchResult());
+    }
+
+    public function testNoExceptionWhenSuccessIsCalledAfterFailAndAllowResue(): void
+    {
+        $promise = $this->buildPromise(
+            onSuccess: fn (): bool => true,
+            onFail: fn (): bool => false,
+        );
+
+        $this->assertInstanceOf(
+            PromiseInterface::class,
+            $promise->allowReuse(),
+        );
+
+        $this->assertInstanceOf(
+            PromiseInterface::class,
+            $promise->fail(new Exception('foo')),
+        );
+
+        $this->assertFalse($promise->fetchResult());
 
         $promise->success();
         $this->assertTrue($promise->fetchResult());

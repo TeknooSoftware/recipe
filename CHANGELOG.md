@@ -1,5 +1,12 @@
 # Teknoo Software - Recipe - Change Log
 
+## [7.1.0] - 2025-08-25
+### Stable Release
+- When an exception object is passed to the promise method `fail` after a first call (typically when there are a 
+  try/cactch to call the fail method), no AlreadyCalledException will be thrown.
+- Add methods to promise `allowReuse` and `prohibitReuse` to allow or prohibit reuse of the promise and disable 
+  the exception `AlreadyCalledException` and get a behavior similar to Recipe v6. Usefull for promise used in loop.
+
 ## [7.0.0] - 2025-07-27
 ### Stable Release
 - Drop support of PHP 8.3

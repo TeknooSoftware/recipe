@@ -115,6 +115,18 @@ interface PromiseInterface extends ImmutableInterface
     public function fetchResultIfCalled(): mixed;
 
     /**
+     * To disable exception when a promise is reused
+     * @return PromiseInterface<TSuccessArgType, TResultType>
+     */
+    public function allowReuse(): PromiseInterface;
+
+    /**
+     * To disable exception when a promise is reused
+     * @return PromiseInterface<TSuccessArgType, TResultType>
+     */
+    public function prohibitReuse(): PromiseInterface;
+
+    /**
      * To reset the promise instance to allow to be resued
      * @return PromiseInterface<TSuccessArgType, TResultType>
      */
