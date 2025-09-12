@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [7.1.1] - 2025-09-12
+### Stable Release
+- Some fix from PHPStan 
+
 ## [7.1.0] - 2025-08-25
 ### Stable Release
 - When an exception object is passed to the promise method `fail` after a first call (typically when there are a 

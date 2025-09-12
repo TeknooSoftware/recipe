@@ -38,6 +38,7 @@ use function enum_exists;
 use function interface_exists;
 use function is_a;
 use function is_callable;
+use function is_int;
 use function is_object;
 use function is_string;
 use function is_subclass_of;
@@ -95,10 +96,11 @@ class Ingredient implements IngredientInterface
         if (
             null === $this->normalizeCallback
             && enum_exists($this->requiredType)
+            && is_a($this->requiredType, BackedEnum::class, true)
             && (new ReflectionEnum($this->requiredType))->isBacked()
         ) {
             $this->normalizeCallback = function (mixed $value) {
-                if (!$value instanceof BackedEnum) {
+                if (!$value instanceof BackedEnum && (is_string($value) || is_int($value))) {
                     $value = ($this->requiredType)::from($value);
                 }
 
