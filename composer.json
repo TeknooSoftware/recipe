@@ -39,7 +39,7 @@
     "require":{
         "php": "^8.4",
         "teknoo/immutable": "^3.0.21",
-        "teknoo/states": "^7"
+        "teknoo/states": "^7.1"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

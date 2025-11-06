@@ -32,8 +32,8 @@ use Teknoo\Recipe\Chef\Free;
 use Teknoo\Recipe\Chef\Trained;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Ingredient\MergeableInterface;
-use Teknoo\States\Automated\Assertion\AssertionInterface;
-use Teknoo\States\Automated\Assertion\Property;
+use Teknoo\States\Attributes\Assertion\Property;
+use Teknoo\States\Attributes\StateClass;
 use Teknoo\States\Automated\Assertion\Property\IsNull;
 use Teknoo\States\Automated\Assertion\Property\IsInstanceOf;
 use Teknoo\States\Automated\Assertion\Property\IsEqual;
@@ -53,6 +53,28 @@ use Throwable;
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
+#[StateClass(Trained::class)]
+#[StateClass(Free::class)]
+#[StateClass(Cooking::class)]
+#[Property(
+    Free::class,
+    ['recipe', IsNull::class],
+)]
+#[Property(
+    Free::class,
+    ['steps', IsEqual::class, []],
+)]
+#[Property(
+    Trained::class,
+    ['recipe', IsInstanceOf::class, BaseRecipeInterface::class],
+    ['steps', IsNotEqual::class, []]
+)]
+#[Property(
+    Cooking::class,
+    ['recipe', IsInstanceOf::class, BaseRecipeInterface::class],
+    ['steps', IsNotEqual::class, []],
+    ['cooking', IsEqual::class, true]
+)]
 class Chef implements AutomatedInterface, ChefInterface
 {
     use ProxyTrait;
@@ -91,35 +113,6 @@ class Chef implements AutomatedInterface, ChefInterface
 
     private bool $errorReporing = false;
 
-    /**
-     * @return array<string>
-     */
-    protected static function statesListDeclaration(): array
-    {
-        return [
-            Cooking::class,
-            Free::class,
-            Trained::class,
-        ];
-    }
-
-    /**
-     * @return array<AssertionInterface>
-     */
-    protected function listAssertions(): array
-    {
-        return [
-            new Property(Free::class)->with('recipe', new IsNull()),
-            new Property(Free::class)->with('steps', new IsEqual([])),
-            new Property(Trained::class)
-                ->with('recipe', new IsInstanceOf(BaseRecipeInterface::class))
-                ->with('steps', new IsNotEqual([])),
-            new Property(Cooking::class)
-                ->with('recipe', new IsInstanceOf(BaseRecipeInterface::class))
-                ->with('steps', new IsNotEqual([]))
-                ->with('cooking', new IsEqual(true)),
-        ];
-    }
 
     final public function __construct(
         ?BaseRecipeInterface $recipe = null,

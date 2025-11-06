@@ -32,8 +32,8 @@ use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Recipe\Draft;
 use Teknoo\Recipe\Recipe\Written;
-use Teknoo\States\Automated\Assertion\AssertionInterface;
-use Teknoo\States\Automated\Assertion\Property;
+use Teknoo\States\Attributes\Assertion\Property;
+use Teknoo\States\Attributes\StateClass;
 use Teknoo\States\Automated\Assertion\Property\IsNull;
 use Teknoo\States\Automated\Assertion\Property\IsNotNull;
 use Teknoo\States\Automated\AutomatedInterface;
@@ -59,6 +59,10 @@ use function key;
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
+#[StateClass(Draft::class)]
+#[StateClass(Written::class)]
+#[Property(Draft::class, ['compiled', IsNull::class])]
+#[Property(Written::class, ['compiled', IsNotNull::class])]
 class Recipe implements AutomatedInterface, RecipeInterface
 {
     use ImmutableTrait;
@@ -105,28 +109,6 @@ class Recipe implements AutomatedInterface, RecipeInterface
     public function __clone()
     {
         $this->cloneProxy();
-    }
-
-    /**
-     * @return array<string>
-     */
-    protected static function statesListDeclaration(): array
-    {
-        return [
-            Draft::class,
-            Written::class,
-        ];
-    }
-
-    /**
-     * @return array<AssertionInterface>
-     */
-    protected function listAssertions(): array
-    {
-        return [
-            new Property(Draft::class)->with('compiled', new IsNull()),
-            new Property(Written::class)->with('compiled', new IsNotNull()),
-        ];
     }
 
     protected function cloneMe(): Recipe
