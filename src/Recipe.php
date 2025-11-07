@@ -126,9 +126,21 @@ class Recipe implements AutomatedInterface, RecipeInterface
         callable | BowlInterface $action,
         string $name,
         array $with = [],
-        ?int $position = null
+        RecipeRelativePositionEnum|int|null $position = null,
+        ?string $offsetStepName = null,
     ): RecipeInterface {
-        return $this->addStep($action, $name, $with, $position);
+        return $this->addStep($action, $name, $with, $position, $offsetStepName);
+    }
+
+    public function execute(
+        BaseRecipeInterface $recipe,
+        string $name,
+        int | callable $repeat = 1,
+        RecipeRelativePositionEnum|int|null $position = null,
+        bool $inFiber = false,
+        ?string $offsetStepName = null,
+    ): RecipeInterface {
+        return $this->addSubRecipe($recipe, $name, $repeat, $position, $inFiber, $offsetStepName);
     }
 
     public function onError(callable | BowlInterface $action): RecipeInterface
@@ -136,19 +148,27 @@ class Recipe implements AutomatedInterface, RecipeInterface
         return $this->setOnError($action);
     }
 
-    public function execute(
-        BaseRecipeInterface $recipe,
-        string $name,
-        int | callable $repeat = 1,
-        ?int $position = null,
-        bool $inFiber = false,
-    ): RecipeInterface {
-        return $this->addSubRecipe($recipe, $name, $repeat, $position, $inFiber);
-    }
-
     public function given(DishInterface $dish): RecipeInterface
     {
         return $this->setExceptedDish($dish);
+    }
+
+    private function findStepPosition(string $name): int
+    {
+        $counter = 0;
+        foreach ($this->steps as &$stepsPerPositions) {
+            foreach ($stepsPerPositions as &$stepsSubList) {
+                foreach ($stepsSubList as $stepName => &$stepBowl) {
+                    if ($stepName === $name) {
+                        return $counter;
+                    }
+                }
+            }
+
+            $counter++;
+        }
+
+        return $counter + 1;
     }
 
     /**

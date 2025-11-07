@@ -20,10 +20,28 @@ Feature: Recipe with named step
     And I must obtain an String with at "foo bar bar"
     Then I should have a new recipe.
 
+  Scenario: Create a complex recipe with steps added relative to others
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define a "Teknoo\Tests\Recipe\Behat\StringObject" to start my recipe
+    When I define the step "step1" to do "Teknoo\Tests\Recipe\Behat\StringObject::addTest" my recipe
+    When I define the step "step2" to do "Teknoo\Tests\Recipe\Behat\StringObject::addTest" my recipe
+    When I define the step "step_b_2" to do "Teknoo\Tests\Recipe\Behat\StringObject::addAnotherTest" my recipe before "step2"
+    When I define the step "step_b_5" to do "Teknoo\Tests\Recipe\Behat\StringObject::addAnotherTest" my recipe before "step5"
+    When I define the step "step3" to do "Teknoo\Tests\Recipe\Behat\StringObject::addTest" my recipe
+    When I define the step "step_a_1" to do "Teknoo\Tests\Recipe\Behat\StringObject::addAnotherAnotherTest" my recipe after "step1"
+    When I define the step "step_a_5" to do "Teknoo\Tests\Recipe\Behat\StringObject::addAnotherAnotherTest" my recipe after "step5"
+    When I define the excepted dish "Teknoo\Tests\Recipe\Behat\StringObject" to my recipe
+    And I must obtain an String with at "foo bar foo bar <3 foo bar <3"
+    Then I should have a new recipe.
+    When I train the chef with the recipe
+    And It starts cooking with "foo" as "Teknoo\Tests\Recipe\Behat\StringObject"
+    Then the recipe has been successful executed
+
   Scenario: Create a complex recipe with repeated actions with same name
     Given I have an empty recipe
+    And I have an untrained chef
     When I define a "Teknoo\Tests\Recipe\Behat\StringObject" to start my recipe
-    And I define a "\Closure" to start my recipe
     When I define the step "step1" to do "Teknoo\Tests\Recipe\Behat\StringObject::addTest" my recipe
     When I define the step "step2" to do "Teknoo\Tests\Recipe\Behat\StringObject::addTest" my recipe
     When I define the step "step3" to do "Teknoo\Tests\Recipe\Behat\StringObject::addTest" my recipe
@@ -33,6 +51,9 @@ Feature: Recipe with named step
     When I define the excepted dish "Teknoo\Tests\Recipe\Behat\StringObject" to my recipe
     And I must obtain an String with at "foo bar bar bar bar bar bar"
     Then I should have a new recipe.
+    When I train the chef with the recipe
+    And It starts cooking with "foo" as "Teknoo\Tests\Recipe\Behat\StringObject"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish with goto to actions
     Given I have an empty recipe
@@ -46,5 +67,6 @@ Feature: Recipe with named step
     When I define the step "final" to do "Teknoo\Tests\Recipe\Behat\StringObject::addTest" my recipe
     And I define the excepted dish "Teknoo\Tests\Recipe\Behat\StringObject" to my recipe
     And I must obtain an String with at "foo bar bar bar"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "foo" as "Teknoo\Tests\Recipe\Behat\StringObject"
+    Then the recipe has been successful executed

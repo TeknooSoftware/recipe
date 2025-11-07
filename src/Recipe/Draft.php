@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Recipe;
 
+use InvalidArgumentException;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
@@ -34,6 +35,7 @@ use Teknoo\Recipe\Dish\DishInterface;
 use Teknoo\Recipe\Ingredient\IngredientInterface;
 use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface;
+use Teknoo\Recipe\RecipeRelativePositionEnum;
 use Teknoo\Recipe\Value;
 use Teknoo\States\State\StateInterface;
 use Teknoo\States\State\StateTrait;
@@ -81,7 +83,8 @@ class Draft implements StateInterface
             callable | BowlInterface $action,
             string $name,
             array $with = [],
-            ?int $position = null
+            RecipeRelativePositionEnum|int|null $position = null,
+            ?string $offsetStepName = null,
         ): RecipeInterface {
             $that = $this->cloneMe();
 
@@ -93,6 +96,67 @@ class Draft implements StateInterface
             if (empty($position)) {
                 $that->steps[] = [[$name => $callable]];
             } else {
+                if ($position instanceof RecipeRelativePositionEnum) {
+                    if (null === $offsetStepName) {
+                        throw new InvalidArgumentException('The offset name is required to define a step position');
+                    }
+
+                    $offsetPlace = $this->findStepPosition($offsetStepName);
+                    $position = match ($position) {
+                        RecipeRelativePositionEnum::Before => $offsetPlace - 1,
+                        RecipeRelativePositionEnum::After => $offsetPlace + 1,
+                    };
+                }
+
+                $that->steps[$position][] = [$name => $callable];
+            }
+
+            return $that;
+        };
+    }
+
+    /*
+     * To define / add a sub recipe into this recipe recipe. It will be wrapped into a RecipeBowl instance. The repeat
+     * condition can be a callable and will be wrapped into a bowl in this case.
+     * A new recipe object will be returned
+     */
+    private function addSubRecipe(): callable
+    {
+        return function (
+            BaseRecipeInterface $recipe,
+            string $name,
+            int | callable $repeat = 1,
+            RecipeRelativePositionEnum|int|null $position = null,
+            bool $inFiber = false,
+            ?string $offsetStepName = null,
+        ): RecipeInterface {
+            $that = $this->cloneMe();
+
+            if (is_callable($repeat)) {
+                $repeat = new Bowl($repeat, []);
+            }
+
+            if (!$inFiber) {
+                $callable = new RecipeBowl($recipe, $repeat);
+            } else {
+                $callable = new FiberRecipeBowl($recipe, $repeat);
+            }
+
+            if (null === $position) {
+                $that->steps[] = [[$name => $callable]];
+            } else {
+                if ($position instanceof RecipeRelativePositionEnum) {
+                    if (null === $offsetStepName) {
+                        throw new InvalidArgumentException('The offset name is required to define a step position');
+                    }
+
+                    $offsetPlace = $this->findStepPosition($offsetStepName);
+                    $position = match ($position) {
+                        RecipeRelativePositionEnum::Before => $offsetPlace - 1,
+                        RecipeRelativePositionEnum::After => $offsetPlace + 1,
+                    };
+                }
+
                 $that->steps[$position][] = [$name => $callable];
             }
 
@@ -113,42 +177,6 @@ class Draft implements StateInterface
             }
 
             $that->onError[] = $callable;
-
-            return $that;
-        };
-    }
-
-    /*
-     * To define / add a sub recipe into this recipe recipe. It will be wrapped into a RecipeBowl instance. The repeat
-     * condition can be a callable and will be wrapped into a bowl in this case.
-     * A new recipe object will be returned
-     */
-    private function addSubRecipe(): callable
-    {
-        return function (
-            BaseRecipeInterface $recipe,
-            string $name,
-            int | callable $repeat = 1,
-            ?int $position = null,
-            bool $inFiber = false,
-        ): RecipeInterface {
-            $that = $this->cloneMe();
-
-            if (is_callable($repeat)) {
-                $repeat = new Bowl($repeat, []);
-            }
-
-            if (!$inFiber) {
-                $callable = new RecipeBowl($recipe, $repeat);
-            } else {
-                $callable = new FiberRecipeBowl($recipe, $repeat);
-            }
-
-            if (null === $position) {
-                $that->steps[] = [[$name => $callable]];
-            } else {
-                $that->steps[$position][] = [$name => $callable];
-            }
 
             return $that;
         };

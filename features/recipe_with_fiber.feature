@@ -35,8 +35,9 @@ Feature: Recipe with fiber
     And I define the step in fiber "createImmutable" to do "DateTimeImmutable::createFromMutable" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
     And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish with two ingredient
     Given I have an empty recipe
@@ -45,8 +46,9 @@ Feature: Recipe with fiber
     And I define the step in fiber "createImmutable" to do "DateTimeImmutable::createFromMutable" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
     And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish with two ingredient
     Given I have an empty recipe
@@ -55,8 +57,9 @@ Feature: Recipe with fiber
     And I define the step in fiber "createImmutable" to do "DateTimeImmutable::createFromMutable" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
     And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish with a transformed ingredient
     Given I have an empty recipe
@@ -64,8 +67,9 @@ Feature: Recipe with fiber
     When I define the step in fiber "createImmutable" to do "FeatureContext::passDateWithTransform" my recipe
     And I define the excepted dish "DateTime" to my recipe
     And I must obtain an Mutable DateTime at "2017-07-01 10:00:00"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "TransformableDateTime"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish with a transformed ingredient via a transformer
     Given I have an empty recipe
@@ -73,8 +77,9 @@ Feature: Recipe with fiber
     When I define the step in fiber "createImmutable" to do "FeatureContext::passDateWithTransformer" my recipe
     And I define the excepted dish "DateTime" to my recipe
     And I must obtain an Mutable DateTime at "2017-07-01 10:00:00"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "string"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish with a transformed non-named ingredient
     Given I have an empty recipe
@@ -82,8 +87,9 @@ Feature: Recipe with fiber
     When I define the step in fiber "createImmutable" to do "FeatureContext::passDateWithTransformNonNamed" my recipe
     And I define the excepted dish "DateTime" to my recipe
     And I must obtain an Mutable DateTime at "2017-07-01 10:00:00"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "TransformableDateTime"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish with a transformed non-named ingredient via a transformer
     Given I have an empty recipe
@@ -91,8 +97,9 @@ Feature: Recipe with fiber
     When I define the step in fiber "createImmutable" to do "FeatureContext::passDateWithTransformerNonNamed" my recipe
     And I define the excepted dish "DateTime" to my recipe
     And I must obtain an Mutable DateTime at "2017-07-01 10:00:00"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "string"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish with transformable ingredient
     Given I have an empty recipe
@@ -100,8 +107,9 @@ Feature: Recipe with fiber
     When I define the step in fiber "createImmutable" to do "FeatureContext::passDateWithoutTransform" my recipe
     And I define the excepted dish "Teknoo\Tests\Recipe\Transformable" to my recipe
     And I must obtain an Transform object
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "TransformableDateTime"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook with two dishes in same time
     Given I have an empty recipe
@@ -112,8 +120,9 @@ Feature: Recipe with fiber
     When I define the step "looping" to do "Fiber::looping" my recipe
     When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "30"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "0" as "Teknoo\Tests\Recipe\Behat\IntBag"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook with several dishes in sames times with subrecipes
     Given I have an empty recipe
@@ -126,8 +135,9 @@ Feature: Recipe with fiber
     When I define the step "looping" to do "Fiber::looping" my recipe
     When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "60"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "0" as "Teknoo\Tests\Recipe\Behat\IntBag"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook with several dishes in sames times with subsubrecipes
     Given I have an empty recipe
@@ -142,8 +152,9 @@ Feature: Recipe with fiber
     When I define the step "looping" to do "Fiber::looping" my recipe
     When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "105"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "0" as "Teknoo\Tests\Recipe\Behat\IntBag"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish with merged ingredient
     Given I have an empty recipe
@@ -152,8 +163,9 @@ Feature: Recipe with fiber
     When I define the step in fiber "increaseValue" to do "FeatureContext::mergeValue" my recipe
     When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "15"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish with mergeable ingredient
     Given I have an empty recipe
@@ -161,8 +173,9 @@ Feature: Recipe with fiber
     When I define the step in fiber "increaseValue" to do "FeatureContext::updatedInWorkPlanAMergeableValue" my recipe
     When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "7"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish and remove an ingredient
     Given I have an empty recipe
@@ -170,26 +183,27 @@ Feature: Recipe with fiber
     When I define a "\DateTime" to start my recipe
     And I define the step in fiber "removeIngredient" to do "FeatureContext::removeDate" my recipe
     And I define the step in fiber "checkMissingIngredient" to do "FeatureContext::checkDate" my recipe
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook and have an error without error handler
     Given I have an empty recipe
     And I have an untrained chef
     When I define the step in fiber "createAnError" to do "FeatureContext::createException" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
-    And I must obtain an error message "There had an error"
-    Then I train the chef with the recipe
-    And It starts cooking and obtain an error
+    When I train the chef with the recipe
+    And It starts cooking
+    Then I obtain an error
 
   Scenario: Train a chef to cook and have step send an error
     Given I have an empty recipe
     And I have an untrained chef
     When I define the step in fiber "callAnError" to do "FeatureContext::callError" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
-    And I must obtain an error message "There had an error"
-    Then I train the chef with the recipe
-    And It starts cooking and obtain an error
+    When I train the chef with the recipe
+    And It starts cooking
+    Then I obtain an error
 
   Scenario: Train a chef to cook and have an error with error handler
     Given I have an empty recipe
@@ -197,5 +211,6 @@ Feature: Recipe with fiber
     When I define the step in fiber "createAnError" to do "FeatureContext::createException" my recipe
     And I define the behavior on error to do "FeatureContext::onError" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
-    Then I train the chef with the recipe
-    And It starts cooking and obtain an catched error with message "There had an error"
+    When I train the chef with the recipe
+    And It starts cooking
+    Then I obtain an catched error with message "There had an error"

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe\Behat;
 
+use Behat\Hook\BeforeScenario;
 use Behat\Step\Given;
 use Behat\Step\Then;
 use Behat\Step\When;
@@ -54,6 +55,7 @@ use Teknoo\Recipe\PlanInterface;
 use Teknoo\Recipe\Promise\Promise;
 use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface;
+use Teknoo\Recipe\RecipeRelativePositionEnum;
 use Teknoo\Recipe\Value;
 use Teknoo\Tests\Recipe\Transformable;
 use Throwable;
@@ -102,6 +104,10 @@ class FeatureContext implements Context
      * @var callable
      */
     private $callbackPromiseSuccess;
+
+    private static ?Throwable $runningCatchedError = null;
+
+    private static ?Throwable $runningUncatchedError = null;
 
     private array $workPlan = [];
 
@@ -169,6 +175,13 @@ class FeatureContext implements Context
 
         static::$message = '';
     }
+    #[BeforeScenario]
+    public function prepareScenario(): void
+    {
+        self::$message = '';
+        self::$runningCatchedError = null;
+        self::$runningUncatchedError = null;
+    }
 
     private function pushRecipe(RecipeInterface $recipe): void
     {
@@ -234,6 +247,25 @@ class FeatureContext implements Context
         $this->pushRecipe($this->lastRecipe->cook($this->parseMethod($methodName), $stepName));
     }
 
+    #[When('I define the step :stepName to do :methodName my recipe :position :offset')]
+    public function iDefineTheStepToDoMyRecipeBefore(
+        string $stepName,
+        string $methodName,
+        string $position,
+        string $offset,
+    ): void {
+        $this->pushRecipe(
+            $this->lastRecipe->cook(
+                action: $this->parseMethod($methodName),
+                name: $stepName,
+                position: match ($position) {
+                    'before' => RecipeRelativePositionEnum::Before,
+                    'after' => RecipeRelativePositionEnum::After,
+                },
+                offsetStepName: $offset,
+            )
+        );
+    }
 
     #[When('I define the step in fiber :stepName to do :methodName my recipe')]
     public function iDefineTheStepInFiberToDoMyRecipe(string $stepName, string $methodName): void
@@ -250,7 +282,7 @@ class FeatureContext implements Context
         );
     }
 
-    #[When('I define the excepted dish :className to my recipe')] 
+    #[When('I define the excepted dish :className to my recipe')]
     public function iDefineTheExceptedDishToMyRecipe(string $className): void
     {
         $promise = new Promise(
@@ -295,13 +327,35 @@ class FeatureContext implements Context
         $this->chef = new Chef();
     }
 
-    #[Then('I train the chef with the recipe')]
+    #[When('I train the chef with the recipe')]
     public function iTrainTheChefWithTheRecipe(): void
     {
         $this->chef->read($this->lastRecipe);
     }
 
-    #[Then('It starts cooking with :value as :name')]
+    #[Then('the recipe has been successful executed')]
+    public function theRecipeHasBeenSuccessfulExecuted(): void
+    {
+        Assert::assertNull(self::$runningCatchedError);
+    }
+
+    #[Then('I obtain an error')]
+    public function iObtainAnError(): void
+    {
+        Assert::assertInstanceOf(Throwable::class, self::$runningCatchedError);
+    }
+
+    #[Then('I obtain an catched error')]
+    #[Then('I obtain an catched error with message :content')]
+    public function itStartsCookingAndObtainAnCatchedErrorWithMessage(?string $content = null): void
+    {
+        Assert::assertInstanceOf(Throwable::class, self::$runningUncatchedError);
+        if (null !== $content) {
+            Assert::assertEquals($content, static::$message);
+        }
+    }
+
+    #[When('It starts cooking with :value as :name')]
     public function itStartsCookingWithAs($value, $name): void
     {
         $value = match ($name) {
@@ -318,52 +372,29 @@ class FeatureContext implements Context
             $this->workPlan[$this->secondVar] = \hash('sha256', $this->secondVar);
         }
 
-        if (!class_exists($name)) {
-            $this->chef->process(array_merge($this->workPlan, [lcfirst((string) $name) => $value]));
-        } else {
-            $this->chef->process(array_merge($this->workPlan, [trim($name, '\\') => new $name($value)]));
-        }
-    }
-
-    #[Then('It starts cooking with :value as :name and obtain an error')]
-    public function itStartsCookingWithAsAndObtainAnError($value, $name): void
-    {
         try {
-            if (null !== $this->secondVar) {
-                $this->workPlan[$this->secondVar] = \hash('sha256', $this->secondVar);
+            if (!class_exists($name)) {
+                $this->chef->process(array_merge($this->workPlan, [lcfirst((string)$name) => $value]));
+            } else {
+                $this->chef->process(array_merge($this->workPlan, [trim($name, '\\') => new $name($value)]));
             }
-
-            $this->chef->process(array_merge($this->workPlan, [trim((string) $name, '\\') => new $name($value)]));
-        } catch (Throwable) {
-            return;
+        } catch (Throwable $e) {
+            self::$runningCatchedError = $e;
         }
-
-        Assert::fail('An error must be thrown');
     }
 
-    #[Then('It starts cooking and obtain an error')]
-    public function itStartsCookingAndObtainAnError(): void
+    #[When('It starts cooking')]
+    public function itStartsCooking(): void
     {
         try {
             $this->chef->process($this->workPlan);
         } catch (Throwable $e) {
             static::$message = $e->getMessage();
-            ($this->callbackPromiseSuccess)();
-            return;
+            self::$runningCatchedError = $e;
         }
-
-        Assert::fail('An error must be thrown');
     }
 
-    #[Then('It starts cooking and obtain an catched error with message :content')]
-    public function itStartsCookingAndObtainAnCatchedErrorWithMessage($content): void
-    {
-        $this->chef->process($this->workPlan);
-        Assert::assertEquals($content, static::$message);
-        static::$message = '';
-    }
-
-    #[Then('It starts cooking with :value as :name and obtain an catched error with message :content')] 
+    #[When('It starts cooking with :value as :name and obtain an catched error with message :content')]
     public function itStartsCookingWithAsAndObtainAnCatchedErrorWithMessage($value, $name, $content): void
     {
         if (null !== $this->secondVar) {
@@ -376,7 +407,7 @@ class FeatureContext implements Context
         static::$message = '';
     }
 
-    #[When('I must obtain an DateTime at :content')] 
+    #[Then('I must obtain an DateTime at :content')]
     public function iMustObtainAnDatetimeAt($content): void
     {
         $this->callbackPromiseSuccess = function ($value) use ($content): void {
@@ -572,21 +603,12 @@ class FeatureContext implements Context
         );
     }
 
-    #[When('I must obtain an IntBag with value :content')]
+    #[Then('I must obtain an IntBag with value :content')]
     public function iMustObtainAnIntbagWithValue(int $content): void
     {
         $this->callbackPromiseSuccess = function ($value) use ($content): void {
             Assert::assertInstanceOf(IntBag::class, $value);
             Assert::assertEquals(new IntBag($content), $value);
-        };
-    }
-
-    #[When('I must obtain an error message :content')]
-    public function iMustObtainAnErrorMessage($content): void
-    {
-        $this->callbackPromiseSuccess = function () use ($content): void {
-            Assert::assertEquals($content, static::$message);
-            static::$message = '';
         };
     }
 
@@ -718,12 +740,14 @@ class FeatureContext implements Context
     public static function onError(Throwable $exception, ChefInterface $chef): void
     {
         static::$message .= $exception->getMessage();
+        static::$runningUncatchedError = $exception;
     }
 
     public static function onErrorWithStopRepporing(Throwable $exception, ChefInterface $chef): void
     {
         $chef->stopErrorReporting();
         $chef->interruptCooking();
+        static::$runningUncatchedError = $exception;
         static::$message .= $exception->getMessage();
     }
 
@@ -732,7 +756,8 @@ class FeatureContext implements Context
         static::$message .= 'sub : ' . $exception->getMessage();
     }
 
-    #[Given('I have a plan for date management to get :expectedDate')] #[Given('I have a plan for date management')]
+    #[Given('I have a plan for date management to get :expectedDate')]
+    #[Given('I have a plan for date management')]
     public function iHaveAPlanForDateManagement(?string $expectedDate = ''): void
     {
         $this->plan = new class ($this, $expectedDate) implements PlanInterface {
@@ -801,7 +826,8 @@ class FeatureContext implements Context
         };
     }
 
-    #[Given('I have an editable plan for date management to get :expectedDate')] #[Given('I have an editable plan for date management')]
+    #[Given('I have an editable plan for date management to get :expectedDate')]
+    #[Given('I have an editable plan for date management')]
     public function iHaveAEditablePlanForDateManagement(?string $expectedDate = ''): void
     {
         $this->notDefaultPlan = false;
@@ -1094,7 +1120,7 @@ class FeatureContext implements Context
         };
     }
 
-    #[Then('I train the chef with the plan')]
+    #[When('I train the chef with the plan')]
     public function iTrainTheChefWithThePlan(): void
     {
         if (!$this->lastRecipe instanceof RecipeInterface) {

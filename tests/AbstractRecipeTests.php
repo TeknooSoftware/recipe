@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe;
 
+use Teknoo\Recipe\RecipeRelativePositionEnum;
 use TypeError;
 use stdClass;
 use Teknoo\Recipe\BaseRecipeInterface;
@@ -138,6 +139,106 @@ abstract class AbstractRecipeTests extends TestCase
         );
     }
 
+    public function testCookWithRelativePositionWithoutOffsetStepName(): void
+    {
+        $recipe = $this->buildRecipe();
+        $this->expectException(\InvalidArgumentException::class);
+        $recipeWithStep = $recipe->cook(
+            function (): void {
+            },
+            'foo',
+            ['foo' => 'bar'],
+            RecipeRelativePositionEnum::After
+        );
+    }
+
+    public function testCookWithRelativePositionAfterOffsetStepName(): void
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithStep = $recipe->cook(
+            action: fn() => true,
+            name: 'foo',
+            with: ['foo' => 'bar'],
+            position: 123,
+        );
+
+        $recipeWithOrder = $recipeWithStep->cook(
+            action: fn() => true,
+            name: 'bar',
+            with: ['foo' => 'bar'],
+            position: RecipeRelativePositionEnum::After,
+            offsetStepName: 'foo',
+        );
+
+        $this->assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithOrder
+        );
+
+        $this->assertNotSame(
+            $recipeWithStep,
+            $recipeWithOrder
+        );
+    }
+
+    public function testCookWithRelativePositionBeforeOffsetStepName(): void
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithStep = $recipe->cook(
+            action: fn() => true,
+            name: 'foo',
+            with: ['foo' => 'bar'],
+            position: 123,
+        );
+
+        $recipeWithOrder = $recipeWithStep->cook(
+            action: fn() => true,
+            name: 'bar',
+            with: ['foo' => 'bar'],
+            position: RecipeRelativePositionEnum::Before,
+            offsetStepName: 'foo',
+        );
+
+        $this->assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithOrder
+        );
+
+        $this->assertNotSame(
+            $recipeWithStep,
+            $recipeWithOrder
+        );
+    }
+
+    public function testCookWithRelativePositionWithOffsetStepNameNotFound(): void
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithStep = $recipe->cook(
+            action: fn() => true,
+            name: 'foo',
+            with: ['foo' => 'bar'],
+            position: 123,
+        );
+
+        $recipeWithOrder = $recipeWithStep->cook(
+            action: fn() => true,
+            name: 'bar',
+            with: ['foo' => 'bar'],
+            position: RecipeRelativePositionEnum::After,
+            offsetStepName: 'foo2',
+        );
+
+        $this->assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithOrder
+        );
+
+        $this->assertNotSame(
+            $recipeWithStep,
+            $recipeWithOrder
+        );
+    }
+
     public function testOnError(): void
     {
         $recipe = $this->buildRecipe();
@@ -198,6 +299,95 @@ abstract class AbstractRecipeTests extends TestCase
         $this->assertNotSame(
             $recipe,
             $recipeWithStep
+        );
+    }
+
+    public function testExecuteWithRecipeWithRelativePositionWithoutOffsetStepName(): void
+    {
+        $recipe = $this->buildRecipe();
+        $this->expectException(\InvalidArgumentException::class);
+        $recipe->execute(
+            recipe: $this->createMock(RecipeInterface::class),
+            name: 'foo',
+            position: RecipeRelativePositionEnum::After,
+        );
+    }
+
+    public function testExecuteWithRecipeWithRelativePositionAfterOffsetStepName(): void
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithStep = $recipe->execute(
+            recipe: $this->createMock(RecipeInterface::class),
+            name: 'foo'
+        );
+
+        $recipeWithStepWithOffset = $recipeWithStep->execute(
+            recipe: $this->createMock(RecipeInterface::class),
+            name: 'bar',
+            position: RecipeRelativePositionEnum::After,
+            offsetStepName: 'foo',
+        );
+
+        $this->assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithStepWithOffset
+        );
+
+        $this->assertNotSame(
+            $recipeWithStep,
+            $recipeWithStepWithOffset
+        );
+    }
+
+    public function testExecuteWithRecipeWithRelativePositionBeforeOffsetStepName(): void
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithStep = $recipe->execute(
+            recipe: $this->createMock(RecipeInterface::class),
+            name: 'foo'
+        );
+
+        $recipeWithStepWithOffset = $recipeWithStep->execute(
+            recipe: $this->createMock(RecipeInterface::class),
+            name: 'bar',
+            position: RecipeRelativePositionEnum::Before,
+            offsetStepName: 'foo',
+        );
+
+        $this->assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithStepWithOffset
+        );
+
+        $this->assertNotSame(
+            $recipeWithStep,
+            $recipeWithStepWithOffset
+        );
+    }
+
+    public function testExecuteWithRecipeWithRelativePositionOnOffsetStepNameNotFound(): void
+    {
+        $recipe = $this->buildRecipe();
+        $recipeWithStep = $recipe->execute(
+            recipe: $this->createMock(RecipeInterface::class),
+            name: 'foo'
+        );
+
+        $recipeWithStepWithOffset = $recipeWithStep->execute(
+            recipe: $this->createMock(RecipeInterface::class),
+            name: 'bar',
+            position: RecipeRelativePositionEnum::After,
+            offsetStepName: 'foo2',
+        );
+
+        $this->assertInstanceOf(
+            RecipeInterface::class,
+            $recipeWithStepWithOffset
+        );
+
+        $this->assertNotSame(
+            $recipeWithStep,
+            $recipeWithStepWithOffset
         );
     }
 

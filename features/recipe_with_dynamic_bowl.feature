@@ -37,8 +37,9 @@ Feature: Recipe with dynamic bowl
     When I set the dynamic callable "createImmutable" to "DateTimeImmutable::createFromMutable" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
     And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dynamic dish without non mandatory callable
     Given I have an empty recipe
@@ -47,8 +48,9 @@ Feature: Recipe with dynamic bowl
     When I define the dynamic step "createImmutable" my recipe
     And I define the excepted dish "DateTime" to my recipe
     And I must obtain an DateTime at "2017-07-01 10:00:00"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dynamic dish with a mandatory step
     Given I have an empty recipe
@@ -58,8 +60,9 @@ Feature: Recipe with dynamic bowl
     When I set the dynamic callable "createImmutable" to "DateTimeImmutable::createFromMutable" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
     And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dynamic dish without callable with a mandatory step
     Given I have an empty recipe
@@ -68,5 +71,6 @@ Feature: Recipe with dynamic bowl
     When I define the mandatory dynamic step "createImmutable" my recipe
     And I define the excepted dish "DateTimeImmutable" to my recipe
     And I must obtain an Immutable DateTime at "2017-07-01 10:00:00"
-    Then I train the chef with the recipe
-    And It starts cooking with "2017-07-01 10:00:00" as "DateTime" and obtain an error
+    When I train the chef with the recipe
+    And It starts cooking with "2017-07-01 10:00:00" as "DateTime"
+    Then I obtain an error
