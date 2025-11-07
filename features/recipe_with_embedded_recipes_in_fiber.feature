@@ -87,8 +87,9 @@ Feature: Recipe with embedded recipes in fiber
     When I include the recipe "increasingValue" to "increaseValue" in my recipe in fiber to call "3" times
     When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "13"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish with sub recipes from a plan
     Given I have an empty recipe
@@ -102,8 +103,9 @@ Feature: Recipe with embedded recipes in fiber
     When I include the recipe "increasingValue" to "increaseValue" in my recipe in fiber to call "3" times
     When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "19"
-    Then I train the chef with the recipe
+    When I train the chef with the recipe
     And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
+    Then the recipe has been successful executed
 
   Scenario: Train a chef to cook a dish with sub recipes containing an error from a plan
     Given I have an empty recipe
@@ -117,8 +119,9 @@ Feature: Recipe with embedded recipes in fiber
     When I include the recipe "increasingValue" to "increaseValue" in my recipe in fiber to call "3" times
     When I define the excepted dish "Teknoo\Tests\Recipe\Behat\IntBag" to my recipe
     And I must obtain an IntBag with value "19"
-    Then I train the chef with the recipe
-    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag" and obtain an error
+    When I train the chef with the recipe
+    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
+    Then I obtain an error
 
   Scenario: Train a chef to cook a dish  with error handler and with sub recipes containing an error from a plan
     Given I have an empty recipe
@@ -131,8 +134,9 @@ Feature: Recipe with embedded recipes in fiber
     When I define the step "initializeBag" to do "Teknoo\Tests\Recipe\Behat\IntBag::initializeTo10" my recipe
     When I include the recipe "increasingValue" to "increaseValue" in my recipe in fiber to call "3" times
     When I define the behavior on error to do "FeatureContext::onError" my recipe
-    Then I train the chef with the recipe
-    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag" and obtain an catched error with message "There had an error"
+    When I train the chef with the recipe
+    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
+    Then I obtain an catched error with message "There had an error"
 
   Scenario: Train a chef to cook a dish with sub recipes containing an error from a plan with error handler only on subrecipe
     Given I have an empty recipe
@@ -145,8 +149,9 @@ Feature: Recipe with embedded recipes in fiber
     When I define a "Teknoo\Tests\Recipe\Behat\IntBag" to start my recipe
     When I define the step "initializeBag" to do "Teknoo\Tests\Recipe\Behat\IntBag::initializeTo10" my recipe
     When I include the recipe "increasingValue" to "increaseValue" in my recipe in fiber to call "3" times
-    Then I train the chef with the recipe
-    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag" and obtain an error
+    When I train the chef with the recipe
+    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
+    Then I obtain an error
 
   Scenario: Train a chef to cook a dish with sub recipes containing an error from a plan with error handler only on subrecipe but error reporting is disabled
     Given I have an empty recipe
@@ -159,8 +164,9 @@ Feature: Recipe with embedded recipes in fiber
     When I define a "Teknoo\Tests\Recipe\Behat\IntBag" to start my recipe
     When I define the step "initializeBag" to do "Teknoo\Tests\Recipe\Behat\IntBag::initializeTo10" my recipe
     When I include the recipe "increasingValue" to "increaseValue" in my recipe in fiber to call "1" times
-    Then I train the chef with the recipe
-    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag" and obtain an catched error with message "There had an error"
+    When I train the chef with the recipe
+    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
+    Then I obtain an catched error with message "There had an error"
 
   Scenario: Train a chef to cook a dish with sub recipes containing an error from a plan with different error handler
     Given I have an empty recipe
@@ -174,5 +180,6 @@ Feature: Recipe with embedded recipes in fiber
     When I define a "Teknoo\Tests\Recipe\Behat\IntBag" to start my recipe
     When I define the step "initializeBag" to do "Teknoo\Tests\Recipe\Behat\IntBag::initializeTo10" my recipe
     When I include the recipe "increasingValue" to "increaseValue" in my recipe in fiber to call "3" times
-    Then I train the chef with the recipe
-    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag" and obtain an catched error with message "There had an error"
+    When I train the chef with the recipe
+    And It starts cooking with "5" as "Teknoo\Tests\Recipe\Behat\IntBag"
+    Then I obtain an catched error with message "There had an error"

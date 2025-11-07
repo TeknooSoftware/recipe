@@ -23,10 +23,7 @@
 
 declare(strict_types=1);
 
-namespace Teknoo\Tests\Recipe\Behat;
-
-use Stringable;
-use Teknoo\Recipe\ChefInterface;
+namespace Teknoo\Recipe;
 
 /**
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
@@ -34,37 +31,8 @@ use Teknoo\Recipe\ChefInterface;
  * @license     http://teknoo.software/license/bsd-3         3-Clause BSD License
  * @author      Richard Déloge <richard@teknoo.software>
  */
-class StringObject implements Stringable
+enum RecipeRelativePositionEnum: string
 {
-    /**
-     * StringObject constructor.
-     */
-    public function __construct(private string $value)
-    {
-    }
-
-    public static function addTest(self $string): void
-    {
-        $string->value .= ' bar';
-    }
-
-    public static function addAnotherTest(self $string): void
-    {
-        $string->value .= ' foo';
-    }
-
-    public static function addAnotherAnotherTest(self $string): void
-    {
-        $string->value .= ' <3';
-    }
-
-    public static function gotTo(ChefInterface $chef): void
-    {
-        $chef->continue([], 'final');
-    }
-
-    public function __toString(): string
-    {
-        return $this->value;
-    }
+    case Before = 'before';
+    case After = 'after';
 }

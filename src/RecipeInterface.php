@@ -58,13 +58,9 @@ interface RecipeInterface extends ImmutableInterface, BaseRecipeInterface
         callable | BowlInterface $action,
         string $name,
         array $with = [],
-        ?int $position = null
+        RecipeRelativePositionEnum|int|null $position = null,
+        ?string $offsetStepName = null,
     ): RecipeInterface;
-
-    /*
-     * To define action when an error is occurred
-     */
-    public function onError(callable | BowlInterface $action): RecipeInterface;
 
     /*
      * To define / add a sub recipe into this recipe recipe. It will be wrapped into a RecipeBowl instance. The repeat
@@ -74,9 +70,15 @@ interface RecipeInterface extends ImmutableInterface, BaseRecipeInterface
         BaseRecipeInterface $recipe,
         string $name,
         int | callable $repeat = 1,
-        ?int $position = null,
+        RecipeRelativePositionEnum|int|null $position = null,
         bool $inFiber = false,
+        ?string $offsetStepName = null,
     ): RecipeInterface;
+
+    /*
+     * To define action when an error is occurred
+     */
+    public function onError(callable | BowlInterface $action): RecipeInterface;
 
     /*
      * To define the excepted dish attempted at the end.

@@ -1,5 +1,10 @@
 # Teknoo Software - Recipe - Change Log
 
+## [7.2.0] - 2025-11-07
+### Stable Release
+- Switch to Teknoo State 7.1
+- Add the ability to insert cooking steps or sub-recipes relative to another step. 
+
 ## [7.1.1] - 2025-09-12
 ### Stable Release
 - Some fix from PHPStan 
