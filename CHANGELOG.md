@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [7.2.1] - 2025-12-02
+### Stable Release
+- Update dev libraries
+
 ## [7.2.0] - 2025-11-07
 ### Stable Release
 - Switch to Teknoo State 7.1
