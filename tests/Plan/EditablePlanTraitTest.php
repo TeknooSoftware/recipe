@@ -50,7 +50,7 @@ final class EditablePlanTraitTest extends TestCase
 
     public function buildPlan(): EditablePlanInterface
     {
-        $plan = new class ($this->createMock(RecipeInterface::class)) implements EditablePlanInterface {
+        $plan = new class ($this->createStub(RecipeInterface::class)) implements EditablePlanInterface {
             use EditablePlanTrait;
 
             public function __construct(RecipeInterface $recipe)

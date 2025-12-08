@@ -62,11 +62,11 @@ abstract class AbstractRecipeBowlTests extends TestCase
     {
         $this->expectException(TypeError::class);
         $values = ['foo' => 'bar'];
-        $this->buildBowl($this->createMock(RecipeInterface::class), 1)
+        $this->buildBowl($this->createStub(RecipeInterface::class), 1)
             ->execute(
                 new stdClass(),
                 $values,
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             );
     }
 
@@ -74,11 +74,11 @@ abstract class AbstractRecipeBowlTests extends TestCase
     {
         $this->expectException(TypeError::class);
         $values = new stdClass();
-        $this->buildBowl($this->createMock(RecipeInterface::class), 1)
+        $this->buildBowl($this->createStub(RecipeInterface::class), 1)
             ->execute(
-                $this->createMock(ChefInterface::class),
+                $this->createStub(ChefInterface::class),
                 $values,
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             );
     }
 
@@ -86,9 +86,9 @@ abstract class AbstractRecipeBowlTests extends TestCase
     {
         $this->expectException(TypeError::class);
         $values = [];
-        $this->buildBowl($this->createMock(RecipeInterface::class), 1)
+        $this->buildBowl($this->createStub(RecipeInterface::class), 1)
             ->execute(
-                $this->createMock(ChefInterface::class),
+                $this->createStub(ChefInterface::class),
                 $values,
                 new stdClass()
             );
@@ -96,7 +96,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
 
     public function testExecuteWithBasicCounterWithRecipe(): void
     {
-        $recipe = $this->createMock(RecipeInterface::class);
+        $recipe = $this->createStub(RecipeInterface::class);
         $counter = 2;
 
         $chef = $this->createMock(ChefInterface::class);
@@ -128,14 +128,14 @@ abstract class AbstractRecipeBowlTests extends TestCase
             $bowl->execute(
                 $chef,
                 $workplan,
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             )
         );
     }
 
     public function testExecuteWithBasicCallableCounterWithRecipe(): void
     {
-        $recipe = $this->createMock(RecipeInterface::class);
+        $recipe = $this->createStub(RecipeInterface::class);
         $counter = $this->createMock(BowlInterface::class);
         $counter->expects($this->exactly(3))
             ->method('execute')
@@ -177,7 +177,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
             $bowl->execute(
                 $chef,
                 $workplan,
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             )
         );
 
@@ -189,7 +189,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
 
     public function testExecuteWithBasicCounterWithBaseRecipe(): void
     {
-        $recipe = $this->createMock(BaseRecipeInterface::class);
+        $recipe = $this->createStub(BaseRecipeInterface::class);
         $counter = 2;
 
         $chef = $this->createMock(ChefInterface::class);
@@ -221,14 +221,14 @@ abstract class AbstractRecipeBowlTests extends TestCase
             $bowl->execute(
                 $chef,
                 $workplan,
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             )
         );
     }
 
     public function testExecuteWithBasicCallableCounterWithBaseRecipe(): void
     {
-        $recipe = $this->createMock(BaseRecipeInterface::class);
+        $recipe = $this->createStub(BaseRecipeInterface::class);
         $counter = $this->createMock(BowlInterface::class);
         $counter->expects($this->exactly(3))
             ->method('execute')
@@ -270,7 +270,7 @@ abstract class AbstractRecipeBowlTests extends TestCase
             $bowl->execute(
                 $chef,
                 $workplan,
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             )
         );
 

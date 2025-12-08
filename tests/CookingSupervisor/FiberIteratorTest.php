@@ -65,7 +65,7 @@ final class FiberIteratorTest extends TestCase
         $this->assertInstanceOf(
             FiberIterator::class,
             $this->buildIterator([])->add(
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             )
         );
     }
@@ -108,8 +108,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [
@@ -128,8 +128,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [
@@ -154,8 +154,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [
@@ -183,8 +183,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [
@@ -205,8 +205,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [
@@ -232,8 +232,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [
@@ -257,8 +257,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [
@@ -303,8 +303,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [
@@ -323,8 +323,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [
@@ -350,8 +350,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [
@@ -372,8 +372,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [
@@ -400,8 +400,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [
@@ -424,8 +424,8 @@ final class FiberIteratorTest extends TestCase
         $f2 = new Fiber(function (): void {});
         $f3 = new Fiber(function (): void {});
         $f4 = new Fiber(function (): void {});
-        $s1 = $this->createMock(CookingSupervisorInterface::class);
-        $s2 = $this->createMock(CookingSupervisorInterface::class);
+        $s1 = $this->createStub(CookingSupervisorInterface::class);
+        $s2 = $this->createStub(CookingSupervisorInterface::class);
 
         $iterator = $this->buildIterator(
             [

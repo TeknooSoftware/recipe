@@ -39,13 +39,13 @@
     "require":{
         "php": "^8.4",
         "teknoo/immutable": "^3.0.22",
-        "teknoo/states": "^7.1.1"
+        "teknoo/states": "^7.1.2"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "phpunit/phpunit": "^12.4.5",
+        "phpunit/phpunit": "^12.5.2",
         "squizlabs/php_codesniffer": "^4.0.1",
-        "phpstan/phpstan": "^2.1.32",
+        "phpstan/phpstan": "^2.1.33",
         "phpstan/extension-installer": "^1.4.3",
         "symfony/property-access": "^6.4||^7.3||^8",
         "nikic/php-parser": "^5.6.2",

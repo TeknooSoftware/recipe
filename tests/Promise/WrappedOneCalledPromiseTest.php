@@ -47,14 +47,14 @@ final class WrappedOneCalledPromiseTest extends TestCase
     }
     public function testNext(): void
     {
-        $promise1 = $this->createMock(PromiseInterface::class);
-        $promise2 = $this->createMock(PromiseInterface::class);
+        $promise1 = $this->createStub(PromiseInterface::class);
+        $promise2 = $this->createStub(PromiseInterface::class);
 
         $promise1->method('next')->willReturn($promise2);
 
         $wp = $this->buildPromise($promise1);
         $wp2 = $wp->next(
-            $this->createMock(PromiseInterface::class)
+            $this->createStub(PromiseInterface::class)
         );
 
         $this->assertNotSame($wp, $wp2);
@@ -123,7 +123,7 @@ final class WrappedOneCalledPromiseTest extends TestCase
     }
     public function testFetchResult(): void
     {
-        $promise = $this->createMock(PromiseInterface::class);
+        $promise = $this->createStub(PromiseInterface::class);
 
         $promise->method('fetchResult')->with('bar')->willReturn('foo');
 
@@ -135,7 +135,7 @@ final class WrappedOneCalledPromiseTest extends TestCase
     }
     public function testFetchResultIfCalled(): void
     {
-        $promise = $this->createMock(PromiseInterface::class);
+        $promise = $this->createStub(PromiseInterface::class);
 
         $promise->method('fetchResultIfCalled')->willReturn('foo');
 

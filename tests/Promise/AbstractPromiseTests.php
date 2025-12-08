@@ -141,7 +141,7 @@ abstract class AbstractPromiseTests extends TestCase
             },
             allowNext: true,
         );
-        $nextPromise = $promise->next($this->createMock(PromiseInterface::class));
+        $nextPromise = $promise->next($this->createStub(PromiseInterface::class));
 
         $this->assertInstanceOf(expected: PromiseInterface::class, actual: $nextPromise);
         $this->assertNotSame(expected: $promise, actual: $nextPromise);
@@ -158,7 +158,7 @@ abstract class AbstractPromiseTests extends TestCase
         );
 
         $this->expectException(RuntimeException::class);
-        $promise->next($this->createMock(PromiseInterface::class));
+        $promise->next($this->createStub(PromiseInterface::class));
     }
 
     public function testSuccess(): void

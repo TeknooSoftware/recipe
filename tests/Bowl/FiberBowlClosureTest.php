@@ -141,7 +141,7 @@ final class FiberBowlClosureTest extends AbstractBowlTests
             $bowl->execute(
                 $chef,
                 $values,
-                $this->createMock(CookingSupervisorInterface::class)
+                $this->createStub(CookingSupervisorInterface::class)
             )
         );
     }

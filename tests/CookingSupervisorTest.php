@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Tests\Recipe;
 
+use PHPUnit\Framework\MockObject\Stub;
 use RuntimeException;
 use Exception;
 use Fiber;
@@ -50,14 +51,31 @@ use TypeError;
 final class CookingSupervisorTest extends TestCase
 {
     private ?FiberIterator $items = null;
-    public function getFiberIterator(): MockObject&FiberIterator
+
+    public function getFiberIterator(): FiberIterator&Stub
     {
-        if (!$this->items instanceof FiberIterator) {
+        if (
+            !$this->items instanceof FiberIterator
+            || !$this->items instanceof Stub
+        ) {
+            $this->items = $this->createStub(FiberIterator::class);
+        }
+
+        return $this->items;
+    }
+
+    public function getFiberIteratorMock(): MockObject&FiberIterator
+    {
+        if (
+            !$this->items instanceof FiberIterator
+            || !$this->items instanceof MockObject
+        ) {
             $this->items = $this->createMock(FiberIterator::class);
         }
 
         return $this->items;
     }
+
     public function buildSupervisor(?CookingSupervisorInterface $supervisor = null): CookingSupervisorInterface
     {
         return new CookingSupervisor($supervisor, $this->getFiberIterator());
@@ -81,7 +99,7 @@ final class CookingSupervisorTest extends TestCase
         $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->setParentSupervisor(
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             )
         );
     }
@@ -125,7 +143,7 @@ final class CookingSupervisorTest extends TestCase
         $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->manage(
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             )
         );
     }
@@ -141,7 +159,7 @@ final class CookingSupervisorTest extends TestCase
         $this->assertInstanceOf(
             CookingSupervisorInterface::class,
             $this->buildSupervisor()->free(
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             )
         );
     }
@@ -206,10 +224,10 @@ final class CookingSupervisorTest extends TestCase
         );
         $f->start();
 
-        $this->getFiberIterator()->method('count')->willReturn(1);
-        $this->getFiberIterator()->method('valid')->willReturn(true);
-        $this->getFiberIterator()->method('current')->willReturn($f);
-        $this->getFiberIterator()->expects($this->once())->method('remove')->with($f);
+        $this->getFiberIteratorMock()->method('count')->willReturn(1);
+        $this->getFiberIteratorMock()->method('valid')->willReturn(true);
+        $this->getFiberIteratorMock()->method('current')->willReturn($f);
+        $this->getFiberIteratorMock()->expects($this->once())->method('remove')->with($f);
 
         $this->assertInstanceOf(
             CookingSupervisorInterface::class,
@@ -368,8 +386,8 @@ final class CookingSupervisorTest extends TestCase
         );
         $f2->start();
 
-        $this->getFiberIterator()->method('count')->willReturn(2);
-        $this->getFiberIterator()->expects($this->exactly(2))->method('remove')
+        $this->getFiberIteratorMock()->method('count')->willReturn(2);
+        $this->getFiberIteratorMock()->expects($this->exactly(2))->method('remove')
             ->with(
                 $this->callback(
                     fn ($value): bool => match ($value) {
@@ -379,9 +397,9 @@ final class CookingSupervisorTest extends TestCase
                     }
                 )
             );
-        $this->getFiberIterator()->method('valid')
+        $this->getFiberIteratorMock()->method('valid')
             ->willReturnOnConsecutiveCalls(true, true, false, true, false);
-        $this->getFiberIterator()
+        $this->getFiberIteratorMock()
             
             ->method('current')
             ->willReturnOnConsecutiveCalls($f1, $f2, $f2, null, null);
@@ -395,6 +413,7 @@ final class CookingSupervisorTest extends TestCase
     }
     public function testFinishWithSupervisor(): void
     {
+        $this->getFiberIteratorMock()->method('count')->willReturn(2);
         $supervisor = $this->buildSupervisor();
 
         $s1 = $this->createMock(CookingSupervisorInterface::class);
@@ -413,8 +432,7 @@ final class CookingSupervisorTest extends TestCase
             }
         );
 
-        $this->getFiberIterator()->method('count')->willReturn(2);
-        $this->getFiberIterator()->expects($this->exactly(2))->method('remove')
+        $this->getFiberIteratorMock()->expects($this->exactly(2))->method('remove')
             ->with(
                 $this->callback(
                     fn ($value): bool => match ($value) {
@@ -424,9 +442,9 @@ final class CookingSupervisorTest extends TestCase
                     }
                 )
             );
-        $this->getFiberIterator()->method('valid')
+        $this->getFiberIteratorMock()->method('valid')
             ->willReturnOnConsecutiveCalls(true, true, false, true, false);
-        $this->getFiberIterator()->method('current')
+        $this->getFiberIteratorMock()->method('current')
             ->willReturnOnConsecutiveCalls($s1, $s2, null, null, null);
 
         $this->assertInstanceOf(

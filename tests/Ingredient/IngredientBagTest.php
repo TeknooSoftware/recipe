@@ -70,7 +70,7 @@ final class IngredientBagTest extends TestCase
     {
         $this->assertInstanceOf(
             IngredientBagInterface::class,
-            $this->buildBag()->updateWorkPlan($this->createMock(ChefInterface::class))
+            $this->buildBag()->updateWorkPlan($this->createStub(ChefInterface::class))
         );
     }
 }

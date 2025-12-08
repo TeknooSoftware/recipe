@@ -106,7 +106,7 @@ abstract class AbstractChefTests extends TestCase
     public function testReserveAndBeginChefWithBaseSupervisor(): void
     {
         $this->expectException(TypeError::class);
-        $recipe = $this->createMock(BaseRecipeInterface::class);
+        $recipe = $this->createStub(BaseRecipeInterface::class);
         $this->buildChef()->reserveAndBegin($recipe, new stdClass());
     }
 
@@ -121,7 +121,7 @@ abstract class AbstractChefTests extends TestCase
         $subRecipe->expects($this->once())
             ->method('train')
             ->willReturnCallback(function (ChefInterface $chef) use ($subRecipe): MockObject {
-                $chef->followSteps(['substep' => $this->createMock(BowlInterface::class)]);
+                $chef->followSteps(['substep' => $this->createStub(BowlInterface::class)]);
 
                 return $subRecipe;
             });
@@ -171,7 +171,7 @@ abstract class AbstractChefTests extends TestCase
         $subRecipe->expects($this->once())
             ->method('train')
             ->willReturnCallback(function (ChefInterface $chef) use ($subRecipe): MockObject {
-                $chef->followSteps(['substep' => $this->createMock(BowlInterface::class)]);
+                $chef->followSteps(['substep' => $this->createStub(BowlInterface::class)]);
 
                 return $subRecipe;
             });
@@ -188,7 +188,7 @@ abstract class AbstractChefTests extends TestCase
             ->willReturnCallback(function (ChefInterface $chef) use ($step, $subRecipe): MockObject {
                 $this->assertInstanceOf(
                     ChefInterface::class,
-                    $subchef = $chef->reserveAndBegin($subRecipe, $this->createMock(CookingSupervisorInterface::class))
+                    $subchef = $chef->reserveAndBegin($subRecipe, $this->createStub(CookingSupervisorInterface::class))
                 );
 
                 $this->assertNotSame(
@@ -221,7 +221,7 @@ abstract class AbstractChefTests extends TestCase
         $subRecipe->expects($this->once())
             ->method('train')
             ->willReturnCallback(function (ChefInterface $chef) use ($subRecipe): MockObject {
-                $chef->followSteps(['substep' => $this->createMock(BowlInterface::class)]);
+                $chef->followSteps(['substep' => $this->createStub(BowlInterface::class)]);
 
                 return $subRecipe;
             });
@@ -238,7 +238,7 @@ abstract class AbstractChefTests extends TestCase
             ->willReturnCallback(function (ChefInterface $chef) use ($step, $subRecipe): MockObject {
                 $this->assertInstanceOf(
                     ChefInterface::class,
-                    $subchef = $chef->reserveAndBegin($subRecipe, $this->createMock(CookingSupervisorInterface::class))
+                    $subchef = $chef->reserveAndBegin($subRecipe, $this->createStub(CookingSupervisorInterface::class))
                 );
 
                 $this->assertNotSame(
@@ -263,21 +263,21 @@ abstract class AbstractChefTests extends TestCase
     public function testReserveAndBeginOnNonTrainedChefWithRecipe(): void
     {
         $this->expectException(Throwable::class);
-        $recipe = $this->createMock(RecipeInterface::class);
+        $recipe = $this->createStub(RecipeInterface::class);
         $this->buildChef()->reserveAndBegin($recipe);
     }
 
     public function testReserveAndBeginOnNonTrainedChefWithPlan(): void
     {
         $this->expectException(Throwable::class);
-        $recipe = $this->createMock(PlanInterface::class);
+        $recipe = $this->createStub(PlanInterface::class);
         $this->buildChef()->reserveAndBegin($recipe);
     }
 
     public function testReserveAndBeginOnNonTrainedChefWithBaseRecipe(): void
     {
         $this->expectException(Throwable::class);
-        $recipe = $this->createMock(BaseRecipeInterface::class);
+        $recipe = $this->createStub(BaseRecipeInterface::class);
         $this->buildChef()->reserveAndBegin($recipe);
     }
 
@@ -291,7 +291,7 @@ abstract class AbstractChefTests extends TestCase
     {
         $this->expectException(TypeError::class);
         $this->buildChef()->missing(
-            $this->createMock(IngredientInterface::class),
+            $this->createStub(IngredientInterface::class),
             new stdClass()
         );
     }
@@ -299,7 +299,7 @@ abstract class AbstractChefTests extends TestCase
     public function testMissing(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
@@ -310,7 +310,7 @@ abstract class AbstractChefTests extends TestCase
                 $this->assertInstanceOf(
                     ChefInterface::class,
                     $chef->missing(
-                        $this->createMock(IngredientInterface::class),
+                        $this->createStub(IngredientInterface::class),
                         'fooBar'
                     )
                 );
@@ -337,8 +337,8 @@ abstract class AbstractChefTests extends TestCase
     public function testUpdateWorkPlan(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
-        $chef->followSteps([$this->createMock(BowlInterface::class)]);
+        $chef->read($this->createStub(RecipeInterface::class));
+        $chef->followSteps([$this->createStub(BowlInterface::class)]);
 
         $this->assertInstanceOf(
             ChefInterface::class,
@@ -351,7 +351,7 @@ abstract class AbstractChefTests extends TestCase
     public function testExceptionOnUpdateWorkPlanWithBadName(): void
     {
         $this->expectException(TypeError::class);
-        $this->buildChef()->missing(new stdClass(), $this->createMock(MergeableInterface::class));
+        $this->buildChef()->missing(new stdClass(), $this->createStub(MergeableInterface::class));
     }
 
     public function testExceptionOnUpdateWorkPlanWithBadValue(): void
@@ -363,7 +363,7 @@ abstract class AbstractChefTests extends TestCase
     public function testMerge(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
         $chef->followSteps([
             new Bowl(
                 function ($foo): void {
@@ -428,8 +428,8 @@ abstract class AbstractChefTests extends TestCase
     public function testMergeWithNonMergeable(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
-        $chef->followSteps([$this->createMock(BowlInterface::class)]);
+        $chef->read($this->createStub(RecipeInterface::class));
+        $chef->followSteps([$this->createStub(BowlInterface::class)]);
 
         $this->assertInstanceOf(
             ChefInterface::class,
@@ -441,20 +441,20 @@ abstract class AbstractChefTests extends TestCase
         $this->expectException(RuntimeException::class);
         $chef->merge(
             'foo',
-            $this->createMock(MergeableInterface::class)
+            $this->createStub(MergeableInterface::class)
         );
     }
 
     public function testMergeWithNonMergeableAfterUpdate(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
-        $chef->followSteps([$this->createMock(BowlInterface::class)]);
+        $chef->read($this->createStub(RecipeInterface::class));
+        $chef->followSteps([$this->createStub(BowlInterface::class)]);
 
         $this->assertInstanceOf(
             ChefInterface::class,
             $chef->updateWorkPlan(
-                ['foo' => $this->createMock(MergeableInterface::class)]
+                ['foo' => $this->createStub(MergeableInterface::class)]
             )
         );
 
@@ -468,7 +468,7 @@ abstract class AbstractChefTests extends TestCase
         $this->expectException(RuntimeException::class);
         $chef->merge(
             'foo',
-            $this->createMock(MergeableInterface::class)
+            $this->createStub(MergeableInterface::class)
         );
     }
 
@@ -481,8 +481,8 @@ abstract class AbstractChefTests extends TestCase
     public function testCleanWorkPlan(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
-        $chef->followSteps([$this->createMock(BowlInterface::class)]);
+        $chef->read($this->createStub(RecipeInterface::class));
+        $chef->followSteps([$this->createStub(BowlInterface::class)]);
 
         $this->assertInstanceOf(
             ChefInterface::class,
@@ -526,7 +526,7 @@ abstract class AbstractChefTests extends TestCase
             ChefInterface::class,
             $this->buildChef()->followSteps(
                 ['foo' => 'bar'],
-                $this->createMock(BowlInterface::class)
+                $this->createStub(BowlInterface::class)
             )
         );
     }
@@ -546,7 +546,7 @@ abstract class AbstractChefTests extends TestCase
     public function testContinue(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
@@ -588,7 +588,7 @@ abstract class AbstractChefTests extends TestCase
     {
         $this->expectException(RuntimeException::class);
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
 
         $bowl = $this->createMock(BowlInterface::class);
         $bowl->expects($this->once())
@@ -612,7 +612,7 @@ abstract class AbstractChefTests extends TestCase
     public function testExceptionWithExceptionBowlDefined(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
@@ -649,7 +649,7 @@ abstract class AbstractChefTests extends TestCase
     public function testExceptionWithSeveralExceptionBowlDefined(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
 
         $called = false;
         $bowl1 = $this->createMock(BowlInterface::class);
@@ -696,7 +696,7 @@ abstract class AbstractChefTests extends TestCase
     public function testContinueNextStep(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
@@ -742,7 +742,7 @@ abstract class AbstractChefTests extends TestCase
     public function testFinish(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
@@ -773,7 +773,7 @@ abstract class AbstractChefTests extends TestCase
     public function testInterruptCooking(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
@@ -812,7 +812,7 @@ abstract class AbstractChefTests extends TestCase
     {
 
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
@@ -844,7 +844,7 @@ abstract class AbstractChefTests extends TestCase
     public function testErrorWithCatcher(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
@@ -894,8 +894,8 @@ abstract class AbstractChefTests extends TestCase
     public function testProcess(): void
     {
         $chef = $this->buildChef();
-        $chef->read($this->createMock(RecipeInterface::class));
-        $chef->followSteps([$this->createMock(BowlInterface::class)]);
+        $chef->read($this->createStub(RecipeInterface::class));
+        $chef->followSteps([$this->createStub(BowlInterface::class)]);
 
         $this->assertInstanceOf(
             ChefInterface::class,
@@ -909,7 +909,7 @@ abstract class AbstractChefTests extends TestCase
     {
         $this->expectException(RuntimeException::class);
         $chef = $this->buildChef();
-        $ingredient = $this->createMock(IngredientInterface::class);
+        $ingredient = $this->createStub(IngredientInterface::class);
 
         $recipe = $this->createMock(RecipeInterface::class);
         $recipe->expects($this->once())
@@ -928,7 +928,7 @@ abstract class AbstractChefTests extends TestCase
             });
 
         $chef->read($recipe);
-        $chef->followSteps([$this->createMock(BowlInterface::class)]);
+        $chef->followSteps([$this->createStub(BowlInterface::class)]);
 
         $chef->process(['foo' => 'bar']);
     }
@@ -940,7 +940,7 @@ abstract class AbstractChefTests extends TestCase
 
         $this->assertNotSame($chef, $chef2);
 
-        $chefSupervised = $this->buildChef($this->createMock(CookingSupervisorInterface::class));
+        $chefSupervised = $this->buildChef($this->createStub(CookingSupervisorInterface::class));
         $chefSupervised2 = clone $chefSupervised;
 
         $this->assertNotSame($chef, $chef2);

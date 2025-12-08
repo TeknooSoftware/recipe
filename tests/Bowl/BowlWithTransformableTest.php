@@ -166,7 +166,7 @@ final class BowlWithTransformableTest extends TestCase
         $this->assertInstanceOf(
             BowlInterface::class,
             (new Bowl($this->noTransform(...), []))->execute(
-                $this->createMock(ChefInterface::class),
+                $this->createStub(ChefInterface::class),
                 $workplan
             )
         );
@@ -185,7 +185,7 @@ final class BowlWithTransformableTest extends TestCase
         $this->assertInstanceOf(
             BowlInterface::class,
             (new Bowl($this->transformNoHinting(...), []))->execute(
-                $this->createMock(ChefInterface::class),
+                $this->createStub(ChefInterface::class),
                 $workplan
             )
         );
@@ -204,7 +204,7 @@ final class BowlWithTransformableTest extends TestCase
         $this->assertInstanceOf(
             BowlInterface::class,
             (new Bowl($this->transformHinting(...), []))->execute(
-                $this->createMock(ChefInterface::class),
+                $this->createStub(ChefInterface::class),
                 $workplan
             )
         );
@@ -223,7 +223,7 @@ final class BowlWithTransformableTest extends TestCase
         $this->assertInstanceOf(
             BowlInterface::class,
             (new Bowl($this->transformHintingWithClass(...), []))->execute(
-                $this->createMock(ChefInterface::class),
+                $this->createStub(ChefInterface::class),
                 $workplan
             )
         );
@@ -242,7 +242,7 @@ final class BowlWithTransformableTest extends TestCase
         $this->assertInstanceOf(
             BowlInterface::class,
             (new Bowl($this->transformWithTransformer(...), []))->execute(
-                $this->createMock(ChefInterface::class),
+                $this->createStub(ChefInterface::class),
                 $workplan
             )
         );
@@ -261,7 +261,7 @@ final class BowlWithTransformableTest extends TestCase
         $this->assertInstanceOf(
             BowlInterface::class,
             (new Bowl($this->transformWithTransformer(...), []))->execute(
-                $this->createMock(ChefInterface::class),
+                $this->createStub(ChefInterface::class),
                 $workplan
             )
         );

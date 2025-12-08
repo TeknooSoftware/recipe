@@ -66,7 +66,7 @@ abstract class AbstractIngredientTests extends TestCase
     {
         $this->expectException(TypeError::class);
         $s = new stdClass();
-        $this->buildIngredient()->prepare($s, $this->createMock(RecipeInterface::class));
+        $this->buildIngredient()->prepare($s, $this->createStub(RecipeInterface::class));
     }
 
     public function testExceptionOnPrepareWhenWorkPlanIsNotPromise(): void

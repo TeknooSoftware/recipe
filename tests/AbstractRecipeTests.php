@@ -56,7 +56,7 @@ abstract class AbstractRecipeTests extends TestCase
     {
         $recipe = $this->buildRecipe();
         $recipeWithIngredient = $recipe->require(
-            $this->createMock(IngredientInterface::class)
+            $this->createStub(IngredientInterface::class)
         );
 
         $this->assertInstanceOf(
@@ -274,20 +274,20 @@ abstract class AbstractRecipeTests extends TestCase
     public function testExceptionOnExecuteWithBadName(): void
     {
         $this->expectException(TypeError::class);
-        $this->buildRecipe()->execute($this->createMock(RecipeInterface::class), new stdClass());
+        $this->buildRecipe()->execute($this->createStub(RecipeInterface::class), new stdClass());
     }
 
     public function testExceptionOnExecuteWithBadPosition(): void
     {
         $this->expectException(TypeError::class);
-        $this->buildRecipe()->execute($this->createMock(RecipeInterface::class), 'foo', 123, new stdClass());
+        $this->buildRecipe()->execute($this->createStub(RecipeInterface::class), 'foo', 123, new stdClass());
     }
 
     public function testExecuteWithRecipe(): void
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->execute(
-            $this->createMock(RecipeInterface::class),
+            $this->createStub(RecipeInterface::class),
             'foo'
         );
 
@@ -307,7 +307,7 @@ abstract class AbstractRecipeTests extends TestCase
         $recipe = $this->buildRecipe();
         $this->expectException(\InvalidArgumentException::class);
         $recipe->execute(
-            recipe: $this->createMock(RecipeInterface::class),
+            recipe: $this->createStub(RecipeInterface::class),
             name: 'foo',
             position: RecipeRelativePositionEnum::After,
         );
@@ -317,12 +317,12 @@ abstract class AbstractRecipeTests extends TestCase
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->execute(
-            recipe: $this->createMock(RecipeInterface::class),
+            recipe: $this->createStub(RecipeInterface::class),
             name: 'foo'
         );
 
         $recipeWithStepWithOffset = $recipeWithStep->execute(
-            recipe: $this->createMock(RecipeInterface::class),
+            recipe: $this->createStub(RecipeInterface::class),
             name: 'bar',
             position: RecipeRelativePositionEnum::After,
             offsetStepName: 'foo',
@@ -343,12 +343,12 @@ abstract class AbstractRecipeTests extends TestCase
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->execute(
-            recipe: $this->createMock(RecipeInterface::class),
+            recipe: $this->createStub(RecipeInterface::class),
             name: 'foo'
         );
 
         $recipeWithStepWithOffset = $recipeWithStep->execute(
-            recipe: $this->createMock(RecipeInterface::class),
+            recipe: $this->createStub(RecipeInterface::class),
             name: 'bar',
             position: RecipeRelativePositionEnum::Before,
             offsetStepName: 'foo',
@@ -369,12 +369,12 @@ abstract class AbstractRecipeTests extends TestCase
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->execute(
-            recipe: $this->createMock(RecipeInterface::class),
+            recipe: $this->createStub(RecipeInterface::class),
             name: 'foo'
         );
 
         $recipeWithStepWithOffset = $recipeWithStep->execute(
-            recipe: $this->createMock(RecipeInterface::class),
+            recipe: $this->createStub(RecipeInterface::class),
             name: 'bar',
             position: RecipeRelativePositionEnum::After,
             offsetStepName: 'foo2',
@@ -395,7 +395,7 @@ abstract class AbstractRecipeTests extends TestCase
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->execute(
-            recipe: $this->createMock(RecipeInterface::class),
+            recipe: $this->createStub(RecipeInterface::class),
             name: 'foo',
             inFiber: true
         );
@@ -415,7 +415,7 @@ abstract class AbstractRecipeTests extends TestCase
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->execute(
-            $this->createMock(BaseRecipeInterface::class),
+            $this->createStub(BaseRecipeInterface::class),
             'foo'
         );
 
@@ -434,7 +434,7 @@ abstract class AbstractRecipeTests extends TestCase
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->execute(
-            $this->createMock(PlanInterface::class),
+            $this->createStub(PlanInterface::class),
             'foo'
         );
 
@@ -453,7 +453,7 @@ abstract class AbstractRecipeTests extends TestCase
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->execute(
-            $this->createMock(RecipeInterface::class),
+            $this->createStub(RecipeInterface::class),
             'foo',
             123,
             123
@@ -474,7 +474,7 @@ abstract class AbstractRecipeTests extends TestCase
     {
         $recipe = $this->buildRecipe();
         $recipeWithStep = $recipe->execute(
-            $this->createMock(RecipeInterface::class),
+            $this->createStub(RecipeInterface::class),
             'foo',
             function (): void {
             },
@@ -502,7 +502,7 @@ abstract class AbstractRecipeTests extends TestCase
     {
         $recipe = $this->buildRecipe();
         $recipeWithDish = $recipe->given(
-            $this->createMock(DishInterface::class)
+            $this->createStub(DishInterface::class)
         );
 
         $this->assertInstanceOf(
@@ -530,7 +530,7 @@ abstract class AbstractRecipeTests extends TestCase
                 ->given($dish)
                 ->cook(function (): void {
                 }, 'foo')
-                ->train($this->createMock(ChefInterface::class))
+                ->train($this->createStub(ChefInterface::class))
                 ->validate('fooBar')
         );
     }
@@ -542,7 +542,7 @@ abstract class AbstractRecipeTests extends TestCase
             $this->buildRecipe()
                 ->cook(function (): void {
                 }, 'foo')
-                ->train($this->createMock(ChefInterface::class))
+                ->train($this->createStub(ChefInterface::class))
                 ->validate('fooBar')
         );
     }
@@ -573,7 +573,7 @@ abstract class AbstractRecipeTests extends TestCase
     {
         $this->expectException(TypeError::class);
         $workPlan = new stdClass();
-        $this->buildRecipe()->prepare($workPlan, $this->createMock(ChefInterface::class));
+        $this->buildRecipe()->prepare($workPlan, $this->createStub(ChefInterface::class));
     }
 
     public function testExceptionOnPrepareWithABadChef(): void
@@ -585,7 +585,7 @@ abstract class AbstractRecipeTests extends TestCase
 
     public function testPrepare(): void
     {
-        $chef = $this->createMock(ChefInterface::class);
+        $chef = $this->createStub(ChefInterface::class);
         $ingredient = $this->createMock(IngredientInterface::class);
         $workPlan = ['foo' => 'bar'];
 

@@ -62,7 +62,7 @@ trait EditablePlanTestTrait
     {
         $this->assertInstanceOf(
             EditablePlanInterface::class,
-            $this->buildPlan()->add($this->createMock(BowlInterface::class), 1),
+            $this->buildPlan()->add($this->createStub(BowlInterface::class), 1),
         );
     }
 
@@ -70,7 +70,7 @@ trait EditablePlanTestTrait
     {
         $this->assertInstanceOf(
             EditablePlanInterface::class,
-            $this->buildPlan()->add($this->createMock(Step::class), 1),
+            $this->buildPlan()->add($this->createStub(Step::class), 1),
         );
     }
 
@@ -102,19 +102,19 @@ trait EditablePlanTestTrait
 
         $this->assertInstanceOf(
             PlanInterface::class,
-            $plan->train($this->createMock(ChefInterface::class))
+            $plan->train($this->createStub(ChefInterface::class))
         );
 
         $this->assertInstanceOf(
             PlanInterface::class,
-            $plan->train($this->createMock(ChefInterface::class))
+            $plan->train($this->createStub(ChefInterface::class))
         );
     }
 
     public function testPrepare(): void
     {
         $plan = $this->buildPlan();
-        $chef = $this->createMock(ChefInterface::class);
+        $chef = $this->createStub(ChefInterface::class);
 
         $workplan = [];
         $this->assertInstanceOf(

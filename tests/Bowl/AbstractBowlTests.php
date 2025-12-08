@@ -64,7 +64,7 @@ abstract class AbstractBowlTests extends TestCase
     {
         $this->expectException(TypeError::class);
         $values = new stdClass();
-        $this->buildBowl()->execute($this->createMock(ChefInterface::class), $values);
+        $this->buildBowl()->execute($this->createStub(ChefInterface::class), $values);
     }
 
     protected function getValidWorkPlan(): array
@@ -100,7 +100,7 @@ abstract class AbstractBowlTests extends TestCase
             $this->buildBowl()->execute(
                 $chef,
                 $values,
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             )
         );
     }
@@ -128,7 +128,7 @@ abstract class AbstractBowlTests extends TestCase
             $this->buildBowlWithMappingValue()->execute(
                 $chef,
                 $values,
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             )
         );
     }

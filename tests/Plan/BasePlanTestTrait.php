@@ -54,12 +54,12 @@ trait BasePlanTestTrait
 
         $this->assertInstanceOf(
             PlanInterface::class,
-            $plan->train($this->createMock(ChefInterface::class))
+            $plan->train($this->createStub(ChefInterface::class))
         );
 
         $this->assertInstanceOf(
             PlanInterface::class,
-            $plan->train($this->createMock(ChefInterface::class))
+            $plan->train($this->createStub(ChefInterface::class))
         );
     }
 
@@ -67,20 +67,20 @@ trait BasePlanTestTrait
     {
         $this->expectException(TypeError::class);
 
-        $this->buildPlan()->train(new stdClass(), $this->createMock(ChefInterface::class));
+        $this->buildPlan()->train(new stdClass(), $this->createStub(ChefInterface::class));
     }
 
     public function testPrepareWithBadChef(): void
     {
         $this->expectException(TypeError::class);
 
-        $this->buildPlan()->train([], $this->createMock(ChefInterface::class));
+        $this->buildPlan()->train([], $this->createStub(ChefInterface::class));
     }
 
     public function testPrepare(): void
     {
         $plan = $this->buildPlan();
-        $chef = $this->createMock(ChefInterface::class);
+        $chef = $this->createStub(ChefInterface::class);
 
         $workplan = [];
         $this->assertInstanceOf(
@@ -108,7 +108,7 @@ trait BasePlanTestTrait
     {
         $this->assertInstanceOf(
             PlanInterface::class,
-            $this->buildPlan()->fill($this->createMock(RecipeInterface::class))
+            $this->buildPlan()->fill($this->createStub(RecipeInterface::class))
         );
     }
 

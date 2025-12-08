@@ -54,7 +54,7 @@ final class DynamicBowlMissingCallableNotMandatoryTest extends TestCase
         $this->assertInstanceOf(
             DynamicBowl::class,
             $bowl->execute(
-                $this->createMock(ChefInterface::class),
+                $this->createStub(ChefInterface::class),
                 $values
             )
         );

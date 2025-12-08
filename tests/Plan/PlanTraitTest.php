@@ -46,7 +46,7 @@ final class PlanTraitTest extends TestCase
 
     public function buildPlan(): PlanInterface
     {
-        return new class ($this->createMock(RecipeInterface::class)) implements PlanInterface {
+        return new class ($this->createStub(RecipeInterface::class)) implements PlanInterface {
             use BasePlanTrait;
 
             public function __construct(RecipeInterface $recipe)

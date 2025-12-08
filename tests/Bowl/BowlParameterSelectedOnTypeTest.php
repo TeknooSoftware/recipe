@@ -139,7 +139,7 @@ final class BowlParameterSelectedOnTypeTest extends AbstractBowlTests
             $this->buildBowlWithMappingValue()->execute(
                 $chef,
                 $values,
-                $this->createMock(CookingSupervisorInterface::class),
+                $this->createStub(CookingSupervisorInterface::class),
             )
         );
     }

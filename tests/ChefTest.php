@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Tests\Recipe;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Teknoo\Recipe\Bowl\BowlInterface;
@@ -34,7 +35,6 @@ use Teknoo\Recipe\Chef\Cooking;
 use Teknoo\Recipe\Chef\Free;
 use Teknoo\Recipe\Chef\Trained;
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\CookingSupervisor;
 use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\RecipeInterface;
 
@@ -78,18 +78,18 @@ final class ChefTest extends AbstractChefTests
     }
     public function testErrorWithCatcherWithTopChef(): void
     {
-        $topChef = $this->createMock(Chef::class);
+        $topChef = $this->createStub(Chef::class);
         $topChefCalled = [];
         $topChef
             ->method('__call')
-            ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled): MockObject {
+            ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled): Stub {
                 $topChefCalled[$name] = true;
 
                 return $topChef;
             });
 
         $chef = $this->buildChef(topChef: $topChef);
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
@@ -125,18 +125,18 @@ final class ChefTest extends AbstractChefTests
     }
     public function testErrorWithCatcherWithTopChefButErrorReportingIsStopped(): void
     {
-        $topChef = $this->createMock(Chef::class);
+        $topChef = $this->createStub(Chef::class);
         $topChefCalled = [];
         $topChef
             ->method('__call')
-            ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled): MockObject {
+            ->willReturnCallback(function ($name) use ($topChef, &$topChefCalled): Stub {
                 $topChefCalled[$name] = true;
 
                 return $topChef;
             });
 
         $chef = $this->buildChef(topChef: $topChef);
-        $chef->read($this->createMock(RecipeInterface::class));
+        $chef->read($this->createStub(RecipeInterface::class));
 
         $called = false;
         $bowl = $this->createMock(BowlInterface::class);
