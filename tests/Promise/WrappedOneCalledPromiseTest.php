@@ -125,7 +125,7 @@ final class WrappedOneCalledPromiseTest extends TestCase
     {
         $promise = $this->createStub(PromiseInterface::class);
 
-        $promise->method('fetchResult')->with('bar')->willReturn('foo');
+        $promise->method('fetchResult')->willReturn('foo');
 
         $wp = $this->buildPromise($promise);
         $this->assertEquals(
