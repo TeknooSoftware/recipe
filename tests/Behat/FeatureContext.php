@@ -144,9 +144,7 @@ class FeatureContext implements Context
 
                 $ro = new ReflectionObject($supervisor);
                 $rp = $ro->getProperty('items');
-                $rp->setAccessible(true);
                 $iterator = $rp->getValue($supervisor);
-                $rp->setAccessible(false);
 
                 if (2 === $iterator->count()) {
                     Assert::assertContainsOnlyInstancesOf(Fiber::class, $iterator);

@@ -116,7 +116,6 @@ final class BowlClassTest extends AbstractBowlTests
 
         $refClass = new ReflectionClass(Bowl::class);
         $parameter = $refClass->getProperty('reflectionsParameters');
-        $parameter->setAccessible(true);
 
         $refType = $this->createStub(ReflectionNamedType::class);
         $refType
