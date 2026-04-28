@@ -158,9 +158,8 @@ trait BowlTrait
             is_array($callable)
             && (
                 is_object($callable[0])
-                || (is_string($callable[0]) && class_exists($callable[0], true))
+                || (class_exists($callable[0], true))
             )
-            && is_string($callable[1])
         ) {
             //The callable is checked by PHP in the constructor by the type hitting
             return self::getReflectionMethod($callable[0], (string) $callable[1]);

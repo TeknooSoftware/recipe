@@ -1,5 +1,9 @@
 # Teknoo Software - Recipe - Change Log
 
+## [7.2.3] - 2026-04-28
+### Stable Release
+- Update PHPStan and fix false positive
+
 ## [7.2.2] - 2025-12-08
 ### Stable Release
 - Fix bc break introduced into patch of phpstan and phpunit
