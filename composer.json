@@ -47,7 +47,7 @@
         "squizlabs/php_codesniffer": "^4.0.1",
         "phpstan/phpstan": "^2.1.53",
         "phpstan/extension-installer": "^1.4.3",
-        "symfony/property-access": "^6.4||^7.4||^8",
+        "symfony/property-access": "^6.4||^7.4||^8.1",
         "nikic/php-parser": "^5.7",
         "behat/behat": "^3.29"
     },
