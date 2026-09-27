@@ -2,8 +2,10 @@
 
 # Applications
 COMPOSER ?= /usr/bin/env composer
-DEPENDENCIES ?= lastest
+DEPENDENCIES ?= latest
 PHP ?= /usr/bin/env php
+# Behat scenarios tagged @php85 use a PHP 8.5 only syntax, they are filtered on older versions
+BEHAT_TAGS = $(shell ${PHP} -r 'echo PHP_VERSION_ID < 80500 ? "--tags=~@php85" : "";')
 
 ### Helpers
 all: clean depend
@@ -31,7 +33,7 @@ phpstan:
 	${PHP} -d memory_limit=256M vendor/bin/phpstan analyse
 
 phpcs:
-	${PHP} vendor/bin/phpcs --standard=PSR12 --extensions=php --ignore=src/CookbookInterface.php,src/Cookbook/BaseCookbookTrait.php src/
+	${PHP} vendor/bin/phpcs --standard=PSR12 --extensions=php src/
 
 audit:
 	${COMPOSER} audit
@@ -41,7 +43,7 @@ audit:
 ### Testing
 test:
 	XDEBUG_MODE=coverage ${PHP} -dzend_extension=xdebug.so -dxdebug.mode=coverage vendor/bin/phpunit -c phpunit.xml --colors --coverage-text
-	php vendor/bin/behat
+	${PHP} vendor/bin/behat ${BEHAT_TAGS}
 
 .PHONY: test
 

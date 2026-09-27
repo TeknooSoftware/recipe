@@ -40,6 +40,7 @@ use Teknoo\States\Automated\Assertion\Property\IsEqual;
 use Teknoo\States\Automated\Assertion\Property\IsNotEqual;
 use Teknoo\States\Automated\AutomatedInterface;
 use Teknoo\States\Automated\AutomatedTrait;
+use Teknoo\States\Proxy\Exception\StateNotFound;
 use Teknoo\States\Proxy\ProxyTrait;
 use Throwable;
 
@@ -129,10 +130,13 @@ class Chef implements AutomatedInterface, ChefInterface
     }
 
     /**
-     * @return void
+     * @throws StateNotFound
      */
     public function __clone()
     {
+        //Clone states instances and reset callers stack of the proxy (a clone can be created during a cooking)
+        $this->cloneProxy();
+
         $this->cookingSupervisor = clone $this->cookingSupervisor;
     }
 

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Recipe;
 
-use InvalidArgumentException;
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\Bowl\Bowl;
 use Teknoo\Recipe\Bowl\BowlInterface;
@@ -93,21 +92,10 @@ class Draft implements StateInterface
                 $callable = new Bowl($callable, $with, $name);
             }
 
-            if (empty($position)) {
+            $position = $this->resolveStepPosition($position, $offsetStepName);
+            if (null === $position) {
                 $that->steps[] = [[$name => $callable]];
             } else {
-                if ($position instanceof RecipeRelativePositionEnum) {
-                    if (null === $offsetStepName) {
-                        throw new InvalidArgumentException('The offset name is required to define a step position');
-                    }
-
-                    $offsetPlace = $this->findStepPosition($offsetStepName);
-                    $position = match ($position) {
-                        RecipeRelativePositionEnum::Before => $offsetPlace - 1,
-                        RecipeRelativePositionEnum::After => $offsetPlace + 1,
-                    };
-                }
-
                 $that->steps[$position][] = [$name => $callable];
             }
 
@@ -142,21 +130,10 @@ class Draft implements StateInterface
                 $callable = new FiberRecipeBowl($recipe, $repeat);
             }
 
+            $position = $this->resolveStepPosition($position, $offsetStepName);
             if (null === $position) {
                 $that->steps[] = [[$name => $callable]];
             } else {
-                if ($position instanceof RecipeRelativePositionEnum) {
-                    if (null === $offsetStepName) {
-                        throw new InvalidArgumentException('The offset name is required to define a step position');
-                    }
-
-                    $offsetPlace = $this->findStepPosition($offsetStepName);
-                    $position = match ($position) {
-                        RecipeRelativePositionEnum::Before => $offsetPlace - 1,
-                        RecipeRelativePositionEnum::After => $offsetPlace + 1,
-                    };
-                }
-
                 $that->steps[$position][] = [$name => $callable];
             }
 

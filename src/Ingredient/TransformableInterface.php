@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Teknoo\Recipe\Ingredient;
 
 /**
- * To define an ingredient instance able to be transform before to put it into the bowl when a step use the attribute
- * Transformable
+ * To define an ingredient instance able to be transformed before to put it into the bowl when a step uses the
+ * attribute Transform on its parameter
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)

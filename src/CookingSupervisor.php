@@ -161,11 +161,20 @@ class CookingSupervisor implements CookingSupervisorInterface
         }
 
         if (!$item->isStarted()) {
+            //A never started fiber can not be resumed by the supervisor. To finish the cooking, it must be forgotten,
+            //else the supervisor will loop indefinitely on it
+            if (Action::Finish === $methodName) {
+                $this->items->remove($item);
+            }
+
             return;
         }
 
         if (Action::Throw === $methodName) {
-            $item->throw($value);
+            //Fiber::throw() requires a throwable, without exception to throw, the fiber is not resumed
+            if ($value instanceof Throwable) {
+                $item->throw($value);
+            }
         } elseif ($item->isSuspended()) {
             $item->resume($value);
         }

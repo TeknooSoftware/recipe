@@ -213,8 +213,11 @@ abstract class AbstractPromise implements PromiseInterface
 
         $args = func_get_args();
         $this->isFailing = true;
-        $this->call($this->onFail, $args);
-        $this->isFailing = false;
+        try {
+            $this->call($this->onFail, $args);
+        } finally {
+            $this->isFailing = false;
+        }
 
         if (
             $this->nextPromise instanceof PromiseInterface
@@ -274,7 +277,7 @@ abstract class AbstractPromise implements PromiseInterface
     }
 
     /**
-     * To disable exception when a promise is reused
+     * To enable (default behavior) the exception when a promise is reused
      * @return PromiseInterface<TSuccessArgType, TResultType>
      */
     public function prohibitReuse(): PromiseInterface

@@ -43,16 +43,16 @@ use Teknoo\Recipe\CookingSupervisorInterface;
 use Teknoo\Recipe\Ingredient\Attributes\Transform;
 use Teknoo\Recipe\Ingredient\TransformableInterface;
 use Teknoo\Recipe\Value;
+use WeakMap;
 
 use function class_exists;
-use function current;
+use function explode;
 use function is_array;
 use function is_callable;
 use function is_object;
 use function is_string;
-use function next;
-use function reset;
 use function sprintf;
+use function str_contains;
 
 /**
  * Default base implementation for Bowl to manage parameter mapping with the workplan's ingredients.
@@ -64,12 +64,6 @@ use function sprintf;
  */
 trait BowlTrait
 {
-    /**
-     * To cache the reflections about parameters of the callable
-     * @var array<string, ReflectionParameter>
-     */
-    private ?array $parametersCache = null;
-
     /**
      * @var array<string, ReflectionClass<object>>
      */
@@ -94,6 +88,12 @@ trait BowlTrait
      * @var array<string, array<ReflectionParameter>>
      */
     private static array $reflectionsParameters = [];
+
+    /**
+     * To cache the Transform attribute (or false when the parameter has no attribute) of each cached parameter.
+     * @var WeakMap<ReflectionParameter, Transform|false>|null
+     */
+    private static ?WeakMap $reflectionsTransforms = null;
 
     /**
      * @param class-string $objectOrClass
@@ -170,11 +170,42 @@ trait BowlTrait
         }
 
         if (is_string($callable)) {
+            //Static method passed as a "Class::method" string
+            if (str_contains($callable, '::')) {
+                $parts = explode('::', $callable, 2);
+                /** @var class-string $className */
+                $className = $parts[0];
+
+                return self::getReflectionMethod($className, $parts[1]);
+            }
+
             return self::getReflectionFunction($callable);
         }
 
         //It's not a closure, so it's mandatory a invokable object (because the callable is valid)
         return self::getReflectionInvokable((object) $callable);
+    }
+
+    /**
+     * To compute the key identifying a callable into the static cache of parameters :
+     * - methods (and invokable objects) are identified by their class and their name (a method from a trait used by
+     *   several classes is cached for each class, so a `self` parameter is resolved with the good class),
+     * - functions and closures defined in a PHP file are identified by this file and the line of their definition
+     *   (limitation : two closures defined on the same line share the same entry in the cache),
+     * - internal functions (and closures created from them) have no file and are identified by their scope and name.
+     */
+    private static function getReflectionKey(ReflectionFunctionAbstract $reflection): string
+    {
+        if ($reflection instanceof ReflectionMethod) {
+            return $reflection->class . '::' . $reflection->name;
+        }
+
+        $fileName = $reflection->getFileName();
+        if (false !== $fileName) {
+            return $fileName . ':' . $reflection->getStartLine();
+        }
+
+        return 'internal:' . ($reflection->getClosureScopeClass()?->getName() ?? '') . '::' . $reflection->getName();
     }
 
     /**
@@ -186,7 +217,7 @@ trait BowlTrait
     private function &listParameters(callable $callable): array
     {
         $reflection = self::getReflection($callable);
-        $oid = $reflection->getFileName() . ':' . $reflection->getStartLine();
+        $oid = self::getReflectionKey($reflection);
 
         $getter = static function &() use ($oid, $reflection): array {
             $parameters = [];
@@ -207,6 +238,25 @@ trait BowlTrait
     }
 
     /**
+     * To get the Transform attribute of a parameter. Attributes are immutable, so the instance is cached to avoid
+     * to instantiate it at each execution of the bowl.
+     */
+    private static function getTransformAttribute(ReflectionParameter $parameter): ?Transform
+    {
+        self::$reflectionsTransforms ??= new WeakMap();
+
+        if (isset(self::$reflectionsTransforms[$parameter])) {
+            return self::$reflectionsTransforms[$parameter] ?: null;
+        }
+
+        $attributes = $parameter->getAttributes(Transform::class);
+        $attribute = empty($attributes) ? false : $attributes[0]->newInstance();
+        self::$reflectionsTransforms[$parameter] = $attribute;
+
+        return $attribute ?: null;
+    }
+
+    /**
      * @param array<string, mixed> $workPlan
      * @param array<mixed> $values
      */
@@ -219,9 +269,9 @@ trait BowlTrait
     ): bool {
         $automaticValueFound = false;
 
-        $refClass = null;
-        if ($allowTransform && null !== $transformClassName && class_exists($transformClassName)) {
-            $refClass = self::getReflectionClass($transformClassName);
+        $transformClass = null;
+        if ($allowTransform && null !== $transformClassName) {
+            $transformClass = $transformClassName;
         }
 
         foreach ($workPlan as &$variable) {
@@ -237,10 +287,9 @@ trait BowlTrait
             }
 
             if (
-                $allowTransform
-                && null !== $refClass
+                null !== $transformClass
                 && $variable instanceof TransformableInterface
-                && $refClass->isInstance($variable)
+                && $variable instanceof $transformClass
             ) {
                 $values[] = $variable->transform();
 
@@ -282,8 +331,8 @@ trait BowlTrait
                 return $declaringClass->isInstance($instance);
             }
 
-            $rfClass = new ReflectionClass($className);
-            return $rfClass->isInstance($instance);
+            //instanceof is always false for a not existing class, no reflection is needed here
+            return $instance instanceof $className;
         };
 
         if ($type instanceof ReflectionUnionType) {
@@ -361,6 +410,9 @@ trait BowlTrait
             //Special name `_methodName`
             BowlInterface::METHOD_NAME === $name => $this->name,
 
+            //A variadic parameter without ingredient : nothing to pass (there is no default value to fetch)
+            $parameter->isVariadic() => $skip = true,
+
             //Not found, if it is not optional, throw an exception
             !$parameter->isOptional() => throw new BadMethodCallException(
                 sprintf(
@@ -406,9 +458,8 @@ trait BowlTrait
             $allowTransform = false;
             $transformClassName = null;
             $transformer = null;
-            if (!empty($attributes = $parameter->getAttributes(Transform::class))) {
-                /** @var Transform $attr */
-                $attr = $attributes[0]->newInstance();
+            $attr = self::getTransformAttribute($parameter);
+            if (null !== $attr) {
                 $transformClassName = $attr->getClassName();
                 $transformer = $attr->getTransformer();
                 $allowTransform = true;
@@ -419,10 +470,13 @@ trait BowlTrait
                 if (is_string($mapping)) {
                     $name = $mapping;
                 } elseif (is_array($mapping)) {
-                    reset($mapping);
-                    do {
-                        $name = current($mapping);
-                    } while (!isset($workPlan[$name]) && next($mapping));
+                    //Use the first alias available in the workplan, else keep the last one (reported as missing)
+                    foreach ($mapping as $alias) {
+                        $name = $alias;
+                        if (isset($workPlan[$name])) {
+                            break;
+                        }
+                    }
                 } elseif ($mapping instanceof Value) {
                     $values[] = $mapping->getValue();
 

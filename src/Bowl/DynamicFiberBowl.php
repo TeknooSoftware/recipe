@@ -50,10 +50,14 @@ class DynamicFiberBowl extends AbstractDynamicBowl
         /** @var Fiber<mixed, mixed, void, mixed> $fiber */
         $fiber = new Fiber($callable);
 
+        //Parameters are extracted before registering the fiber into the supervisor : if an ingredient is missing,
+        //the fiber is never started and must not stay in the supervisor (a never started fiber can not be resumed)
+        $parameters = $this->extractParameters($callable, $chef, $workPlan, $fiber, $cookingSupervisor);
+
         if (null !== $cookingSupervisor) {
             $cookingSupervisor->supervise($fiber);
         }
 
-        $fiber->start(...$this->extractParameters($callable, $chef, $workPlan, $fiber, $cookingSupervisor));
+        $fiber->start(...$parameters);
     }
 }

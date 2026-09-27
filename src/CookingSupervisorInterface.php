@@ -79,8 +79,9 @@ interface CookingSupervisorInterface
     public function switch(mixed $value = null): CookingSupervisorInterface;
 
     /*
-     * To resume a specific task in the list, from its name, with an exception.
-     * If the task is not suspended, this method do nothing
+     * To resume the next suspended task in the list with an exception (thrown into the fiber).
+     * If the task is not suspended, or if no exception is passed, this method do nothing.
+     * A supervised supervisor receives also the call.
      */
     public function throw(#[SensitiveParameter] ?Throwable $value = null): CookingSupervisorInterface;
 

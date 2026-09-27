@@ -75,9 +75,7 @@ Quick Example
     //Show : 2020-06-26 22:00:00 UTC
     echo $output.PHP_EOL;
 
-Others examples are available into demo
-
-A complete documentation is available in [documentation/README.md](documentation/README.md)
+Other examples are available in the [demo](demo) folder.
 
 Support this project
 ---------------------
@@ -100,7 +98,7 @@ sharing knowledge and skills.
 
 License
 -------
-Recipe is licensed under the 3-Clause BSD License - see the licenses folder for details.
+Recipe is licensed under the 3-Clause BSD License - see the [LICENSE](LICENSE) file for details.
 
 Installation & Requirements
 ---------------------------
@@ -110,10 +108,56 @@ To install this library with composer, run this command :
 
 This library requires :
 
-    * PHP 8.1+
+    * PHP 8.4+
     * A PHP autoloader (Composer is recommended)
-    * Teknoo/Immutable.
-    * Teknoo/States.
+    * Teknoo/Immutable 3.0.22+
+    * Teknoo/States 7.1.11+
+
+News from Teknoo Recipe 7.3
+----------------------------
+- Fix several bugs : chef cleaning after an escaped exception, relative and zero positions of steps, repeated sub
+  recipes on a new cooking, fibers resumed twice by the supervisor, never started fibers, optional scalar
+  ingredients, interfaces and non object values in ingredients checking, `"Class::method"` callables, variadic
+  parameters, falsy aliases in mappings, step named `"0"`, chef cloning, promises flags.
+- Optimizations : `instanceof` instead of reflection to resolve parameters, cached `Transform` attributes,
+  scalar type checker of ingredients resolved once.
+- On PHP 8.5, the transformer of `#[Transform]` can be a first-class callable (`MyTransformer::toDateTime(...)`).
+
+News from Teknoo Recipe 7.2
+----------------------------
+- Steps and sub recipes can be inserted relatively to another step (`RecipeRelativePositionEnum::Before` / `After`
+  with the name of the offset step).
+- Switch to Teknoo States 7.1.
+
+News from Teknoo Recipe 7.1
+----------------------------
+- A promise passed the same exception several times to `fail()` (a try/catch calling `fail()`) does not throw an
+  `AlreadyCalledPromiseException`.
+- Add `allowReuse()` and `prohibitReuse()` to promises, to get the reusable behavior of Recipe 6.
+
+News from Teknoo Recipe 7.0
+----------------------------
+This library requires PHP 8.4 or newer. Some changes cause BC breaks.
+
+- Promises' `success()` and `fail()` can be called only once (see `allowReuse()`).
+- `CookbookInterface` and `BaseCookbookTrait` (deprecated since 6.0) are removed, use `PlanInterface` and
+  `BasePlanTrait`.
+- Switch to Teknoo States 7 and PHPStan 2.
+- The license is now the 3-Clause BSD License.
+
+News from Teknoo Recipe 6.0
+----------------------------
+- `Cookbook` is renamed `Plan` (`PlanInterface`, `BasePlanTrait`).
+- Add editable plans (`EditablePlanInterface`, `EditablePlanTrait`, `Plan\Step`) to add steps and error handlers
+  to a plan from a container definition, without a custom mechanism.
+
+News from Teknoo Recipe 5.0
+----------------------------
+This library requires PHP 8.2 or newer (8.1 dropped in 5.1). Some changes cause BC breaks.
+
+- Add `Value` to inject a fixed value through a step's mapping.
+- Promises : `allowNext` is true by default, `onFail` is called when `onSuccess` throws (`callOnFailOnException`),
+  `fetchResult` / `fetchResultIfCalled` behaviors fixed, `setDefaultResult()` and `__invoke()` added.
 
 News from Teknoo Recipe 4.0
 ----------------------------
@@ -122,7 +166,7 @@ This library requires PHP 8.1 or newer. Some change causes bc breaks.
 - Use readonly properties for immutables objects.
 - Constant `BowlInterface::METHOD_NAME` is final.
 - Support `Fiber` into `Promise`.
-- Support `Fiber` into `Bowl` and `DynamicBowl` thanks to dynamics classes :
+- Support `Fiber` into steps thanks to the dedicated classes `FiberBowl` and `DynamicFiberBowl` :
   - callable will be automatically wrapped by a fiber,
   - the fiber object will be available as parameter for bowls.
 - Add `Fiber` support to RecipeBowl, also in a dedicated class `FiberRecipeBowl`.
@@ -135,7 +179,7 @@ News from Teknoo Recipe 3.1
 ----------------------------
 This library requires PHP 8.0 or newer.
 
-- Add `MergeableInterface` and `ChefInterface::merge()` to allow merge ingredient instead of replace it with `updateWorkplan`
+- Add `MergeableInterface` and `ChefInterface::merge()` to allow merge ingredient instead of replace it with `updateWorkPlan`
   without fetch it into step.
 - Add `TransformableInterface` and attribute `Transform` to allow transform an ingredient before to put it into the bowl
 
@@ -158,12 +202,12 @@ This library requires PHP 7.4 or newer. Some change causes bc breaks :
 - PHP 7.4 is the minimum required
 - Most methods have been updated to include type hints where applicable. Please check your extension points to make sure the function signatures are correct.
 - Switch to typed properties
-_ All files use strict typing. Please make sure to not rely on type coercion.
+- All files use strict typing. Please make sure to not rely on type coercion.
 - Replace array_merge by "..." operators for integer indexed arrays
-- Remove some PHP useless DockBlocks
+- Remove some PHP useless DocBlocks
 - Enable PHPStan in QA Tools and disable PHPMd
 - Enable PHPStan extension dedicated to support Stated classes
 
 Contribute :)
 -------------
-You are welcome to contribute to this project. [Fork it on Github](CONTRIBUTING.md)
+You are welcome to contribute to this project. Read the [contributing guide](CONTRIBUTING.md) first.

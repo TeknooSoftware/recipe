@@ -1,5 +1,56 @@
 # Teknoo Software - Recipe - Change Log
 
+## [7.3.0] - 2026-09-27
+### Stable Release
+
+**Security**
+- Ingredients required with a class or an interface are strictly checked: interfaces were never checked and non
+  object values (`int`, `array`...) were accepted. Without normalizer, the value must be an instance (or a class
+  name) of the required type. With a normalizer, non object values are still passed to it.
+- Documentation: never map a `DynamicBowl` key, or a class name ingredient, to a value controlled by an end user.
+
+**Bug fixes**
+- Chef: the workplan and the cooking state are always cleaned when an exception escapes from `process()`, and the
+  missing ingredients of a previous cooking are forgotten (a chef can be reused after a failure).
+- Chef: `continue()` can jump to a step named `"0"`.
+- Chef: `__clone()` also clones the states proxy, like `Recipe` (no callers stack inherited from the original).
+- Recipe: `cook()` (and `EditablePlanInterface::add()`) honor the position `0` instead of appending the step.
+- Recipe: relative positions (`Before` / `After`) use the real position of the offset step, also with non
+  contiguous positions. An unknown offset step appends the new step at the end.
+- Sub recipes: `stopLooping()` called during a cooking no longer prevents the loop in the next cookings.
+- Supervisor: fibers are no longer resumed twice in the same `loop()` / `finish()` when another fiber terminates.
+- Supervisor: `throw()` without exception no longer raises a `TypeError` on a suspended fiber.
+- Fiber bowls: a fiber is registered into the supervisor only after the extraction of its parameters; `finish()`
+  forgets never started fibers instead of looping indefinitely on them.
+- Bowls: internal PHP functions and methods, and trait methods used by several classes, no longer share their
+  cached parameters (`ArgumentCountError`, wrong `self` resolution).
+- Bowls: static methods passed as a `"Class::method"` string are supported.
+- Bowls: a variadic parameter without ingredient receives no argument instead of raising a `ReflectionException`.
+- Bowls: a falsy alias (`'0'`) in a mapping list no longer stops the search of the ingredient.
+- Ingredients: an optional scalar ingredient absent from the workplan is accepted as `null` instead of missing.
+- Ingredients: a requirement named like a PHP function with several arguments (`a`) no longer crashes.
+- Promises: after an exception in a wrapped promise, `WrappedOneCalledPromise` forwards the next calls instead of
+  ignoring them silently, and its constructor is immutable; `fail()` always resets its failing flag.
+
+**Optimizations**
+- Parameters of bowls are resolved with `instanceof` instead of a new `ReflectionClass` per parameter (a parameter
+  typed with an unknown class now raises the missing parameter `BadMethodCallException` instead of a
+  `ReflectionException`).
+- The `Transform` attribute of a parameter is instantiated once and cached.
+- The scalar type checker of an ingredient is resolved once, in its constructor.
+- Dead code removed (unused instance cache of parameters in bowls, unused imports, obsolete `phpcs` exclusions).
+
+**Documentation**
+- `AGENTS.md` rewritten (concepts, stack, commands, contribution rules), `README.md`, `documentation/README.md`,
+  `CONTRIBUTING.md` and `SECURITY.md` updated (PHP 8.4+, PSR-12, release notes, examples, security note).
+- Inaccurate docblocks fixed (bowls resolution order and exception, supervisor `throw()`, `prohibitReuse()`...).
+- Tooling: Makefile typo and PHP binary for Behat, export-ignore list, inoperative PHPUnit exclusions.
+- The PHPUnit suite now covers 100% of the code; every fix is covered by PHPUnit and Behat regression tests.
+- On PHP 8.5, the transformer of `#[Transform]` can be a first-class callable (`Foo::bar(...)`); covered by tests
+  skipped on older PHP versions.
+  
+- Version developed with Claude's assistance (Fable 5.1).
+
 ## [7.2.3] - 2026-04-28
 ### Stable Release
 - Update PHPStan and fix false positive
@@ -26,9 +77,9 @@
 ## [7.1.0] - 2025-08-25
 ### Stable Release
 - When an exception object is passed to the promise method `fail` after a first call (typically when there are a 
-  try/cactch to call the fail method), no AlreadyCalledException will be thrown.
+  try/catch to call the fail method), no `AlreadyCalledPromiseException` will be thrown.
 - Add methods to promise `allowReuse` and `prohibitReuse` to allow or prohibit reuse of the promise and disable 
-  the exception `AlreadyCalledException` and get a behavior similar to Recipe v6. Usefull for promise used in loop.
+  the exception `AlreadyCalledPromiseException` and get a behavior similar to Recipe v6. Useful for promise used in loop.
 
 ## [7.0.0] - 2025-07-27
 ### Stable Release
@@ -52,7 +103,7 @@
   - Require Symfony libraries 6.4 or 7.2
   - Update to PHPUnit 12
 - Drop support of PHP 8.2
-  - The library stay usable with PHP 8.2, without any waranties and tests
+  - The library stay usable with PHP 8.2, without any warranties and tests
   - In the next major release, Support of PHP 8.2 will be dropped
 
 ## [6.0.2] - 2025-01-08
@@ -65,7 +116,7 @@
 
 ## [6.0.0] - 2024-11-01
 ### Stable Release
-- To be more understandable, renaming `Coobook` to `Plan`.
+- To be more understandable, renaming `Cookbook` to `Plan`.
   - `CookbookInterface` and `BaseCookbookTrait` are deprecated and will be removed in a next major release.
 - Create native editable plan, with `EditablePlanInterface` and `EditablePlanTrait` to allow developers to edit 
   some plans without implementing a complex system of additional steps to inject in the constructor, like with 
@@ -221,7 +272,7 @@
 
 ## [4.1.0] - 2022-03-03
 ### Stable Release
-- Add transformer option to `#[Trasnform]` to use a callable instead an object
+- Add transformer option to `#[Transform]` to use a callable instead an object
  with the interface `TransformableInterface`. 
  The callable can also return a Transformable object.
 
@@ -271,7 +322,7 @@
 
 ## [3.4.0] - 2021-08-29
 ### Stable Release
-- `Coobook Aware` : Cookbook written with the `BaseCookbookTrait` add them (if it is not already defined) in
+- `Cookbook Aware` : Cookbook written with the `BaseCookbookTrait` add them (if it is not already defined) in
   the default workplan to help developers to write recipe's step aware of the cookbook.
 
 ## [3.3.0] - 2021-08-30
@@ -426,7 +477,7 @@ Change CookbookInterface to be compliant with RecipeInterface
 Add CookbookInterface behavior to provide to developer a new way to define recipe to inject into Chef
 Chef support also Cookbook for new recipe or a new sub recipe
 
-[2.0.9] - 2020-09-18
+## [2.0.9] - 2020-09-18
 ### Stable Release
 - Update QA and CI tools
 - Update description

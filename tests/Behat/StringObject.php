@@ -67,4 +67,9 @@ class StringObject implements Stringable
     {
         return $this->value;
     }
+
+    public static function append(self $string, string $extra): void
+    {
+        $string->value .= $extra;
+    }
 }

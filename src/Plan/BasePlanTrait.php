@@ -27,7 +27,6 @@ namespace Teknoo\Recipe\Plan;
 
 use Teknoo\Recipe\BaseRecipeInterface;
 use Teknoo\Recipe\ChefInterface;
-use Teknoo\Recipe\CookbookInterface;
 use Teknoo\Recipe\PlanInterface;
 use Teknoo\Recipe\RecipeInterface;
 

@@ -56,6 +56,7 @@ class WrappedOneCalledPromise implements PromiseInterface
     public function __construct(
         private PromiseInterface $promise,
     ) {
+        $this->uniqueConstructorCheck();
     }
 
     public function next(?PromiseInterface $promise = null, bool $autoCall = true): PromiseInterface
@@ -74,9 +75,14 @@ class WrappedOneCalledPromise implements PromiseInterface
     {
         if (!$this->calling && !$this->called) {
             $this->calling = true;
-            $this->promise->success(...$args);
-            $this->calling = false;
-            $this->called = true;
+            try {
+                $this->promise->success(...$args);
+                $this->called = true;
+            } finally {
+                //An exception from the wrapped promise must not leave this wrapper in the calling state (next calls
+                //would be silently ignored). They are forwarded to the wrapped promise, deciding if they are allowed
+                $this->calling = false;
+            }
         }
 
         return $this;
