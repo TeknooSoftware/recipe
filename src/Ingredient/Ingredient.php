@@ -29,19 +29,20 @@ use BackedEnum;
 use DomainException;
 use LogicException;
 use ReflectionEnum;
+use ReflectionFunction;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\ChefInterface;
 use Throwable;
 
 use function class_exists;
 use function enum_exists;
+use function function_exists;
 use function interface_exists;
 use function is_a;
 use function is_callable;
 use function is_int;
 use function is_object;
 use function is_string;
-use function is_subclass_of;
 
 /**
  * Base class to define required ingredient needed to start cooking a recipe,
@@ -65,6 +66,17 @@ class Ingredient implements IngredientInterface
 
     private readonly bool $mandatory;
 
+    /**
+     * PHP function `is_*` to check a scalar requirement (`int`, `string`, `iterable`...), null for objects.
+     * @var callable-string|null
+     */
+    private readonly ?string $scalarTester;
+
+    /**
+     * True when the requirement is a class, an interface or an enum (checked with `is_a`)
+     */
+    private readonly bool $objectType;
+
     public function __construct(
         private readonly string $requiredType,
         private readonly ?string $name = null,
@@ -75,10 +87,14 @@ class Ingredient implements IngredientInterface
     ) {
         $this->uniqueConstructorCheck();
 
+        $this->scalarTester = self::findScalarTester($this->requiredType);
+        $this->objectType = null === $this->scalarTester
+            && (class_exists($this->requiredType) || interface_exists($this->requiredType));
+
         if (
             null === $this->name
             && 'object' !== $this->requiredType
-            && is_callable('is_' . $this->requiredType)
+            && null !== $this->scalarTester
         ) {
             throw new LogicException(
                 'Error, an ingredient requirement without name is allowed only for object and enum',
@@ -109,6 +125,26 @@ class Ingredient implements IngredientInterface
         }
     }
 
+    /**
+     * To find the PHP function `is_*` able to check a scalar requirement (`is_int`, `is_string`, `is_iterable`...).
+     * Only functions with a single required argument are type checkers (`is_a` or `is_subclass_of` are not).
+     *
+     * @return callable-string|null
+     */
+    private static function findScalarTester(string $requiredType): ?string
+    {
+        $function = 'is_' . $requiredType;
+        if (!function_exists($function)) {
+            return null;
+        }
+
+        if (1 !== (new ReflectionFunction($function))->getNumberOfRequiredParameters()) {
+            return null;
+        }
+
+        return $function;
+    }
+
     private function getNormalizedName(): string
     {
         if (empty($this->normalizedName)) {
@@ -120,9 +156,12 @@ class Ingredient implements IngredientInterface
 
     private function testScalarValue(mixed &$value, ChefInterface $chef): bool
     {
-        $isMethod = 'is_' . $this->requiredType;
+        //An optional ingredient without value in the workplan (and without default value) is accepted as null
+        if (null === $value && !$this->mandatory) {
+            return true;
+        }
 
-        if (is_callable($isMethod) && !$isMethod($value)) {
+        if (null !== $this->scalarTester && !($this->scalarTester)($value)) {
             $chef->missing($this, "The ingredient {$this->name} must be a {$this->requiredType}");
 
             return false;
@@ -133,19 +172,34 @@ class Ingredient implements IngredientInterface
 
     private function testObjectValue(mixed &$value, ChefInterface $chef): bool
     {
-        if (
-            class_exists($this->requiredType)
-            && (!enum_exists($this->requiredType) || null === $this->normalizeCallback)
-            && (is_object($value) || is_string($value))
-            && !is_a($value, $this->requiredType, true)
-            && !is_subclass_of($value, $this->requiredType)
-        ) {
-            $chef->missing($this, "The ingredient {$this->name} must implement {$this->requiredType}");
-
-            return false;
+        //Scalar requirement (already checked) or not a class/interface/enum : nothing to check here
+        if (!$this->objectType) {
+            return true;
         }
 
-        return true;
+        //A backed enum with a normalizer accepts scalar values, converted by the normalizer
+        if (enum_exists($this->requiredType) && null !== $this->normalizeCallback) {
+            return true;
+        }
+
+        //An optional ingredient without value in the workplan (and without default value) is accepted as null
+        if (null === $value) {
+            return true;
+        }
+
+        //With a normalizer, non objects values are passed to it (to build the object), only objects and class names
+        //are checked here
+        if (null !== $this->normalizeCallback && !is_object($value) && !is_string($value)) {
+            return true;
+        }
+
+        if ((is_object($value) || is_string($value)) && is_a($value, $this->requiredType, true)) {
+            return true;
+        }
+
+        $chef->missing($this, "The ingredient {$this->name} must implement {$this->requiredType}");
+
+        return false;
     }
 
     private function normalize(mixed &$value): mixed

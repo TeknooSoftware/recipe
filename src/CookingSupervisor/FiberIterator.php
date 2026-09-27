@@ -30,14 +30,13 @@ use Fiber;
 use Iterator;
 use Teknoo\Recipe\CookingSupervisorInterface;
 
-use function array_splice;
 use function count;
-use function current;
-use function key;
-use function reset;
 
 /**
  * Iterator to manage list of fibers, with an abstraction for supervisor of the complexity of the list.
+ *
+ * The iteration is driven by an explicit cursor (and not by the internal pointer of the PHP array) : removing an
+ * item during an iteration (a terminated fiber) must not rewind the iteration to the top of the list.
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)
@@ -53,9 +52,12 @@ class FiberIterator implements Iterator, Countable
      */
     private array $items = [];
 
+    private int $cursor = 0;
+
     public function __clone()
     {
         $this->items = [];
+        $this->cursor = 0;
     }
 
     /**
@@ -71,17 +73,30 @@ class FiberIterator implements Iterator, Countable
     /**
      * @param Fiber<mixed, mixed, void, mixed>|CookingSupervisorInterface $item
      */
+    /**
+     * Remove all occurrences of the item from the list, without alter the iteration : the cursor is moved back for
+     * each occurrence removed before it, so the next item to iterate stays the same.
+     *
+     * @param Fiber<mixed, mixed, void, mixed>|CookingSupervisorInterface $item
+     */
     public function remove(Fiber|CookingSupervisorInterface $item): self
     {
-        $count = count($this->items);
-        for ($i = 0; $i < $count; ++$i) {
-            if ($this->items[$i] !== $item) {
+        $kept = [];
+        $removedBeforeCursor = 0;
+        foreach ($this->items as $index => $current) {
+            if ($current === $item) {
+                if ($index < $this->cursor) {
+                    ++$removedBeforeCursor;
+                }
+
                 continue;
             }
 
-            array_splice($this->items, $i, 1);
-            $count = count($this->items);
+            $kept[] = $current;
         }
+
+        $this->items = $kept;
+        $this->cursor -= $removedBeforeCursor;
 
         return $this;
     }
@@ -91,43 +106,34 @@ class FiberIterator implements Iterator, Countable
      */
     public function current(): Fiber|CookingSupervisorInterface|null
     {
-        if (empty($this->items)) {
-            return null;
-        }
-
-        if (false === ($item = current($this->items))) {
-            return null;
-        }
-
-        return $item;
+        return $this->items[$this->cursor] ?? null;
     }
 
     public function next(): void
     {
-        if (empty($this->items)) {
-            return;
+        //The cursor can not go beyond the end of the list, an item added later must be reachable
+        if ($this->cursor < count($this->items)) {
+            ++$this->cursor;
         }
-
-        next($this->items);
     }
 
     public function key(): ?int
     {
-        return key($this->items);
+        if (!isset($this->items[$this->cursor])) {
+            return null;
+        }
+
+        return $this->cursor;
     }
 
     public function valid(): bool
     {
-        return false !== current($this->items);
+        return isset($this->items[$this->cursor]);
     }
 
     public function rewind(): void
     {
-        if (empty($this->items)) {
-            return;
-        }
-
-        reset($this->items);
+        $this->cursor = 0;
     }
 
     public function count(): int

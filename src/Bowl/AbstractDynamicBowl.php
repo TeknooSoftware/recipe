@@ -54,11 +54,6 @@ abstract class AbstractDynamicBowl implements BowlInterface
     use BowlTrait;
 
     /**
-     * @var null|callable
-     */
-    private $previousCallable;
-
-    /**
      * DynamicBowl constructor.
      * @param array<string, string|string[]|Value> $mapping
      */
@@ -97,15 +92,6 @@ abstract class AbstractDynamicBowl implements BowlInterface
         return $callable;
     }
 
-    private function checkToClearsParametersCache(callable $callable): void
-    {
-        if ($this->previousCallable !== $callable) {
-            $this->parametersCache = null;
-        }
-
-        $this->previousCallable = $callable;
-    }
-
     /**
      * @param array<string, mixed> $workPlan
      * @throws RuntimeException if a required argument can not be mapped.
@@ -136,8 +122,6 @@ abstract class AbstractDynamicBowl implements BowlInterface
         if (null === $callable) {
             return $this;
         }
-
-        $this->checkToClearsParametersCache($callable);
 
         $this->processToExecution($callable, $chef, $workPlan, $cookingSupervisor);
 

@@ -124,6 +124,7 @@ class Trained implements StateInterface
     {
         return function (): void {
             $this->workPlan = [];
+            $this->missingIngredients = [];
             $this->cooking = false;
 
             $this->updateStates();
@@ -144,11 +145,15 @@ class Trained implements StateInterface
 
             $this->updateStates();
 
-            $this->prepare();
+            try {
+                $this->prepare();
 
-            $this->continue();
-
-            $this->clean();
+                $this->continue();
+            } finally {
+                //Always clean the chef, even if an exception escapes from the cooking, to avoid keep sensitives
+                //ingredients in the workplan and reuse them (or the cooking state) in the next cooking
+                $this->clean();
+            }
 
             return $this;
         };

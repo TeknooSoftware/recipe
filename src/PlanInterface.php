@@ -29,7 +29,7 @@ namespace Teknoo\Recipe;
  * Interface to define a Plan : a factory to write recipe.
  * To be execute by a Chef, a plan needs a recipe, who can be prepopulated.
  *
- * A Plan can be muttable
+ * A Plan can be mutable
  *
  * @copyright   Copyright (c) EIRL Richard Déloge (https://deloge.io - richard@deloge.io)
  * @copyright   Copyright (c) SASU Teknoo Software (https://teknoo.software - contact@teknoo.software)

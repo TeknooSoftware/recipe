@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Teknoo\Recipe;
 
 use Generator;
+use InvalidArgumentException;
 use Teknoo\Immutable\ImmutableTrait;
 use Teknoo\Recipe\Bowl\BowlInterface;
 use Teknoo\Recipe\Dish\DishInterface;
@@ -153,22 +154,50 @@ class Recipe implements AutomatedInterface, RecipeInterface
         return $this->setExceptedDish($dish);
     }
 
-    private function findStepPosition(string $name): int
+    /**
+     * To find the position (the key in the steps matrix) of a step from its name. Returns null if the step is not
+     * defined in this recipe.
+     */
+    private function findStepPosition(string $name): ?int
     {
-        $counter = 0;
-        foreach ($this->steps as &$stepsPerPositions) {
+        foreach ($this->steps as $position => &$stepsPerPositions) {
             foreach ($stepsPerPositions as &$stepsSubList) {
-                foreach ($stepsSubList as $stepName => &$stepBowl) {
-                    if ($stepName === $name) {
-                        return $counter;
-                    }
+                if (isset($stepsSubList[$name])) {
+                    return $position;
                 }
             }
-
-            $counter++;
         }
 
-        return $counter + 1;
+        return null;
+    }
+
+    /**
+     * To convert a relative position (before or after another step) to an absolute position in the steps matrix.
+     * Returns null when the step must be appended at the end of the recipe (no position, or offset step not found).
+     *
+     * @throws InvalidArgumentException when a relative position is used without offset step name
+     */
+    private function resolveStepPosition(
+        RecipeRelativePositionEnum|int|null $position,
+        ?string $offsetStepName,
+    ): ?int {
+        if (!$position instanceof RecipeRelativePositionEnum) {
+            return $position;
+        }
+
+        if (null === $offsetStepName) {
+            throw new InvalidArgumentException('The offset name is required to define a step position');
+        }
+
+        $offsetPlace = $this->findStepPosition($offsetStepName);
+        if (null === $offsetPlace) {
+            return null;
+        }
+
+        return match ($position) {
+            RecipeRelativePositionEnum::Before => $offsetPlace - 1,
+            RecipeRelativePositionEnum::After => $offsetPlace + 1,
+        };
     }
 
     /**

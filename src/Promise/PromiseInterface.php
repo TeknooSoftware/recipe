@@ -121,7 +121,7 @@ interface PromiseInterface extends ImmutableInterface
     public function allowReuse(): PromiseInterface;
 
     /**
-     * To disable exception when a promise is reused
+     * To enable (default behavior) the exception when a promise is reused
      * @return PromiseInterface<TSuccessArgType, TResultType>
      */
     public function prohibitReuse(): PromiseInterface;

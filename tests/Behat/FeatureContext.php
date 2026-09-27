@@ -1180,4 +1180,302 @@ class FeatureContext implements Context
             }
         );
     }
+
+    #[When('It starts cooking again')]
+    public function itStartsCookingAgain(): void
+    {
+        self::$message = '';
+        self::$runningCatchedError = null;
+        self::$runningUncatchedError = null;
+
+        $this->itStartsCooking();
+    }
+
+    #[When('It starts cooking again with :value as :name')]
+    public function itStartsCookingAgainWithAs($value, $name): void
+    {
+        self::$message = '';
+        self::$runningCatchedError = null;
+        self::$runningUncatchedError = null;
+
+        $this->itStartsCookingWithAs($value, $name);
+    }
+
+    #[Then('I obtain an error whose message contains :content')]
+    public function iObtainAnErrorWhoseMessageContains(string $content): void
+    {
+        Assert::assertInstanceOf(Throwable::class, self::$runningCatchedError);
+        Assert::assertStringContainsString($content, self::$runningCatchedError->getMessage());
+    }
+
+    #[Then('I obtain an catched error whose message contains :content')]
+    public function iObtainAnCatchedErrorWhoseMessageContains(string $content): void
+    {
+        Assert::assertInstanceOf(Throwable::class, self::$runningUncatchedError);
+        Assert::assertStringContainsString($content, static::$message);
+    }
+
+    public static function failWhenBoomIsPresent(StringObject $string, ?string $boom = null): void
+    {
+        if (null !== $boom) {
+            throw new RuntimeException('failed with ' . $string);
+        }
+    }
+
+    #[When('I remove :name from the workplan')]
+    public function iRemoveFromTheWorkplan(string $name): void
+    {
+        unset($this->workPlan[$name]);
+    }
+
+    #[When('I define the step :stepName to do :methodName my recipe at position :position')]
+    public function iDefineTheStepToDoMyRecipeAtPosition(string $stepName, string $methodName, string $position): void
+    {
+        $this->pushRecipe(
+            $this->lastRecipe->cook(
+                action: $this->parseMethod($methodName),
+                name: $stepName,
+                position: (int) $position,
+            )
+        );
+    }
+
+    #[When('I include the recipe :name to :method in my recipe while the counter is below :count')]
+    public function iIncludeTheRecipeToInMyRecipeWhileTheCounterIsBelow(string $name, string $method, string $count): void
+    {
+        $limit = (int) $count;
+        $this->pushRecipe(
+            $this->lastRecipe->execute(
+                recipe: $this->subRecipes[$name],
+                name: $method,
+                repeat: static function (\Teknoo\Recipe\Bowl\AbstractRecipeBowl $bowl, int $counter) use ($limit): void {
+                    if ($counter >= $limit) {
+                        $bowl->stopLooping();
+                    }
+                },
+            )
+        );
+    }
+
+    #[When('I define the excepted dish :className to my recipe for several cookings')]
+    public function iDefineTheExceptedDishToMyRecipeForSeveralCookings(string $className): void
+    {
+        $promise = new Promise(
+            function ($value): void {
+                ($this->callbackPromiseSuccess)($value);
+            },
+            function (): void {
+                Assert::fail('The dish is not valid');
+            },
+        );
+        $promise->allowReuse();
+
+        $this->pushRecipe(
+            $this->lastRecipe->cook(
+                function (ChefInterface $chef, $result): void {
+                    $chef->finish($result);
+                },
+                'finish',
+                ['result' => trim($className, '\\')]
+            )
+        );
+
+        $this->pushRecipe($this->lastRecipe->given(new DishClass($className, $promise)));
+    }
+
+    public static function fiberSuspendOnce(StringObject $string, string $_methodName): void
+    {
+        Fiber::suspend();
+        StringObject::append($string, ' ' . $_methodName . '1');
+    }
+
+    public static function fiberSuspendTwice(StringObject $string, string $_methodName): void
+    {
+        for ($i = 1; $i <= 2; ++$i) {
+            Fiber::suspend();
+            StringObject::append($string, ' ' . $_methodName . $i);
+        }
+    }
+
+    public static function throwNullInSupervisor(CookingSupervisorInterface $supervisor): void
+    {
+        $supervisor->throw(null);
+    }
+
+    public static function needAMissingDateTime(DateTime $missing): void
+    {
+        Assert::fail('This step must not be executed without its ingredient');
+    }
+
+    public static function onErrorAndFinishFibers(
+        Throwable $exception,
+        CookingSupervisorInterface $supervisor,
+        ChefInterface $chef,
+        StringObject $string,
+    ): void {
+        static::$message .= $exception->getMessage();
+        static::$runningUncatchedError = $exception;
+
+        //Without the fix, finish() loops indefinitely on the never started fiber : the time limit avoids a hang
+        set_time_limit(10);
+        $supervisor->finish();
+        set_time_limit(0);
+
+        //The dish is validated with the result of the fibers resumed by finish()
+        $chef->finish($string);
+    }
+
+    #[Given('I add the string :value as :name in the workplan')]
+    public function iAddTheStringAsInTheWorkplan(string $value, string $name): void
+    {
+        $this->workPlan[$name] = $value;
+    }
+
+    #[Given('I add the integer :value as :name in the workplan')]
+    public function iAddTheIntegerAsInTheWorkplan(string $value, string $name): void
+    {
+        $this->workPlan[$name] = (int) $value;
+    }
+
+    #[Given('I add an ArrayObject named :name in the workplan')]
+    public function iAddAnArrayObjectNamedInTheWorkplan(string $name): void
+    {
+        $this->workPlan[$name] = new \ArrayObject();
+    }
+
+    #[Given('I add the internal method :method of :object as the dynamic callable :name in the workplan')]
+    public function iAddTheInternalMethodOfAsTheDynamicCallableInTheWorkplan(
+        string $method,
+        string $object,
+        string $name,
+    ): void {
+        //A first-class callable of an internal method (without source file) to check the cache of parameters
+        $this->workPlan[$name] = $this->workPlan[$object]->$method(...);
+    }
+
+    #[Then('I must obtain an ArrayObject with the values :content')]
+    public function iMustObtainAnArrayObjectWithTheValues(string $content): void
+    {
+        $this->callbackPromiseSuccess = function ($value) use ($content): void {
+            Assert::assertInstanceOf(\ArrayObject::class, $value);
+            Assert::assertEquals($content, implode(',', $value->getArrayCopy()));
+        };
+    }
+
+    /**
+     * Parse a mapping definition like "param=name" or "param=name1|name2,param2=name3"
+     *
+     * @return array<string, string|string[]>
+     */
+    private function parseMapping(string $mapping): array
+    {
+        $result = [];
+        foreach (explode(',', $mapping) as $definition) {
+            [$parameter, $names] = explode('=', $definition, 2);
+            $names = explode('|', $names);
+            $result[trim($parameter)] = (1 === count($names)) ? $names[0] : $names;
+        }
+
+        return $result;
+    }
+
+    #[When('I define the step :stepName to do :methodName my recipe with the mapping :mapping')]
+    public function iDefineTheStepToDoMyRecipeWithTheMapping(string $stepName, string $methodName, string $mapping): void
+    {
+        $this->pushRecipe(
+            $this->lastRecipe->cook(
+                action: $this->parseMethod($methodName),
+                name: $stepName,
+                with: $this->parseMapping($mapping),
+            )
+        );
+    }
+
+    public static function appendExtra(StringObject $string, string $extra): void
+    {
+        StringObject::append($string, $extra);
+    }
+
+    #[When('I define the step :stepName to do the callable string :methodName my recipe')]
+    public function iDefineTheStepToDoTheCallableStringMyRecipe(string $stepName, string $methodName): void
+    {
+        //The method name is passed as a raw "Class::method" string, without conversion to an array callable
+        $this->pushRecipe($this->lastRecipe->cook($methodName, $stepName));
+    }
+
+    public static function appendVariadic(StringObject $string, string ...$extras): void
+    {
+        foreach ($extras as $extra) {
+            StringObject::append($string, $extra);
+        }
+    }
+
+    //The class in the type hint does not exist on purpose
+    public static function needAnUnknownClass(UnknownClassForFeatureContext $value): void
+    {
+        Assert::fail('This step must not be executed without its ingredient');
+    }
+
+    #[When('I define an unnamed :className ingredient to start my recipe')]
+    public function iDefineAnUnnamedIngredientToStartMyRecipe(string $className): void
+    {
+        $this->pushRecipe($this->lastRecipe->require(new Ingredient(trim($className, '\\'))));
+    }
+
+    #[When('It starts cooking with :value as a :className instance named :name')]
+    public function itStartsCookingWithAsAInstanceNamed(string $value, string $className, string $name): void
+    {
+        $className = trim($className, '\\');
+
+        try {
+            $this->chef->process(array_merge($this->workPlan, [$name => new $className($value)]));
+        } catch (Throwable $e) {
+            static::$message = $e->getMessage();
+            self::$runningCatchedError = $e;
+        }
+    }
+
+    public static function gotToStepZero(ChefInterface $chef): void
+    {
+        $chef->continue([], '0');
+    }
+
+    #[When('I define an optional :type ingredient named :name to start my recipe')]
+    public function iDefineAnOptionalIngredientNamedToStartMyRecipe(string $type, string $name): void
+    {
+        $this->pushRecipe($this->lastRecipe->require(new Ingredient($type, $name, mandatory: false)));
+    }
+
+    public static function appendNickname(StringObject $string, ?string $nickname = null): void
+    {
+        if (null !== $nickname) {
+            StringObject::append($string, ' (' . $nickname . ')');
+        }
+    }
+
+    #[When('It starts cooking with the integer :value as :name')]
+    public function itStartsCookingWithTheIntegerAs(string $value, string $name): void
+    {
+        try {
+            $this->chef->process(array_merge($this->workPlan, [trim($name, '\\') => (int) $value]));
+        } catch (Throwable $e) {
+            static::$message = $e->getMessage();
+            self::$runningCatchedError = $e;
+        }
+    }
+
+    private static ?ChefInterface $clonedChef = null;
+
+    public static function cloneTheChef(ChefInterface $chef): void
+    {
+        self::$clonedChef = clone $chef;
+    }
+
+    #[When('I use the chef cloned during the cooking')]
+    public function iUseTheChefClonedDuringTheCooking(): void
+    {
+        Assert::assertInstanceOf(ChefInterface::class, self::$clonedChef);
+        Assert::assertNotSame($this->chef, self::$clonedChef);
+        $this->chef = self::$clonedChef;
+    }
 }

@@ -58,8 +58,8 @@ class Cooking implements StateInterface
     use StateTrait;
 
     /*
-     * To start a sub recipe with a subchef, cloned from the current chef with a copy of its workplan.
-     * Two worplans will evolve independently
+     * To start a sub recipe with a subchef, a new chef instance (with the current chef as top chef) with a copy of
+     * the current workplan. Two workplans will evolve independently
      */
     private function begin(): callable
     {
@@ -101,7 +101,7 @@ class Cooking implements StateInterface
     private function getNextStep(): callable
     {
         return function (?string $nextStep = null): ?BowlInterface {
-            if (!empty($nextStep) && isset($this->stepsNames[$nextStep])) {
+            if (null !== $nextStep && isset($this->stepsNames[$nextStep])) {
                 $this->position = $this->stepsNames[$nextStep];
             }
 
@@ -176,6 +176,9 @@ class Cooking implements StateInterface
     private function prepare(): callable
     {
         return function (): void {
+            //Missing ingredients from a previous cooking must not be reported again
+            $this->missingIngredients = [];
+
             $this->recipe->prepare($this->workPlan, $this);
 
             $this->checkMissingIngredients();

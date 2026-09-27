@@ -93,6 +93,10 @@ abstract class AbstractRecipeBowl implements BowlInterface
         array &$workPlan,
         ?CookingSupervisorInterface $cookingSupervisor = null,
     ): BowlInterface {
+        //A bowl is shared by all cookings of its recipe, a call to stopLooping() during a previous cooking must not
+        //prevent the looping in the current cooking
+        $this->allowToLoop = true;
+
         $counter = 0;
         do {
             $subSupervisor = null;

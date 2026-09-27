@@ -1,7 +1,7 @@
 {
     "name": "teknoo/recipe",
     "type": "library",
-    "description": "Inspired by cooking, allows the creation of dynamics workflows, called here recipe, following the #east programming and using middleware, configurable via DI or any configuration, if a set of conditions (ingredients) are available.",
+    "description": "Inspired by cooking, allows the creation of dynamic workflows, called here recipe, following the #east programming and using middleware, configurable via DI or any configuration, if a set of conditions (ingredients) are available.",
     "keywords": ["east", "middleware", "workflow", "recipe", "dynamic", "algorithm"],
     "homepage": "https://teknoo.software/libraries/recipe",
     "license": ["BSD-3-Clause"],
@@ -39,17 +39,17 @@
     "require":{
         "php": "^8.4",
         "teknoo/immutable": "^3.0.22",
-        "teknoo/states": "^7.1.2"
+        "teknoo/states": "^7.1.11"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "phpunit/phpunit": "^13.0.1",
-        "squizlabs/php_codesniffer": "^4.0.1",
-        "phpstan/phpstan": "^2.1.53",
+        "phpunit/phpunit": "^13.3.5",
+        "squizlabs/php_codesniffer": "^4.0.4",
+        "phpstan/phpstan": "^2.2.16",
         "phpstan/extension-installer": "^1.4.3",
         "symfony/property-access": "^6.4||^7.4||^8.1",
-        "nikic/php-parser": "^5.7",
-        "behat/behat": "^3.29"
+        "nikic/php-parser": "^5.9",
+        "behat/behat": "^3.33"
     },
     "autoload": {
         "psr-4": {

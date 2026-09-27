@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Teknoo\Recipe\Bowl;
 
+use BadMethodCallException;
 use RuntimeException;
 use Teknoo\Immutable\ImmutableInterface;
 use Teknoo\Recipe\ChefInterface;
@@ -46,14 +47,21 @@ interface BowlInterface extends ImmutableInterface
 
     /**
      * To execute the callable contained into the bowl. The bowl instance must automatically map ingredients contained
-     * on the Work plan to the callable's arguments :
-     * - Maps first on ChefInterface instance (if the argument's class is ChefInterface)
-     * - Maps next on the name
-     * - Else on the argument's class
-     * - Throw a RuntTimeException if a mandatory argument can not be mapped
+     * on the Work plan to the callable's arguments, in this order :
+     * - Reserved instances, from the argument's type : ChefInterface, Fiber (fiber bowls) and
+     *   CookingSupervisorInterface
+     * - The mapping defined with the bowl : another ingredient's name, a list of names, or a fixed Value
+     * - The argument's name, as key of the workplan
+     * - The argument's class name, as key of the workplan
+     * - An instance of the argument's type in the workplan (also a TransformableInterface instance of the class
+     *   defined by the Transform attribute)
+     * - The special name `_methodName`, to get the name of the step
+     * - The default value of the argument
+     * - Throw a BadMethodCallException (a LogicException) if a mandatory argument can not be mapped
      *
      * @param array<string, mixed> $workPlan
-     * @throws RuntimeException if a required argument can not be mapped.
+     * @throws RuntimeException if the callable can not be executed (missing callable in a dynamic bowl...)
+     * @throws BadMethodCallException if a required argument can not be mapped.
      */
     public function execute(
         ChefInterface $chef,
