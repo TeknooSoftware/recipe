@@ -103,7 +103,7 @@ A wrapper to inject a fixed value into a step's parameter through the mapping of
 - Dependencies : `teknoo/immutable` `^3.0.22` (immutability contract), `teknoo/states` `^7.1.11` (stated classes
   `Recipe` and `Chef`).
 - Tests : PHPUnit 13 (`tests/`, files `*Test.php`; shared abstract suites are `*Tests.php` / `*TestTrait.php`;
-  `tests/Support/` holds fixtures also analysed by PHPStan) and Behat 3 (`features/*.feature`, context
+  `tests/Support/` holds fixtures also analysed by PHPStan) and Behat 4 (`features/*.feature`, context
   `tests/Behat/FeatureContext.php`, helpers `tests/Behat/IntBag.php` and `StringObject.php`).
 - QA : PHPStan level max (`phpstan.neon`, `src/` and `tests/Support/`), PHP_CodeSniffer **PSR-12** on `src/`,
   `composer audit`.
