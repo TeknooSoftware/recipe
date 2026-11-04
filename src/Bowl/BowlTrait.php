@@ -394,8 +394,10 @@ trait BowlTrait
             //Found from ingredient's name in workplan
             isset($workPlan[$name]) => $workPlan[$name],
 
-            //Found from ingredient's class in workplan
+            //Found from ingredient's class in workplan. A builtin type (`mixed`, `int`, `string`...) is never a key of
+            //the workplan : else an ingredient given by an end user could replace an optional parameter
             ($type = $parameter->getType()) instanceof ReflectionNamedType
+            && !$type->isBuiltin()
             && isset($workPlan[$type->getName()]) => $workPlan[$type->getName()],
 
             //Found from ingredient's instance type
