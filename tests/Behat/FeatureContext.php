@@ -1478,4 +1478,14 @@ class FeatureContext implements Context
         Assert::assertNotSame($this->chef, self::$clonedChef);
         $this->chef = self::$clonedChef;
     }
+
+    public static function appendSuffixWithDefault(StringObject $stringObject, string $suffix = ' default'): void
+    {
+        StringObject::append($stringObject, $suffix);
+    }
+
+    public static function appendCodeWithDefault(StringObject $stringObject, int $code = 404): void
+    {
+        StringObject::append($stringObject, ' ' . $code);
+    }
 }
