@@ -53,7 +53,8 @@ Parameters are resolved, in this order :
 1. reserved instances by type : `ChefInterface`, `Fiber` (fiber bowls only), `CookingSupervisorInterface`,
 2. the mapping given to `cook()` (`$with`) : another name, a list of names (first found), or a fixed `Value`,
 3. the parameter name as key of the workplan,
-4. the class name of the parameter as key of the workplan,
+4. the class name of the parameter as key of the workplan (a class or an interface only : never a builtin type like
+   `int`, `string` or `mixed`),
 5. an instance of the parameter's type in the workplan (also a `TransformableInterface` instance of the class given
    to `#[Transform]`, transformed before injection),
 6. the special name `_methodName` (the name of the step),

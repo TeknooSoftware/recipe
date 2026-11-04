@@ -1,5 +1,13 @@
 # Teknoo Software - Recipe - Change Log
 
+## [7.3.1] - 2026-11-04
+### Stable Release
+
+**Security**
+- Bowls: a parameter of a builtin type (`mixed`, `int`, `string`...) no longer takes an ingredient named as its type.
+  Only a class or an interface is a key of the workplan, so an ingredient given by an end user (a query parameter)
+  cannot replace an optional parameter of a step. An ingredient named `int` must be mapped explicitly.
+
 ## [7.3.0] - 2026-09-27
 ### Stable Release
 
