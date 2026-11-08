@@ -1,5 +1,12 @@
 # Teknoo Software - Recipe - Change Log
 
+## [7.3.2] - Release pending
+### Stable Release
+
+**Bug fixes**
+- Chef: a chef cloned during a step has its own workplan. The original no longer empties the workplan of the clone at
+  the end of its cooking, and their writes stay separate.
+
 ## [7.3.1] - 2026-11-04
 ### Stable Release
 
