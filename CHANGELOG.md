@@ -1,6 +1,6 @@
 # Teknoo Software - Recipe - Change Log
 
-## [7.3.2] - Release pending
+## [7.3.2] - 2026-11-09
 ### Stable Release
 
 **Bug fixes**
