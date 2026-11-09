@@ -1488,4 +1488,40 @@ class FeatureContext implements Context
     {
         StringObject::append($stringObject, ' ' . $code);
     }
+
+    private mixed $dishOfTheClonedChef = null;
+
+    public static function cloneTheChefAndUpdateTheWorkPlanOfTheClone(ChefInterface $chef): void
+    {
+        self::$clonedChef = clone $chef;
+        self::$clonedChef->updateWorkPlan([StringObject::class => new StringObject('cloned')]);
+    }
+
+    #[When('the chef cloned during the cooking continues its cooking')]
+    public function theChefClonedDuringTheCookingContinuesItsCooking(): void
+    {
+        Assert::assertInstanceOf(ChefInterface::class, self::$clonedChef);
+        Assert::assertNotSame($this->chef, self::$clonedChef);
+
+        //The dish validated by the clone is kept to be checked by the next step
+        $this->dishOfTheClonedChef = null;
+        $this->callbackPromiseSuccess = function (mixed $value): void {
+            $this->dishOfTheClonedChef = $value;
+        };
+
+        try {
+            self::$clonedChef->continue();
+        } catch (Throwable $e) {
+            static::$message = $e->getMessage();
+            self::$runningCatchedError = $e;
+        }
+    }
+
+    #[Then('the chef cloned during the cooking has served the string :content')]
+    public function theChefClonedDuringTheCookingHasServedTheString(string $content): void
+    {
+        Assert::assertNull(self::$runningCatchedError);
+        Assert::assertInstanceOf(StringObject::class, $this->dishOfTheClonedChef);
+        Assert::assertEquals($content, (string) $this->dishOfTheClonedChef);
+    }
 }
