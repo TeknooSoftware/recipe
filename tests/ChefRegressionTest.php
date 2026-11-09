@@ -220,4 +220,58 @@ final class ChefRegressionTest extends TestCase
         $callersStack = new ReflectionProperty(Chef::class, 'callersStack');
         $this->assertEquals([], $callersStack->getValue($clone));
     }
+
+    public function testCloneTakenDuringAStepKeepsItsWorkPlanAfterTheEndOfTheOriginalCooking(): void
+    {
+        //A step receives the workplan by reference : a clone taken during a step must not share this reference, else
+        //the original empties also the workplan of the clone when it cleans its own workplan at the end of its cooking
+        $log = [];
+        $clone = null;
+        $recipe = (new Recipe())
+            ->cook(
+                static function (ChefInterface $chef) use (&$clone): void {
+                    $clone = clone $chef;
+                },
+                'clone',
+            )
+            ->cook(
+                static function (string $value = 'none') use (&$log): void {
+                    $log[] = $value;
+                },
+                'read',
+            );
+
+        $chef = new Chef($recipe);
+        $chef->process(['value' => 'foo']);
+
+        $this->assertInstanceOf(Chef::class, $clone);
+        $this->assertInstanceOf(ChefInterface::class, $clone->continue());
+        $this->assertEquals(['foo', 'foo'], $log);
+    }
+
+    public function testAWriteOfACloneTakenDuringAStepDoesNotReachTheOriginalWorkPlan(): void
+    {
+        //A step receives the workplan by reference : a clone taken during a step must not share this reference, else
+        //an ingredient added by the clone replaces the ingredient of the original
+        $log = [];
+        $recipe = (new Recipe())
+            ->cook(
+                static function (ChefInterface $chef): void {
+                    $clone = clone $chef;
+                    $clone->updateWorkPlan(['value' => 'clone']);
+                    $clone->continue();
+                },
+                'clone',
+            )
+            ->cook(
+                static function (string $value = 'none') use (&$log): void {
+                    $log[] = $value;
+                },
+                'read',
+            );
+
+        (new Chef($recipe))->process(['value' => 'original']);
+
+        $this->assertEquals(['clone', 'original'], $log);
+    }
 }

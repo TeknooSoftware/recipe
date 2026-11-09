@@ -138,6 +138,11 @@ class Chef implements AutomatedInterface, ChefInterface
         $this->cloneProxy();
 
         $this->cookingSupervisor = clone $this->cookingSupervisor;
+
+        //A step receives the workplan by reference, and PHP keeps this reference in a clone. A new reference gives
+        //the clone its own workplan, else the clean of one chef empties the workplan of the other
+        $workPlan = $this->workPlan;
+        $this->workPlan = &$workPlan;
     }
 
     public function read(BaseRecipeInterface $recipe): ChefInterface

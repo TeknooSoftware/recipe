@@ -63,3 +63,33 @@ Feature: Chef life cycle between two cookings
     When I use the chef cloned during the cooking
     And It starts cooking again with "foo" as "Teknoo\Tests\Recipe\Behat\StringObject"
     Then the recipe has been successful executed
+
+  Scenario: A chef cloned during a step keeps its workplan after the end of the original cooking
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define a "Teknoo\Tests\Recipe\Behat\StringObject" to start my recipe
+    When I define the step "addTest" to do "Teknoo\Tests\Recipe\Behat\StringObject::addTest" my recipe
+    When I define the step "clone" to do "FeatureContext::cloneTheChef" my recipe
+    When I define the excepted dish "Teknoo\Tests\Recipe\Behat\StringObject" to my recipe for several cookings
+    And I must obtain an String with at "foo bar"
+    Then I should have a new recipe.
+    When I train the chef with the recipe
+    And It starts cooking with "foo" as "Teknoo\Tests\Recipe\Behat\StringObject"
+    Then the recipe has been successful executed
+    When the chef cloned during the cooking continues its cooking
+    Then the chef cloned during the cooking has served the string "foo bar"
+
+  Scenario: A chef cloned during a step does not change the workplan of the original chef
+    Given I have an empty recipe
+    And I have an untrained chef
+    When I define a "Teknoo\Tests\Recipe\Behat\StringObject" to start my recipe
+    When I define the step "clone" to do "FeatureContext::cloneTheChefAndUpdateTheWorkPlanOfTheClone" my recipe
+    When I define the step "addTest" to do "Teknoo\Tests\Recipe\Behat\StringObject::addTest" my recipe
+    When I define the excepted dish "Teknoo\Tests\Recipe\Behat\StringObject" to my recipe for several cookings
+    And I must obtain an String with at "foo bar"
+    Then I should have a new recipe.
+    When I train the chef with the recipe
+    And It starts cooking with "foo" as "Teknoo\Tests\Recipe\Behat\StringObject"
+    Then the recipe has been successful executed
+    When the chef cloned during the cooking continues its cooking
+    Then the chef cloned during the cooking has served the string "cloned bar"
