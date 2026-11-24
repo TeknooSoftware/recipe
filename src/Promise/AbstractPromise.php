@@ -163,7 +163,7 @@ abstract class AbstractPromise implements PromiseInterface
             if (
                 !$this->isFailing
                 && $this->callOnFailOnException
-                && is_callable($this->onFail)
+                && (is_callable($this->onFail) || null !== $this->nextPromise)
             ) {
                 $this->fail($error);
             } else {

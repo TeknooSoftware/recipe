@@ -31,6 +31,7 @@ use Behat\Step\Then;
 use Behat\Step\When;
 use ReflectionObject;
 use RuntimeException;
+use SensitiveParameter;
 use Behat\Behat\Context\Context;
 use DateTime;
 use DateTimeImmutable;
@@ -1523,5 +1524,57 @@ class FeatureContext implements Context
         Assert::assertNull(self::$runningCatchedError);
         Assert::assertInstanceOf(StringObject::class, $this->dishOfTheClonedChef);
         Assert::assertEquals($content, (string) $this->dishOfTheClonedChef);
+    }
+
+    private ?Throwable $errorOfTheNextPromiseOfTheDish = null;
+
+    private bool $nextPromiseOfTheDishSucceeded = false;
+
+    #[When('I define the excepted dish :className to my recipe with a promise failing on success and a next promise')]
+    public function iDefineTheExceptedDishToMyRecipeWithAPromiseFailingOnSuccessAndANextPromise(
+        string $className,
+    ): void {
+        $this->errorOfTheNextPromiseOfTheDish = null;
+        $this->nextPromiseOfTheDishSucceeded = false;
+
+        //The promise of the dish has no failure callback : the exception of its success callback must be forwarded
+        //to the failure callback of the next promise
+        $promise = new Promise(
+            static function (mixed $value): void {
+                throw new RuntimeException('The dish ' . $value . ' is refused');
+            },
+        );
+
+        $promise = $promise->next(
+            new Promise(
+                function (): void {
+                    $this->nextPromiseOfTheDishSucceeded = true;
+                },
+                function (#[SensitiveParameter] Throwable $error): void {
+                    $this->errorOfTheNextPromiseOfTheDish = $error;
+                },
+            ),
+        );
+
+        $this->pushRecipe(
+            $this->lastRecipe->cook(
+                function (ChefInterface $chef, $result): void {
+                    $chef->finish($result);
+                },
+                'finish',
+                ['result' => trim($className, '\\')]
+            )
+        );
+
+        $this->pushRecipe($this->lastRecipe->given(new DishClass($className, $promise)));
+    }
+
+    #[Then('the next promise of the dish has received the error :message')]
+    public function theNextPromiseOfTheDishHasReceivedTheError(string $message): void
+    {
+        Assert::assertNull(self::$runningCatchedError);
+        Assert::assertFalse($this->nextPromiseOfTheDishSucceeded);
+        Assert::assertInstanceOf(RuntimeException::class, $this->errorOfTheNextPromiseOfTheDish);
+        Assert::assertEquals($message, $this->errorOfTheNextPromiseOfTheDish->getMessage());
     }
 }

@@ -1,5 +1,12 @@
 # Teknoo Software - Recipe - Change Log
 
+## [7.3.3] - 2026-11-24
+### Stable Release
+
+**Bug fixes**
+- Promises: an exception thrown by the success callback of a promise without failure callback is forwarded to the
+  failure callback of its next promise (`next()`), instead of being thrown.
+
 ## [7.3.2] - 2026-11-09
 ### Stable Release
 
