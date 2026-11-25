@@ -50,6 +50,8 @@ class WrappedOneCalledPromise implements PromiseInterface
 
     private bool $failed = false;
 
+    private bool $successThrown = false;
+
     /**
      * @param PromiseInterface<TSuccessArgType, TResultType> $promise
      */
@@ -78,6 +80,10 @@ class WrappedOneCalledPromise implements PromiseInterface
             try {
                 $this->promise->success(...$args);
                 $this->called = true;
+            } catch (Throwable $error) {
+                $this->successThrown = true;
+
+                throw $error;
             } finally {
                 //An exception from the wrapped promise must not leave this wrapper in the calling state (next calls
                 //would be silently ignored). They are forwarded to the wrapped promise, deciding if they are allowed
@@ -97,6 +103,21 @@ class WrappedOneCalledPromise implements PromiseInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return PromiseInterface<TSuccessArgType, TResultType>
+     */
+    public function failOrThrow(#[SensitiveParameter] Throwable $throwable): PromiseInterface
+    {
+        //To forward an exception thrown by the success callback of a previous promise without failure callback : the
+        //exception is passed to the wrapped promise, or thrown when the wrapped promise was already called (or has
+        //thrown an exception), to not lose it
+        if ($this->called || $this->successThrown) {
+            throw $throwable;
+        }
+
+        return $this->fail($throwable);
     }
 
     public function setDefaultResult(mixed $default): PromiseInterface
@@ -135,6 +156,7 @@ class WrappedOneCalledPromise implements PromiseInterface
         $this->called = false;
         $this->calling = false;
         $this->failed = false;
+        $this->successThrown = false;
 
         $this->promise->reset();
 

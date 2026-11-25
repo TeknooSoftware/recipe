@@ -163,9 +163,24 @@ abstract class AbstractPromise implements PromiseInterface
             if (
                 !$this->isFailing
                 && $this->callOnFailOnException
-                && (is_callable($this->onFail) || null !== $this->nextPromise)
+                && is_callable($this->onFail)
             ) {
                 $this->fail($error);
+            } elseif (
+                !$this->isFailing
+                && $this->callOnFailOnException
+                && $this->nextPromise instanceof WrappedOneCalledPromise
+                && true === $this->autoCallNextPromise
+            ) {
+                //Without failure callback, the exception is forwarded to the next promise, or thrown when the next
+                //promise was already called, to not lose it
+                try {
+                    $this->nextPromise->failOrThrow($error);
+                } catch (Throwable $thrown) {
+                    $this->throwedObject = $thrown;
+
+                    throw $thrown;
+                }
             } else {
                 $this->throwedObject = $error;
 

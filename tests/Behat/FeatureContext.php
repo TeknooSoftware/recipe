@@ -54,6 +54,7 @@ use Teknoo\Recipe\Plan\EditablePlanTrait;
 use Teknoo\Recipe\Plan\Step;
 use Teknoo\Recipe\PlanInterface;
 use Teknoo\Recipe\Promise\Promise;
+use Teknoo\Recipe\Promise\PromiseInterface;
 use Teknoo\Recipe\Recipe;
 use Teknoo\Recipe\RecipeInterface;
 use Teknoo\Recipe\RecipeRelativePositionEnum;
@@ -1576,5 +1577,46 @@ class FeatureContext implements Context
         Assert::assertFalse($this->nextPromiseOfTheDishSucceeded);
         Assert::assertInstanceOf(RuntimeException::class, $this->errorOfTheNextPromiseOfTheDish);
         Assert::assertEquals($message, $this->errorOfTheNextPromiseOfTheDish->getMessage());
+    }
+
+    #[When('I define the excepted dish :className to my recipe with a promise failing a throwing next promise')]
+    public function iDefineTheExceptedDishToMyRecipeWithAPromiseFailingAThrowingNextPromise(
+        string $className,
+    ): void {
+        $this->errorOfTheNextPromiseOfTheDish = null;
+        $this->nextPromiseOfTheDishSucceeded = false;
+
+        //The promise of the dish has no failure callback and fails its next promise from its success callback : the
+        //exception thrown by the failure callback of the next promise must escape from the cooking
+        $promise = new Promise(
+            static function (mixed $value, PromiseInterface $next): void {
+                $next->fail(new RuntimeException('The dish ' . $value . ' is refused'));
+            },
+        );
+
+        $promise = $promise->next(
+            new Promise(
+                function (): void {
+                    $this->nextPromiseOfTheDishSucceeded = true;
+                },
+                function (#[SensitiveParameter] Throwable $error): never {
+                    $this->errorOfTheNextPromiseOfTheDish = $error;
+
+                    throw $error;
+                },
+            ),
+        );
+
+        $this->pushRecipe(
+            $this->lastRecipe->cook(
+                function (ChefInterface $chef, $result): void {
+                    $chef->finish($result);
+                },
+                'finish',
+                ['result' => trim($className, '\\')]
+            )
+        );
+
+        $this->pushRecipe($this->lastRecipe->given(new DishClass($className, $promise)));
     }
 }

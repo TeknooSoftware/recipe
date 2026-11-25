@@ -1,5 +1,13 @@
 # Teknoo Software - Recipe - Change Log
 
+## [7.3.4] - 2026-11-25
+### Stable Release
+
+**Bug fixes**
+- Promises: an exception of the success callback of a promise without failure callback is thrown again, like before
+  7.3.3, instead of being lost, when its next promise was already called (or failed), or when the next promise is
+  not automatically called (`next($promise, false)`).
+
 ## [7.3.3] - 2026-11-24
 ### Stable Release
 
